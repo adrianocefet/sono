@@ -134,58 +134,20 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                                 ? Container()
                                                 : questao('Nome'),
                                             model.editar
-                                                ? questao1('Modo')
-                                                : questao('Modo'),
+                                                ? questao1('Descrição')
+                                                : questao('Descrição'),
                                             model.editar
-                                                ? questao1('Pressão definida')
-                                                : questao('Pressão definida'),
+                                                ? questao1('Equipamento')
+                                                : questao('Equipamento'),
                                             model.editar
-                                                ? questao1('EPR')
-                                                : questao('EPR'),
+                                                ? questao1('Status')
+                                                : questao('Status'),
                                             model.editar
-                                                ? questao1('Utilização')
-                                                : questao('Utilização'),
+                                                ? questao1('Data do Status')
+                                                : questao('Data do Status'),
                                             model.editar
-                                                ? questao1('Fuga mediana')
-                                                : questao('Fuga mediana'),
-                                            model.editar
-                                                ? questao1('Fuga %95')
-                                                : questao('Fuga %95'),
-                                            model.editar
-                                                ? questao1('Fuga máxima')
-                                                : questao('Fuga máxima'),
-                                            model.editar
-                                                ? questao1('IAH')
-                                                : questao('IAH'),
-                                            model.editar
-                                                ? questao1('IA')
-                                                : questao('IA'),
-                                            model.editar
-                                                ? questao1('IH')
-                                                : questao('IH'),
-                                            model.editar
-                                                ? questao1(
-                                                'Índice de apneia central')
-                                                : questao(
-                                                'Índice de apneia central'),
-                                            model.editar
-                                                ? questao1(
-                                                'Índice de apneia obstrutiva')
-                                                : questao(
-                                                'Índice de apneia obstrutiva'),
-                                            model.editar
-                                                ? questao1(
-                                                'Índice de apneia desconhecida')
-                                                : questao(
-                                                'Índice de apneia desconhecida'),
-                                            model.editar
-                                                ? questao1('RERA')
-                                                : questao('RERA'),
-                                            model.editar
-                                                ? questao1(
-                                                'Respiração de Cheyne-Stockes')
-                                                : questao(
-                                                'Respiração de Cheyne-Stockes'),
+                                                ? questao1('ID do Status')
+                                                : questao('ID do Status'),
                                           ],
                                         ),
                                       ),
