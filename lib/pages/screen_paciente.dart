@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/model.dart';
 
-Map<String, dynamic> respostas = {};
+Map<String, dynamic> map_paciente = {};
 String ID = 'Adriano';
 
 class ScreenPaciente extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
         .snapshots()
         .map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-      respostas = data;
+      map_paciente = data;
     }).toList();
 
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
@@ -45,7 +45,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
             default:
               return Scaffold(
                   appBar: AppBar(
-                    title: Text(respostas['Nome'] ?? 'sem nome'),
+                    title: Text(map_paciente['Nome'] ?? 'sem nome'),
                     //Text(snapshot.data!['Nome']),
                     actions: [
                       IconButton(
@@ -61,7 +61,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                   .doc(widget.idPaciente)
                                   .
                               //update({'Nome':'Adriano'});
-                              update(respostas);
+                              update(map_paciente);
                             }
                           },
                           icon: model.editar
@@ -89,7 +89,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Image.network(
-                                            respostas['Foto'] ??
+                                            map_paciente['Foto'] ??
                                                 model.semimagem,
                                             width:
                                             MediaQuery
@@ -122,7 +122,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                               MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  respostas['Nome'] ??
+                                                  map_paciente['Nome'] ??
                                                       'sem nome',
                                                   style: TextStyle(
                                                     fontSize: 40,
@@ -217,9 +217,9 @@ Widget questao(String q) {
               minLines: 1,
               maxLines: 4,
               // expands: true,
-              initialValue: respostas[q] ?? '',
+              initialValue: map_paciente[q] ?? '',
               decoration: InputDecoration(
-                hintText: respostas[q] ?? '',
+                hintText: map_paciente[q] ?? '',
                 border: OutlineInputBorder(),
                 labelStyle:
                 TextStyle(color: Color.fromRGBO(88, 98, 143, 1), fontSize: 14),
@@ -229,8 +229,8 @@ Widget questao(String q) {
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.bold),
-              onSaved: (value) => respostas[q] = value,
-              onChanged: (value) => respostas[q] = value,
+              onSaved: (value) => map_paciente[q] = value,
+              onChanged: (value) => map_paciente[q] = value,
               //validator: (value) => value != '' ? null : 'Dado obrigatório.',
             ),
           )),
@@ -249,7 +249,7 @@ Widget questao1(String q) {
         ),
       ),
       Text(
-        respostas[q] ?? '',
+        map_paciente[q] ?? '',
         style: TextStyle(
           fontSize: 20,
         ),
