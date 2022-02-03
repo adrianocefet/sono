@@ -29,6 +29,10 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       map_equipamento = data;
     }).toList();
+
+
+
+    /*
     FirebaseFirestore.instance
         .collection('Paciente')
         //.where('Hospital',isEqualTo: model.hospital)
@@ -37,7 +41,7 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
         .map((QuerySnapshot document) {
       Map<String, dynamic> data = document.docs as Map<String, dynamic>;
       map_paciente = data;
-    }).toList();
+    }).toList();*/
 
 
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
@@ -147,25 +151,27 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                         model.editar
                                             ? questao1('Equipamento')
                                             : questao('Equipamento'),
+                                        //Divider(thickness: 5,color: Colors.black,),
                                         model.editar
                                             ? questao1('Status')
                                             : questao2('Status'),
+                                        fazPaciente(),
                                         model.editar
                                             ? questao1('Data do Status')
-                                            : questao('Data do Status'),
-                                        model.editar
-                                            ? questao1('ID do Status')
-                                            : questao1('ID do Status'),
+                                            : questao1('Data do Status'),
+                                        Divider(thickness: 5,color: Colors.black,),
                                       ],
                                     ),
                                   ),
                                 ],
-                              )),
+                              ),
+                          ),
                         ),
                       ],
                     ) //coluna
                         );
-                  })); //Scaffold
+                  }),
+              );
           }
         },
       );
@@ -222,6 +228,63 @@ Widget questao1(String q) {
         style: TextStyle(
           fontSize: 20,
         ),
+      ),
+    ],
+  );
+}
+
+Widget fazPaciente() {
+  FirebaseFirestore.instance
+      .collection('Paciente')
+      .doc(map_equipamento['ID do Status'] ?? 'IdSemPaciente')
+      .snapshots()
+      .map((DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    map_paciente = data;
+  }).toList();
+
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Divider(thickness: 5,color: Colors.black,),
+      Row(
+        children: [
+          const Text(
+            'Detalhe do Status',
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ],
+      ),
+      Divider(thickness: 5,color: Colors.black,),
+      Row(
+        children: [
+          Image.network(
+            map_paciente['Foto'] ?? 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+        ],
+      ),
+      Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Text(
+            'Nome : ',
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+          Text(
+            map_paciente['Nome'] ?? 'Sem Nome',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+
+        ],
       ),
     ],
   );
@@ -338,7 +401,6 @@ void escolherPaciente(context) {
 Widget FazGrid(String imagem, String texto, String id) {
   return InkWell(
     onTap: (){
-      //map_equipamento['ID do Status'] = '5XXNjbVNvfTQ5DyFeD5D';
       map_equipamento['ID do Status'] = id;
       print(map_equipamento.toString());
     },
