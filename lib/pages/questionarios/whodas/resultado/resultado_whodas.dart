@@ -1,0 +1,212 @@
+import 'package:flutter/material.dart';
+import 'package:sono/constants/constants.dart';
+import 'package:sono/widgets/dialogs/error_message.dart';
+
+class PaginaResultado extends StatefulWidget {
+  final Map<String, dynamic> resultado;
+
+  const PaginaResultado({Key? key, required this.resultado}) : super(key: key);
+  @override
+  PaginaResultadoState createState() => PaginaResultadoState();
+}
+
+class PaginaResultadoState extends State<PaginaResultado> {
+  bool isLoading = false;
+
+  Future<void> salvarFormulario() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // await FirebaseService()
+      //     .uploadWhodasData(widget.resultado, widget.resultado['id_paciente']);
+      // await Usuario().updateInfo();
+      // Navigator.popUntil(
+      //   context,
+      //   ModalRoute.withName(Constants.paginaInicialNavigate),
+      // );
+
+      // Navigator.pushNamed(context, Constants.paginaInicialNavigate);
+      // Navigator.pushNamed(context, Constants.buscaPacienteNavigate);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (_) {
+      //     return PerfilPaciente(widget.resultado['id_paciente']);
+      //   }),
+      // );
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } on Exception catch (e) {
+      mostrarMensagemErro(context, e.toString());
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(widget.resultado);
+    isLoading = false;
+
+    return WillPopScope(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Constants.corAzulEscuroPrincipal,
+            title: const Text('Resultados'),
+            centerTitle: true,
+            actions: <Widget>[],
+          ),
+          backgroundColor: Colors.white,
+          body: SingleChildScrollView(
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'TOTAL',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.corAzulEscuroSecundario),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Constants.domTotalColor,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  widget.resultado['total'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 0),
+                        child: Divider(
+                          color: Constants.corAzulEscuroSecundario,
+                          thickness: 2.5,
+                          indent: 30,
+                          endIndent: 30,
+                          height: 0,
+                        ),
+                      ),
+                      Pontuacao('dom_1', widget.resultado['dom_1']),
+                      Pontuacao('dom_2', widget.resultado['dom_2']),
+                      Pontuacao('dom_3', widget.resultado['dom_3']),
+                      Pontuacao('dom_4', widget.resultado['dom_4']),
+                      Pontuacao('dom_51', widget.resultado['dom_51']),
+                      Pontuacao('dom_52', widget.resultado['dom_52']),
+                      Pontuacao('dom_6', widget.resultado['dom_6']),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 15),
+                        child: Divider(
+                          color: Constants.corAzulEscuroPrincipal,
+                          thickness: 2.5,
+                          indent: 30,
+                          endIndent: 30,
+                          height: 0,
+                        ),
+                      ),
+                      //SizedBox(height: 15,),
+                      isLoading == true
+                          ? const CircularProgressIndicator()
+                          : Container(
+                              height: 50.0,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                color: Constants.corAzulEscuroPrincipal,
+                              ),
+                              child: FlatButton(
+                                onPressed: () async => salvarFormulario(),
+                                child: const Text(
+                                  "Salvar respostas",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 25.0),
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        onWillPop: () {
+          Navigator.pop(context);
+
+          return Future.value(false);
+        });
+  }
+}
+
+class Pontuacao extends StatelessWidget {
+  final String dominio;
+  final num pontuacao;
+  const Pontuacao(this.dominio, this.pontuacao, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      //contentPadding: EdgeInsets.all(2),
+      //dense: true,
+      leading: Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: pontuacao < 0
+              ? Colors.grey
+              : Constants.coresDominiosWHODASMap[dominio],
+        ),
+        child: Center(
+          child: Text(
+            pontuacao < 0 ? 'X' : pontuacao.toString(),
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      title: Text(
+          'Domínio de ' + (Constants.nomesDominiosWHODASMap[dominio] ?? ''),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            color: Constants.coresDominiosWHODASMap[dominio],
+            fontWeight: FontWeight.bold,
+            decoration: pontuacao < 0
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+          )),
+    );
+  }
+}
