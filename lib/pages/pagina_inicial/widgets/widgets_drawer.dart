@@ -66,16 +66,15 @@ class CustomDrawer extends StatelessWidget {
               ),
               const Divider(),
               DrawerTile(Icons.home, "Início", pageController, 0),
+              //DrawerTile(Icons.playlist_add_check, "Questionários", pageController, 1),
               DrawerTile(
-                  Icons.playlist_add_check, "Questionários", pageController, 1),
+                  Icons.playlist_add_check, "Paciente", pageController, 1),
               DrawerTile(
-                  Icons.playlist_add_check, "Paciente", pageController, 2),
+                  Icons.playlist_add_check, "Equipamentos", pageController, 2),
               DrawerTile(
-                  Icons.playlist_add_check, "Equipamentos", pageController, 3),
+                  Icons.playlist_add_check, "Fale Conosco", pageController, 3),
               DrawerTile(
-                  Icons.playlist_add_check, "Fale Conosco", pageController, 4),
-              DrawerTile(
-                  Icons.playlist_add_check, "Comunicação", pageController, 5),
+                  Icons.playlist_add_check, "Comunicação", pageController, 4),
             ],
           )
         ],

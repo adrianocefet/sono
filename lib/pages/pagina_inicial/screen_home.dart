@@ -10,6 +10,8 @@ import 'package:sono/pages/tabelas/tab_04.dart';
 import 'package:sono/pages/tabelas/tabela_pacientes/dialogs/adicionar_paciente_dialog.dart';
 import 'package:sono/pages/tabelas/tabela_pacientes/tab_paciente.dart';
 
+import '../widgets_botao_menu.dart';
+
 class HomeScreen extends StatelessWidget {
   final _pageController = PageController();
 
@@ -25,12 +27,8 @@ class HomeScreen extends StatelessWidget {
           body: const HomeTab(),
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
-          /*floatingActionButton: FloatingActionButton(
-                onPressed: (){
-                  _pageController.jumpToPage(2);
-                })*/
         ),
-        Scaffold(
+        /*Scaffold(
           appBar: AppBar(
             title: const Text("Questionários"),
             centerTitle: true,
@@ -39,7 +37,7 @@ class HomeScreen extends StatelessWidget {
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
           body: const SelecaoDeQuestionario(),
-        ),
+        ),*/
         Scaffold(
           appBar: AppBar(
             title: const Text("Pacientes"),
@@ -67,6 +65,7 @@ class HomeScreen extends StatelessWidget {
           body: const Equipamento(),
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
+          floatingActionButton: BotaoMenu(),
         ),
         Scaffold(
           appBar: AppBar(

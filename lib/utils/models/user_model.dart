@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
@@ -7,6 +8,18 @@ class UserModel extends Model {
   String semimagem =
       'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
   bool editar = true;
+
+  void FazHome() async {
+    Equipamento = 'Equipamento';
+    notifyListeners();
+  }
+  void Adicionar() async {
+    FirebaseFirestore.instance.collection('Equipamento').add({
+      'Hospital': hospital,
+      'Equipamento': Equipamento
+    });
+    //notifyListeners();
+  }
   void teste(String vai) async {
     texto = 'José';
     notifyListeners();
@@ -14,4 +27,5 @@ class UserModel extends Model {
     texto = vai;
     notifyListeners();
   }
+
 }
