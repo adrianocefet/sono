@@ -6,7 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 class CustomDrawer extends StatelessWidget {
   final PageController pageController;
 
-  CustomDrawer(this.pageController);
+  const CustomDrawer(this.pageController, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,16 +65,42 @@ class CustomDrawer extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              DrawerTile(Icons.home, "Início", pageController, 0),
-              //DrawerTile(Icons.playlist_add_check, "Questionários", pageController, 1),
               DrawerTile(
-                  Icons.playlist_add_check, "Paciente", pageController, 1),
+                Icons.home,
+                "Início",
+                pageController,
+                0,
+              ),
               DrawerTile(
-                  Icons.playlist_add_check, "Equipamentos", pageController, 2),
+                Icons.check_box,
+                "Questionários",
+                pageController,
+                1,
+              ),
               DrawerTile(
-                  Icons.playlist_add_check, "Fale Conosco", pageController, 3),
+                Icons.playlist_add_check,
+                "Pacientes",
+                pageController,
+                2,
+              ),
               DrawerTile(
-                  Icons.playlist_add_check, "Comunicação", pageController, 4),
+                Icons.playlist_add_check,
+                "Equipamentos",
+                pageController,
+                3,
+              ),
+              DrawerTile(
+                Icons.playlist_add_check,
+                "Fale Conosco",
+                pageController,
+                4,
+              ),
+              DrawerTile(
+                Icons.playlist_add_check,
+                "Comunicação",
+                pageController,
+                5,
+              ),
             ],
           )
         ],

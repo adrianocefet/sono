@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/selecao_questionario/selecao_questionario.dart';
-import 'package:sono/pages/tabelas/adicionar_paciente/adicionar_paciente.dart';
 import 'package:sono/pages/tabelas/tabela_equipamentos/tab_equipamentos.dart';
 import 'package:sono/pages/pagina_inicial/widgets/widgets_drawer.dart';
 import 'package:sono/pages/tabelas/tabela_hospitais_home/tab_home.dart';
@@ -28,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
         ),
-        /*Scaffold(
+        Scaffold(
           appBar: AppBar(
             title: const Text("Questionários"),
             centerTitle: true,
@@ -37,7 +36,7 @@ class HomeScreen extends StatelessWidget {
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
           body: const SelecaoDeQuestionario(),
-        ),*/
+        ),
         Scaffold(
           appBar: AppBar(
             title: const Text("Pacientes"),
@@ -65,7 +64,7 @@ class HomeScreen extends StatelessWidget {
           body: const Equipamento(),
           drawer: CustomDrawer(_pageController),
           drawerEnableOpenDragGesture: true,
-          floatingActionButton: BotaoMenu(),
+          floatingActionButton: const BotaoMenu(),
         ),
         Scaffold(
           appBar: AppBar(

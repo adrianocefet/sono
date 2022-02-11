@@ -13,7 +13,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
   final actionButtomColor = Colors.tealAccent.shade700;
 
   late AnimationController animation;
-  final manuIsOpen = ValueNotifier<bool>(false);
+  final menuIsOpen = ValueNotifier<bool>(false);
 
   @override
   void initState(){
@@ -27,8 +27,8 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
     super.dispose();
   }
   toggleMenu(){
-    manuIsOpen.value ? animation.reverse(): animation.forward();
-    manuIsOpen.value = !manuIsOpen.value;
+    menuIsOpen.value ? animation.reverse(): animation.forward();
+    menuIsOpen.value = !menuIsOpen.value;
   }
 
   @override
@@ -48,7 +48,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
           FloatingActionButton(
             child: const Icon(Icons.add),
             onPressed: (){
-              model.Adicionar();
+              model.adicionarEquipamento();
             },
             backgroundColor: actionButtomColor,
           ),
@@ -60,7 +60,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
           FloatingActionButton(
             child: const Icon(Icons.home),
             onPressed: (){
-              model.FazHome();
+              model.fazHome();
             },
             backgroundColor: actionButtomColor,
           ),

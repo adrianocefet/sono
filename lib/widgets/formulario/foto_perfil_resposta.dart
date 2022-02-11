@@ -91,8 +91,8 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                       alignment: AlignmentDirectional.bottomStart,
                       children: [
                         Container(
-                          height: Constants.alturaFotoDePerfil,
-                          width: Constants.larguraFotoDePerfil,
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          height: MediaQuery.of(context).size.width * 0.25,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.black87,
@@ -104,7 +104,8 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                                     widget.autoPreencher == null
                                 ? FaIcon(
                                     FontAwesomeIcons.userAlt,
-                                    size: 130,
+                                    size: MediaQuery.of(context).size.width *
+                                        0.23,
                                     color: Colors.grey[350],
                                   )
                                 : SizedBox(

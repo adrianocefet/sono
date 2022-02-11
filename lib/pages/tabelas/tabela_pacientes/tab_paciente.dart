@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sono/widgets/foto_de_perfil.dart';
 
 class TabelaDePacientes extends StatefulWidget {
   const TabelaDePacientes({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
                         .map((DocumentSnapshot document) {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
-                      return geraImagemDoPaciente(
+                      return FotoDePerfil.paciente(
                         data['Foto'] ?? model.semimagem,
                         data['Nome'] ?? 'sem nome',
                         document.id,
