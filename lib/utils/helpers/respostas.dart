@@ -16,12 +16,14 @@ class Resposta extends StatefulWidget {
   final Function()? notifyParent;
   final Color corTexto;
   final dynamic autoPreencher;
+  final bool formularioEWHODAS;
 
   const Resposta(this.pergunta,
       {this.notifyParent,
       this.paciente,
       this.corTexto = Colors.black,
       this.autoPreencher,
+      this.formularioEWHODAS = true,
       Key? key})
       : super(key: key);
 
@@ -87,7 +89,8 @@ class _RespostaState extends State<Resposta> {
             corDominio:
                 Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
                     Constants.corAzulEscuroSecundario,
-            corTexto: Colors.black,
+            corTexto: widget.corTexto,
+            oFormularioEWHODAS: widget.formularioEWHODAS,
           );
         }
       case TipoPergunta.multipla:

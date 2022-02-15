@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_rich_text/simple_rich_text.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/base_perguntas/base_whodas.dart';
 import 'package:sono/utils/models/pergunta.dart';
@@ -7,8 +8,14 @@ class RepostaAfirmativa extends StatefulWidget {
   final Pergunta pergunta;
   final Color? corTexto;
   final Color? corDominio;
+  final oFormularioEWHODAS;
+
   const RepostaAfirmativa(
-      {required this.pergunta, this.corDominio, this.corTexto, Key? key})
+      {required this.pergunta,
+      this.corDominio,
+      this.corTexto,
+      this.oFormularioEWHODAS,
+      Key? key})
       : super(key: key);
 
   @override
@@ -65,12 +72,21 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
             visible: false,
             child: TextFormField(
               onSaved: (valor) {
-                if (escolha == null) widget.pergunta.setResposta(0);
+                //if (escolha == null) widget.pergunta.setResposta(0);
               },
             ),
             maintainState: true,
           ),
-          enunciado(widget.pergunta.enunciado),
+          widget.oFormularioEWHODAS
+              ? enunciado(widget.pergunta.enunciado)
+              : SimpleRichText(
+                  widget.pergunta.enunciado,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: widget.corTexto,
+                    fontSize: Constants.fontSizeEnunciados,
+                  ),
+                ),
           const SizedBox(
             height: 20.0,
           ),
@@ -80,20 +96,23 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
               RadioListTile(
                 title: const Text("Não"),
                 value: 0,
-                activeColor: widget.corDominio,
+                activeColor: widget.oFormularioEWHODAS ? widget.corDominio : Colors.green,
                 groupValue: widget.pergunta.resposta,
                 onChanged: (int? valor) {
                   escolha = valor;
-                  setState(() {
-                    widget.pergunta.setResposta(valor!);
-                  });
+                  print("${widget.pergunta.codigo} : ${valor}");
+                  setState(
+                    () {
+                      widget.pergunta.setResposta(valor!);
+                    },
+                  );
                 },
               ),
               RadioListTile(
                 title: const Text("Sim"),
                 value: 1,
                 groupValue: widget.pergunta.resposta,
-                activeColor: widget.corDominio,
+                activeColor: widget.oFormularioEWHODAS ? widget.corDominio : Colors.red,
                 onChanged: (int? valor) {
                   escolha = valor;
                   setState(
@@ -101,6 +120,8 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
                       widget.pergunta.setResposta(valor!);
                     },
                   );
+                  print(
+                      "${widget.pergunta.codigo} : ${widget.pergunta.resposta}");
                 },
               ),
             ],

@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/user_model.dart';
 
-Map<String, dynamic> map_paciente = {};
+Map<String, dynamic> mapPaciente = {};
 String ID = 'Adriano';
 
 class ScreenPaciente extends StatefulWidget {
@@ -24,7 +24,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
     FirebaseFirestore.instance.collection('Paciente').doc(ID).snapshots().map(
       (DocumentSnapshot document) {
         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-        map_paciente = data;
+        mapPaciente = data;
       },
     ).toList();
 
@@ -45,8 +45,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
               default:
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text(map_paciente['Nome'] ?? 'sem nome'),
-                    //Text(snapshot.data!['Nome']),
+                    title: Text(mapPaciente['Nome'] ?? 'sem nome'),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -59,14 +58,12 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                             FirebaseFirestore.instance
                                 .collection('Paciente')
                                 .doc(widget.idPaciente)
-                                .
-                                //update({'Nome':'Adriano'});
-                                update(map_paciente);
+                                .update(mapPaciente);
                           }
                         },
                         icon: model.editar
-                            ? const Icon(Icons.edit)
-                            : const Icon(Icons.save),
+                            ? const Icon(Icons.save)
+                            : const Icon(Icons.edit),
                       )
                     ],
                   ),
@@ -79,7 +76,6 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                           child: Column(
                             children: [
                               Form(
-                                //key: _formKey,
                                 child: Align(
                                   alignment: const AlignmentDirectional(0, 0),
                                   child: FittedBox(
@@ -90,13 +86,16 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Image.network(
-                                          map_paciente['Foto'] ?? model.semimagem,
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.3,
-                                          height:
-                                              MediaQuery.of(context).size.width *
-                                                  0.3,
+                                          mapPaciente['Foto'] ??
+                                              model.semimagem,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.3,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.3,
                                           fit: BoxFit.cover,
                                         ),
                                         const SizedBox(
@@ -109,7 +108,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                             model.editar
                                                 ? FittedBox(
                                                     child: Text(
-                                                      map_paciente['Nome'] ??
+                                                      mapPaciente['Nome'] ??
                                                           'sem nome',
                                                       style: const TextStyle(
                                                         fontSize: 40,
@@ -119,8 +118,9 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                                 : Container(),
                                             for (String atrib in Constants
                                                 .titulosAtributosPacientes)
-                                              !model.editar
-                                                  ? editarAtributo(context, atrib)
+                                              model.editar
+                                                  ? editarAtributo(
+                                                      context, atrib)
                                                   : atrib == "Nome"
                                                       ? Container()
                                                       : atributo(atrib)
@@ -164,9 +164,9 @@ Widget editarAtributo(BuildContext context, String q) {
           child: TextFormField(
             minLines: 1,
             maxLines: 4,
-            initialValue: map_paciente[q] ?? '',
+            initialValue: mapPaciente[q] ?? '',
             decoration: InputDecoration(
-              hintText: map_paciente[q] ?? '',
+              hintText: mapPaciente[q] ?? '',
               border: const OutlineInputBorder(),
               labelStyle: const TextStyle(
                 color: Color.fromRGBO(88, 98, 143, 1),
@@ -179,8 +179,8 @@ Widget editarAtributo(BuildContext context, String q) {
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
-            onSaved: (value) => map_paciente[q] = value,
-            onChanged: (value) => map_paciente[q] = value,
+            onSaved: (value) => mapPaciente[q] = value,
+            onChanged: (value) => mapPaciente[q] = value,
             //validator: (value) => value != '' ? null : 'Dado obrigatório.',
           ),
         ),
@@ -199,7 +199,7 @@ Widget atributo(String q) {
         ),
       ),
       Text(
-        map_paciente[q] ?? '',
+        mapPaciente[q] ?? '',
         style: const TextStyle(
           fontSize: 20,
         ),

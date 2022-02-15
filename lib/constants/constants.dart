@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 abstract class Constants {
-  static const Color corPrincipalQuestionarios = Colors.lime;
+  static const Color corPrincipalQuestionarios =
+      Color.fromARGB(255, 158, 212, 147);
+  static const Color corSecundariaQuestionarios =
+      Color.fromARGB(221, 18, 63, 9);
+
   static const double fontSizeEnunciados = 15.5;
 
   static const Color corAzulEscuroPrincipal = Color.fromRGBO(43, 56, 97, 1);
@@ -53,6 +57,15 @@ abstract class Constants {
     'Índice de apneia desconhecida',
     'RERA',
     'Respiração de Cheyne-Stockes',
+  ];
+
+  static const List<String> titulosAtributosEquipamentos = [
+    'Nome',
+    'Descrição',
+    'Equipamento',
+    'Status',
+    'Data de Expedição',
+    'Paciente Responsável',
   ];
 
   static const Map<String, String> nomesDominiosWHODASMap = {

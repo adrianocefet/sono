@@ -13,7 +13,7 @@ import 'widgets/dominio_widget.dart';
 class WHODASView extends StatefulWidget {
   final Paciente? paciente;
 
-  const WHODASView({this.paciente, Key? key});
+  const WHODASView({Key? key, this.paciente}) : super(key: key);
 
   @override
   _WHODASViewState createState() => _WHODASViewState();
@@ -155,39 +155,40 @@ class _WHODASViewState extends State<WHODASView> {
         return Future.value(false);
       },
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Constants.corAzulEscuroPrincipal,
-            title: const Text('WHODAS'),
-            centerTitle: true,
+        appBar: AppBar(
+          backgroundColor: Constants.corAzulEscuroPrincipal,
+          title: const Text('WHODAS'),
+          centerTitle: true,
+        ),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: Column(
+                children: _formulario,
+              ),
+            ),
           ),
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Scrollbar(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _formulario,
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: FlatButton(
+              color: Constants.corAzulEscuroPrincipal,
+              onPressed: () async {
+                for (var p in perguntas) print("${p.codigo} : ${p.resposta}");
+                await validarFormulario();
+              },
+              child: const Text(
+                "Confirmar",
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: FlatButton(
-                color: Constants.corAzulEscuroPrincipal,
-                onPressed: () async {
-                  for (var p in perguntas) print("${p.codigo} : ${p.resposta}");
-                  await validarFormulario();
-                },
-                child: const Text(
-                  "Confirmar",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          )),
+        ),
+      ),
     );
   }
 }

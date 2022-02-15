@@ -4,10 +4,13 @@ void mostrarDialogCarregando(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const AbsorbPointer(
-        absorbing: true,
-        child: Center(
-          child: CircularProgressIndicator(),
+      return WillPopScope(
+        onWillPop: () async => false,
+        child: const AbsorbPointer(
+          absorbing: true,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       );
     },

@@ -66,7 +66,7 @@ class RegistroPacienteHelper {
 
   Future<void> _adicionarNovoPacienteAoBancoDeDados() async {
     idPaciente = await FirebaseService()
-        .uploadPatientData(respostas, fotoDePerfil: _fotoDePerfil);
+        .uploadDadosDoPaciente(respostas, fotoDePerfil: _fotoDePerfil);
   }
 }
 

@@ -11,41 +11,39 @@ import '../../../constants/constants.dart';
 
 Map<String, dynamic> map_equipamento = {};
 Map<String, dynamic> map_paciente = {};
+String ID = 'Adriano';
 
 class ScreenEquipamento extends StatefulWidget {
-  const ScreenEquipamento(this.idEquipamento, {Key? key}) : super(key: key);
+  const ScreenEquipamento(this.idPaciente, {Key? key}) : super(key: key);
 
-  final String idEquipamento;
+  final String idPaciente;
 
   @override
   _ScreenEquipamentoState createState() => _ScreenEquipamentoState();
 }
 
 class _ScreenEquipamentoState extends State<ScreenEquipamento> {
+  Pergunta perguntaFotoDePerfil = Pergunta("", TipoPergunta.foto, [], "", "");
   void _recarregarPagina() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
-    late Equipamento equipamento;
-
+    ID = widget.idPaciente;
     FirebaseFirestore.instance
         .collection('Equipamento')
-        .doc(widget.idEquipamento)
+        .doc(ID)
         .snapshots()
-        .map(
-      (DocumentSnapshot document) {
-        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-        map_equipamento = map_equipamento.isEmpty ? data : map_equipamento;
-        equipamento = Equipamento.fromMap(data);
-      },
-    ).toList();
+        .map((DocumentSnapshot document) {
+      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+      map_equipamento = map_equipamento.isEmpty ? data : map_equipamento;
+    }).toList();
 
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection('Equipamento')
-              .doc(widget.idEquipamento)
+              .doc(widget.idPaciente)
               .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -61,21 +59,20 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                 print(map_paciente.toString());
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text(equipamento.nome),
+                    title: Text(map_equipamento['Nome'] ?? 'sem nome'),
+                    //Text(snapshot.data!['Nome']),
                     actions: [
                       IconButton(
                         onPressed: () {
-                          setState(
-                            () {
-                              model.editar
-                                  ? model.editar = false
-                                  : model.editar = true;
-                            },
-                          );
+                          setState(() {
+                            model.editar
+                                ? model.editar = false
+                                : model.editar = true;
+                          });
                           if (model.editar) {
                             FirebaseFirestore.instance
                                 .collection('Equipamento')
-                                .doc(widget.idEquipamento)
+                                .doc(widget.idPaciente)
                                 .update(map_equipamento);
                             print(map_equipamento.toString());
                           }
@@ -140,7 +137,8 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                               children: [
                                                 FittedBox(
                                                   child: Text(
-                                                    equipamento.nome,
+                                                    map_equipamento['Nome'] ??
+                                                        'sem nome',
                                                     style: const TextStyle(
                                                       fontSize: 40,
                                                     ),
@@ -157,7 +155,6 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                                       ? Container()
                                                       : atrib == "Status"
                                                           ? EditarStatus(
-                                                              equipamento,
                                                               "Status",
                                                               _recarregarPagina,
                                                             )
@@ -332,12 +329,10 @@ class _DetalheDoStatusState extends State<DetalheDoStatus> {
 }
 
 class EditarStatus extends StatefulWidget {
-  final Equipamento equipamento;
   final String q;
   final Function() recarregarPagina;
 
   const EditarStatus(
-    this.equipamento,
     this.q,
     this.recarregarPagina, {
     Key? key,
@@ -363,7 +358,7 @@ class _EditarStatusState extends State<EditarStatus> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: DropdownButton<String>(
-              value: widget.equipamento.infoMap[widget.q] ?? 'Disponível',
+              value: map_equipamento[widget.q] ?? 'Disponível',
               icon: const Icon(Icons.arrow_downward),
               elevation: 16,
               style: const TextStyle(

@@ -61,18 +61,10 @@ class WHODAS {
           : (_somaPontuacaoTotal / _somaPesosMaxTotal * 100).ceil(),
     };
 
-    // Map<String, dynamic> infoPaciente = {
-    //   'id_paciente': paciente.id,
-    //   'pais': paciente.pais,
-    //   'estado': paciente.estado,
-    //   'cidade': paciente.cidade,
-    //   'tabagista': paciente.tabagista,
-    //   'alcool_1_vez_semana': paciente.alcool1VezSemana
-    // };
+
 
     gerarPerguntasMultiplas(perguntas);
     gerarPerguntasEscrever(perguntas);
-    // resultado.addAll(infoPaciente);
     resultado.addAll(pontuacaoDominios);
 
     print(

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:sono/utils/services/firebase.dart';
 import 'package:sono/widgets/dialogs/carregando.dart';
 
-Future<bool> mostrarDialogDeletarPaciente(context, idPaciente) async {
+Future<bool> mostrarDialogDeletarEquipmaneto(context, idEquipamento) async {
   return await showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text(
-            'Deseja deletar este paciente?',
+            'Deseja deletar este equipamento?',
           ),
           content: const Text(
             "Este processo não pode ser revertido!",
@@ -18,12 +18,13 @@ Future<bool> mostrarDialogDeletarPaciente(context, idPaciente) async {
               onPressed: () async {
                 mostrarDialogCarregando(context);
                 try {
-                  await FirebaseService().removerPaciente(idPaciente);
+                  await FirebaseService().removerEquipamento(idEquipamento);
                 } catch (e) {
                   rethrow;
                 }
-                Navigator.pop(context);
+
                 Navigator.pop(context, true);
+                Navigator.pop(context);
               },
               child: const Text(
                 "Sim",

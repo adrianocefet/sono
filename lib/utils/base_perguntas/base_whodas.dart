@@ -341,7 +341,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   },
   {
     'enunciado':
-        'D5.10 - Você ja ganhou menos dinheiro como resultado de uma condição de saúde?',
+        "D5.10 - Você ja ganhou menos dinheiro como resultado de uma condição de saúde?",
     'tipo': TipoPergunta.afirmativa,
     'pesos': <int>[],
     'codigo': 'D5.10',

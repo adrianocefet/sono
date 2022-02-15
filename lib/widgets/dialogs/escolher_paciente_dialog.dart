@@ -31,9 +31,9 @@ Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
                       padding: EdgeInsets.zero,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
                         childAspectRatio: 1,
                       ),
                       scrollDirection: Axis.vertical,
@@ -41,26 +41,29 @@ Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
                         (DocumentSnapshot document) {
                           Paciente paciente =
                               Paciente.porDocumentSnapshot(document);
-                          return InkWell(
-                            onTap: () {
-                              // map_equipamento['ID do Status'] = id;
-                              // print(map_equipamento.toString());
-                              Navigator.pop(context, paciente);
-                            },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image.network(
-                                  paciente.urlFoto ?? model.semimagem,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  paciente.nome,
-                                  //style: TextStyle(fontSize: 30,),
-                                )
-                              ],
+                          return FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: InkWell(
+                              onTap: () {
+                                // map_equipamento['ID do Status'] = id;
+                                // print(map_equipamento.toString());
+                                Navigator.pop(context, paciente);
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Image.network(
+                                    paciente.urlFoto ?? model.semimagem,
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Text(
+                                    paciente.nome,
+                                    //style: TextStyle(fontSize: 30,),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

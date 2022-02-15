@@ -3,11 +3,11 @@ import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
   String texto = 'adriano';
-  String hospital = 'HGF';
+  String hospital = 'HUWC';
   String Equipamento = 'Equipamento';
   String semimagem =
       'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
-  bool editar = true;
+  bool editar = false;
 
   void fazHome() async {
     Equipamento = 'Equipamento';

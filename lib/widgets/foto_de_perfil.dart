@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
 import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/widgets/dialogs/deletar_equipamento.dart';
 import 'package:sono/widgets/dialogs/deletar_paciente.dart';
 
 enum TipoElemento {
@@ -14,15 +15,18 @@ class FotoDePerfil extends StatefulWidget {
   final String nome;
   final String urlImagem;
   final String id;
+  final Function()? recarregarParent;
 
   late final TipoElemento _tipo;
 
-  FotoDePerfil.equipamento(this.urlImagem, this.nome, this.id, {Key? key})
+  FotoDePerfil.equipamento(this.urlImagem, this.nome, this.id,
+      {Key? key, this.recarregarParent})
       : super(key: key) {
     _tipo = TipoElemento.equipamento;
   }
 
-  FotoDePerfil.paciente(this.urlImagem, this.nome, this.id, {Key? key})
+  FotoDePerfil.paciente(this.urlImagem, this.nome, this.id,
+      {Key? key, this.recarregarParent})
       : super(key: key) {
     _tipo = TipoElemento.paciente;
   }
@@ -43,9 +47,13 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
             setState(() {
               opacity = 0.1;
             });
-            print('AAAAAAAAAAAA');
-            if (await mostrarDialogDeletarPaciente(context, widget.id)) {
+            print(widget._tipo);
 
+            if (widget._tipo == TipoElemento.paciente
+                ? await mostrarDialogDeletarPaciente(context, widget.id)
+                : model.Equipamento != 'Equipamento'
+                    ? await mostrarDialogDeletarEquipmaneto(context, widget.id)
+                    : false) {
               Navigator.pop(context);
             } else {
               setState(() {
@@ -56,9 +64,10 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
           onTap: () {
             if (widget._tipo == TipoElemento.equipamento) {
               model.Equipamento == 'Equipamento'
-                  ? setState(() {
+                  ? () {
                       model.Equipamento = widget.nome;
-                    })
+                      widget.recarregarParent!();
+                    }()
                   : Navigator.push(
                       context,
                       MaterialPageRoute(

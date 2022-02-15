@@ -39,6 +39,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
         delegate: FlowMenuDelegate(animation: animation),
         children: [
           FloatingActionButton(
+            heroTag: null,
             child: AnimatedIcon(
               icon: AnimatedIcons.menu_close,
               progress: animation,
@@ -46,6 +47,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
             onPressed: () => toggleMenu(),
           ),
           FloatingActionButton(
+            heroTag: null,
             child: const Icon(Icons.add),
             onPressed: (){
               model.adicionarEquipamento();
@@ -53,11 +55,13 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
             backgroundColor: actionButtomColor,
           ),
           FloatingActionButton(
+            heroTag: null,
             child: const Icon(Icons.save),
             onPressed: (){},
             backgroundColor: actionButtomColor,
           ),
           FloatingActionButton(
+            heroTag: null,
             child: const Icon(Icons.home),
             onPressed: (){
               model.fazHome();
