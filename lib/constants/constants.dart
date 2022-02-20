@@ -8,8 +8,12 @@ abstract class Constants {
 
   static const double fontSizeEnunciados = 15.5;
 
-  static const Color corAzulEscuroPrincipal = Color.fromRGBO(43, 56, 97, 1);
-  static const Color corAzulEscuroSecundario = Color.fromRGBO(88, 98, 143, 1);
+  static const Color corAzulEscuroPrincipal =
+      Color.fromRGBO(65, 69, 171, 1); //Color.fromRGBO(43, 56, 97, 1);
+  static const Color corAzulEscuroSecundario =
+      Color.fromRGBO(165, 166, 246, 1); //Color.fromRGBO(88, 98, 143, 1);
+
+  static const Color corVerdeClaroPrincipal = Color.fromRGBO(206, 253, 178, 1);
 
   static const alturaFotoDePerfil = 140.0;
   static const larguraFotoDePerfil = 140.0;

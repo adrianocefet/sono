@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../pagina_inicial/widgets/widgets_drawer.dart';
@@ -16,12 +17,20 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> _listaImagens = [
+      imagemHospital('HGCC', 0.9),
+      imagemHospital('HGF', 0.3),
+      imagemHospital('HM', -0.3),
+      imagemHospital('HUWC', -0.9),
+    ];
+
     return Scaffold(
       drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
       body: ScopedModelDescendant<UserModel>(
         builder: (context, child, model) {
           return Stack(
+            alignment: AlignmentDirectional.bottomCenter,
             children: [
               Image.asset(
                 'assets/imagens/Home.png',
@@ -29,10 +38,37 @@ class _HomeTabState extends State<HomeTab> {
                 height: MediaQuery.of(context).size.height,
                 fit: BoxFit.cover,
               ),
-              imagemHospital('HGCC', 0.9),
-              imagemHospital('HGF', 0.3),
-              imagemHospital('HM', -0.3),
-              imagemHospital('HUWC', -0.9),
+              Container(
+                color: Constants.corAzulEscuroPrincipal,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Divider(
+                      color: Constants.corAzulEscuroSecundario,
+                      thickness: 2.5,
+                      height: 1,
+                    ),
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: _listaImagens,
+                            ),
+                          )
+                        : GridView.count(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            shrinkWrap: true,
+                            childAspectRatio: 1.7,
+                            crossAxisSpacing: 40,
+                            mainAxisSpacing: 5,
+                            crossAxisCount: 2,
+                            children: _listaImagens,
+                          ),
+                  ],
+                ),
+              ),
             ],
           );
         },
@@ -43,19 +79,15 @@ class _HomeTabState extends State<HomeTab> {
   Widget imagemHospital(String hospital, double x) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        return Align(
-          alignment: AlignmentDirectional(x, .9),
-          child: InkWell(
-            onTap: () {
-              model.hospital = hospital;
-              model.Equipamento = 'Equipamento';
-              Scaffold.of(context).openDrawer();
-            },
-            child: Image.asset(
-              'assets/imagens/$hospital.png',
-              width: MediaQuery.of(context).size.width * 0.2,
-              fit: BoxFit.cover,
-            ),
+        return GestureDetector(
+          onTap: () {
+            model.hospital = hospital;
+            model.Equipamento = 'Equipamento';
+            Scaffold.of(context).openDrawer();
+          },
+          child: Image.asset(
+            'assets/imagens/$hospital.png',
+            width: MediaQuery.of(context).size.width * 0.2,
           ),
         );
       },

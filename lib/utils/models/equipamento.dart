@@ -14,16 +14,16 @@ class Equipamento {
   Equipamento(this.nome, this.id, this.tipo, this.status,
       {this.urlFotoDePerfil}) {
     infoMap = {
-      'nome': nome,
-      "id": id,
-      "tipo": tipo,
-      "status": status,
+      'Nome': nome,
+      "Id": id,
+      "Equipamento": tipo,
+      "Status": status,
       "urlFotoDePerfil": urlFotoDePerfil,
     };
   }
 
   Equipamento.fromMap(this.infoMap) {
-    nome = infoMap["nome"];
+    nome = infoMap["Nome"];
     id = infoMap["id"];
     tipo = infoMap["tipo"];
     status = infoMap["status"];
@@ -83,3 +83,5 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
     }
   }
 }
+
+

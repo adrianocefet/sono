@@ -26,7 +26,7 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
 
   @override
   Widget build(BuildContext context) {
-    late Equipamento equipamento;
+    //late Equipamento equipamento;
 
     FirebaseFirestore.instance
         .collection('Equipamento')
@@ -36,7 +36,7 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
       (DocumentSnapshot document) {
         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
         map_equipamento = map_equipamento.isEmpty ? data : map_equipamento;
-        equipamento = Equipamento.fromMap(data);
+        //equipamento = Equipamento.fromMap(data);
       },
     ).toList();
 
@@ -61,7 +61,7 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                 print(map_paciente.toString());
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text(equipamento.nome),
+                    title: Text(map_equipamento['Nome'] ?? "Sem nome"),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -104,29 +104,24 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                       children: [
                                         Column(
                                           children: [
-                                            model.editar
-                                                ? Container() //Resposta(perguntaFotoDePerfil)
-                                                : Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      right: 10.0,
-                                                    ),
-                                                    child: Image.network(
-                                                      map_equipamento['Foto'] ??
-                                                          model.semimagem,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.5,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.5,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 10.0,
+                                              ),
+                                              child: Image.network(
+                                                map_equipamento['Foto'] ??
+                                                    model.semimagem,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         Column(
@@ -140,7 +135,8 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                               children: [
                                                 FittedBox(
                                                   child: Text(
-                                                    equipamento.nome,
+                                                    map_equipamento['Nome'] ??
+                                                        "Sem nome",
                                                     style: const TextStyle(
                                                       fontSize: 40,
                                                     ),
@@ -157,7 +153,6 @@ class _ScreenEquipamentoState extends State<ScreenEquipamento> {
                                                       ? Container()
                                                       : atrib == "Status"
                                                           ? EditarStatus(
-                                                              equipamento,
                                                               "Status",
                                                               _recarregarPagina,
                                                             )
@@ -332,12 +327,12 @@ class _DetalheDoStatusState extends State<DetalheDoStatus> {
 }
 
 class EditarStatus extends StatefulWidget {
-  final Equipamento equipamento;
+  //final Equipamento equipamento;
   final String q;
   final Function() recarregarPagina;
 
   const EditarStatus(
-    this.equipamento,
+    //this.equipamento,
     this.q,
     this.recarregarPagina, {
     Key? key,
@@ -363,7 +358,7 @@ class _EditarStatusState extends State<EditarStatus> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: DropdownButton<String>(
-              value: widget.equipamento.infoMap[widget.q] ?? 'Disponível',
+              value: map_equipamento[widget.q] ?? 'Disponível',
               icon: const Icon(Icons.arrow_downward),
               elevation: 16,
               style: const TextStyle(
@@ -382,7 +377,7 @@ class _EditarStatusState extends State<EditarStatus> {
                       pacienteEscolhido != null ? newValue : "Disponível";
                   map_equipamento['ID do Status'] = pacienteEscolhido?.id;
                   map_paciente = pacienteEscolhido?.infoMap ?? {};
-                  await Equipamento.fromMap(map_equipamento);
+                  //await Equipamento.fromMap(map_equipamento);
                 } else {
                   map_equipamento['ID do Status'] = null;
                   map_paciente.clear();
