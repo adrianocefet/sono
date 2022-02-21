@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sono/utils/models/paciente/paciente.dart';
 
-import '../models/equipamento.dart';
+import '../models/equipamento/equipamento.dart';
 
 class FirebaseService {
   static final FirebaseService _firebaseService = FirebaseService._internal();
@@ -47,23 +47,56 @@ class FirebaseService {
 //     }
 //   }
 
+  Future<Paciente> obterPacientePorID(String idPaciente) async {
+    return await _db.collection(PACIENTE).doc(idPaciente).get().then(
+          (document) => Paciente(
+            document.data()!,
+          ),
+        );
+  }
+
+  static Future<void> atualizarEquipamento(
+      Equipamento equipamentoAtualizado) async {
+    Map<String, dynamic> dadosAtualizados = equipamentoAtualizado.infoMap;
+    dadosAtualizados.remove("id");
+
+    await FirebaseFirestore.instance
+        .collection('Equipamento')
+        .doc(equipamentoAtualizado.id)
+        .update(
+          equipamentoAtualizado.infoMap,
+        );
+  }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> streamEquipamento(
+    String idEquipamento,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('Equipamento')
+        .doc(idEquipamento)
+        .snapshots();
+  }
+
   Future<void> emprestarEquipamento(
-      Equipamento equipamento, Paciente paciente) async {
+    Equipamento equipamento,
+    Paciente paciente,
+  ) async {
     try {
       await _db.collection(EQUIPAMENTO).doc(equipamento.id).update(
         {
-          "tipo": equipamento.tipo.emString,
-          "status": {
-            "status": equipamento.status.emString,
-            "paciente_responsavel": paciente.infoMap,
-            "data_de_expedicao": FieldValue.serverTimestamp(),
-          },
+          "status": equipamento.status.emString,
+          "paciente_responsavel": paciente.id,
+          "data_de_expedicao": FieldValue.serverTimestamp(),
         },
       );
 
       await _db.collection(PACIENTE).doc(paciente.id).update(
         {
-          "equipamentos.${equipamento.id}": equipamento.infoMap,
+          "equipamentos.${equipamento.id}": {
+            "nome": equipamento.nome,
+            "data_de_expedicao": FieldValue.serverTimestamp(),
+            "foto": equipamento.urlFotoDePerfil,
+          },
         },
       );
     } catch (e) {
@@ -72,18 +105,21 @@ class FirebaseService {
   }
 
   Future<void> devolverEquipamento(
-      Equipamento equipamento, Paciente paciente) async {
+    Equipamento equipamento,
+  ) async {
     try {
       await _db.collection(EQUIPAMENTO).doc(equipamento.id).update(
         {
-          "tipo": equipamento.tipo.emString,
-          "status": {
-            "status": equipamento.status.emString,
-          }
+          "status": StatusDoEquipamento.disponivel.emString,
+          "paciente_responsavel": FieldValue.delete(),
+          "data_de_expedicao": FieldValue.delete(),
         },
       );
 
-      await _db.collection(PACIENTE).doc(paciente.id).update(
+      await _db
+          .collection(PACIENTE)
+          .doc(equipamento.idPacienteResponsavel)
+          .update(
         {
           "equipamentos.${equipamento.id}": FieldValue.delete(),
         },
@@ -121,6 +157,7 @@ class FirebaseService {
     await _db.collection(PACIENTE).doc(idEquipamento).delete();
     try {
       await deletarImagemDoFirebaseStorage(idEquipamento);
+      // ignore: empty_catches
     } on Exception {}
   }
 

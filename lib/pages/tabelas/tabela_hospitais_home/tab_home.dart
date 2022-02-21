@@ -39,7 +39,7 @@ class _HomeTabState extends State<HomeTab> {
                 fit: BoxFit.cover,
               ),
               Container(
-                color: Constants.corAzulEscuroPrincipal,
+                color: Constants.corAzulEscuroPrincipal.withOpacity(0.7),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -51,7 +51,9 @@ class _HomeTabState extends State<HomeTab> {
                     MediaQuery.of(context).orientation == Orientation.landscape
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 10),
+                              horizontal: 5.0,
+                              vertical: 10,
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: _listaImagens,

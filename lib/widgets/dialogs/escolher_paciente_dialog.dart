@@ -53,7 +53,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Image.network(
-                                    paciente.urlFoto ?? model.semimagem,
+                                    paciente.urlFotoDePerfil ?? model.semimagem,
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,
