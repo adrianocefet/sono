@@ -56,7 +56,7 @@ class _BotaoMenuState extends State<BotaoMenu> with SingleTickerProviderStateMix
           ),
           FloatingActionButton(
             heroTag: null,
-            child: const Icon(Icons.save),
+            child: const Icon(Icons.sort_by_alpha),
             onPressed: (){},
             backgroundColor: actionButtomColor,
           ),
