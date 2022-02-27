@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 
 abstract class Constants {
   static const Color corPrincipalQuestionarios =
-      Color.fromARGB(255, 158, 212, 147);
+      Color.fromARGB(255, 137, 206, 123);
   static const Color corSecundariaQuestionarios =
       Color.fromARGB(221, 18, 63, 9);
 
   static const double fontSizeEnunciados = 15.5;
 
-  static const Color corAzulEscuroPrincipal =
-      Color.fromRGBO(65, 69, 171, 1); //Color.fromRGBO(43, 56, 97, 1);
-  static const Color corAzulEscuroSecundario =
-      Color.fromRGBO(165, 166, 246, 1); //Color.fromRGBO(88, 98, 143, 1);
-
+  static const Color corAzulEscuroPrincipal = Color.fromRGBO(65, 69, 171, 1);
+  static const Color corAzulEscuroSecundario = Color.fromRGBO(165, 166, 246, 1);
   static const Color corVerdeClaroPrincipal = Color.fromRGBO(206, 253, 178, 1);
+  static const Color corCinzaPrincipal = Color.fromRGBO(196, 196, 196, 1);
 
   static const alturaFotoDePerfil = 140.0;
   static const larguraFotoDePerfil = 140.0;
 
   static const domTotalColor = Color(0xff023e8a);
-  static const dom1Color = Color(0XFF5a189a); //Colors.deepPurpleAccent;
+  static const dom1Color = Color(0XFF5a189a);
   static const dom2Color = Color(0XFFd90816);
   static const dom3Color = Color(0XFF7f4f24);
   static const dom4Color = Color(0XFF028090);
@@ -68,8 +66,6 @@ abstract class Constants {
     'Descrição',
     'Equipamento',
     'Status',
-    'Data de Expedição',
-    'Paciente Responsável',
   ];
 
   static const Map<String, String> nomesDominiosWHODASMap = {

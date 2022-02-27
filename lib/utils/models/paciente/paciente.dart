@@ -6,11 +6,14 @@ class Paciente {
   late final String hospital;
   late final String? id;
   late final String? urlFotoDePerfil;
+  late final List<String> equipamentosEmprestados;
 
   Paciente(this.infoMap) {
     nome = infoMap["Nome"];
     hospital = infoMap["Hospital"];
     urlFotoDePerfil = infoMap["Foto"];
+    id = infoMap["id"];
+    equipamentosEmprestados = infoMap["equipamentos"];
   }
 
   Paciente.porDocumentSnapshot(DocumentSnapshot document) {
@@ -19,5 +22,7 @@ class Paciente {
     nome = infoMap["Nome"];
     hospital = infoMap["Hospital"];
     urlFotoDePerfil = infoMap["Foto"];
+    equipamentosEmprestados =
+        List<String>.from((infoMap["equipamentos"] as List?) ?? <String>[]);
   }
 }

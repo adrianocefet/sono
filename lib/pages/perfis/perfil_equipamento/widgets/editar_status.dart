@@ -78,10 +78,6 @@ class _EditarStatusState extends State<EditarStatus> {
                     mostrarMensagemErro(context, e.toString());
                   }
                 }
-
-                print(map_equipamento.toString());
-
-                //map_equipamento[q] = newValue!;
               },
               items: <String>[
                 'Disponível',

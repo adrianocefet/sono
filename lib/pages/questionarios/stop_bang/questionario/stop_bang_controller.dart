@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/questionarios/stop_bang/questionario/widgets/resposta_afirmativa_stopbang.dart';
 import 'package:sono/utils/base_perguntas/base_stopbang.dart';
-import 'package:sono/utils/helpers/respostas.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/models/questionario.dart';
 
 class StopBangController implements Questionario {
-  static final List<Pergunta> _perguntas = baseStopBang.map((e) {
-    return Pergunta(
-      e['enunciado'],
-      e['tipo'],
-      e['pesos'],
-      e['dominio'],
-      e['codigo'],
-      validador: e['validador'],
-    );
-  }).toList();
+  final List<Pergunta> _perguntas = baseStopBang.map(
+    (e) {
+      return Pergunta(
+        e['enunciado'],
+        e['tipo'],
+        e['pesos'],
+        e['dominio'],
+        e['codigo'],
+        validador: e['validador'],
+      );
+    },
+  ).toList();
 
-  static final List<Resposta> _respostas = _perguntas
-      .map(
-        (e) => Resposta(
-          e,
-          formularioEWHODAS: false,
-          corTexto: Colors.black,
-        ),
-      )
-      .toList();
+  dynamic _resultado;
 
-  static dynamic _resultado;
-
-  List<Resposta> get listaDeRespostas => _respostas;
+  List<RespostaAfirmativaStopBang> listaDeRespostas(
+          Future<void> Function() passarPagina) =>
+      _perguntas
+          .map(
+            (e) => RespostaAfirmativaStopBang(
+              pergunta: e,
+              passarPagina: passarPagina,
+            ),
+          )
+          .toList();
 
   @override
   List<Pergunta> get listaDePerguntas => _perguntas;
@@ -42,20 +43,20 @@ class StopBangController implements Questionario {
     Map mapaDeRepostas = {};
 
     for (Pergunta pergunta in _perguntas) {
-      int resposta = pergunta.resposta as int;
+      int? resposta = pergunta.resposta;
 
       mapaDeRepostas[pergunta.codigo] = pergunta.resposta;
 
       if (_perguntas.indexOf(pergunta) <= 3) {
-        pontuacaoDasPerguntasIniciais += resposta;
+        pontuacaoDasPerguntasIniciais += resposta!;
       }
 
-      pontuacaoTotal += resposta;
+      pontuacaoTotal += resposta!;
     }
 
-    print("INICIAIS $pontuacaoDasPerguntasIniciais");
-    print("TOTAL $pontuacaoTotal");
-    print(mapaDeRepostas);
+    // print("INICIAIS $pontuacaoDasPerguntasIniciais");
+    // print("TOTAL $pontuacaoTotal");
+    // print(mapaDeRepostas);
 
     if (pontuacaoDasPerguntasIniciais >= 2) {
       for (Pergunta pergunta in _perguntas.where(
@@ -81,7 +82,13 @@ class StopBangController implements Questionario {
 
   @override
   ResultadoStopBang? validarFormulario(GlobalKey<FormState> formKey) {
-    return _gerarResultadoDoQuestionario();
+    if (!_perguntas.any((element) {
+      return element.resposta == null;
+    })) {
+      formKey.currentState!.save();
+      return _gerarResultadoDoQuestionario();
+    }
+    return null;
   }
 }
 

@@ -6,6 +6,8 @@ import 'package:sono/utils/models/paciente/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 import 'package:sono/widgets/dialogs/error_message.dart';
 
+import '../../perfil_paciente/dialogs/devolver_equipamento_dialog.dart';
+
 class DisplayDetalheDoStatus extends StatefulWidget {
   final Equipamento equipamento;
   const DisplayDetalheDoStatus({
@@ -34,7 +36,6 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
           return Container();
         } else if (snapshot.hasData) {
           Paciente? pacienteResponsavel = snapshot.data;
-          print(pacienteResponsavel);
           return Column(
             children: [
               const Divider(
@@ -62,8 +63,8 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
                             pacienteResponsavel.urlFotoDePerfil != null
                         ? pacienteResponsavel.urlFotoDePerfil!
                         : 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
-                    width: 100,
-                    height: 100,
+                    width: 150,
+                    height: 150,
                     fit: BoxFit.cover,
                   ),
                 ],
@@ -79,6 +80,19 @@ Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
                 style: const TextStyle(
                   fontSize: 30,
                   color: Colors.black,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () async => await mostrarDialogDevolverEquipamento(
+                    context, widget.equipamento),
+                child: const Text(
+                  "Cancelar empréstimo",
+                  style: TextStyle(
+                    fontSize: 40,
+                  ),
                 ),
               ),
             ],

@@ -17,42 +17,27 @@ class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-//   String? get getUserEmail => _auth.currentUser?.email;
-//   String? get getUserID => _auth.currentUser?.uid;
-//   User? get getUser => _auth.currentUser;
-
-  static const String PACIENTE = 'Paciente';
-  static const String EQUIPAMENTO = "Equipamento";
-//   static const String USUARIOS = 'usuarios';
-
-//   Future removeWhodasData(String whodasID, String pacienteID,
-//       {String? dataUltimaSessao}) async {
-//     try {
-//       await _db.collection('whodas').doc(whodasID).delete();
-//       await _db.collection(PACIENTE).doc(pacienteID).update(
-//         {
-//           'whodas.$whodasID': FieldValue.delete(),
-//         },
-//       );
-
-//       await _db.collection(USUARIOS).doc(_auth.currentUser?.uid).update(
-//         {
-//           'paciente.$pacienteID.ultima_sessao': dataUltimaSessao,
-//         },
-//       );
-
-//       await Usuario().updateInfo();
-//     } catch (e) {
-//       throw e;
-//     }
-//   }
+  static const String _stringPaciente = 'Paciente';
+  static const String _stringEquipamento = "Equipamento";
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
-    return await _db.collection(PACIENTE).doc(idPaciente).get().then(
-          (document) => Paciente(
-            document.data()!,
+    return await _db.collection(_stringPaciente).doc(idPaciente).get().then(
+          (document) => Paciente.porDocumentSnapshot(
+            document,
           ),
         );
+  }
+
+  Future<Equipamento> obterEquipamentoPorID(String idEquipamento) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _db.collection(_stringEquipamento).doc(idEquipamento).get();
+
+    Map<String, dynamic> dadosEquipamento = snapshot.data()!;
+    dadosEquipamento["id"] = idEquipamento;
+
+    return Equipamento.porMap(
+      dadosEquipamento,
+    );
   }
 
   static Future<void> atualizarEquipamento(
@@ -82,7 +67,7 @@ class FirebaseService {
     Paciente paciente,
   ) async {
     try {
-      await _db.collection(EQUIPAMENTO).doc(equipamento.id).update(
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": equipamento.status.emString,
           "paciente_responsavel": paciente.id,
@@ -90,13 +75,9 @@ class FirebaseService {
         },
       );
 
-      await _db.collection(PACIENTE).doc(paciente.id).update(
+      await _db.collection(_stringPaciente).doc(paciente.id).update(
         {
-          "equipamentos.${equipamento.id}": {
-            "nome": equipamento.nome,
-            "data_de_expedicao": FieldValue.serverTimestamp(),
-            "foto": equipamento.urlFotoDePerfil,
-          },
+          "equipamentos": FieldValue.arrayUnion([equipamento.id])
         },
       );
     } catch (e) {
@@ -108,7 +89,7 @@ class FirebaseService {
     Equipamento equipamento,
   ) async {
     try {
-      await _db.collection(EQUIPAMENTO).doc(equipamento.id).update(
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.disponivel.emString,
           "paciente_responsavel": FieldValue.delete(),
@@ -117,11 +98,11 @@ class FirebaseService {
       );
 
       await _db
-          .collection(PACIENTE)
+          .collection(_stringPaciente)
           .doc(equipamento.idPacienteResponsavel)
           .update(
         {
-          "equipamentos.${equipamento.id}": FieldValue.delete(),
+          "equipamentos": FieldValue.arrayRemove([equipamento.id]),
         },
       );
     } catch (e) {
@@ -130,7 +111,7 @@ class FirebaseService {
   }
 
   Future removerPaciente(String idPaciente) async {
-    await _db.collection(PACIENTE).doc(idPaciente).delete();
+    await _db.collection(_stringPaciente).doc(idPaciente).delete();
     try {
       await deletarImagemDoFirebaseStorage(idPaciente);
     } on Exception {}
@@ -140,7 +121,7 @@ class FirebaseService {
     String? idPaciente;
     try {
       QuerySnapshot query = await _db
-          .collection(PACIENTE)
+          .collection(_stringPaciente)
           .where("Nome", isEqualTo: data['Nome'])
           .where("Hospital", isEqualTo: data["Hospital"])
           .get();
@@ -154,7 +135,7 @@ class FirebaseService {
   }
 
   Future removerEquipamento(String idEquipamento) async {
-    await _db.collection(PACIENTE).doc(idEquipamento).delete();
+    await _db.collection(_stringPaciente).doc(idEquipamento).delete();
     try {
       await deletarImagemDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches
@@ -163,7 +144,7 @@ class FirebaseService {
 
   Future<String> uploadDadosDoPaciente(Map<String, dynamic> data,
       {File? fotoDePerfil}) async {
-    String idPaciente = _db.collection(PACIENTE).doc().id;
+    String idPaciente = _db.collection(_stringPaciente).doc().id;
     String urlImagem = '';
 
     try {
@@ -175,7 +156,7 @@ class FirebaseService {
       }
       if (urlImagem.isNotEmpty) data['Foto'] = urlImagem;
 
-      await _db.collection(PACIENTE).doc(idPaciente).set(data);
+      await _db.collection(_stringPaciente).doc(idPaciente).set(data);
     } catch (e) {
       rethrow;
     }
@@ -186,7 +167,7 @@ class FirebaseService {
   Future<String> updateDadosDoPaciente(
       Map<String, dynamic> data, String idPaciente) async {
     try {
-      await _db.collection(PACIENTE).doc(idPaciente).update(data);
+      await _db.collection(_stringPaciente).doc(idPaciente).update(data);
     } catch (e) {
       print(e);
       rethrow;
@@ -194,80 +175,6 @@ class FirebaseService {
 
     return idPaciente;
   }
-
-//   Future uploadWhodasData(Map<String, dynamic> data, String idPaciente) async {
-//     String whodasID = _db.collection('whodas').doc().id;
-//     try {
-//       var dataDeRealizacao = FieldValue.serverTimestamp();
-//       data['data'] = dataDeRealizacao;
-//       await _db.collection('whodas').doc(whodasID).set(data);
-
-//       await _db.collection(PACIENTE).doc(idPaciente).update(
-//         {
-//           'num_total_sessoes': FieldValue.increment(1),
-//           'whodas.$whodasID': {
-//             'data': dataDeRealizacao,
-//             'dom_1': data['dom_1'],
-//             'dom_2': data['dom_2'],
-//             'dom_3': data['dom_3'],
-//             'dom_4': data['dom_4'],
-//             'dom_51': data['dom_51'],
-//             'dom_52': data['dom_52'],
-//             'dom_6': data['dom_6'],
-//             'total': data['total']
-//           }
-//         },
-//       );
-
-//       DocumentSnapshot snapshot =
-//           await _db.collection(PACIENTE).doc(idPaciente).get();
-//       Map paciente = snapshot.data() as Map;
-//       Map usuarios = paciente['usuarios'];
-
-//       for (var usuario in usuarios.entries) {
-//         await _db.collection(USUARIOS).doc(usuario.key).update(
-//           {
-//             'paciente.$idPaciente.ultima_sessao': dataDeRealizacao,
-//           },
-//         );
-
-//         if (usuario.key == _auth.currentUser?.uid)
-//           await _db.collection(USUARIOS).doc(usuario.key).update(
-//             {
-//               'paciente.$idPaciente.num_parcial_sessoes':
-//                   FieldValue.increment(1),
-//               'paciente.$idPaciente.num_total_sessoes':
-//                   FieldValue.increment(1),
-//             },
-//           );
-//       }
-//     } catch (e) {
-//       print(e);
-//       throw e;
-//     }
-//   }
-
-  Future<Paciente> getPatient(String id) async {
-    DocumentSnapshot snapshot = await _db.collection(PACIENTE).doc(id).get();
-    Map<String, dynamic> dataMap = snapshot.data() as Map<String, dynamic>;
-    dataMap['id'] = id;
-
-    try {
-      //dataMap['foto_perfil'] = await getProfileImageFromFirebaseStorage(id: id);
-    } catch (e) {}
-
-    return Paciente(dataMap);
-  }
-
-  // Future<Map<String, dynamic>?> getWhodasData(String whodasID) async {
-  //   try {
-  //     DocumentSnapshot<Map<String, dynamic>> snapshot =
-  //         await _db.collection('whodas').doc(whodasID).get();
-  //     return snapshot.data();
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
 
   Future<String> uploadImageToFirebaseStorage({
     required File imageFile,
@@ -287,20 +194,4 @@ class FirebaseService {
 
     await ref.delete();
   }
-
-//   Future<Uint8List?> getProfileImageFromFirebaseStorage({
-//     String? id,
-//     bool fotoDePerfilDePaciente = true,
-//   }) async {
-//     Reference? ref;
-//     try {
-//       ref = _storage.ref(
-//         '${fotoDePerfilDePaciente ? 'fotos_de_perfil_paciente' : 'fotos_de_perfil_usuarios'}/perfil_${id ?? _auth.currentUser!.uid}',
-//       );
-
-//       return ref.getData();
-//     } catch (e) {
-//       return null;
-//     }
-//   }
 }

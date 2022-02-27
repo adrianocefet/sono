@@ -61,8 +61,6 @@ class WHODAS {
           : (_somaPontuacaoTotal / _somaPesosMaxTotal * 100).ceil(),
     };
 
-
-
     gerarPerguntasMultiplas(perguntas);
     gerarPerguntasEscrever(perguntas);
     resultado.addAll(pontuacaoDominios);

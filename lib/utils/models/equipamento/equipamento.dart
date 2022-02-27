@@ -51,27 +51,30 @@ class Equipamento {
     this.urlFotoDePerfil,
   });
 
-  Equipamento.fromMap(equipamentoInfoMap) {
+  Equipamento.porMap(equipamentoInfoMap) {
     nome = equipamentoInfoMap["Nome"] ?? equipamentoInfoMap["nome"];
     id = equipamentoInfoMap["id"];
+    idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
+    urlFotoDePerfil =
+        equipamentoInfoMap["foto_de_perfil"] ?? equipamentoInfoMap["Foto"];
+    descricao =
+        equipamentoInfoMap["descricao"] ?? equipamentoInfoMap["Descrição"];
+
     tipo = _lerTipoDeEquipamentoDoBancoDeDados(
       equipamentoInfoMap["tipo"] ?? equipamentoInfoMap["Equipamento"],
     )!;
-    descricao =
-        equipamentoInfoMap["descricao"] ?? equipamentoInfoMap["Descrição"];
-    status = _lerStatusDoEquipamentoDoBancoDeDados(
-      equipamentoInfoMap["status"] ?? equipamentoInfoMap["Status"],
-    )!;
-    idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
 
-    urlFotoDePerfil =
-        equipamentoInfoMap["foto_de_perfil"] ?? equipamentoInfoMap["Foto"];
+    status = _lerStatusDoEquipamentoDoBancoDeDados(
+      equipamentoInfoMap["status"] ??
+          equipamentoInfoMap["Status"] ??
+          "Disponível",
+    )!;
 
     infoMap = equipamentoInfoMap;
   }
 
   String? _formatarData(DateTime? data) =>
-      DateFormat("dd/MM/yyyy").format(data!);
+      DateFormat("dd/MM/yy").format(data!);
 
   StatusDoEquipamento? _lerStatusDoEquipamentoDoBancoDeDados(
     String status,

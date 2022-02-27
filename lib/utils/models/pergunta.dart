@@ -8,7 +8,7 @@ class Pergunta {
   dynamic codigo = '';
   List<int> pesos = [];
   String dominio = '';
-  int? resposta = 0;
+  int? resposta;
   String respostaExtenso = '';
   List<String?>? respostaLocalizacao;
   List<String>? opcoes = [''];
@@ -29,7 +29,6 @@ class Pergunta {
   void setRespostaExtenso(String respostaExtenso) =>
       this.respostaExtenso = respostaExtenso;
 
-
   void setRespostaArquivo(File? respostaArquivo) =>
       this.respostaArquivo = respostaArquivo;
 
@@ -38,16 +37,12 @@ class Pergunta {
         ['D5.1', 'D5.5'].contains(codigo) != true) {
       whodas?.condicoesExtraDom51[codigo] =
           [0, 5].contains(resposta) != true ? true : false;
-      print(whodas?.condicoesExtraDom51);
-      print(whodas?.habilitar501);
     }
 
     if (dominio.contains('dom_52') &&
         ['D5.9', 'D5.10'].contains(codigo) != true) {
       whodas?.condicoesExtraDom52[codigo] =
           [0, 5].contains(resposta) != true ? true : false;
-      print(whodas?.condicoesExtraDom52);
-      print(whodas?.habilitar502);
     }
 
     this.resposta = resposta;

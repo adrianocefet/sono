@@ -3,6 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 List<Map<String, dynamic>> baseStopBang = [
   {
     'enunciado': """*Roncos?*
+
 Você ronca alto (alto o suficiente que pode ser ouvido através de portas fechadas ou seu companheiro cutuca você à noite para parar de roncar)?""",
     'tipo': TipoPergunta.afirmativa,
     'pesos': <int>[],
@@ -12,6 +13,7 @@ Você ronca alto (alto o suficiente que pode ser ouvido através de portas fecha
   },
   {
     'enunciado': """*Cansado?*
+
 Você frequentemente se sente cansado, exausto ou sonolento durante o dia (como, por exemplo, adormecer enquanto dirige)? """,
     'tipo': TipoPergunta.afirmativa,
     'pesos': <int>[],
@@ -21,7 +23,8 @@ Você frequentemente se sente cansado, exausto ou sonolento durante o dia (como,
   },
   {
     'enunciado': """*Observou?*
-Alguém observou que você para de respirar ou engasga/fica ofegante durante o seu sono?""",
+
+Alguém observou que você para de respirar ou engasga ou fica ofegante durante o seu sono?""",
     'tipo': TipoPergunta.afirmativa,
     'pesos': <int>[],
     'dominio': '',
@@ -30,6 +33,7 @@ Alguém observou que você para de respirar ou engasga/fica ofegante durante o s
   },
   {
     'enunciado': """*Pressão?*
+    
 Você tem ou está sendo tratado para pressão sanguínea alta?""",
     'tipo': TipoPergunta.afirmativa,
     'pesos': <int>[],

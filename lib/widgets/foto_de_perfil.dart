@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
+import 'package:sono/pages/perfis/perfil_paciente/perfil_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/widgets/dialogs/deletar_equipamento.dart';
@@ -78,7 +79,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ScreenPaciente(widget.id),
+                  builder: (context) => PerfilDoPaciente(widget.id),
                 ),
               );
             }

@@ -81,7 +81,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget imagemHospital(String hospital, double x) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        return GestureDetector(
+        return InkWell(
           onTap: () {
             model.hospital = hospital;
             model.Equipamento = 'Equipamento';

@@ -56,7 +56,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                 Map<String, dynamic> dadosEquipamento = snapshot.data!.data()!;
                 dadosEquipamento["id"] = snapshot.data!.id;
 
-                Equipamento equipamento = Equipamento.fromMap(dadosEquipamento);
+                Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
 
                 return Scaffold(
                   appBar: AppBar(
@@ -70,7 +70,6 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                 : model.editar = true;
                           });
                           if (!model.editar) {
-                            print(equipamento.infoMap);
                             FirebaseService.atualizarEquipamento(equipamento);
                           }
                         },
@@ -89,7 +88,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                right: 10.0,
+                                right: 20.0,
                               ),
                               child: Image.network(
                                 equipamento.urlFotoDePerfil ?? model.semimagem,

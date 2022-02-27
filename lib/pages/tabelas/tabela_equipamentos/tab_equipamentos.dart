@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
@@ -108,41 +107,41 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
     );
   }
 
-  Widget _fazGrid(String imagem, String nome, String id) {
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model) {
-        return InkWell(
-          onTap: () {
-            model.Equipamento == 'Equipamento'
-                ? setState(() {
-                    model.Equipamento = nome;
-                  })
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ScreenEquipamento(id),
-                    ),
-                  );
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Image.network(
-                imagem,
-                width: MediaQuery.of(context).size.width * 0.25,
-                height: MediaQuery.of(context).size.width * 0.25,
-                fit: BoxFit.cover,
-              ),
-              Text(
-                nome,
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.03,
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // Widget _fazGrid(String imagem, String nome, String id) {
+  //   return ScopedModelDescendant<UserModel>(
+  //     builder: (context, child, model) {
+  //       return InkWell(
+  //         onTap: () {
+  //           model.Equipamento == 'Equipamento'
+  //               ? setState(() {
+  //                   model.Equipamento = nome;
+  //                 })
+  //               : Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (context) => ScreenEquipamento(id),
+  //                   ),
+  //                 );
+  //         },
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.max,
+  //           children: [
+  //             Image.network(
+  //               imagem,
+  //               width: MediaQuery.of(context).size.width * 0.25,
+  //               height: MediaQuery.of(context).size.width * 0.25,
+  //               fit: BoxFit.cover,
+  //             ),
+  //             Text(
+  //               nome,
+  //               style: TextStyle(
+  //                 fontSize: MediaQuery.of(context).size.width * 0.03,
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
