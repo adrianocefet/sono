@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/models/paciente/paciente.dart';
+import '../../../../utils/models/paciente.dart';
 
 class AtributoPaciente extends StatelessWidget {
   final String atributo;

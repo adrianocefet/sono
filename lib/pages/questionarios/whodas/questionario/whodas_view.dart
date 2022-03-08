@@ -3,9 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/whodas/resultado/resultado_whodas.dart';
 import 'package:sono/utils/base_perguntas/base_whodas.dart';
-import 'package:sono/utils/helpers/respostas.dart';
+import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/helpers/whodas.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/widgets/dialogs/error_message.dart';
 import 'widgets/dominio_widget.dart';
@@ -51,7 +51,7 @@ class _WHODASViewState extends State<WHODASView> {
     for (var i = 0; i < perguntas.length; i++) {
       if (perguntas[i].dominio == '') {
         respostas.add(
-          Resposta(
+          RespostaWidget(
             perguntas[i],
             paciente: widget.paciente,
             notifyParent: () {},
@@ -64,14 +64,14 @@ class _WHODASViewState extends State<WHODASView> {
     respostas.insertAll(
       respostas.indexWhere(
         (resposta) =>
-            resposta.runtimeType == Resposta &&
-            (resposta as Resposta).pergunta.codigo == 'H1',
+            resposta.runtimeType == RespostaWidget &&
+            (resposta as RespostaWidget).pergunta.codigo == 'H1',
       ),
       [
-        for (int i = 1; i < Constants.codigosDominiosWHODAS.length; i++)
+        for (int i = 1; i < Constantes.codigosDominiosWHODAS.length; i++)
           Dominio(
             whodas: whodas,
-            codigoDominio: Constants.codigosDominiosWHODAS[i],
+            codigoDominio: Constantes.codigosDominiosWHODAS[i],
             perguntas: perguntas,
           )
       ],
@@ -130,7 +130,7 @@ class _WHODASViewState extends State<WHODASView> {
       const Padding(
         padding: EdgeInsets.only(bottom: 15),
         child: Divider(
-          color: Constants.corAzulEscuroSecundario,
+          color: Constantes.corAzulEscuroSecundario,
           thickness: 2.5,
           indent: 30,
           endIndent: 30,
@@ -156,7 +156,7 @@ class _WHODASViewState extends State<WHODASView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Constants.corAzulEscuroPrincipal,
+          backgroundColor: Constantes.corAzulEscuroPrincipal,
           title: const Text('WHODAS'),
           centerTitle: true,
         ),
@@ -174,7 +174,7 @@ class _WHODASViewState extends State<WHODASView> {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: FlatButton(
-              color: Constants.corAzulEscuroPrincipal,
+              color: Constantes.corAzulEscuroPrincipal,
               onPressed: () async {
                 for (var p in perguntas) print("${p.codigo} : ${p.resposta}");
                 await validarFormulario();

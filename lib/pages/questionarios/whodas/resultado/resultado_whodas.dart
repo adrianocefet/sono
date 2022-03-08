@@ -54,7 +54,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
     return WillPopScope(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Constants.corAzulEscuroPrincipal,
+            backgroundColor: Constantes.corAzulEscuroPrincipal,
             title: const Text('Resultados'),
             centerTitle: true,
             actions: <Widget>[],
@@ -78,7 +78,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Constants.corAzulEscuroSecundario),
+                                  color: Constantes.corAzulEscuroSecundario),
                             ),
                             const SizedBox(
                               height: 5,
@@ -88,7 +88,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                               width: 80,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Constants.domTotalColor,
+                                color: Constantes.domTotalColor,
                               ),
                               child: Center(
                                 child: Text(
@@ -107,7 +107,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                       const Padding(
                         padding: EdgeInsets.only(bottom: 0),
                         child: Divider(
-                          color: Constants.corAzulEscuroSecundario,
+                          color: Constantes.corAzulEscuroSecundario,
                           thickness: 2.5,
                           indent: 30,
                           endIndent: 30,
@@ -124,7 +124,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10, bottom: 15),
                         child: Divider(
-                          color: Constants.corAzulEscuroPrincipal,
+                          color: Constantes.corAzulEscuroPrincipal,
                           thickness: 2.5,
                           indent: 30,
                           endIndent: 30,
@@ -140,7 +140,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(15),
                                 ),
-                                color: Constants.corAzulEscuroPrincipal,
+                                color: Constantes.corAzulEscuroPrincipal,
                               ),
                               child: FlatButton(
                                 onPressed: () async => salvarFormulario(),
@@ -183,7 +183,7 @@ class Pontuacao extends StatelessWidget {
           shape: BoxShape.circle,
           color: pontuacao < 0
               ? Colors.grey
-              : Constants.coresDominiosWHODASMap[dominio],
+              : Constantes.coresDominiosWHODASMap[dominio],
         ),
         child: Center(
           child: Text(
@@ -197,11 +197,11 @@ class Pontuacao extends StatelessWidget {
         ),
       ),
       title: Text(
-          'Domínio de ' + (Constants.nomesDominiosWHODASMap[dominio] ?? ''),
+          'Domínio de ' + (Constantes.nomesDominiosWHODASMap[dominio] ?? ''),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
-            color: Constants.coresDominiosWHODASMap[dominio],
+            color: Constantes.coresDominiosWHODASMap[dominio],
             fontWeight: FontWeight.bold,
             decoration: pontuacao < 0
                 ? TextDecoration.lineThrough

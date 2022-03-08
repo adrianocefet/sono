@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/helpers/respostas.dart';
+import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/helpers/whodas.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
@@ -57,7 +57,7 @@ class _DominioState extends State<Dominio> {
       EnunDominio(dominio: widget.codigoDominio),
       ListTile(
         leading: Switch(
-          activeColor: Constants.coresDominiosWHODASMap[widget.codigoDominio],
+          activeColor: Constantes.coresDominiosWHODASMap[widget.codigoDominio],
           value: _dominioAplicavel,
           onChanged: _mudarEstadoDominio,
         ),
@@ -69,7 +69,7 @@ class _DominioState extends State<Dominio> {
         ),
       ),
       Divider(
-        color: Constants.coresDominiosWHODASMap[widget.codigoDominio],
+        color: Constantes.coresDominiosWHODASMap[widget.codigoDominio],
         endIndent: 30,
         indent: 30,
         thickness: 2,
@@ -81,7 +81,7 @@ class _DominioState extends State<Dominio> {
         Pergunta pergunta = widget.perguntas[i];
         dynamic codigo = pergunta.codigo;
 
-        Resposta respostaWidget = Resposta(
+        RespostaWidget respostaWidget = RespostaWidget(
           pergunta,
           notifyParent: () => habilitarPerguntasCondicionais(
             whodas.habilitar501,

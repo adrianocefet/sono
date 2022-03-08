@@ -8,10 +8,10 @@ class EnunDominio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? tituloDominio = Constants.titulosDominiosWHODASMap[dominio];
+    String? tituloDominio = Constantes.titulosDominiosWHODASMap[dominio];
 
-    String nomeDominio = Constants.nomesDominiosWHODASMap[dominio] ?? '';
-    Color cor = Constants.coresDominiosWHODASMap[dominio] ?? Colors.blue;
+    String nomeDominio = Constantes.nomesDominiosWHODASMap[dominio] ?? '';
+    Color cor = Constantes.coresDominiosWHODASMap[dominio] ?? Colors.blue;
     int i = ['dom_51', 'dom_52', 'dom_6'].contains(dominio) ? 1 : 0;
 
     return ListTile(

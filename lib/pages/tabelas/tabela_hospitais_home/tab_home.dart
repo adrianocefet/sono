@@ -39,12 +39,12 @@ class _HomeTabState extends State<HomeTab> {
                 fit: BoxFit.cover,
               ),
               Container(
-                color: Constants.corAzulEscuroPrincipal.withOpacity(0.7),
+                color: Constantes.corAzulEscuroPrincipal.withOpacity(0.7),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Divider(
-                      color: Constants.corAzulEscuroSecundario,
+                      color: Constantes.corAzulEscuroSecundario,
                       thickness: 2.5,
                       height: 1,
                     ),
@@ -84,7 +84,7 @@ class _HomeTabState extends State<HomeTab> {
         return InkWell(
           onTap: () {
             model.hospital = hospital;
-            model.Equipamento = 'Equipamento';
+            model.equipamento = 'Equipamento';
             Scaffold.of(context).openDrawer();
           },
           child: Image.asset(

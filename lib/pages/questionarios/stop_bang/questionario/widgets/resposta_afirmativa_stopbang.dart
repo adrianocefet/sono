@@ -36,7 +36,7 @@ class _RespostaAfirmativaStopBangState
           maintainState: true,
         ),
         Container(
-          color: Constants.corAzulEscuroSecundario,
+          color: Constantes.corAzulEscuroSecundario,
           constraints: BoxConstraints(
             minHeight: MediaQuery.of(context).size.height * 0.15,
             minWidth: double.infinity,
@@ -48,7 +48,7 @@ class _RespostaAfirmativaStopBangState
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.black,
-              fontSize: Constants.fontSizeEnunciados,
+              fontSize: Constantes.fontSizeEnunciados,
             ),
           ),
         ),
@@ -124,7 +124,7 @@ class _BotaoState extends State<_Botao> {
         minimumSize: const Size.fromHeight(50),
         primary: groupValue == value
             ? value == 0 ? Colors.green : Colors.red
-            : Constants.corCinzaPrincipal,
+            : Constantes.corCinzaPrincipal,
       ),
       onPressed: () {
         widget.pergunta.setResposta(value);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/equipamento/equipamento.dart';
+import 'package:sono/utils/models/equipamento.dart';
 
 class EditarAtributoEquipamento extends StatelessWidget {
   final String atributo;

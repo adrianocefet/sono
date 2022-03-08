@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_paciente/widgets/atributo_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/widgets/editar_atributo_paciente.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'widgets/equipamentos_emprestados.dart';
 
@@ -97,7 +97,7 @@ class _PerfilDoPacienteState extends State<PerfilDoPaciente> {
                                           )
                                         : Container(),
                                     for (String atrib
-                                        in Constants.titulosAtributosPacientes)
+                                        in Constantes.titulosAtributosPacientes)
                                       model.editar
                                           ? EditarAtributoPaciente(
                                               atributo: atrib,

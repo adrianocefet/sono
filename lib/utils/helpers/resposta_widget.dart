@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/pages/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/widgets/formulario/afirmativa_resposta.dart';
 import 'package:sono/widgets/formulario/data_resposta.dart';
 import 'package:sono/widgets/formulario/dropdown_resposta.dart';
+import 'package:sono/widgets/formulario/extenso_resposta_cadastro.dart';
 import 'package:sono/widgets/formulario/extenso_resposta.dart';
 import 'package:sono/widgets/formulario/foto_perfil_resposta.dart';
 import 'package:sono/widgets/formulario/marcar_resposta.dart';
 import 'package:sono/widgets/formulario/multipla_resposta.dart';
 
-class Resposta extends StatefulWidget {
+class RespostaWidget extends StatefulWidget {
   final Pergunta pergunta;
   final Paciente? paciente;
   final Function()? notifyParent;
@@ -18,7 +20,7 @@ class Resposta extends StatefulWidget {
   final dynamic autoPreencher;
   final bool formularioEWHODAS;
 
-  const Resposta(this.pergunta,
+  const RespostaWidget(this.pergunta,
       {this.notifyParent,
       this.paciente,
       this.corTexto = Colors.black,
@@ -28,10 +30,10 @@ class Resposta extends StatefulWidget {
       : super(key: key);
 
   @override
-  _RespostaState createState() => _RespostaState();
+  _RespostaWidgetState createState() => _RespostaWidgetState();
 }
 
-class _RespostaState extends State<Resposta> {
+class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
   @override
   Widget build(BuildContext context) {
     return resposta(widget.pergunta);
@@ -41,26 +43,46 @@ class _RespostaState extends State<Resposta> {
     switch (pergunta.tipo) {
       case TipoPergunta.extenso:
         {
-          return RespostaExtenso(
+          return RespostaExtensoQuestionario(
             pergunta: pergunta,
             paciente: widget.paciente,
-            corTexto: widget.corTexto,
             corDominio:
-                Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constants.corAzulEscuroSecundario,
-            autoPreencher: widget.autoPreencher ?? '',
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
+            autoPreencher: widget.autoPreencher,
           );
         }
       case TipoPergunta.extensoNumerico:
         {
-          return RespostaExtenso(
+          return RespostaExtensoQuestionario(
+            pergunta: pergunta,
+            paciente: widget.paciente,
+            numerico: true,
+            corDominio:
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
+            autoPreencher: widget.autoPreencher,
+          );
+        }
+      case TipoPergunta.extensoCadastros:
+        {
+          return RespostaExtensoCadastro(
+            pergunta: pergunta,
+            paciente: widget.paciente,
+            corTexto: widget.corTexto,
+            autoPreencher: widget.autoPreencher ?? '',
+          );
+        }
+      case TipoPergunta.extensoNumericoCadastros:
+        {
+          return RespostaExtensoCadastro(
             pergunta: pergunta,
             paciente: widget.paciente,
             numerico: true,
             corTexto: widget.corTexto,
             corDominio:
-                Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constants.corAzulEscuroSecundario,
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
             autoPreencher: widget.autoPreencher ?? '',
           );
         }
@@ -78,8 +100,8 @@ class _RespostaState extends State<Resposta> {
             pergunta: pergunta,
             refreshParent: widget.notifyParent!,
             corDominio:
-                Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constants.corAzulEscuroSecundario,
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
           );
         }
       case TipoPergunta.afirmativa:
@@ -87,19 +109,17 @@ class _RespostaState extends State<Resposta> {
           return RepostaAfirmativa(
             pergunta: pergunta,
             corDominio:
-                Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constants.corAzulEscuroSecundario,
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
             corTexto: widget.corTexto,
             oFormularioEWHODAS: widget.formularioEWHODAS,
           );
         }
       case TipoPergunta.multipla:
         {
-          return RepostaMultipla(
+          return RespostaMultipla(
             pergunta: pergunta,
-            corDominio:
-                Constants.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constants.corAzulEscuroSecundario,
+            passarPagina: widget.notifyParent as Future<void> Function(),
           );
         }
       case TipoPergunta.data:
@@ -114,7 +134,11 @@ class _RespostaState extends State<Resposta> {
           pergunta: pergunta,
           autoPreencher: widget.autoPreencher,
         );
-
+      case TipoPergunta.multiplaCondicionalBerlin:
+        return RespostaMultiplaBerlin(
+          pergunta: pergunta,
+          passarPagina: widget.notifyParent as Future<void> Function(),
+        );
       default:
         {
           return Container();

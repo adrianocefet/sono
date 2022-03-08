@@ -48,7 +48,7 @@ class _RespostaDataState extends State<RespostaData> {
           Text(
             widget.pergunta.enunciado,
             style: const TextStyle(
-              fontSize: Constants.fontSizeEnunciados,
+              fontSize: Constantes.fontSizeEnunciados,
             ),
           ),
           const SizedBox(

@@ -89,7 +89,7 @@ class WHODAS {
       if (p.tipo == TipoPergunta.extenso ||
           p.tipo == TipoPergunta.extensoNumerico) {
         resultado[p.codigo] = p.respostaExtenso;
-        perguntas.add(p.respostaExtenso);
+        perguntas.add(p.respostaExtenso!);
         print(p.respostaExtenso);
       }
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/widgets/formulario/enunciado_respostas.dart';
 
 class RespostaDropdown extends StatefulWidget {
   final Pergunta pergunta;
@@ -24,33 +25,31 @@ class _RespostaDropdownState extends State<RespostaDropdown> {
   @override
   Widget build(BuildContext context) {
     _opcoes = widget.pergunta.opcoes!;
-    _escolha = _escolha ?? widget.autoPreencher;
+    _escolha = _escolha ?? widget.autoPreencher ?? widget.pergunta.resposta;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        EnunciadoRespostasDeQuestionarios(enunciado: widget.pergunta.enunciado),
         Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: Text(
-            widget.pergunta.enunciado,
-            style: const TextStyle(
-              fontSize: Constants.fontSizeEnunciados,
-            ),
-          ),
-        ),
-        ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButtonHideUnderline(
+          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 50),
+          child: ButtonTheme(
+            alignedDropdown: true,
             child: DropdownButtonFormField(
-              hint: const Text('Selecione uma opção'),
+              hint: const Text(
+                'Selecione uma opção',
+                style: TextStyle(
+                  color: Constantes.corAzulEscuroPrincipal,
+                ),
+              ),
               menuMaxHeight: 400,
-              decoration: const InputDecoration.collapsed(
-                hintText: "",
-                border: OutlineInputBorder(),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(8),
               ),
               style: const TextStyle(
-                color: Colors.black,
+                color: Constantes.corAzulEscuroPrincipal,
                 fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
               value: _escolha != null ? _opcoes[_escolha!] : null,
               icon: const Icon(
@@ -70,21 +69,20 @@ class _RespostaDropdownState extends State<RespostaDropdown> {
                 widget.pergunta.setResposta(_escolha);
               },
               validator: widget.pergunta.codigo == 'renda_familiar_mensal'
-                  ? (value) {}
+                  ? (value) => null
                   : (value) => _escolha != null ? null : 'Dado obrigatório.',
               items: _opcoes.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(
+                    value,
+                  ),
                 );
               }).toList(),
             ),
           ),
         ),
-        const SizedBox(
-          height: 20.0,
-        ),
-      ]),
+      ],
     );
   }
 }

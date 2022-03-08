@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang_controller.dart';
 import 'package:sono/pages/questionarios/stop_bang/resultado/resultado_stop_bang.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class StopBang extends StatefulWidget {
-  const StopBang({Key? key}) : super(key: key);
+  final Paciente paciente;
+
+  const StopBang({required this.paciente, Key? key}) : super(key: key);
 
   @override
   _StopBangState createState() => _StopBangState();
@@ -45,7 +47,7 @@ class _StopBangState extends State<StopBang> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("STOP-BANG"),
-          backgroundColor: Constants.corPrincipalQuestionarios,
+          backgroundColor: Constantes.corAzulEscuroPrincipal,
           actions: [
             ValueListenableBuilder(
               valueListenable: paginaAtual,
@@ -75,7 +77,7 @@ class _StopBangState extends State<StopBang> {
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Constants.corPrincipalQuestionarios,
+                primary: Constantes.corAzulEscuroPrincipal,
               ),
               onPressed: () async {
                 for (Pergunta p in _controller.listaDePerguntas) {

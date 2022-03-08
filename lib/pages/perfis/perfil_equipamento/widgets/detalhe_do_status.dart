@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_rich_text/simple_rich_text.dart';
-import 'package:sono/utils/models/equipamento/equipamento.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/equipamento.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 import 'package:sono/widgets/dialogs/error_message.dart';
 

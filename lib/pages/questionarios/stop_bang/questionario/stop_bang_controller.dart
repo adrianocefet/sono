@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/widgets/resposta_afirmativa_stopbang.dart';
 import 'package:sono/utils/base_perguntas/base_stopbang.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/utils/models/questionario.dart';
 
-class StopBangController implements Questionario {
+class StopBangController {
   final List<Pergunta> _perguntas = baseStopBang.map(
     (e) {
       return Pergunta(
@@ -31,10 +30,8 @@ class StopBangController implements Questionario {
           )
           .toList();
 
-  @override
   List<Pergunta> get listaDePerguntas => _perguntas;
 
-  @override
   get resultado => _resultado;
 
   ResultadoStopBang _gerarResultadoDoQuestionario() {
@@ -53,10 +50,6 @@ class StopBangController implements Questionario {
 
       pontuacaoTotal += resposta!;
     }
-
-    // print("INICIAIS $pontuacaoDasPerguntasIniciais");
-    // print("TOTAL $pontuacaoTotal");
-    // print(mapaDeRepostas);
 
     if (pontuacaoDasPerguntasIniciais >= 2) {
       for (Pergunta pergunta in _perguntas.where(

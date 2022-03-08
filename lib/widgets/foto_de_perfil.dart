@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_paciente.dart';
-import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/widgets/dialogs/deletar_equipamento.dart';
 import 'package:sono/widgets/dialogs/deletar_paciente.dart';
@@ -52,10 +51,9 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
 
             if (widget._tipo == TipoElemento.paciente
                 ? await mostrarDialogDeletarPaciente(context, widget.id)
-                : model.Equipamento != 'Equipamento'
+                : model.equipamento != 'Equipamento'
                     ? await mostrarDialogDeletarEquipmaneto(context, widget.id)
                     : false) {
-              Navigator.pop(context);
             } else {
               setState(() {
                 opacity = 0;
@@ -64,9 +62,9 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
           },
           onTap: () {
             if (widget._tipo == TipoElemento.equipamento) {
-              model.Equipamento == 'Equipamento'
+              model.equipamento == 'Equipamento'
                   ? () {
-                      model.Equipamento = widget.nome;
+                      model.equipamento = widget.nome;
                       widget.recarregarParent!();
                     }()
                   : Navigator.push(

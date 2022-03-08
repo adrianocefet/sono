@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/widgets/dialogs/escolher_paciente_dialog.dart';
 
 import '../../../constants/constants.dart';
@@ -17,114 +18,79 @@ class SelecaoDeQuestionario extends StatefulWidget {
 }
 
 class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
+  Paciente? _pacienteEscolhido;
+
+  List tiposDequestionarios = [
+    StopBang,
+    Berlin,
+  ];
+
+  ListTile tileQuestionario({required dynamic tipoDeQuestionario}) {
+    late String nomeDoQuestionario;
+
+    switch (tipoDeQuestionario) {
+      case Berlin:
+        nomeDoQuestionario = "Berlin";
+        break;
+      case StopBang:
+        nomeDoQuestionario = "Stop-Bang";
+        break;
+    }
+
+    return ListTile(
+      title: Text(
+        nomeDoQuestionario,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 22,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      onTap: () async {
+        _pacienteEscolhido = await mostrarDialogEscolherPaciente(context);
+
+        if (_pacienteEscolhido != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) {
+                return () {
+                  switch (tipoDeQuestionario) {
+                    case Berlin:
+                      return Berlin(paciente: _pacienteEscolhido!);
+                    default:
+                      return StopBang(paciente: _pacienteEscolhido!);
+                  }
+                }();
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Questionários"),
         centerTitle: true,
-        backgroundColor: Constants.corPrincipalQuestionarios,
+        backgroundColor: Constantes.corAzulEscuroPrincipal,
       ),
       drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text(
-              'WHODAS',
-              style: TextStyle(
-                fontSize: 20,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            onTap: () async {
-              Paciente? pacienteEscolhido =
-                  await mostrarDialogEscolherPaciente(context);
-
-              if (pacienteEscolhido != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    maintainState: true,
-                    builder: (_) {
-                      return WHODASView(
-                        paciente: pacienteEscolhido,
-                      );
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text(
-              'STOP-BANG',
-              style: TextStyle(
-                fontSize: 20,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            onTap: () async {
-              Paciente? pacienteEscolhido =
-                  await mostrarDialogEscolherPaciente(context);
-
-              if (pacienteEscolhido != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) {
-                      return const StopBang();
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class QuestionarioTile extends StatelessWidget {
-  final String nome;
-  final StatefulWidget paginaDestino;
-  const QuestionarioTile(
-    this.nome,
-    this.paginaDestino, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        nome,
-        style: const TextStyle(
-          fontSize: 20,
-          fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.w500,
+      body: ListView.separated(
+        itemCount: tiposDequestionarios.length,
+        itemBuilder: (context, i) => tileQuestionario(
+          tipoDeQuestionario: tiposDequestionarios[i],
+        ),
+        separatorBuilder: (context, i) => const Divider(
+          thickness: 2,
+          color: Constantes.corAzulEscuroSecundario,
         ),
       ),
-      onTap: () async {
-        Paciente? pacienteEscolhido =
-            await mostrarDialogEscolherPaciente(context);
-
-        if (pacienteEscolhido != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              maintainState: true,
-              builder: (_) {
-                return paginaDestino;
-              },
-            ),
-          );
-        }
-      },
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class Constants {
+abstract class Constantes {
   static const Color corPrincipalQuestionarios =
       Color.fromARGB(255, 137, 206, 123);
   static const Color corSecundariaQuestionarios =
@@ -89,13 +89,13 @@ abstract class Constants {
   };
 
   static const Map coresDominiosWHODASMap = {
-    'total': Constants.domTotalColor,
-    'dom_1': Constants.dom1Color,
-    'dom_2': Constants.dom2Color,
-    'dom_3': Constants.dom3Color,
-    'dom_4': Constants.dom4Color,
-    'dom_51': Constants.dom51Color,
-    'dom_52': Constants.dom52Color,
-    'dom_6': Constants.dom6Color,
+    'total': Constantes.domTotalColor,
+    'dom_1': Constantes.dom1Color,
+    'dom_2': Constantes.dom2Color,
+    'dom_3': Constantes.dom3Color,
+    'dom_4': Constantes.dom4Color,
+    'dom_51': Constantes.dom51Color,
+    'dom_52': Constantes.dom52Color,
+    'dom_6': Constantes.dom6Color,
   };
 }

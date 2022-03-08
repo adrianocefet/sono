@@ -30,7 +30,7 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
         text: enunSemCodigo,
         style: TextStyle(
           color: widget.corTexto,
-          fontSize: Constants.fontSizeEnunciados,
+          fontSize: Constantes.fontSizeEnunciados,
         ),
       ),
     ];
@@ -44,7 +44,7 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: widget.corDominio,
-              fontSize: Constants.fontSizeEnunciados,
+              fontSize: Constantes.fontSizeEnunciados,
             ),
           ),
         );
@@ -84,7 +84,7 @@ class _RepostaAfirmativaState extends State<RepostaAfirmativa> {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: widget.corTexto,
-                    fontSize: Constants.fontSizeEnunciados,
+                    fontSize: Constantes.fontSizeEnunciados,
                   ),
                 ),
           const SizedBox(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 
 class EditarAtributoPaciente extends StatelessWidget {
   final Paciente paciente;

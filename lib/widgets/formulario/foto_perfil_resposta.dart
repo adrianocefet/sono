@@ -72,7 +72,7 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
               widget.pergunta.enunciado,
               textAlign: TextAlign.left,
               style: const TextStyle(
-                fontSize: Constants.fontSizeEnunciados,
+                fontSize: Constantes.fontSizeEnunciados,
               ),
             ),
           ),
@@ -109,8 +109,8 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                                     color: Colors.grey[350],
                                   )
                                 : SizedBox(
-                                    height: Constants.alturaFotoDePerfil,
-                                    width: Constants.larguraFotoDePerfil,
+                                    height: Constantes.alturaFotoDePerfil,
+                                    width: Constantes.larguraFotoDePerfil,
                                     child: _imageFile == null
                                         ? Image.memory(
                                             widget.autoPreencher!,

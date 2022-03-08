@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<UserModel>(
       model: UserModel(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Projeto Sono - UFC',
         home: example1,
       ),

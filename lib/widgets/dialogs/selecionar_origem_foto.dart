@@ -11,7 +11,7 @@ Future<ImageSource?> selecionarOrigemFoto(BuildContext context) async {
           "Selecione a origem da foto",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Constants.corAzulEscuroPrincipal,
+            color: Constantes.corAzulEscuroPrincipal,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -24,7 +24,7 @@ Future<ImageSource?> selecionarOrigemFoto(BuildContext context) async {
                 "Galeria",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Constants.corAzulEscuroSecundario,
+                  color: Constantes.corAzulEscuroSecundario,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -41,7 +41,7 @@ Future<ImageSource?> selecionarOrigemFoto(BuildContext context) async {
                 "Câmera",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Constants.corAzulEscuroSecundario,
+                  color: Constantes.corAzulEscuroSecundario,
                   fontWeight: FontWeight.bold,
                 ),
               ),

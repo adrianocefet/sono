@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/pagina_inicial/screen_home.dart';
-import 'package:sono/pages/tabelas/tabela_hospitais_home/tab_home.dart';
 import '../questionario/stop_bang_controller.dart';
 
 class TelaResultadoStopBang extends StatelessWidget {
@@ -32,7 +31,7 @@ class TelaResultadoStopBang extends StatelessWidget {
         title: const Text(
           'Resultado',
         ),
-        backgroundColor: Constants.corPrincipalQuestionarios,
+        backgroundColor: Constantes.corPrincipalQuestionarios,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -42,14 +41,14 @@ class TelaResultadoStopBang extends StatelessWidget {
             alignment: AlignmentDirectional.center,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: Constants.corAzulEscuroSecundario.withOpacity(0.7),
+              color: Constantes.corAzulEscuroSecundario.withOpacity(0.7),
               border: Border.all(
-                color: Constants.corAzulEscuroPrincipal,
+                color: Constantes.corAzulEscuroPrincipal,
                 width: 4,
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 resultadoEmString(),
                 textAlign: TextAlign.center,
@@ -68,7 +67,7 @@ class TelaResultadoStopBang extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Constants.corPrincipalQuestionarios,
+                primary: Constantes.corPrincipalQuestionarios,
                 minimumSize: const Size(0, 140)),
             child: const Text(
               "Salvar resultado no perfil do paciente",
@@ -76,12 +75,8 @@ class TelaResultadoStopBang extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
           ),
         ),

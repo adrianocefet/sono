@@ -4,11 +4,11 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributo_equip.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/detalhe_do_status.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/editar_atributo_equip.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 import '../../../constants/constants.dart';
-import '../../../utils/models/equipamento/equipamento.dart';
+import '../../../utils/models/equipamento.dart';
 import '../../../utils/models/user_model.dart';
 import 'widgets/editar_status.dart';
 
@@ -115,7 +115,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                   ],
                                 ),
                                 for (String atrib
-                                    in Constants.titulosAtributosEquipamentos)
+                                    in Constantes.titulosAtributosEquipamentos)
                                   model.editar
                                       ? EditarAtributoEquipamento(
                                           equipamento,

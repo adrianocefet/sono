@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 
-import '../models/equipamento/equipamento.dart';
+import '../models/equipamento.dart';
 
 class FirebaseService {
   static final FirebaseService _firebaseService = FirebaseService._internal();
@@ -51,6 +51,33 @@ class FirebaseService {
         .update(
           equipamentoAtualizado.infoMap,
         );
+  }
+
+  Future<String> adicionarEquipamentoAoBancoDeDados(
+      Map<String, dynamic> dadosDoEquipamento,
+      {File? fotoDePerfil}) async {
+    String idEquipamento = _db.collection(_stringEquipamento).doc().id;
+    String urlImagem = '';
+
+    try {
+      if (fotoDePerfil != null) {
+        urlImagem = await FirebaseService()
+            .adicionarImageDoEquipamentoAoFirebaseStorage(
+          imageFile: fotoDePerfil,
+          idEquipamento: idEquipamento,
+        );
+      }
+      if (urlImagem.isNotEmpty) dadosDoEquipamento['Foto'] = urlImagem;
+
+      await _db
+          .collection(_stringEquipamento)
+          .doc(idEquipamento)
+          .set(dadosDoEquipamento);
+    } catch (e) {
+      rethrow;
+    }
+
+    return idEquipamento;
   }
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> streamEquipamento(
@@ -110,6 +137,21 @@ class FirebaseService {
     }
   }
 
+  Future<String?> procurarEquipamentoNoBancoDeDados(
+      Map<String, dynamic> data) async {
+    String? idEquipamento;
+
+    QuerySnapshot query = await _db
+        .collection(_stringPaciente)
+        .where("Nome", isEqualTo: data['Nome'])
+        .where("Hospital", isEqualTo: data["Hospital"])
+        .get();
+
+    if (query.docs.isNotEmpty) idEquipamento = query.docs[0].id;
+
+    return idEquipamento;
+  }
+
   Future removerPaciente(String idPaciente) async {
     await _db.collection(_stringPaciente).doc(idPaciente).delete();
     try {
@@ -117,19 +159,17 @@ class FirebaseService {
     } on Exception {}
   }
 
-  Future<String?> searchPatientOnDatabase(Map<String, dynamic> data) async {
+  Future<String?> procurarPacienteNoBancoDeDados(
+      Map<String, dynamic> data) async {
     String? idPaciente;
-    try {
-      QuerySnapshot query = await _db
-          .collection(_stringPaciente)
-          .where("Nome", isEqualTo: data['Nome'])
-          .where("Hospital", isEqualTo: data["Hospital"])
-          .get();
 
-      if (query.docs.isNotEmpty) idPaciente = query.docs[0].id;
-    } catch (e) {
-      rethrow;
-    }
+    QuerySnapshot query = await _db
+        .collection(_stringPaciente)
+        .where("Nome", isEqualTo: data['Nome'])
+        .where("Hospital", isEqualTo: data["Hospital"])
+        .get();
+
+    if (query.docs.isNotEmpty) idPaciente = query.docs[0].id;
 
     return idPaciente;
   }
@@ -149,7 +189,8 @@ class FirebaseService {
 
     try {
       if (fotoDePerfil != null) {
-        urlImagem = await FirebaseService().uploadImageToFirebaseStorage(
+        urlImagem =
+            await FirebaseService().adicionarImageDoPacienteAoFirebaseStorage(
           imageFile: fotoDePerfil,
           idPaciente: idPaciente,
         );
@@ -169,19 +210,29 @@ class FirebaseService {
     try {
       await _db.collection(_stringPaciente).doc(idPaciente).update(data);
     } catch (e) {
-      print(e);
       rethrow;
     }
 
     return idPaciente;
   }
 
-  Future<String> uploadImageToFirebaseStorage({
+  Future<String> adicionarImageDoPacienteAoFirebaseStorage({
     required File imageFile,
     String? idPaciente,
   }) async {
     Reference ref = _storage.ref(
-      'fotos_de_perfil/perfil_$idPaciente',
+      '$_stringPaciente/perfil_$idPaciente',
+    );
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL();
+  }
+
+  Future<String> adicionarImageDoEquipamentoAoFirebaseStorage({
+    required File imageFile,
+    String? idEquipamento,
+  }) async {
+    Reference ref = _storage.ref(
+      '$_stringEquipamento/perfil_$idEquipamento',
     );
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();

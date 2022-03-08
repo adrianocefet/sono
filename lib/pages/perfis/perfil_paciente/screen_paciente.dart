@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
-
-import 'widgets/equipamentos_emprestados.dart';
 
 Map<String, dynamic> mapPaciente = {};
 String ID = 'Adriano';
@@ -107,7 +104,7 @@ class _ScreenPacienteState extends State<ScreenPaciente> {
                                           )
                                         : Container(),
                                     for (String atrib
-                                        in Constants.titulosAtributosPacientes)
+                                        in Constantes.titulosAtributosPacientes)
                                       model.editar
                                           ? editarAtributo(context, atrib)
                                           : atrib == "Nome"

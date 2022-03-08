@@ -33,13 +33,13 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         inicializa
-            ? {model.Equipamento = 'Equipamento', inicializa = false}
+            ? {model.equipamento = 'Equipamento', inicializa = false}
             : null;
         return WillPopScope(
           onWillPop: () async {
-            if (model.Equipamento != 'Equipamento') {
+            if (model.equipamento != 'Equipamento') {
               setState(() {
-                model.Equipamento = 'Equipamento';
+                model.equipamento = 'Equipamento';
               });
             }
 
@@ -49,7 +49,7 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
             stream: FirebaseFirestore.instance
                 .collection('Equipamento')
                 .where('Hospital', isEqualTo: model.hospital)
-                .where('Equipamento', isEqualTo: model.Equipamento)
+                .where('Equipamento', isEqualTo: model.equipamento)
                 .snapshots(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
@@ -57,7 +57,7 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                 case ConnectionState.waiting:
                   return Scaffold(
                     appBar: AppBar(
-                      title: Text(model.Equipamento),
+                      title: Text(model.equipamento),
                       centerTitle: true,
                     ),
                     body: const Center(
@@ -67,7 +67,7 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                 default:
                   return Scaffold(
                     appBar: AppBar(
-                      title: Text(model.Equipamento),
+                      title: Text(model.equipamento),
                       centerTitle: true,
                     ),
                     body: Padding(
@@ -98,7 +98,9 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                     ),
                     drawer: CustomDrawer(widget.pageController),
                     drawerEnableOpenDragGesture: true,
-                    floatingActionButton: const BotaoMenu(),
+                    floatingActionButton: model.equipamento != "Equipamento"
+                        ? const BotaoMenu()
+                        : null,
                   );
               }
             },

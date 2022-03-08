@@ -2,34 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/formulario/enunciado_respostas.dart';
 
-class RespostaExtensoQuestionario extends StatefulWidget {
+class RespostaExtensoCadastro extends StatefulWidget {
   final Pergunta pergunta;
   final Paciente? paciente;
   final bool? numerico;
+  final Color? corTexto;
   final Color? corDominio;
   final String? autoPreencher;
   final TextEditingController _extensoController = TextEditingController();
-  final bool enabled;
+  late final bool _enabled;
 
-  RespostaExtensoQuestionario({
+  RespostaExtensoCadastro({
     required this.pergunta,
     this.paciente,
     this.numerico,
+    this.corTexto = Colors.black,
     this.corDominio = Colors.blue,
     this.autoPreencher,
-    this.enabled = true,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher ?? pergunta.respostaExtenso ?? "";
+    _extensoController.text = autoPreencher!;
+    _enabled = true;
   }
 
   @override
   _RespostaExtensoState createState() => _RespostaExtensoState();
 }
 
-class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
+class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
   Paciente? paciente;
 
   @override
@@ -38,22 +39,25 @@ class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
       paciente = widget.paciente;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        EnunciadoRespostasDeQuestionarios(
-          enunciado: widget.pergunta.enunciado,
-        ),
-        const SizedBox(
-          height: 5.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 50),
-          child: TextFormField(
-            enabled: widget.enabled,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.pergunta.enunciado,
+            style: const TextStyle(
+              fontSize: Constantes.fontSizeEnunciados,
+            ),
+          ),
+          const SizedBox(
+            height: 5.0,
+          ),
+          TextFormField(
+            enabled: widget._enabled,
             controller: widget._extensoController,
             minLines: 1,
-            maxLines: 3,
+            maxLines: 4,
             textCapitalization:
                 ['F1', 'F2', 'cid'].contains(widget.pergunta.codigo)
                     ? TextCapitalization.characters
@@ -66,16 +70,13 @@ class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
                     ? TextInputType.number
                     : TextInputType.text,
             decoration: InputDecoration(
-              label: const Text(
-                "Digite a resposta",
-                style: TextStyle(fontSize: 20),
-              ),
+              border: const OutlineInputBorder(),
               labelStyle: const TextStyle(
-                color: Constantes.corAzulEscuroPrincipal,
-                fontSize: 16,
+                color: Constantes.corAzulEscuroSecundario,
+                fontSize: 14,
               ),
               suffixIcon:
-                  widget.enabled && widget._extensoController.text.isNotEmpty
+                  widget._enabled && widget._extensoController.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(
                             Icons.clear_rounded,
@@ -91,29 +92,33 @@ class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
                         )
                       : null,
             ),
-            onChanged: (String? value) {
-              if (value!.length <= 1) {
+            onChanged: (value) {
+              if (value.length <= 1) {
                 setState(() {});
               }
             },
             textAlign: TextAlign.left,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 20,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
             onSaved: (String? value) {
               setState(
                 () {
-                  widget.pergunta
-                      .setRespostaExtenso(value!.isEmpty ? null : value.trim());
+                  widget.pergunta.setRespostaExtenso(
+                    (value!.trim()).replaceAll(
+                      RegExp(' +'),
+                      ' ',
+                    ),
+                  );
                 },
               );
             },
             validator: widget.pergunta.validador,
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

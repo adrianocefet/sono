@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:sono/utils/models/paciente/paciente.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -15,7 +15,7 @@ class RegistroPacienteHelper {
     perguntas = [
       Pergunta(
           "Foto do paciente (opcional)", TipoPergunta.foto, [], '', 'Foto'),
-      Pergunta('Nome do paciente', TipoPergunta.extenso, [], '', "Nome",
+      Pergunta('Nome do paciente', TipoPergunta.extensoCadastros, [], '', "Nome",
           validador: (value) => value != '' ? null : 'Dado obrigatório.'),
     ];
   }
@@ -51,7 +51,7 @@ class RegistroPacienteHelper {
     bool jaPossuiPaciente = false;
 
     idPacientePreexistente =
-        await FirebaseService().searchPatientOnDatabase(respostas);
+        await FirebaseService().procurarPacienteNoBancoDeDados(respostas);
 
     if (idPacientePreexistente != null) {
       jaPossuiPaciente = true;

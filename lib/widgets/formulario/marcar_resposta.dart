@@ -31,7 +31,7 @@ class _RepostaMarcarState extends State<RepostaMarcar> {
           text: enunSemCodigo,
           style: TextStyle(
             color: widget.corTexto,
-            fontSize: Constants.fontSizeEnunciados,
+            fontSize: Constantes.fontSizeEnunciados,
           ),
         ),
       ];
@@ -45,7 +45,7 @@ class _RepostaMarcarState extends State<RepostaMarcar> {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: widget.corDominio,
-                fontSize: Constants.fontSizeEnunciados,
+                fontSize: Constantes.fontSizeEnunciados,
               ),
             ),
           );

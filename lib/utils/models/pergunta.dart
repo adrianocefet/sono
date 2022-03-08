@@ -9,7 +9,7 @@ class Pergunta {
   List<int> pesos = [];
   String dominio = '';
   int? resposta;
-  String respostaExtenso = '';
+  String? respostaExtenso;
   List<String?>? respostaLocalizacao;
   List<String>? opcoes = [''];
   String? Function(String? value)? validador;
@@ -26,7 +26,17 @@ class Pergunta {
     this.validador,
   });
 
-  void setRespostaExtenso(String respostaExtenso) =>
+  Pergunta.pelaBase(e) {
+    enunciado = e['enunciado'];
+    tipo = e['tipo'];
+    pesos = e['pesos'] ?? <int>[];
+    dominio = e['dominio'];
+    codigo = e['codigo'];
+    validador = e['validador'];
+    opcoes = e['opcoes'];
+  }
+
+  void setRespostaExtenso(String? respostaExtenso) =>
       this.respostaExtenso = respostaExtenso;
 
   void setRespostaArquivo(File? respostaArquivo) =>
@@ -47,14 +57,23 @@ class Pergunta {
 
     this.resposta = resposta;
   }
+
+  void limparRespostas() {
+    setResposta(null);
+    setRespostaArquivo(null);
+    setRespostaExtenso(null);
+  }
 }
 
 enum TipoPergunta {
   extenso,
   extensoNumerico,
+  extensoNumericoCadastros,
+  extensoCadastros,
   marcar,
-  afirmativa, //0,1,2
+  afirmativa,
   multipla,
+  multiplaCondicionalBerlin,
   data,
   dropdown,
   foto,

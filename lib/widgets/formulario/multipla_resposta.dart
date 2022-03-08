@@ -1,135 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/base_perguntas/base_whodas.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/widgets/formulario/enunciado_respostas.dart';
 
-class RepostaMultipla extends StatefulWidget {
+import '../../../../../constants/constants.dart';
+
+class RespostaMultipla extends StatefulWidget {
   final Pergunta pergunta;
-  final Color corTexto;
-  final Color corDominio;
-  const RepostaMultipla(
-      {required this.pergunta,
-      this.corTexto = Colors.black,
-      this.corDominio = Colors.blue,
-      Key? key})
-      : super(key: key);
+  final Future<void> Function() passarPagina;
+
+  const RespostaMultipla({
+    Key? key,
+    required this.pergunta,
+    required this.passarPagina,
+  }) : super(key: key);
 
   @override
-  _RepostaMultiplaState createState() => _RepostaMultiplaState();
+  _RespostaMultiplaState createState() => _RespostaMultiplaState();
 }
 
-class _RepostaMultiplaState extends State<RepostaMultipla> {
-  int _groupValue = 0;
-
+class _RespostaMultiplaState extends State<RespostaMultipla> {
   @override
   Widget build(BuildContext context) {
-    Widget enunciado(String enun) {
-      String enunSemCodigo =
-          enun.replaceAll('${widget.pergunta.codigo} - ', '');
-      List<InlineSpan> novoEnun = [
-        TextSpan(
-          text: enunSemCodigo,
-          style: TextStyle(
-            color: widget.corTexto,
-            fontSize: Constants.fontSizeEnunciados,
-          ),
-        ),
-      ];
-
-      for (Map p in baseWHODAS) {
-        if (p['codigo'] == widget.pergunta.codigo) {
-          novoEnun.insert(
-            0,
-            TextSpan(
-              text: '${widget.pergunta.codigo} - ',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: widget.corDominio,
-                fontSize: Constants.fontSizeEnunciados,
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Visibility(
+            visible: false,
+            child: TextFormField(
+              validator: (indice) => widget.pergunta.resposta == null
+                  ? "Pergunta obrigatória."
+                  : null,
             ),
-          );
-        }
-      }
-      RichText enunFormat = RichText(
-        text: TextSpan(
-          children: novoEnun,
-        ),
-      );
-
-      return enunFormat;
-    }
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              enunciado(widget.pergunta.enunciado),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.pergunta.opcoes!
-                    .map(
-                      (opcao) => RadioListTile(
-                        title: Text(
-                          opcao,
-                          style: const TextStyle(
-                            fontSize: 15.5,
-                          ),
-                        ),
-                        value: widget.pergunta.opcoes!.indexOf(opcao),
-                        groupValue: _groupValue,
-                        onChanged: (value) {
-                          print(value);
-                          setState(() {
-                            _groupValue = value as int;
-                            widget.pergunta.setResposta(value);
-                          });
-                        },
-                        activeColor: widget.corDominio,
-                      ),
-                    )
-                    .toList(),
-              ),
-              (() {
-                {
-                  return widget.pergunta.codigo.contains('A5') &&
-                          _groupValue == 8
-                      ? TextFormField(
-                          validator: (value) =>
-                              value != '' ? null : 'Dado obrigatório.',
-                          minLines: 1,
-                          maxLines: 4,
-                          // expands: true,
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelStyle: TextStyle(
-                                color: const Color.fromRGBO(88, 98, 143, 1),
-                                fontSize: 14),
-                          ),
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                          onSaved: (value) => value != null
-                              ? widget.pergunta.setRespostaExtenso(value)
-                              : widget.pergunta.setRespostaExtenso(
-                                  'Outros (não especificado)'),
-                        )
-                      : Container();
-                }
-              }())
-            ],
+            maintainState: true,
           ),
+          EnunciadoRespostasDeQuestionarios(
+            enunciado: widget.pergunta.enunciado,
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            child: Column(
+              children: [
+                for (int i = 0; i < widget.pergunta.opcoes!.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: _Botao(
+                      pergunta: widget.pergunta,
+                      indice: i,
+                      parentSetState: () => () async {
+                        setState(() {});
+                        await widget.passarPagina();
+                      }(),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Botao extends StatefulWidget {
+  final int indice;
+  final Pergunta pergunta;
+  final Function parentSetState;
+  const _Botao({
+    Key? key,
+    required this.pergunta,
+    required this.indice,
+    required this.parentSetState,
+  }) : super(key: key);
+
+  @override
+  State<_Botao> createState() => _BotaoState();
+}
+
+class _BotaoState extends State<_Botao> {
+  @override
+  Widget build(BuildContext context) {
+    int indice = widget.indice;
+    int peso = widget.pergunta.pesos[indice];
+    String label = widget.pergunta.opcoes![indice];
+    bool estaSelecionado = widget.pergunta.respostaExtenso == label;
+
+    return ElevatedButton(
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.black,
         ),
-      ],
+      ),
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(50),
+        primary: estaSelecionado
+            ? peso == 0
+                ? Colors.green
+                : Colors.red
+            : Constantes.corCinzaPrincipal,
+      ),
+      onPressed: () {
+        widget.pergunta.setRespostaExtenso(label);
+        widget.pergunta.setResposta(peso);
+        widget.parentSetState();
+      },
     );
   }
 }

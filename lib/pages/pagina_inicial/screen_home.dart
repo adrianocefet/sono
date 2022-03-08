@@ -18,7 +18,10 @@ class HomeScreen extends StatelessWidget {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         inicializa
-            ? {model.Equipamento = 'Equipamento', inicializa = false}
+            ? {
+                model.equipamento = 'Equipamento',
+                inicializa = false,
+              }
             : null;
         return PageView(
           controller: _pageController,

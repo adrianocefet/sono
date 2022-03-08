@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_paciente/dialogs/devolver_equipamento_dialog.dart';
-import 'package:sono/utils/models/equipamento/equipamento.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class EquipamentosEmprestados extends StatefulWidget {
@@ -55,7 +55,7 @@ class _EquipamentosEmprestadosState extends State<EquipamentosEmprestados> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 4,
-                                  color: Constants.corAzulEscuroSecundario,
+                                  color: Constantes.corAzulEscuroSecundario,
                                 ),
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(4),
