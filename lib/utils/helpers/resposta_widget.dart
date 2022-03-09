@@ -3,14 +3,14 @@ import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/formulario/afirmativa_resposta.dart';
-import 'package:sono/widgets/formulario/data_resposta.dart';
-import 'package:sono/widgets/formulario/dropdown_resposta.dart';
-import 'package:sono/widgets/formulario/extenso_resposta_cadastro.dart';
-import 'package:sono/widgets/formulario/extenso_resposta.dart';
-import 'package:sono/widgets/formulario/foto_perfil_resposta.dart';
-import 'package:sono/widgets/formulario/marcar_resposta.dart';
-import 'package:sono/widgets/formulario/multipla_resposta.dart';
+import '../../pages/questionarios/widgets/afirmativa_resposta.dart';
+import '../../pages/questionarios/widgets/data_resposta.dart';
+import '../../pages/questionarios/widgets/dropdown_resposta.dart';
+import '../../pages/questionarios/widgets/extenso_resposta.dart';
+import '../../pages/questionarios/widgets/extenso_resposta_cadastro.dart';
+import '../../pages/questionarios/widgets/foto_perfil_resposta.dart';
+import '../../pages/questionarios/widgets/marcar_resposta.dart';
+import '../../pages/questionarios/widgets/multipla_resposta.dart';
 
 class RespostaWidget extends StatefulWidget {
   final Pergunta pergunta;
@@ -18,16 +18,15 @@ class RespostaWidget extends StatefulWidget {
   final Function()? notifyParent;
   final Color corTexto;
   final dynamic autoPreencher;
-  final bool formularioEWHODAS;
 
-  const RespostaWidget(this.pergunta,
-      {this.notifyParent,
-      this.paciente,
-      this.corTexto = Colors.black,
-      this.autoPreencher,
-      this.formularioEWHODAS = true,
-      Key? key})
-      : super(key: key);
+  const RespostaWidget(
+    this.pergunta, {
+    this.notifyParent,
+    this.paciente,
+    this.corTexto = Colors.black,
+    this.autoPreencher,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _RespostaWidgetState createState() => _RespostaWidgetState();
@@ -106,13 +105,9 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         }
       case TipoPergunta.afirmativa:
         {
-          return RepostaAfirmativa(
+          return RespostaAfirmativa(
             pergunta: pergunta,
-            corDominio:
-                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
-                    Constantes.corAzulEscuroSecundario,
-            corTexto: widget.corTexto,
-            oFormularioEWHODAS: widget.formularioEWHODAS,
+            passarPagina: widget.notifyParent as Future<void> Function(),
           );
         }
       case TipoPergunta.multipla:

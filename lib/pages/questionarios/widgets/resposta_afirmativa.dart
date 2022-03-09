@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_rich_text/simple_rich_text.dart';
 import 'package:sono/utils/models/pergunta.dart';
-
-import '../../../../../constants/constants.dart';
+import '../../../constants/constants.dart';
 
 class RespostaAfirmativaStopBang extends StatefulWidget {
   final Pergunta pergunta;
@@ -123,7 +122,9 @@ class _BotaoState extends State<_Botao> {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(50),
         primary: groupValue == value
-            ? value == 0 ? Colors.green : Colors.red
+            ? value == 0
+                ? Colors.green
+                : Colors.red
             : Constantes.corCinzaPrincipal,
       ),
       onPressed: () {

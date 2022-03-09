@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/questionarios/berlin/questionario/berlin_controller.dart';
-import 'package:sono/pages/questionarios/berlin/resultado/resultado_berlin_view.dart';
-import 'package:sono/utils/models/paciente.dart';
-import '../../../../utils/models/pergunta.dart';
+import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br_controller.dart';
 
-class Berlin extends StatefulWidget {
+import '../../../../constants/constants.dart';
+import '../../../../utils/models/paciente.dart';
+import '../../../../utils/models/pergunta.dart';
+import '../resultado/resultado_sacs_br_view.dart';
+
+class SacsBR extends StatefulWidget {
   final Paciente paciente;
 
-  const Berlin({required this.paciente, Key? key}) : super(key: key);
+  const SacsBR({required this.paciente, Key? key}) : super(key: key);
 
   @override
-  _BerlinState createState() => _BerlinState();
+  _SacsBRState createState() => _SacsBRState();
 }
 
-class _BerlinState extends State<Berlin> {
+class _SacsBRState extends State<SacsBR> {
   final _formKey = GlobalKey<FormState>();
   final _pageViewController = PageController();
-  final _controller = BerlinController();
+  final _controller = SacsBRController();
 
   Pergunta? perguntaAtual;
 
@@ -49,21 +50,6 @@ class _BerlinState extends State<Berlin> {
           : 1,
     );
 
-    ValueNotifier categoriaAtual = ValueNotifier(
-      () {
-        switch (listaDeRespostas[paginaAtual.value - 1].pergunta.dominio) {
-          case "inicial":
-            return "Perguntas iniciais";
-          case "categoria_1":
-            return "Categoria 1";
-          case "categoria_2":
-            return "Categoria 2";
-          case "categoria_3":
-            return "Categoria 3";
-        }
-      }(),
-    );
-
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -73,12 +59,9 @@ class _BerlinState extends State<Berlin> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: ValueListenableBuilder(
-            valueListenable: categoriaAtual,
-            builder: (context, value, _) => Text(
-              "BERLIN\n$value",
-              textAlign: TextAlign.center,
-            ),
+          title: const Text(
+            "SACS-BR",
+            textAlign: TextAlign.center,
           ),
           centerTitle: true,
           backgroundColor: Constantes.corAzulEscuroPrincipal,
@@ -109,19 +92,6 @@ class _BerlinState extends State<Berlin> {
             onPageChanged: (i) {
               perguntaAtual = listaDeRespostas[i].pergunta;
               paginaAtual.value = i + 1;
-
-              categoriaAtual.value = () {
-                switch (listaDeRespostas[i].pergunta.dominio) {
-                  case "inicial":
-                    return "Perguntas iniciais";
-                  case "categoria_1":
-                    return "Categoria 1";
-                  case "categoria_2":
-                    return "Categoria 2";
-                  case "categoria_3":
-                    return "Categoria 3";
-                }
-              }();
             },
           ),
         ),
@@ -167,30 +137,20 @@ class _BerlinState extends State<Berlin> {
                               ScaffoldMessenger.of(context)
                                   .removeCurrentSnackBar();
 
-                              ResultadoBerlin? resultadoBerlin =
+                              ResultadoSACSBR? resultadoSACSBR =
                                   _controller.validarFormulario(_formKey);
-                              if (resultadoBerlin != null) {
+                              if (resultadoSACSBR != null) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     maintainState: true,
-                                    builder: (context) => TelaResultadoBerlin(
-                                      resultadoBerlin: resultadoBerlin,
+                                    builder: (context) => ResultadoSACSBRView(
+                                      resultadoSACSBR: resultadoSACSBR,
                                       paciente: widget.paciente,
                                     ),
                                   ),
                                 );
                               } else {
-                                _pageViewController.animateToPage(
-                                  () {
-                                    return _controller
-                                        .obterPaginaDaQuestaoNaoRespondida(
-                                      listaDeRespostas,
-                                    );
-                                  }(),
-                                  duration: const Duration(milliseconds: 400),
-                                  curve: Curves.easeIn,
-                                );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     backgroundColor: Colors.red,
@@ -215,8 +175,13 @@ class _BerlinState extends State<Berlin> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    Visibility(
+                      visible: !(perguntaAtual?.tipo !=
+                              TipoPergunta.extensoNumerico &&
+                          naoEstaNaUltimaPergunta),
+                      child: const SizedBox(
+                        height: 10,
+                      ),
                     ),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 400),

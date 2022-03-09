@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/whodas/resultado/resultado_whodas.dart';
-import 'package:sono/utils/base_perguntas/base_whodas.dart';
+import 'package:sono/utils/bases_questionarios/base_whodas.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/helpers/whodas.dart';
 import 'package:sono/utils/models/paciente.dart';

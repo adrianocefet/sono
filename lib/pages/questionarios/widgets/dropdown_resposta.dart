@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/formulario/enunciado_respostas.dart';
+
+import 'enunciado_respostas.dart';
 
 class RespostaDropdown extends StatefulWidget {
   final Pergunta pergunta;

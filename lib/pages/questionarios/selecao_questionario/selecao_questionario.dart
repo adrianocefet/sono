@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
+import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
@@ -20,9 +21,10 @@ class SelecaoDeQuestionario extends StatefulWidget {
 class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
   Paciente? _pacienteEscolhido;
 
-  List tiposDequestionarios = [
+  List tiposDeQuestionarios = [
     StopBang,
     Berlin,
+    SacsBR,
   ];
 
   ListTile tileQuestionario({required dynamic tipoDeQuestionario}) {
@@ -34,6 +36,9 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
         break;
       case StopBang:
         nomeDoQuestionario = "Stop-Bang";
+        break;
+      case SacsBR:
+        nomeDoQuestionario = "SACS-BR";
         break;
     }
 
@@ -59,6 +64,8 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
                   switch (tipoDeQuestionario) {
                     case Berlin:
                       return Berlin(paciente: _pacienteEscolhido!);
+                    case SacsBR:
+                      return SacsBR(paciente: _pacienteEscolhido!);
                     default:
                       return StopBang(paciente: _pacienteEscolhido!);
                   }
@@ -82,9 +89,9 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
       drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
       body: ListView.separated(
-        itemCount: tiposDequestionarios.length,
+        itemCount: tiposDeQuestionarios.length,
         itemBuilder: (context, i) => tileQuestionario(
-          tipoDeQuestionario: tiposDequestionarios[i],
+          tipoDeQuestionario: tiposDeQuestionarios[i],
         ),
         separatorBuilder: (context, i) => const Divider(
           thickness: 2,

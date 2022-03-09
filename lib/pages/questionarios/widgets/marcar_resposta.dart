@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/base_perguntas/base_whodas.dart';
+import 'package:sono/utils/bases_questionarios/base_whodas.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RepostaMarcar extends StatefulWidget {

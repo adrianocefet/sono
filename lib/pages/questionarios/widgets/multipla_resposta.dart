@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/formulario/enunciado_respostas.dart';
-
 import '../../../../../constants/constants.dart';
+import 'enunciado_respostas.dart';
 
 class RespostaMultipla extends StatefulWidget {
   final Pergunta pergunta;

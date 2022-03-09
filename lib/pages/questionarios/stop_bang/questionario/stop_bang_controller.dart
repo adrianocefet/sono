@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/questionarios/stop_bang/questionario/widgets/resposta_afirmativa_stopbang.dart';
-import 'package:sono/utils/base_perguntas/base_stopbang.dart';
+import 'package:sono/utils/bases_questionarios/base_stopbang.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import '../../widgets/resposta_afirmativa.dart';
+
 
 class StopBangController {
   final List<Pergunta> _perguntas = baseStopBang.map(

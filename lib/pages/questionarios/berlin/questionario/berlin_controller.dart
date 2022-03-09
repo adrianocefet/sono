@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sono/utils/base_perguntas/base_berlin.dart';
+import 'package:sono/utils/bases_questionarios/base_berlin.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
