@@ -46,7 +46,7 @@ class ResultadoSACSBRView extends StatelessWidget {
                     TextSpan(
                       text: resultadoSACSBR.pontuacao > 15
                           ? "Alta probabilidade de SAOS!"
-                          : "Não possui alta probabilidade de SAOS!",
+                          : "Baixa probabilidade de SAOS!",
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
