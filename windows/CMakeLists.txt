@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(test LANGUAGES CXX)
+project(sono LANGUAGES CXX)
 
-set(BINARY_NAME "test")
+set(BINARY_NAME "sono")
 
 cmake_policy(SET CMP0063 NEW)
 
