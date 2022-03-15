@@ -18,14 +18,26 @@ class AppMyWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Container(                                   
-      child: Center( 
-        child: Text( 
-          title, 
-          textDirection: TextDirection.ltr,
-          style: TextStyle(color: Colors.white, fontSize: 50.0),
-        ),
+    return MaterialApp(
+      home: Container(),
+      theme: ThemeData(
+        primarySwatch: Colors.red 
       ),
     );
   }
 }
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(                                   
+//       child: Center( 
+//         child: Text( 
+//           title, 
+//           textDirection: TextDirection.ltr,
+//           style: TextStyle(color: Colors.white, fontSize: 50.0),
+//         ),
+//       ),
+//     );
+//   }
+// }
