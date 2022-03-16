@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 main() {
   // metodo para o app funcionar, desenhar na tela 
   runApp(AppMyWidget(
-    title: 'test sono',
+    title: 'test-sono',
   ));
 }
 
