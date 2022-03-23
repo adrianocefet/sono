@@ -7,7 +7,7 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/helpers/whodas.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
 import 'widgets/dominio_widget.dart';
 
 class WHODASView extends StatefulWidget {

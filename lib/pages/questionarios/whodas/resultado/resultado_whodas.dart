@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
 
 class PaginaResultado extends StatefulWidget {
   final Map<String, dynamic> resultado;

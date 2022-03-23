@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/perfis/perfil_paciente/dialogs/devolver_equipamento_dialog.dart';
+import 'package:sono/utils/dialogs/devolver_equipamento_dialog.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/services/firebase.dart';
 
