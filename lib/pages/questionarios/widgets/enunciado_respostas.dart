@@ -19,6 +19,7 @@ class EnunciadoRespostasDeQuestionarios extends StatelessWidget {
       alignment: AlignmentDirectional.center,
       child: SimpleRichText(
         enunciado,
+        textAlign: TextAlign.center,
         style: const TextStyle(
           fontWeight: FontWeight.w500,
           color: Colors.black,

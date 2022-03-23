@@ -95,10 +95,10 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         }
       case TipoPergunta.marcar:
         {
-          return RepostaMarcar(
+          return RespostaMultipla(
             pergunta: pergunta,
-            refreshParent: widget.notifyParent!,
-            corDominio:
+            passarPagina: widget.notifyParent as Future<void> Function(),
+            corSelecionado:
                 Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
                     Constantes.corAzulEscuroSecundario,
           );

@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:sono/utils/helpers/whodas.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
 
 class Pergunta {
   dynamic enunciado = '';
   TipoPergunta tipo = TipoPergunta.afirmativa;
-  WHODAS? whodas;
+  WHODASController? whodas;
   dynamic codigo = '';
   List<int> pesos = [];
   String dominio = '';
@@ -26,14 +26,23 @@ class Pergunta {
     this.validador,
   });
 
-  Pergunta.pelaBase(e) {
-    enunciado = e['enunciado'];
-    tipo = e['tipo'];
-    pesos = e['pesos'] ?? <int>[];
-    dominio = e['dominio'];
-    codigo = e['codigo'];
-    validador = e['validador'];
-    opcoes = e['opcoes'];
+  Pergunta.pelaBase(base) {
+    enunciado = base['enunciado'];
+    tipo = base['tipo'];
+    pesos = base['pesos'] ?? <int>[];
+    dominio = base['dominio'];
+    codigo = base['codigo'];
+    validador = base['validador'];
+    opcoes = tipo == TipoPergunta.marcar
+        ? [
+            "1 - Nenhuma",
+            "2 - Leve",
+            "3 - Moderada",
+            "4 - Grave",
+            "5 - Extrema ou não consegue fazer",
+            "6 - Não se aplica"
+          ]
+        : base['opcoes'];
   }
 
   void setRespostaExtenso(String? respostaExtenso) =>

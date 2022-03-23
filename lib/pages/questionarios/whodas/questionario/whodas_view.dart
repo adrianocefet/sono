@@ -1,190 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/questionarios/whodas/resultado/resultado_whodas.dart';
-import 'package:sono/utils/bases_questionarios/base_whodas.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/widgets/controle_de_nav.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
-import 'package:sono/utils/helpers/whodas.dart';
-import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
-import 'widgets/dominio_widget.dart';
+import '../../../../constants/constants.dart';
+import '../../../../utils/models/paciente.dart';
+import '../../../../utils/models/pergunta.dart';
+import 'widgets/resposta_ativ_trab.dart';
 
-class WHODASView extends StatefulWidget {
-  final Paciente? paciente;
-
-  const WHODASView({Key? key, this.paciente}) : super(key: key);
+class WHODAS extends StatefulWidget {
+  final Paciente paciente;
+  late final WHODASController _controller;
+  WHODAS({required this.paciente, Key? key}) : super(key: key) {
+    _controller = WHODASController(paciente);
+  }
 
   @override
-  _WHODASViewState createState() => _WHODASViewState();
+  _WHODASState createState() => _WHODASState();
 }
 
-class _WHODASViewState extends State<WHODASView> {
-  WHODAS whodas = WHODAS();
-
-  late final _formKey = GlobalKey<FormState>();
-
-  late final List<Pergunta> perguntas = montarListaPerguntas();
-
-  List<Pergunta> montarListaPerguntas() {
-    return baseWHODAS.map((e) {
-      return Pergunta(
-          e['enunciado'], e['tipo'], e['pesos'], e['dominio'], e['codigo'],
-          whodas: whodas, opcoes: e['opcoes'], validador: e['validador']);
-    }).toList();
-  }
-
-  String? autoPreencher(Pergunta pergunta) {
-    switch (pergunta.codigo) {
-      case "":
-        return widget.paciente?.nome;
-      case 'F4':
-        return DateFormat('dd/MM/yyyy').format(DateTime.now());
-      default:
-        return '';
-    }
-  }
-
-  List<Widget> montarListaRespostas() {
-    List<Widget> respostas = [];
-
-    for (var i = 0; i < perguntas.length; i++) {
-      if (perguntas[i].dominio == '') {
-        respostas.add(
-          RespostaWidget(
-            perguntas[i],
-            paciente: widget.paciente,
-            notifyParent: () {},
-            autoPreencher: autoPreencher(perguntas[i]),
-          ),
-        );
-      }
-    }
-
-    respostas.insertAll(
-      respostas.indexWhere(
-        (resposta) =>
-            resposta.runtimeType == RespostaWidget &&
-            (resposta as RespostaWidget).pergunta.codigo == 'H1',
-      ),
-      [
-        for (int i = 1; i < Constantes.codigosDominiosWHODAS.length; i++)
-          Dominio(
-            whodas: whodas,
-            codigoDominio: Constantes.codigosDominiosWHODAS[i],
-            perguntas: perguntas,
-          )
-      ],
-    );
-
-    return respostas;
-  }
-
-  Future<void> validarFormulario() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      Map<String, dynamic> resultado = await whodas.gerarResultadoDoFormulario(
-          perguntas, "" //widget.paciente!.id,
-          );
-
-      resultado.values.where((element) {
-                if (element.runtimeType == int) {
-                  return element < 0;
-                } else {
-                  return false;
-                }
-              }).length ==
-              7
-          ? mostrarMensagemErro(
-              context,
-              "Pelo menos um domínio deve ser aplicável",
-            )
-          : Navigator.push(
-              context,
-              MaterialPageRoute(
-                maintainState: true,
-                builder: (_) {
-                  return PaginaResultado(resultado: resultado);
-                },
-              ),
-            );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(
-            "Dados inválidos foram inseridos, por favor cheque suas respostas",
-          ),
-        ),
-      );
-    }
-  }
-
-  List<Widget>? listaRespostas;
+class _WHODASState extends State<WHODAS> {
+  Pergunta? perguntaAtual;
+  ValueNotifier<int>? paginaAtual;
 
   @override
   Widget build(BuildContext context) {
-    listaRespostas = listaRespostas ?? montarListaRespostas();
+    final listaDeRespostas = widget._controller.gerarListaDePaginas();
 
-    List<Widget> _formulario = [
-      const Padding(
-        padding: EdgeInsets.only(bottom: 15),
-        child: Divider(
-          color: Constantes.corAzulEscuroSecundario,
-          thickness: 2.5,
-          indent: 30,
-          endIndent: 30,
-          height: 0,
-        ),
-      ),
-      Form(
-        key: _formKey,
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          children: listaRespostas!,
-        ),
-      )
-    ];
+    paginaAtual = paginaAtual ??
+        ValueNotifier<int>(
+          widget._controller.pageViewController.positions.isNotEmpty
+              ? widget._controller.pageViewController.page!.toInt() + 1
+              : 1,
+        );
 
     return WillPopScope(
-      onWillPop: () {
-        whodas.limparDadosAnteriores();
+      onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         Navigator.pop(context);
-        return Future.value(false);
+
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Constantes.corAzulEscuroPrincipal,
-          title: const Text('WHODAS'),
+          title: const Text(
+            "WHODAS",
+            textAlign: TextAlign.center,
+          ),
           centerTitle: true,
-        ),
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Scrollbar(
-            child: SingleChildScrollView(
-              child: Column(
-                children: _formulario,
+          backgroundColor: Constantes.corAzulEscuroPrincipal,
+          actions: [
+            ValueListenableBuilder(
+              valueListenable: paginaAtual!,
+              builder: (context, paginaAtual, _) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text(
+                    "$paginaAtual/${widget._controller.listaDePaginas.length}",
+                    style: const TextStyle(fontSize: 22),
+                  ),
+                ),
               ),
             ),
+          ],
+        ),
+        body: Form(
+          key: widget._controller.formKey,
+          child: PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: listaDeRespostas.length,
+            controller: widget._controller.pageViewController,
+            itemBuilder: (context, i) {
+              return Scrollbar(
+                thickness: 6,
+                child: SingleChildScrollView(
+                  child: listaDeRespostas[i],
+                ),
+              );
+            },
+            onPageChanged: (i) {
+              switch (listaDeRespostas[i].runtimeType) {
+                case RespostaWidget:
+                  perguntaAtual =
+                      (listaDeRespostas[i] as RespostaWidget).pergunta;
+                  break;
+                case RespostaAtividadeTrabalho:
+                  perguntaAtual =
+                      (listaDeRespostas[i] as RespostaAtividadeTrabalho)
+                          .pergunta;
+                  break;
+                default:
+                  perguntaAtual = null;
+                  break;
+              }
+              paginaAtual!.value = i + 1;
+            },
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: FlatButton(
-              color: Constantes.corAzulEscuroPrincipal,
-              onPressed: () async {
-                for (var p in perguntas) print("${p.codigo} : ${p.resposta}");
-                await validarFormulario();
-              },
-              child: const Text(
-                "Confirmar",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+          color: Constantes.corAzulEscuroPrincipal,
+          child: ValueListenableBuilder(
+            valueListenable: paginaAtual!,
+            builder: (context, int paginaAtual, _) => ControleDeNavegacao(
+              controller: widget._controller,
+              paginaAtual: paginaAtual,
+              perguntaAtual: perguntaAtual,
             ),
           ),
         ),

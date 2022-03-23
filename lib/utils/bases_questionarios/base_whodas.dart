@@ -1,8 +1,101 @@
+import 'package:intl/intl.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
-List<String> enunciadosDominios = [
+const List<String> enunciadosDominios = [
   'Nos últimos 30 dias, quanta dificuldade você teve em:',
   'Por causa de sua condição de saúde, nos últimos 30 dias, quanta dificuldade você teve em:'
+];
+
+const List<String> titulosSecoes = [
+  "*Seção 1*\n\nFolha de rosto",
+  "*Seção 2*\n\nInformações gerais e demográficas",
+  "*Seção 3*\n\nIntrodução",
+  "*Seção 4*\n\nRevisão dos domínios",
+];
+
+const List<String> enunciadosDominiosParte1 = [
+  'Nos últimos _30 dias_, quanta _dificuldade_ você teve em:',
+  'Por causa de sua condição de saúde, nos últimos 30 dias, quanta dificuldade você teve em:',
+  "Nos últimos 30 dias:"
+];
+
+const Map<String, String> enunciadosDominiosParte2 = {
+  'dom_1':
+      "Eu vou fazer agora algumas perguntas sobre _compreensão e comunicação._",
+  'dom_2':
+      "Agora vou perguntar para você sobre dificuldades de locomoção e ou movimentação.",
+  'dom_3':
+      "Agora eu vou perguntar a você sobre as dificuldades em cuidar de você mesmo(a).",
+  'dom_4':
+      """Agora eu vou perguntar a você sobre dificuldades nas _relações interpessoais_. 
+
+Por favor, lembre-se que eu vou perguntar somente sobre as dificuldades decorrentes de problemas de saúde.
+
+Por problemas de saúde eu quero dizer doenças, enfermidades, lesões, problemas emocionais ou mentais e problemas com álcool ou drogas.""",
+  'dom_51':
+      """Eu vou perguntar agora sobre atividades envolvidas na manutenção do seu lar e do cuidado com as pessoas com as quais você vive ou que são próximas a você. 
+
+Essas atividades incluem cozinhar, limpar, fazer compras, cuidar de outras pessoas e cuidar dos seus pertences.""",
+  'dom_52':
+      "Agora eu farei algumas perguntas sobre suas atividades escolares ou do trabalho.",
+  'dom_6':
+      """Agora, eu vou perguntar a você sobre _sua participação social_ e o _impacto dos seus problemas de saúde_ sobre _você e sua família_. 
+
+Algumas dessas perguntas podem envolver problemas que ultrapassam 30 dias, entretanto, ao responder, por favor, foque nos últimos 30 dias. 
+
+De novo, quero lembrar-lhe de responder essas perguntas pensando em problemas de saúde: físico, mental ou emocional, relacionados a álcool ou drogas.""",
+};
+
+const List<String> enunciadosSecoes = [
+  "*{color:black}Complete os itens F1-F5 antes de iniciar cada entrevista*",
+  """Esta entrevista foi desenvolvida pela Organização Mundial da Saúde (OMS) para melhor compreender as dificuldades que as pessoas podem ter em decorrência de sua condição de saúde. 
+As informações que você fornecer nessa entrevista são confidenciais e serão usadas exclusivamente para pesquisa. A entrevista terá duração de 15-20 minutos.
+
+*{color:black}Para respondentes da população em geral (não a população clínica) diga:*
+
+Mesmo se você for saudável e não tiver dificuldades, eu preciso fazer todas as perguntas do questionário para completar a entrevista.
+
+Eu vou começar com algumas perguntas gerais.
+""",
+  """*{color:black}Diga ao(à) respondente:*
+
+A entrevista é sobre as dificuldades que as pessoas têm por causa de suas condições de
+saúde.
+
+*{color:black}Dê o cartão resposta nº1 ao(à) respondente e diga:*
+
+Por condições de saúde quero dizer doenças ou enfermidades, ou outros problemas de saúde
+que podem ser de curta ou longa duração; lesões; problemas mentais ou emocionais; e
+problemas com álcool ou drogas.
+
+Lembre-se de considerar todos os seus problemas de saúde enquanto responde às questões.
+
+Quando eu perguntar sobre a dificuldade em fazer uma atividade pense em ...
+
+*{color:black}Aponte para o cartão resposta nº1 e explique que a “dificuldade em fazer uma atividade”
+significa:*
+
+• Esforço aumentado
+• Desconforto ou dor
+• Lentidão
+• Alterações no modo de você fazer a atividade.
+
+*{color:black}Diga ao(à) respondente*:
+
+Quando responder, gostaria que você pensasse nos últimos 30 dias. Eu gostaria ainda que
+você respondesse essas perguntas pensando em quanta dificuldade você teve, em média,
+nos últimos 30 dias, enquanto você fazia suas atividades como você costuma fazer.
+
+*{color:black}Dê o cartão resposta nº2 ao(à) respondente e diga:*
+
+Use essa escala ao responder.
+
+*{color:black}Leia a escala em voz alta:*
+
+Nenhuma, leve, moderada, grave, extrema ou não consegue fazer.
+
+*{color:black}Certifique-se de que o(a) respondente possa ver facilmente os cartões resposta nº1 e nº2 durante toda a entrevista.*
+"""
 ];
 
 List<Map<String, dynamic>> baseWHODAS = [
@@ -11,7 +104,7 @@ List<Map<String, dynamic>> baseWHODAS = [
     'tipo': TipoPergunta.extenso,
     'pesos': <int>[],
     'dominio': '',
-    'codigo': '',
+    'codigo': 'nome',
     'validador': (value) {},
   },
   {
@@ -43,6 +136,14 @@ List<Map<String, dynamic>> baseWHODAS = [
     'pesos': <int>[],
     'dominio': '',
     'codigo': 'F4',
+    'validador': (value) {
+      try {
+        DateFormat("dd/MM/yyyy").parse(value);
+        return null;
+      } catch (e) {
+        return "Insira uma data válida";
+      }
+    },
   },
   {
     'enunciado': 'F5 - Condição em que vive no momento da entrevista',
@@ -57,27 +158,48 @@ List<Map<String, dynamic>> baseWHODAS = [
     ]
   },
   {
-    'enunciado': 'A1 - Anote o sexo da pessoa conforme observado', //ESSA
-    'tipo': TipoPergunta.extenso,
+    'enunciado': 'A1 - Anote o sexo da pessoa conforme observado',
+    'tipo': TipoPergunta.multipla,
     'pesos': <int>[],
+    'opcoes': [
+      "Feminino",
+      "Masculino",
+    ],
     'dominio': '',
     'codigo': 'A1',
   },
   {
-    'enunciado': 'A2 - Qual a sua idade?', //ESSA
-    'tipo': TipoPergunta.extenso,
+    'enunciado': 'A2 - Qual a sua idade?',
+    'tipo': TipoPergunta.extensoNumerico,
     'pesos': <int>[],
     'dominio': '',
     'codigo': 'A2',
+    'validador': (value) {
+      try {
+        return value.trim().isEmpty || int.parse(value) < 0
+            ? "Insira uma idade válida"
+            : null;
+      } catch (e) {
+        return "Insira uma idade válida";
+      }
+    },
   },
   {
     'enunciado':
         'A3 - Quantos anos no total você passou estudando em escola, faculdade ou universidade?',
-    'tipo': TipoPergunta.extenso,
+    'tipo': TipoPergunta.extensoNumerico,
     'pesos': <int>[],
     'codigo': 'A3',
     'dominio': '',
-    'validador': (value) => value != '' ? null : 'Dado obrigatório.',
+    'validador': (value) {
+      try {
+        return value.trim().isEmpty || int.parse(value) < 0
+            ? "Insira um período válido"
+            : null;
+      } catch (e) {
+        return "Insira um período válido";
+      }
+    },
   },
   {
     'enunciado': 'A4 - Qual é o seu estado civil atual?',
@@ -430,7 +552,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'H1 - Em geral, nos últimos 30 dias, por quantos dias essas dificuldades estiveram presentes?',
-    'tipo': TipoPergunta.extenso,
+    'tipo': TipoPergunta.extensoNumerico,
     'pesos': <int>[],
     'codigo': 'H1',
     'dominio': '',

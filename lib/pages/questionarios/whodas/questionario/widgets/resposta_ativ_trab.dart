@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../../../../constants/constants.dart';
-import 'enunciado_respostas.dart';
+import '../../../widgets/enunciado_respostas.dart';
 
-class RespostaMultipla extends StatefulWidget {
+class RespostaAtividadeTrabalho extends StatefulWidget {
   final Pergunta pergunta;
   final Future<void> Function() passarPagina;
+  final GlobalKey<FormState> formKey;
   final Color? corSelecionado;
 
-  const RespostaMultipla({
+  const RespostaAtividadeTrabalho({
     Key? key,
     required this.pergunta,
     required this.passarPagina,
+    required this.formKey,
     this.corSelecionado,
   }) : super(key: key);
 
   @override
-  _RespostaMultiplaState createState() => _RespostaMultiplaState();
+  _RespostaAtividadeTrabalhoState createState() =>
+      _RespostaAtividadeTrabalhoState();
 }
 
-class _RespostaMultiplaState extends State<RespostaMultipla> {
+class _RespostaAtividadeTrabalhoState extends State<RespostaAtividadeTrabalho> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -54,11 +57,59 @@ class _RespostaMultiplaState extends State<RespostaMultipla> {
                       indice: i,
                       parentSetState: () => () async {
                         setState(() {});
-                        await widget.passarPagina();
+                        if (i != widget.pergunta.opcoes!.length - 1) {
+                          await widget.passarPagina();
+                        }
                       }(),
                       corSelecionado: widget.corSelecionado,
                     ),
                   ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 800),
+                  height: widget.pergunta.respostaExtenso ==
+                          "Outros (especifique)"
+                      ? null
+                      : 0,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (value) =>
+                            value != '' ? null : "Dado obrigatório.",
+                        minLines: 1,
+                        maxLines: 4,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                            color: Constantes.corAzulEscuroSecundario,
+                            fontSize: 14,
+                          ),
+                        ),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onSaved: (value) =>
+                            widget.pergunta.setRespostaExtenso(value),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (widget.formKey.currentState!.validate()) {
+                            widget.formKey.currentState!.save();
+                            await widget.passarPagina();
+                          }
+                        },
+                        child: const Text("Confirmar resposta"),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(40),
+                          primary: Colors.blue,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

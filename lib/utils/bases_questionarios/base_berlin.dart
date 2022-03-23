@@ -39,9 +39,10 @@ List<Map<String, dynamic>> baseBerlin = [
     'codigo': 'peso',
     'validador': (value) {
       try {
-        return value.trim().isEmpty || double.parse(value.replaceAll(",", ".")) < 0
-              ? "Insira um peso válido"
-              : null;
+        return value.trim().isEmpty ||
+                double.parse(value.replaceAll(",", ".")) < 0
+            ? "Insira um peso válido"
+            : null;
       } on Exception {
         return "Insira um peso válido";
       }
@@ -49,9 +50,10 @@ List<Map<String, dynamic>> baseBerlin = [
   },
   {
     'enunciado': "Sexo:",
-    'tipo': TipoPergunta.dropdown,
+    'tipo': TipoPergunta.multipla,
     'dominio': 'inicial',
     'opcoes': ["Masculino", "Feminino"],
+    'pesos': [0, 0],
     'codigo': 'sexo',
     'validador': (value) => value.trim().isEmpty ? "Selecione uma opção" : null,
   },

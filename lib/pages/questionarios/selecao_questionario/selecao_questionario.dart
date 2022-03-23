@@ -8,6 +8,7 @@ import 'package:sono/widgets/dialogs/escolher_paciente_dialog.dart';
 
 import '../../../constants/constants.dart';
 import '../../pagina_inicial/widgets/widgets_drawer.dart';
+import '../goal/questionario/goal.dart';
 
 class SelecaoDeQuestionario extends StatefulWidget {
   final PageController pageController;
@@ -25,6 +26,8 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
     StopBang,
     Berlin,
     SacsBR,
+    // WHODAS,
+    GOAL,
   ];
 
   ListTile tileQuestionario({required dynamic tipoDeQuestionario}) {
@@ -39,6 +42,12 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
         break;
       case SacsBR:
         nomeDoQuestionario = "SACS-BR";
+        break;
+      case WHODAS:
+        nomeDoQuestionario = "WHODAS";
+        break;
+      case GOAL:
+        nomeDoQuestionario = "GOAL";
         break;
     }
 
@@ -66,6 +75,10 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
                       return Berlin(paciente: _pacienteEscolhido!);
                     case SacsBR:
                       return SacsBR(paciente: _pacienteEscolhido!);
+                    case WHODAS:
+                      return WHODAS(paciente: _pacienteEscolhido!);
+                    case GOAL:
+                      return GOAL(paciente: _pacienteEscolhido!);
                     default:
                       return StopBang(paciente: _pacienteEscolhido!);
                   }

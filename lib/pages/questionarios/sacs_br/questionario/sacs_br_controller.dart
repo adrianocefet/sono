@@ -12,6 +12,8 @@ class SacsBRController {
   List<RespostaWidget> listaDeRespostas = [];
   List<Pergunta> get listaDePerguntas => _perguntas;
 
+  
+
   List<RespostaWidget> gerarListaDeRespostas(
       context, Future<void> Function() passarPagina) {
     listaDeRespostas = [

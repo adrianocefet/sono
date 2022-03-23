@@ -61,12 +61,12 @@ class _RepostaMarcarState extends State<RepostaMarcar> {
     }
 
     List opcoes = [
-      "1 - Nenhuma",
-      "2 - Leve",
-      "3 - Moderada",
-      "4 - Grave",
-      "5 - Extrema ou não consegue fazer",
-      "6 - Não se aplica"
+      "Nenhuma",
+      "Leve",
+      "Moderada",
+      "Grave",
+      "Extrema ou não consegue fazer",
+      "Não se aplica"
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),

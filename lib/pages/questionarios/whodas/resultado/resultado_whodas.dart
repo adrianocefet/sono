@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
 import 'package:sono/widgets/dialogs/error_message.dart';
+import '../../../../utils/models/paciente.dart';
 
-class PaginaResultado extends StatefulWidget {
-  final Map<String, dynamic> resultado;
+class ResultadoWHODASView extends StatefulWidget {
+  final ResultadoWHODAS resultado;
+  final Paciente paciente;
 
-  const PaginaResultado({Key? key, required this.resultado}) : super(key: key);
+  const ResultadoWHODASView(
+      {Key? key, required this.resultado, required this.paciente})
+      : super(key: key);
   @override
-  PaginaResultadoState createState() => PaginaResultadoState();
+  ResultadoWHODASViewState createState() => ResultadoWHODASViewState();
 }
 
-class PaginaResultadoState extends State<PaginaResultado> {
+class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
   bool isLoading = false;
 
   Future<void> salvarFormulario() async {
@@ -92,7 +97,7 @@ class PaginaResultadoState extends State<PaginaResultado> {
                               ),
                               child: Center(
                                 child: Text(
-                                  widget.resultado['total'].toString(),
+                                  "",//widget.resultado['total'].toString(),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     color: Colors.white,
@@ -114,13 +119,13 @@ class PaginaResultadoState extends State<PaginaResultado> {
                           height: 0,
                         ),
                       ),
-                      Pontuacao('dom_1', widget.resultado['dom_1']),
-                      Pontuacao('dom_2', widget.resultado['dom_2']),
-                      Pontuacao('dom_3', widget.resultado['dom_3']),
-                      Pontuacao('dom_4', widget.resultado['dom_4']),
-                      Pontuacao('dom_51', widget.resultado['dom_51']),
-                      Pontuacao('dom_52', widget.resultado['dom_52']),
-                      Pontuacao('dom_6', widget.resultado['dom_6']),
+                      // Pontuacao('dom_1', widget.resultado['dom_1']),
+                      // Pontuacao('dom_2', widget.resultado['dom_2']),
+                      // Pontuacao('dom_3', widget.resultado['dom_3']),
+                      // Pontuacao('dom_4', widget.resultado['dom_4']),
+                      // Pontuacao('dom_51', widget.resultado['dom_51']),
+                      // Pontuacao('dom_52', widget.resultado['dom_52']),
+                      // Pontuacao('dom_6', widget.resultado['dom_6']),
                       const Padding(
                         padding: EdgeInsets.only(top: 10, bottom: 15),
                         child: Divider(
