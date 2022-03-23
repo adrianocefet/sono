@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'package:sono/widgets/dialogs/carregando.dart';
+
 
 Future<bool> mostrarDialogDeletarEquipmaneto(context, idEquipamento) async {
   return await showDialog(

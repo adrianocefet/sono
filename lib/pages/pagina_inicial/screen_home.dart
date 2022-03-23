@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/questionarios/selecao_questionario/selecao_questionario.dart';
-import 'package:sono/pages/tabelas/tabela_equipamentos/tab_equipamentos.dart';
-import 'package:sono/pages/tabelas/tabela_hospitais_home/tab_home.dart';
+import 'package:sono/pages/tabelas/tab_equipamentos.dart';
+import 'package:sono/pages/tabelas/tab_home.dart';
 import 'package:sono/pages/tabelas/tab_fale.dart';
 import 'package:sono/pages/tabelas/tab_04.dart';
-import 'package:sono/pages/tabelas/tabela_pacientes/tab_paciente.dart';
+import 'package:sono/pages/tabelas/tab_paciente.dart';
 import '../../utils/models/user_model.dart';
 
 class HomeScreen extends StatelessWidget {
