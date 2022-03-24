@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'package:sono/widgets/dialogs/carregando.dart';
+
 
 Future<bool> mostrarDialogDeletarPaciente(context, idPaciente) async {
   return await showDialog(

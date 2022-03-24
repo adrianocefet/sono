@@ -4,9 +4,9 @@ import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
 
-import '../../../widgets/widgets_botao_menu.dart';
-import '../../pagina_inicial/widgets/widgets_drawer.dart';
-import '../../perfis/perfil_equipamento/screen_equipamentos.dart';
+import '../../widgets/widgets_botao_menu.dart';
+import '../pagina_inicial/widgets/widgets_drawer.dart';
+import '../perfis/perfil_equipamento/screen_equipamentos.dart';
 
 bool inicializa = false;
 

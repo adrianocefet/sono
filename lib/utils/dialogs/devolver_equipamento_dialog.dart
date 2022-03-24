@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/models/equipamento.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
 
 Future<void> mostrarDialogDevolverEquipamento(
     context, Equipamento equipamento) async {

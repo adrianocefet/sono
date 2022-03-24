@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/user_model.dart';
 
-import '../../pagina_inicial/widgets/widgets_drawer.dart';
+import '../pagina_inicial/widgets/widgets_drawer.dart';
 
 class HomeTab extends StatefulWidget {
   final PageController pageController;

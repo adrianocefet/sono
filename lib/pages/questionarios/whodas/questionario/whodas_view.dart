@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/widgets/controle_de_nav.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
+<<<<<<< HEAD
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
@@ -13,6 +14,18 @@ class WHODAS extends StatefulWidget {
   WHODAS({required this.paciente, Key? key}) : super(key: key) {
     _controller = WHODASController(paciente);
   }
+=======
+import 'package:sono/utils/helpers/whodas.dart';
+import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
+import 'widgets/dominio_widget.dart';
+
+class WHODASView extends StatefulWidget {
+  final Paciente? paciente;
+
+  const WHODASView({Key? key, this.paciente}) : super(key: key);
+>>>>>>> 973532836c1a1ee6924f766527baa41affe17627
 
   @override
   _WHODASState createState() => _WHODASState();

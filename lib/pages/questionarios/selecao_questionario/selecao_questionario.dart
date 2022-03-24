@@ -4,7 +4,7 @@ import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/widgets/dialogs/escolher_paciente_dialog.dart';
+import 'package:sono/utils/dialogs/escolher_paciente_dialog.dart';
 
 import '../../../constants/constants.dart';
 import '../../pagina_inicial/widgets/widgets_drawer.dart';

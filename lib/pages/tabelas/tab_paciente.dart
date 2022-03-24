@@ -5,8 +5,8 @@ import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
 
-import '../../pagina_inicial/widgets/widgets_drawer.dart';
-import 'dialogs/adicionar_paciente_dialog.dart';
+import '../pagina_inicial/widgets/widgets_drawer.dart';
+import '../../utils/dialogs/adicionar_paciente_dialog.dart';
 
 class TabelaDePacientes extends StatefulWidget {
   final PageController pageController;

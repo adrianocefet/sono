@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+<<<<<<< HEAD
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
 import 'package:sono/widgets/dialogs/error_message.dart';
 import '../../../../utils/models/paciente.dart';
+=======
+import 'package:sono/utils/dialogs/error_message.dart';
+>>>>>>> 973532836c1a1ee6924f766527baa41affe17627
 
 class ResultadoWHODASView extends StatefulWidget {
   final ResultadoWHODAS resultado;

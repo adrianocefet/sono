@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/utils/dialogs/selecionar_origem_foto.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/widgets/dialogs/selecionar_origem_foto.dart';
+
 
 class RegistrarFotoPerfil extends StatefulWidget {
   final Pergunta pergunta;

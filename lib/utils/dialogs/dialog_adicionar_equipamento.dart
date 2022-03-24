@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/utils/helpers/registro_paciente_helper.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
+import 'package:sono/utils/helpers/registro_equipamento_helper.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/user_model.dart';
-import 'package:sono/widgets/dialogs/aviso_ja_possui_paciente.dart';
-import 'package:sono/widgets/dialogs/carregando.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
+import 'package:sono/utils/dialogs/aviso_ja_possui_equipamento.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
 
-void mostrarDialogAdicionarPaciente(BuildContext context) {
+void mostrarDialogAdicionarEquipamento(BuildContext context) {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final RegistroPacienteHelper helper = RegistroPacienteHelper();
+  final RegistroEquipamentoHelper helper = RegistroEquipamentoHelper();
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return ScopedModelDescendant<UserModel>(
         builder: (context, child, model) => AlertDialog(
-          title: const Text('Adicionar paciente'),
+          title: const Text('Adicionar equipamento'),
           contentPadding: EdgeInsets.zero,
           content: Form(
             key: formKey,
@@ -40,10 +40,10 @@ void mostrarDialogAdicionarPaciente(BuildContext context) {
                   formKey.currentState!.save();
                   mostrarDialogCarregando(context);
                   try {
-                    switch (await helper.registrarPaciente(model.hospital)) {
-                      case StatusPaciente.jaExistenteNoBancoDeDados:
+                    switch (await helper.registrarEquipamento(model.hospital)) {
+                      case StatusCadastroEquipamento.jaExistenteNoBancoDeDados:
                         Navigator.pop(context);
-                        mostrarAvisoJaPossuiPaciente(context);
+                        mostrarAvisoJaPossuiEquipamento(context);
                         break;
                       default:
                         Navigator.pop(context);

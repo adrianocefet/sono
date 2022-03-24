@@ -3,8 +3,8 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
-import 'package:sono/widgets/dialogs/deletar_equipamento.dart';
-import 'package:sono/widgets/dialogs/deletar_paciente.dart';
+import 'package:sono/utils/dialogs/deletar_equipamento.dart';
+import 'package:sono/utils/dialogs/deletar_paciente.dart';
 
 enum TipoElemento {
   equipamento,

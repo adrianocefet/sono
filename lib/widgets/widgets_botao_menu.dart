@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/tabelas/tabela_equipamentos/dialogs/dialog_adicionar_equipamento.dart';
+import 'package:sono/utils/dialogs/dialog_adicionar_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 class BotaoMenu extends StatefulWidget {

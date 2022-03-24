@@ -1,15 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_rich_text/simple_rich_text.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'package:sono/widgets/dialogs/error_message.dart';
-
-import '../../perfil_paciente/dialogs/devolver_equipamento_dialog.dart';
+import 'package:sono/utils/dialogs/error_message.dart';
+import 'package:sono/utils/dialogs/devolver_equipamento_dialog.dart';
 
 class DisplayDetalheDoStatus extends StatefulWidget {
   final Equipamento equipamento;
+
   const DisplayDetalheDoStatus({
     Key? key,
     required this.equipamento,
@@ -20,7 +18,6 @@ class DisplayDetalheDoStatus extends StatefulWidget {
 }
 
 class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
-  // Paciente? pacienteResponsavel;
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +68,9 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
               ),
               Text(
                 '''
-
-Paciente Responsável: ${pacienteResponsavel!.nome}
-
-Data de Expedicão: ${widget.equipamento.dataDeExpedicaoEmStringFormatada}
-
-Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
+                Paciente Responsável: ${pacienteResponsavel!.nome}
+                Data de Expedicão: ${widget.equipamento.dataDeExpedicaoEmStringFormatada}
+                Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
                 style: const TextStyle(
                   fontSize: 30,
                   color: Colors.black,
@@ -89,7 +83,27 @@ Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
                 onPressed: () async => await mostrarDialogDevolverEquipamento(
                     context, widget.equipamento),
                 child: const Text(
-                  "Cancelar empréstimo",
+                  "Devolver",
+                  style: TextStyle(
+                    fontSize: 40,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async => await mostrarDialogDevolverEquipamento(
+                    context, widget.equipamento),
+                child: const Text(
+                  "Desifectar",
+                  style: TextStyle(
+                    fontSize: 40,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async => await mostrarDialogDevolverEquipamento(
+                    context, widget.equipamento),
+                child: const Text(
+                  "Manutenção",
                   style: TextStyle(
                     fontSize: 40,
                   ),
