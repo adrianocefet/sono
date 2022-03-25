@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sono/utils/widgets/widgets_botao_menu.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
 
-import '../../widgets/widgets_botao_menu.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 import '../perfis/perfil_equipamento/screen_equipamentos.dart';
 
@@ -98,9 +98,7 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                     ),
                     drawer: CustomDrawer(widget.pageController),
                     drawerEnableOpenDragGesture: true,
-                    floatingActionButton: model.equipamento != "Equipamento"
-                        ? const BotaoMenu()
-                        : null,
+                    floatingActionButton: BotaoMenu(),
                   );
               }
             },
