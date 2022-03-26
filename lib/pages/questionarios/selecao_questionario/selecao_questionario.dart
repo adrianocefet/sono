@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
+import 'package:sono/pages/questionarios/epworth/questionario/epworth_view.dart';
+import 'package:sono/pages/questionarios/pittsburg/questionario/pittsburg_view.dart';
 import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/dialogs/escolher_paciente_dialog.dart';
-
 import '../../../constants/constants.dart';
 import '../../pagina_inicial/widgets/widgets_drawer.dart';
 import '../goal/questionario/goal.dart';
@@ -26,8 +27,10 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
     StopBang,
     Berlin,
     SacsBR,
-    // WHODAS,
+    WHODAS,
     GOAL,
+    Epworth,
+    Pittsburg,
   ];
 
   ListTile tileQuestionario({required dynamic tipoDeQuestionario}) {
@@ -48,6 +51,12 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
         break;
       case GOAL:
         nomeDoQuestionario = "GOAL";
+        break;
+      case Pittsburg:
+        nomeDoQuestionario = "Pittsburg";
+        break;
+      case Epworth:
+        nomeDoQuestionario = "Epworth";
         break;
     }
 
@@ -79,6 +88,10 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
                       return WHODAS(paciente: _pacienteEscolhido!);
                     case GOAL:
                       return GOAL(paciente: _pacienteEscolhido!);
+                    case Epworth:
+                      return Epworth(paciente: _pacienteEscolhido!);
+                    case Pittsburg:
+                      return Pittsburg(paciente: _pacienteEscolhido!);
                     default:
                       return StopBang(paciente: _pacienteEscolhido!);
                   }

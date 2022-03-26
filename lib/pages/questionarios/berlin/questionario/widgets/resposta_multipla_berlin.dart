@@ -30,7 +30,6 @@ class _RespostaMultiplaBerlinState extends State<RespostaMultiplaBerlin> {
 
   @override
   Widget build(BuildContext context) {
-    print(_condicionaisHabilitadas);
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(

@@ -7,7 +7,12 @@ import '../whodas_controller.dart';
 class EnunDominio extends StatefulWidget {
   final String dominio;
   final WHODASController controller;
-  const EnunDominio({required this.dominio, required this.controller, Key? key})
+  final void Function() questionarioSetState;
+  const EnunDominio(
+      {required this.dominio,
+      required this.controller,
+      Key? key,
+      required this.questionarioSetState})
       : super(key: key);
 
   @override
@@ -23,7 +28,8 @@ class _EnunDominioState extends State<EnunDominio> {
     Color cor =
         Constantes.coresDominiosWHODASMap[widget.dominio] ?? Colors.blue;
     int i = ['dom_51', 'dom_52', 'dom_6'].contains(widget.dominio) ? 1 : 0;
-    bool _dominioAplicavel = widget.controller.estadosDosDominios[widget.dominio]!;
+    bool _dominioAplicavel =
+        widget.controller.estadosDosDominios[widget.dominio]!;
 
     return Column(
       children: [
@@ -77,12 +83,10 @@ class _EnunDominioState extends State<EnunDominio> {
             value: _dominioAplicavel,
             onChanged: (value) {
               setState(() {
-                print(value);
-                widget.controller.mudarEstadoDominio(!value, widget.dominio);
+                widget.controller.desabilitarDominio(!value, widget.dominio);
                 _dominioAplicavel = value;
-                print("dominio aplicavel ${_dominioAplicavel}");
-                print(widget.controller.listaDePaginas.length);
               });
+              widget.questionarioSetState();
             },
           ),
           title: Text(

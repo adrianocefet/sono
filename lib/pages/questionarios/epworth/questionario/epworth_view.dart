@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/widgets/controle_de_nav.dart';
-import 'package:sono/utils/helpers/resposta_widget.dart';
+import 'package:sono/pages/questionarios/epworth/questionario/widgets/controle_de_nav_epworth.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
-import 'widgets/resposta_ativ_trab.dart';
+import 'epworth_controller.dart';
 
-class WHODAS extends StatefulWidget {
+class Epworth extends StatefulWidget {
   final Paciente paciente;
-  late final WHODASController _controller;
-  WHODAS({required this.paciente, Key? key}) : super(key: key) {
-    _controller = WHODASController(paciente);
+  late final EpworthController _controller;
+  Epworth({required this.paciente, Key? key}) : super(key: key) {
+    _controller = EpworthController(paciente);
   }
 
   @override
-  _WHODASState createState() => _WHODASState();
+  _EpworthState createState() => _EpworthState();
 }
 
-class _WHODASState extends State<WHODAS> {
+class _EpworthState extends State<Epworth> {
   Pergunta? perguntaAtual;
   ValueNotifier<int>? paginaAtual;
 
   @override
   Widget build(BuildContext context) {
-    final listaDeRespostas =
-        widget._controller.gerarListaDePaginas(() => setState(() {}));
+    final listaDeRespostas = widget._controller.listaDePaginas;
 
     paginaAtual = paginaAtual ??
         ValueNotifier<int>(
@@ -44,13 +41,14 @@ class _WHODASState extends State<WHODAS> {
       child: Scaffold(
         appBar: AppBar(
           title: ValueListenableBuilder<int>(
-              valueListenable: paginaAtual!,
-              builder: (context, paginaAtual, _) {
-                return Text(
-                  "WHODAS${widget._controller.tituloSecaoAtual(perguntaAtual)}",
-                  textAlign: TextAlign.center,
-                );
-              }),
+            valueListenable: paginaAtual!,
+            builder: (context, paginaAtual, _) {
+              return const Text(
+                "Epworth",
+                textAlign: TextAlign.center,
+              );
+            },
+          ),
           centerTitle: true,
           backgroundColor: Constantes.corAzulEscuroPrincipal,
           actions: [
@@ -80,22 +78,6 @@ class _WHODASState extends State<WHODAS> {
               );
             },
             onPageChanged: (i) {
-              setState(() {});
-              switch (listaDeRespostas[i].runtimeType) {
-                case RespostaWidget:
-                  perguntaAtual =
-                      (listaDeRespostas[i] as RespostaWidget).pergunta;
-                  break;
-                case RespostaAtividadeTrabalho:
-                  perguntaAtual =
-                      (listaDeRespostas[i] as RespostaAtividadeTrabalho)
-                          .pergunta;
-                  break;
-                default:
-                  perguntaAtual = null;
-                  break;
-              }
-
               paginaAtual!.value = i + 1;
             },
           ),
@@ -104,10 +86,10 @@ class _WHODASState extends State<WHODAS> {
           color: Constantes.corAzulEscuroPrincipal,
           child: ValueListenableBuilder(
             valueListenable: paginaAtual!,
-            builder: (context, int paginaAtual, _) => ControleDeNavegacao(
+            builder: (context, int paginaAtual, _) =>
+                ControleDeNavegacaoEpworth(
               controller: widget._controller,
               paginaAtual: paginaAtual,
-              perguntaAtual: perguntaAtual,
             ),
           ),
         ),

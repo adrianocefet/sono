@@ -41,8 +41,7 @@ class BerlinController {
     );
   }
 
-  List<RespostaWidget> gerarListaDeRespostas(
-      context, Future<void> Function() passarPagina) {
+  List<RespostaWidget> gerarListaDeRespostas(Future<void> Function() passarPagina) {
     listaDeRespostas = [
       for (Pergunta pergunta in listaDePerguntas)
         RespostaWidget(
@@ -59,6 +58,8 @@ class BerlinController {
     }
 
     tamanhoListaDeRespostas = listaDeRespostas.length;
+
+    print("object");
 
     return listaDeRespostas;
   }

@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
+import 'package:sono/pages/questionarios/pittsburg/questionario/pittsburg_controller.dart';
+import 'package:sono/pages/questionarios/pittsburg/resultado/resultado_pittsburg_view.dart';
 import '../../../../../utils/models/pergunta.dart';
-import '../../resultado/resultado_whodas.dart';
-import '../../resultado/resultado_whodas_view.dart';
+import '../../resultado/resultado_pittsburg.dart';
 
-class ControleDeNavegacao extends StatefulWidget {
+class ControleDeNavegacaoPittsburg extends StatefulWidget {
   final int paginaAtual;
-  final WHODASController controller;
+  final PittsburgController controller;
   final Pergunta? perguntaAtual;
+  final void Function() questionarioSetState;
 
-  const ControleDeNavegacao({
+  const ControleDeNavegacaoPittsburg({
     Key? key,
     required this.controller,
     required this.paginaAtual,
     required this.perguntaAtual,
+    required this.questionarioSetState,
   }) : super(key: key);
 
   @override
-  State<ControleDeNavegacao> createState() => _ControleDeNavegacaoState();
+  State<ControleDeNavegacaoPittsburg> createState() =>
+      _ControleDeNavegacaoPittsburgState();
 }
 
-class _ControleDeNavegacaoState extends State<ControleDeNavegacao> {
+class _ControleDeNavegacaoPittsburgState
+    extends State<ControleDeNavegacaoPittsburg> {
   @override
   Widget build(BuildContext context) {
     bool estaNaPrimeiraPergunta = widget.paginaAtual == 1;
@@ -52,7 +56,7 @@ class _ControleDeNavegacaoState extends State<ControleDeNavegacao> {
                           if (widget.controller.formKey.currentState!
                               .validate()) {
                             widget.controller.formKey.currentState!.save();
-                            await widget.controller.passarParaProximaPagina();
+                            await widget.controller.passarParaProximaPagina(widget.questionarioSetState);
                           }
                         }
                       : null;
@@ -60,15 +64,15 @@ class _ControleDeNavegacaoState extends State<ControleDeNavegacao> {
                   return () async {
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
-                    ResultadoWHODAS? resultadoWHODAS = widget.controller
-                        .validarFormulario(widget.controller.formKey);
-                    if (resultadoWHODAS != null) {
+                    ResultadoPittsburg? resultadoPitts =
+                        widget.controller.validarFormulario();
+                    if (resultadoPitts != null) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           maintainState: true,
-                          builder: (context) => ResultadoWHODASView(
-                            resultado: resultadoWHODAS,
+                          builder: (context) => ResultadoPittsburgView(
+                            resultado: resultadoPitts,
                             paciente: widget.controller.paciente,
                           ),
                         ),
