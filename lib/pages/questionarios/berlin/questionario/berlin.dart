@@ -41,7 +41,7 @@ class _BerlinState extends State<Berlin> {
     perguntaAtual = perguntaAtual ?? _controller.listaDePerguntas.first;
 
     final listaDeRespostas =
-        _controller.gerarListaDeRespostas(context, _passarParaProximaPagina);
+        _controller.gerarListaDeRespostas(_passarParaProximaPagina);
 
     ValueNotifier paginaAtual = ValueNotifier(
       _pageViewController.positions.isNotEmpty

@@ -84,8 +84,8 @@ class _DominioState extends State<Dominio> {
         RespostaWidget respostaWidget = RespostaWidget(
           pergunta,
           notifyParent: () => habilitarPerguntasCondicionais(
-            whodas.habilitar501,
-            whodas.habilitar502,
+            whodas.q501habilitada,
+            whodas.q502habilitada,
           ),
         );
 
@@ -94,8 +94,8 @@ class _DominioState extends State<Dominio> {
               ? elementos.add(
                   Visibility(
                     visible: codigo == 'D5.01'
-                        ? whodas.habilitar501
-                        : whodas.habilitar502,
+                        ? whodas.q501habilitada
+                        : whodas.q502habilitada,
                     child: respostaWidget,
                   ),
                 )
@@ -103,11 +103,11 @@ class _DominioState extends State<Dominio> {
         }
       }
     } else {
-      widget.perguntas.forEach((pergunta) {
+      for (Pergunta pergunta in widget.perguntas) {
         pergunta.tipo == TipoPergunta.afirmativa
             ? pergunta.setResposta(3) // Índice da opção "vazia"
             : pergunta.setResposta(5); // Índice da opção "6 - Não se aplica"
-      });
+      }
     }
 
     return ListView.builder(

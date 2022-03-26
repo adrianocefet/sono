@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/widgets/controle_de_nav.dart';
+import 'package:sono/pages/questionarios/widgets/enunciado_respostas.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
-import 'widgets/resposta_ativ_trab.dart';
+import 'pittsburg_controller.dart';
+import 'widgets/controle_de_nav_pittsburg.dart';
 
-class WHODAS extends StatefulWidget {
+class Pittsburg extends StatefulWidget {
   final Paciente paciente;
-  late final WHODASController _controller;
-  WHODAS({required this.paciente, Key? key}) : super(key: key) {
-    _controller = WHODASController(paciente);
+  late final PittsburgController _controller;
+  Pittsburg({required this.paciente, Key? key}) : super(key: key) {
+    _controller = PittsburgController(paciente);
   }
 
   @override
-  _WHODASState createState() => _WHODASState();
+  _PittsburgState createState() => _PittsburgState();
 }
 
-class _WHODASState extends State<WHODAS> {
+class _PittsburgState extends State<Pittsburg> {
   Pergunta? perguntaAtual;
   ValueNotifier<int>? paginaAtual;
 
   @override
   Widget build(BuildContext context) {
-    final listaDeRespostas =
-        widget._controller.gerarListaDePaginas(() => setState(() {}));
+    final listaDePaginas = widget._controller.gerarListaDePaginas(
+      () => setState(() {}),
+    );
 
     paginaAtual = paginaAtual ??
         ValueNotifier<int>(
@@ -46,8 +47,8 @@ class _WHODASState extends State<WHODAS> {
           title: ValueListenableBuilder<int>(
               valueListenable: paginaAtual!,
               builder: (context, paginaAtual, _) {
-                return Text(
-                  "WHODAS${widget._controller.tituloSecaoAtual(perguntaAtual)}",
+                return const Text(
+                  "Pittsburg",
                   textAlign: TextAlign.center,
                 );
               }),
@@ -72,28 +73,22 @@ class _WHODASState extends State<WHODAS> {
           key: widget._controller.formKey,
           child: PageView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: listaDeRespostas.length,
+            itemCount: listaDePaginas.length,
             controller: widget._controller.pageViewController,
             itemBuilder: (context, i) {
               return SingleChildScrollView(
-                child: listaDeRespostas[i],
+                child: listaDePaginas[i],
               );
             },
             onPageChanged: (i) {
               setState(() {});
-              switch (listaDeRespostas[i].runtimeType) {
-                case RespostaWidget:
-                  perguntaAtual =
-                      (listaDeRespostas[i] as RespostaWidget).pergunta;
-                  break;
-                case RespostaAtividadeTrabalho:
-                  perguntaAtual =
-                      (listaDeRespostas[i] as RespostaAtividadeTrabalho)
-                          .pergunta;
-                  break;
-                default:
-                  perguntaAtual = null;
-                  break;
+              if (listaDePaginas[i].runtimeType !=
+                  EnunciadoRespostasDeQuestionarios) {
+                perguntaAtual = (listaDePaginas[i] as dynamic).pergunta;
+                print(perguntaAtual?.respostaExtenso);
+                print(perguntaAtual?.resposta);
+              } else {
+                perguntaAtual = null;
               }
 
               paginaAtual!.value = i + 1;
@@ -104,10 +99,12 @@ class _WHODASState extends State<WHODAS> {
           color: Constantes.corAzulEscuroPrincipal,
           child: ValueListenableBuilder(
             valueListenable: paginaAtual!,
-            builder: (context, int paginaAtual, _) => ControleDeNavegacao(
+            builder: (context, int paginaAtual, _) =>
+                ControleDeNavegacaoPittsburg(
               controller: widget._controller,
               paginaAtual: paginaAtual,
               perguntaAtual: perguntaAtual,
+              questionarioSetState: () => setState(() {}),
             ),
           ),
         ),
