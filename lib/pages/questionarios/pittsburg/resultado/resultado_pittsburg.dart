@@ -8,6 +8,7 @@ class ResultadoPittsburg {
   late final String resultado;
   late final int pontuacao;
   late final int indiceResultado;
+  List<int> pontuacoesComponentes = List.filled(7, 0);
 
   ResultadoPittsburg(this.perguntas) {
     pontuacao = _obterPontuacaoGeral;
@@ -15,8 +16,6 @@ class ResultadoPittsburg {
   }
 
   int get _obterPontuacaoGeral {
-    List<int> pontuacoesComponentes = List.filled(7, 0);
-
     pontuacoesComponentes[0] = _pontuacaoComponente1;
     pontuacoesComponentes[1] = _pontuacaoComponente2;
     pontuacoesComponentes[2] = _pontuacaoComponente3;

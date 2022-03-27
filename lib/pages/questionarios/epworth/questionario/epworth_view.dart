@@ -3,6 +3,7 @@ import 'package:sono/pages/questionarios/epworth/questionario/widgets/controle_d
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
+import '../../widgets/dialogs/sair_questionario.dart';
 import 'epworth_controller.dart';
 
 class Epworth extends StatefulWidget {
@@ -34,7 +35,7 @@ class _EpworthState extends State<Epworth> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },

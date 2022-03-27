@@ -4,6 +4,7 @@ import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br_controller
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
+import '../../widgets/dialogs/sair_questionario.dart';
 import '../resultado/resultado_sacs_br_view.dart';
 
 class SacsBR extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SacsBRState extends State<SacsBR> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },

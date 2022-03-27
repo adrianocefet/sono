@@ -5,6 +5,8 @@ import 'package:sono/pages/questionarios/stop_bang/resultado/resultado_stop_bang
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
+import '../../widgets/dialogs/sair_questionario.dart';
+
 class StopBang extends StatefulWidget {
   final Paciente paciente;
 
@@ -40,7 +42,7 @@ class _StopBangState extends State<StopBang> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },
