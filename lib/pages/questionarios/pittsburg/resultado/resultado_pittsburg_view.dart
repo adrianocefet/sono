@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/questionarios/epworth/resultado/resultado_epworth.dart';
 import 'package:sono/pages/questionarios/pittsburg/resultado/resultado_pittsburg.dart';
 import 'package:sono/utils/models/paciente.dart';
+
+import '../../widgets/dialogs/sair_questionario.dart';
 
 class ResultadoPittsburgView extends StatelessWidget {
   final ResultadoPittsburg resultado;
@@ -29,89 +30,96 @@ class ResultadoPittsburgView extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Resultado',
+    return WillPopScope(
+      onWillPop: () async {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        await mostrarDialogDesejaSairDoQuestionario(context);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'Resultado',
+          ),
+          backgroundColor: Constantes.corAzulEscuroPrincipal,
         ),
-        backgroundColor: Constantes.corAzulEscuroPrincipal,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Container(
-            height: 400,
-            alignment: AlignmentDirectional.center,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: Constantes.corAzulEscuroSecundario.withOpacity(0.7),
-              border: Border.all(
-                color: Constantes.corAzulEscuroPrincipal,
-                width: 4,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Container(
+              height: 400,
+              alignment: AlignmentDirectional.center,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                color: Constantes.corAzulEscuroSecundario.withOpacity(0.7),
+                border: Border.all(
+                  color: Constantes.corAzulEscuroPrincipal,
+                  width: 4,
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: "Qualidade do sono:\n\n",
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: Constantes.corAzulEscuroPrincipal,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: "Qualidade do sono:\n\n",
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: Constantes.corAzulEscuroPrincipal,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: resultado.resultado,
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: corResultado(),
+                      TextSpan(
+                        text: resultado.resultado,
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: corResultado(),
+                        ),
                       ),
-                    ),
-                    const TextSpan(
-                      text: "\n\nPontuação geral:\n\n",
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.w500,
-                        color: Constantes.corAzulEscuroPrincipal,
+                      const TextSpan(
+                        text: "\n\nPontuação geral:\n\n",
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.w500,
+                          color: Constantes.corAzulEscuroPrincipal,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: resultado.pontuacao.toString(),
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.w500,
-                        color: corResultado(),
+                      TextSpan(
+                        text: resultado.pontuacao.toString(),
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.w500,
+                          color: corResultado(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: Constantes.corAzulEscuroPrincipal,
-                minimumSize: const Size(0, 140)),
-            child: const Text(
-              "Salvar resultado no perfil do paciente",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+        bottomNavigationBar: BottomAppBar(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Constantes.corAzulEscuroPrincipal,
+                  minimumSize: const Size(0, 140)),
+              child: const Text(
+                "Salvar resultado no perfil do paciente",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
             ),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
           ),
         ),
       ),

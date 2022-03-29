@@ -5,6 +5,7 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
+import '../../widgets/dialogs/sair_questionario.dart';
 import 'widgets/resposta_ativ_trab.dart';
 
 class WHODAS extends StatefulWidget {
@@ -37,7 +38,7 @@ class _WHODASState extends State<WHODAS> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },

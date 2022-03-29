@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/questionarios/widgets/enunciado_respostas.dart';
-import 'package:sono/utils/helpers/resposta_widget.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
+import '../../widgets/dialogs/sair_questionario.dart';
 import 'pittsburg_controller.dart';
 import 'widgets/controle_de_nav_pittsburg.dart';
 
@@ -38,7 +38,7 @@ class _PittsburgState extends State<Pittsburg> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },
@@ -85,8 +85,6 @@ class _PittsburgState extends State<Pittsburg> {
               if (listaDePaginas[i].runtimeType !=
                   EnunciadoRespostasDeQuestionarios) {
                 perguntaAtual = (listaDePaginas[i] as dynamic).pergunta;
-                print(perguntaAtual?.respostaExtenso);
-                print(perguntaAtual?.resposta);
               } else {
                 perguntaAtual = null;
               }

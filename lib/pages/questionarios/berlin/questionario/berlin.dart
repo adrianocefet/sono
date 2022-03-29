@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/berlin_controller.dart';
 import 'package:sono/pages/questionarios/berlin/resultado/resultado_berlin_view.dart';
+import 'package:sono/pages/questionarios/widgets/dialogs/sair_questionario.dart';
 import 'package:sono/utils/models/paciente.dart';
 import '../../../../utils/models/pergunta.dart';
 
@@ -67,7 +68,7 @@ class _BerlinState extends State<Berlin> {
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.pop(context);
+        await mostrarDialogDesejaSairDoQuestionario(context);
 
         return false;
       },
