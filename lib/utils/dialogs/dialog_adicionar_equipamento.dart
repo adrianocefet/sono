@@ -22,17 +22,27 @@ void mostrarDialogAdicionarEquipamento(BuildContext context) {
             key: formKey,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  RespostaWidget(helper.perguntas.first),
-                  RespostaWidget(helper.perguntas.last),
-                ],
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    RespostaWidget(helper.perguntas.first),
+                    RespostaWidget(helper.perguntas.last),
+                  ],
+                ),
               ),
             ),
           ),
           actions: [
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             TextButton(
               child: const Text("Adicionar"),
               onPressed: () async {
@@ -56,12 +66,6 @@ void mostrarDialogAdicionarEquipamento(BuildContext context) {
                 }
               },
             ),
-            TextButton(
-              child: const Text("Cancelar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
           ],
         ),
       );

@@ -15,45 +15,49 @@ Future<ImageSource?> selecionarOrigemFoto(BuildContext context) async {
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: ListView(
-          shrinkWrap: true,
-          children: [
-            const Divider(),
-            ListTile(
-              title: const Text(
-                "Galeria",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Constantes.corAzulEscuroSecundario,
-                  fontWeight: FontWeight.bold,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.3,
+          height: MediaQuery.of(context).size.width * 0.1,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  "Galeria",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Constantes.corAzulEscuroSecundario,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                onTap: () {
+                  Navigator.pop(
+                    context,
+                    ImageSource.gallery,
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.pop(
-                  context,
-                  ImageSource.gallery,
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text(
-                "Câmera",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Constantes.corAzulEscuroSecundario,
-                  fontWeight: FontWeight.bold,
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  "Câmera",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Constantes.corAzulEscuroSecundario,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                onTap: () {
+                  Navigator.pop(
+                    context,
+                    ImageSource.camera,
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.pop(
-                  context,
-                  ImageSource.camera,
-                );
-              },
-            ),
-            const Divider(),
-          ],
+              const Divider(),
+            ],
+          ),
         ),
       );
     },

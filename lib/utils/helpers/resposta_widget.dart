@@ -9,7 +9,7 @@ import '../../pages/questionarios/widgets/dropdown_resposta.dart';
 import '../../pages/questionarios/widgets/extenso_resposta.dart';
 import '../../pages/questionarios/widgets/extenso_resposta_cadastro.dart';
 import '../../pages/questionarios/widgets/foto_perfil_resposta.dart';
-import '../../pages/questionarios/widgets/marcar_resposta.dart';
+//import '../../pages/questionarios/widgets/marcar_resposta.dart';
 import '../../pages/questionarios/widgets/multipla_resposta.dart';
 
 class RespostaWidget extends StatefulWidget {

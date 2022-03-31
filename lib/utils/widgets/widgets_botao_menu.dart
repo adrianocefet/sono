@@ -39,48 +39,41 @@ class _BotaoMenuState extends State<BotaoMenu>
 
   @override
   Widget build(BuildContext context) {
-    FloatingActionButton _botao(MapEntry<Icon, void Function()?> infoBotao) {
-      return FloatingActionButton(
-        heroTag: null,
-        child: infoBotao.key,
-        onPressed: infoBotao.value,
-        backgroundColor: actionButtomColor,
+    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+      return Flow(
+        clipBehavior: Clip.none,
+        delegate: FlowMenuDelegate(animation: animation),
+        children: [
+          FloatingActionButton(
+            child: AnimatedIcon(
+              icon: AnimatedIcons.menu_close,
+              progress: animation,
+            ),
+            onPressed: () => toggleMenu(),
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: (){
+              mostrarDialogAdicionarEquipamento(context);
+              //model.adicionarEquipamento();
+            },
+            backgroundColor: actionButtomColor,
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.sort_by_alpha),
+            onPressed: (){},
+            backgroundColor: actionButtomColor,
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.home),
+            onPressed: (){
+              model.fazHome();
+            },
+            backgroundColor: actionButtomColor,
+          ),
+        ],
       );
     }
-
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model) {
-        List<MapEntry<Icon, void Function()?>> informacoesDosBotoes = [
-          MapEntry(
-            const Icon(Icons.add),
-            () => mostrarDialogAdicionarEquipamento(context),
-          ),
-          MapEntry(
-            const Icon(Icons.sort_by_alpha),
-            () {},
-          ),
-          MapEntry(
-            const Icon(Icons.home),
-            model.fazHome,
-          ),
-        ];
-
-        return Flow(
-          clipBehavior: Clip.none,
-          delegate: FlowMenuDelegate(animation: animation),
-          children: [
-            FloatingActionButton(
-              heroTag: null,
-              child: AnimatedIcon(
-                icon: AnimatedIcons.menu_close,
-                progress: animation,
-              ),
-              onPressed: () => toggleMenu(),
-            ),
-            for (var infoBotao in informacoesDosBotoes) _botao(infoBotao),
-          ],
-        );
-      },
     );
   }
 }

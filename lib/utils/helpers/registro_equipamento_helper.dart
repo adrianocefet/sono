@@ -12,9 +12,9 @@ class RegistroEquipamentoHelper {
   RegistroEquipamentoHelper() {
     perguntas = [
       Pergunta(
-          "Foto do equipamento (opcional)", TipoPergunta.foto, [], '', 'Foto'),
+          "Foto (opcional):", TipoPergunta.foto, [], '', 'Foto'),
       Pergunta(
-        'Nome do equipamento',
+        'Nome:',
         TipoPergunta.extensoCadastros,
         [],
         '',

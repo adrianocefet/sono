@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
+import 'package:sono/_lixo/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';

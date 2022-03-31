@@ -6,6 +6,9 @@ import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/dialogs/deletar_equipamento.dart';
 import 'package:sono/utils/dialogs/deletar_paciente.dart';
 
+//usado somento para void opcaoLongPress
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 enum TipoElemento {
   equipamento,
   paciente,
@@ -43,7 +46,10 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return GestureDetector(
-          onLongPress: () async {
+          onLongPress: (){
+            opcaoLongPress(context, "id");
+          },
+          /*onLongPress: () async {
             setState(() {
               opacity = 0.1;
             });
@@ -59,7 +65,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
                 opacity = 0;
               });
             }
-          },
+          },*/
           onTap: () {
             if (widget._tipo == TipoElemento.equipamento) {
               model.equipamento == 'Equipamento'
@@ -118,4 +124,81 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
       },
     );
   }
+}
+
+
+void opcaoLongPress(context, String editarID) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Escolha uma opção:'),
+      content: SizedBox(
+          width: 100,
+          height: 120,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisSize: MainAxisSize.max,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ScreenEquipamento(editarID),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                    Text('Editar'),
+                  ],
+                ),
+              ),
+              const Divider(),
+              InkWell(
+                onTap: () {
+                  FirebaseFirestore.instance
+                      .collection('Equipamento')
+                      .doc(editarID)
+                      .delete();
+                  Navigator.of(context).pop();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.highlight_remove,
+                      color: Colors.black,
+                    ),
+                    Text('Remover'),
+                  ],
+                ),
+              ),
+              const Divider(),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  //mainAxisSize: MainAxisSize.max,
+                  children: const [
+                    Icon(
+                      Icons.cancel,
+                      color: Colors.black,
+                    ),
+                    Text('Cancelar'),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    ),
+  );
 }
