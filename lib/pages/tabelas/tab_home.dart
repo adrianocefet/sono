@@ -81,15 +81,29 @@ class _HomeTabState extends State<HomeTab> {
   Widget imagemHospital(String hospital, double x) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        return InkWell(
-          onTap: () {
-            model.hospital = hospital;
-            model.equipamento = 'Equipamento';
-            Scaffold.of(context).openDrawer();
-          },
-          child: Image.asset(
-            'assets/imagens/$hospital.png',
-            width: MediaQuery.of(context).size.width * 0.2,
+        bool clicado=false;
+        if (hospital==model.hospital) {
+            clicado=true;
+          }
+        return Material(
+          color: clicado?Color.fromARGB(255, 35, 39, 104):Colors.transparent,
+          child: InkWell(
+            splashColor: Constantes.corAzulEscuroSecundario,
+            highlightColor: Color.fromARGB(255, 35, 39, 104),
+            onTap: () {
+              model.hospital = hospital;
+              model.equipamento = 'Equipamento';
+              Scaffold.of(context).openDrawer();
+              setState((){});
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical:10.0, horizontal: 8),
+              child: Image.asset(
+                'assets/imagens/$hospital.png',
+                width: MediaQuery.of(context).size.width * 0.2,
+                height: MediaQuery.of(context).size.height * 0.15,
+              ),
+            ),
           ),
         );
       },
