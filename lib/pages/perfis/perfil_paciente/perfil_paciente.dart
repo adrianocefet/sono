@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/perfis/perfil_paciente/widgets/atributo_paciente.dart';
-import 'package:sono/pages/perfis/perfil_paciente/widgets/editar_atributo_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/widgets/historico_de_questionarios.dart';
+import 'package:sono/pages/perfis/perfil_paciente/widgets/uso_do_cpap.dart';
+import 'package:sono/pages/perfis/perfil_paciente/widgets/visao_geral.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
-import 'widgets/equipamentos_emprestados.dart';
 
 class PerfilDoPaciente extends StatefulWidget {
   const PerfilDoPaciente(this.idPaciente, {Key? key}) : super(key: key);
@@ -38,88 +36,66 @@ class _PerfilDoPacienteState extends State<PerfilDoPaciente> {
               default:
                 Paciente paciente =
                     Paciente.porDocumentSnapshot(snapshot.data!);
-                return Scaffold(
-                  appBar: AppBar(
-                    title: Text(paciente.nome),
-                    actions: [
-                      IconButton(
-                        onPressed: () {
-                          if (model.editar) {
-                            FirebaseFirestore.instance
-                                .collection('Paciente')
-                                .doc(widget.idPaciente)
-                                .update(paciente.infoMap);
-                          }
-                          setState(() {
-                            model.editar
-                                ? model.editar = false
-                                : model.editar = true;
-                          });
-                        },
-                        icon: model.editar
-                            ? const Icon(Icons.save)
-                            : const Icon(Icons.edit),
-                      )
-                    ],
-                  ),
-                  body: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Column(
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.fitWidth,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  paciente.urlFotoDePerfil ?? model.semimagem,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    model.editar
-                                        ? FittedBox(
-                                            child: Text(
-                                              paciente.nome,
-                                              style: const TextStyle(
-                                                fontSize: 40,
-                                              ),
-                                            ),
-                                          )
-                                        : Container(),
-                                    for (String atrib
-                                        in Constantes.titulosAtributosPacientes)
-                                      model.editar
-                                          ? EditarAtributoPaciente(
-                                              atributo: atrib,
-                                              paciente: paciente,
-                                            )
-                                          : atrib == "Nome"
-                                              ? Container()
-                                              : AtributoPaciente(
-                                                  atributo: atrib,
-                                                  paciente: paciente,
-                                                ),
-                                    EquipamentosEmprestados(
-                                      listaDeEquipamentos:
-                                          paciente.equipamentosEmprestados,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                debugPrint(snapshot.data!.data().toString());
+
+                return DefaultTabController(
+                  length: 3,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      title: Text(paciente.nome),
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            if (model.editar) {
+                              FirebaseFirestore.instance
+                                  .collection('Paciente')
+                                  .doc(widget.idPaciente)
+                                  .update(paciente.infoMap);
+                            }
+                            setState(() {
+                              model.editar
+                                  ? model.editar = false
+                                  : model.editar = true;
+                            });
+                          },
+                          icon: model.editar
+                              ? const Icon(Icons.save)
+                              : const Icon(Icons.edit),
+                        )
+                      ],
+                      bottom: const TabBar(
+                        indicatorPadding: EdgeInsets.only(top: 5),
+                        tabs: [
+                          Text(
+                            "Visão Geral",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Uso do CPAP",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Histórico de Questionários",
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
+                    ),
+                    body: TabBarView(
+                      children: [
+                        PacienteVisaoGeral(
+                          paciente: paciente,
+                          model: model,
+                        ),
+                        UsoDoCPAP(
+                          paciente: paciente,
+                          model: model,
+                        ),
+                        HistoricoDeQuestionarios(
+                          paciente: paciente,
+                          model: model,
+                        )
+                      ],
                     ),
                   ),
                 );

@@ -1,86 +1,96 @@
-import 'package:flutter/material.dart';
-import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/pagina_inicial/screen_home.dart';
-import '../questionario/stop_bang_controller.dart';
+import 'package:sono/utils/bases_questionarios/base_stopbang.dart';
+import 'package:sono/utils/models/pergunta.dart';
 
-class TelaResultadoStopBang extends StatelessWidget {
-  final ResultadoStopBang resultadoStopBang;
+class ResultadoStopBang {
+  late final List<Pergunta> perguntas;
+  late final int pontuacao;
+  late final ResultadoStopBangEnum resultado;
 
-  const TelaResultadoStopBang(this.resultadoStopBang, {Key? key})
-      : super(key: key);
+  ResultadoStopBang(this.perguntas) {
+    resultado = _gerarResultadoDoQuestionario();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    Color _cor = Colors.green;
-    String resultadoEmString() {
-      switch (resultadoStopBang) {
-        case ResultadoStopBang.altoRiscoDeAOS:
-          _cor = Colors.red;
-          return "Alto Risco de AOS!";
-        case ResultadoStopBang.riscoIntermediarioDeAOS:
-          _cor = Colors.orange;
-          return "Risco Intermediário de AOS!";
-        default:
-          _cor = Colors.green;
-          return "Risco Baixo de AOS!";
+  ResultadoStopBang.porMapa(Map<String, dynamic> mapa) {
+    perguntas = baseStopBang.map((e) => Pergunta.pelaBase(e)).toList();
+
+    for (Pergunta pergunta in perguntas) {
+      if ([int, null].contains(mapa[pergunta.codigo].runtimeType)) {
+        pergunta.resposta = mapa[pergunta.codigo];
+      }
+      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
+          ? mapa[pergunta.codigo]
+          : null;
+    }
+
+    pontuacao = mapa["pontuacao"];
+    resultado = mapa["resultado"];
+  }
+
+  String get resultadoEmString {
+    switch (resultado) {
+      case ResultadoStopBangEnum.altoRiscoDeAOS:
+        return "Alto Risco de AOS!";
+      case ResultadoStopBangEnum.riscoIntermediarioDeAOS:
+        return "Risco Intermediário de AOS!";
+      default:
+        return "Risco Baixo de AOS!";
+    }
+  }
+
+  ResultadoStopBangEnum _gerarResultadoDoQuestionario() {
+    int pontuacaoDasPerguntasIniciais = 0;
+    pontuacao = 0;
+    Map mapaDeRepostas = {};
+
+    for (Pergunta pergunta in perguntas) {
+      int? resposta = pergunta.resposta;
+
+      mapaDeRepostas[pergunta.codigo] = pergunta.resposta;
+
+      if (perguntas.indexOf(pergunta) <= 3) {
+        pontuacaoDasPerguntasIniciais += resposta!;
+      }
+
+      pontuacao += resposta!;
+    }
+
+    if (pontuacaoDasPerguntasIniciais >= 2) {
+      for (Pergunta pergunta in perguntas.where(
+        (pergunta) => ['imc', 'pescoco_grosso', 'sexo_masculino']
+            .contains(pergunta.codigo),
+      )) {
+        if (pergunta.resposta == 1) {
+          return ResultadoStopBangEnum.altoRiscoDeAOS;
+        } else {
+          continue;
+        }
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Resultado',
-        ),
-        backgroundColor: Constantes.corPrincipalQuestionarios,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Container(
-            height: 400,
-            alignment: AlignmentDirectional.center,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: Constantes.corAzulEscuroSecundario.withOpacity(0.7),
-              border: Border.all(
-                color: Constantes.corAzulEscuroPrincipal,
-                width: 4,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                resultadoEmString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: _cor,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: Constantes.corPrincipalQuestionarios,
-                minimumSize: const Size(0, 140)),
-            child: const Text(
-              "Salvar resultado no perfil do paciente",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-          ),
-        ),
-      ),
-    );
+    if (pontuacao <= 2) {
+      return ResultadoStopBangEnum.riscoBaixoDeAOS;
+    } else if ([3, 4].contains(pontuacao)) {
+      return ResultadoStopBangEnum.riscoIntermediarioDeAOS;
+    } else {
+      return ResultadoStopBangEnum.altoRiscoDeAOS;
+    }
   }
+
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["pontuacao"] = pontuacao;
+
+    return mapa;
+  }
+}
+
+enum ResultadoStopBangEnum {
+  altoRiscoDeAOS,
+  riscoIntermediarioDeAOS,
+  riscoBaixoDeAOS
 }

@@ -4,7 +4,6 @@ import 'package:sono/utils/models/pergunta.dart';
 
 import '../../../constants/constants.dart';
 
-
 class RespostaAfirmativa extends StatefulWidget {
   final Pergunta pergunta;
   final Future<void> Function() passarPagina;
@@ -16,12 +15,10 @@ class RespostaAfirmativa extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RespostaAfirmativaState createState() =>
-      _RespostaAfirmativaState();
+  _RespostaAfirmativaState createState() => _RespostaAfirmativaState();
 }
 
-class _RespostaAfirmativaState
-    extends State<RespostaAfirmativa> {
+class _RespostaAfirmativaState extends State<RespostaAfirmativa> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -131,6 +128,7 @@ class _BotaoState extends State<_Botao> {
       ),
       onPressed: () {
         widget.pergunta.setResposta(value);
+        widget.pergunta.setRespostaExtenso(value == 1 ? "Sim" : "Não");
         widget.parentSetState();
       },
     );

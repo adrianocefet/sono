@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/goal/questionario/goal.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/services/firebase.dart';
 import '../questionario/goal_controller.dart';
 
 class ResultadoGOALView extends StatelessWidget {
@@ -84,7 +86,12 @@ class ResultadoGOALView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await FirebaseService().salvarQuestionarioDoPaciente(
+                paciente,
+                GOAL,
+                resultadoGOAL.mapaDeRespostasEPontuacao,
+              );
               Navigator.pop(context);
               Navigator.pop(context);
             },

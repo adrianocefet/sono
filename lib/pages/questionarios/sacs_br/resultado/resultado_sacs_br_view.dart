@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/services/firebase.dart';
 import '../questionario/sacs_br_controller.dart';
 
 class ResultadoSACSBRView extends StatelessWidget {
@@ -84,7 +86,12 @@ class ResultadoSACSBRView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await FirebaseService().salvarQuestionarioDoPaciente(
+                paciente,
+                SacsBR,
+                resultadoSACSBR.mapaDeRespostasEPontuacao,
+              );
               Navigator.pop(context);
               Navigator.pop(context);
             },

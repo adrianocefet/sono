@@ -41,7 +41,8 @@ class BerlinController {
     );
   }
 
-  List<RespostaWidget> gerarListaDeRespostas(Future<void> Function() passarPagina) {
+  List<RespostaWidget> gerarListaDeRespostas(
+      Future<void> Function() passarPagina) {
     listaDeRespostas = [
       for (Pergunta pergunta in listaDePerguntas)
         RespostaWidget(
@@ -58,8 +59,6 @@ class BerlinController {
     }
 
     tamanhoListaDeRespostas = listaDeRespostas.length;
-
-    print("object");
 
     return listaDeRespostas;
   }
@@ -107,7 +106,7 @@ class BerlinController {
 }
 
 class ResultadoBerlin {
-  final List<Pergunta> perguntas;
+  late final List<Pergunta> perguntas;
 
   Map<String, dynamic> respostasPorPergunta = {};
 
@@ -128,6 +127,43 @@ class ResultadoBerlin {
   ResultadoBerlin(this.perguntas) {
     _gerarResultadoDoQuestionario();
   }
+
+  ResultadoBerlin.porMapa(Map<String, dynamic> mapa) {
+    perguntas = baseBerlin.map((e) => Pergunta.pelaBase(e)).toList();
+
+    for (Pergunta pergunta in perguntas) {
+      pergunta.resposta = mapa[pergunta.codigo];
+      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
+          ? mapa[pergunta.codigo]
+          : null;
+    }
+
+    pontuacoesPorCategoria = mapa["pontuacoesPorCategoria"];
+    resultadosPorCategoria = mapa["resultadosPorCategoria"];
+  }
+
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["pontuacoesPorCategoria"] = pontuacoesPorCategoria;
+    mapa["resultadosPorCategoria"] = resultadosPorCategoria;
+
+    return mapa;
+  }
+
+  bool get resultadoFinalPositivo =>
+      resultadosPorCategoria.values
+          .where((element) => element == true)
+          .length >=
+      2;
+  String get resultadoEmString => resultadoFinalPositivo
+      ? "Alto risco de Distúrbios do Sono e AOS!"
+      : "Baixo risco de Distúrbios do Sono e AOS!";
+
 
   void _gerarResultadoDoQuestionario() {
     for (Pergunta pergunta in perguntas) {

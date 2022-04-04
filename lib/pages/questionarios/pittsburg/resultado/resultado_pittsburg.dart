@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sono/utils/bases_questionarios/base_pittsburg.dart';
 
 import '../../../../utils/models/pergunta.dart';
 
 class ResultadoPittsburg {
-  final List<Pergunta> perguntas;
+  late final List<Pergunta> perguntas;
   late final String resultado;
   late final int pontuacao;
   late final int indiceResultado;
@@ -13,6 +14,36 @@ class ResultadoPittsburg {
   ResultadoPittsburg(this.perguntas) {
     pontuacao = _obterPontuacaoGeral;
     resultado = _obterResultado;
+  }
+
+  ResultadoPittsburg.porMapa(Map<String, dynamic> mapa) {
+    perguntas = basePittsburg.map((e) => Pergunta.pelaBase(e)).toList();
+
+    for (Pergunta pergunta in perguntas) {
+      if ([int, null].contains(mapa[pergunta.codigo].runtimeType)) {
+        pergunta.resposta = mapa[pergunta.codigo];
+      }
+      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
+          ? mapa[pergunta.codigo]
+          : null;
+    }
+
+    pontuacao = mapa["pontuacao"];
+    _obterResultado;
+  }
+
+  String get resultadoEmString => resultado;
+
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["pontuacao"] = pontuacao;
+
+    return mapa;
   }
 
   int get _obterPontuacaoGeral {

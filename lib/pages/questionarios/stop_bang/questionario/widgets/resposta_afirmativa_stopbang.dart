@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_rich_text/simple_rich_text.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import '../../../constants/constants.dart';
+import '../../../../../constants/constants.dart';
 
 class RespostaAfirmativaStopBang extends StatefulWidget {
   final Pergunta pergunta;

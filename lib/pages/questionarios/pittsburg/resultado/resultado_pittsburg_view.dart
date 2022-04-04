@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/pittsburg/questionario/pittsburg_view.dart';
 import 'package:sono/pages/questionarios/pittsburg/resultado/resultado_pittsburg.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 import '../../widgets/dialogs/sair_questionario.dart';
 
@@ -115,7 +117,12 @@ class ResultadoPittsburgView extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseService().salvarQuestionarioDoPaciente(
+                  paciente,
+                  Pittsburg,
+                  resultado.mapaDeRespostasEPontuacao,
+                );
                 Navigator.pop(context);
                 Navigator.pop(context);
               },

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/berlin_controller.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 import '../../../pagina_inicial/screen_home.dart';
 
 class TelaResultadoBerlin extends StatefulWidget {
   final ResultadoBerlin resultadoBerlin;
   final Paciente paciente;
-  
+
   const TelaResultadoBerlin({
     Key? key,
     required this.paciente,
@@ -20,24 +22,11 @@ class TelaResultadoBerlin extends StatefulWidget {
 }
 
 class _TelaResultadoBerlinState extends State<TelaResultadoBerlin> {
-  bool get resultadoFinalPositivo =>
-      widget.resultadoBerlin.resultadosPorCategoria.values
-          .where((element) => element == true)
-          .length >=
-      2;
-  String get resultadoEmString => resultadoFinalPositivo
-      ? "Alto risco de Distúrbios do Sono e AOS!"
-      : "Baixo risco de Distúrbios do Sono e AOS!";
-
   Color get corDoResultado =>
-      resultadoFinalPositivo ? Colors.red : Colors.green;
+      widget.resultadoBerlin.resultadoFinalPositivo ? Colors.red : Colors.green;
 
   @override
   Widget build(BuildContext context) {
-    print(widget.resultadoBerlin.pontuacoesPorCategoria);
-    print(widget.resultadoBerlin.resultadosPorCategoria);
-    print(widget.resultadoBerlin.respostasPorPergunta);
-    print(widget.resultadoBerlin.imc);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Resultado"),
@@ -50,7 +39,7 @@ class _TelaResultadoBerlinState extends State<TelaResultadoBerlin> {
           Container(
             color: corDoResultado.withOpacity(0.4),
             child: Text(
-              resultadoEmString,
+              widget.resultadoBerlin.resultadoEmString,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 40,
@@ -81,7 +70,12 @@ class _TelaResultadoBerlinState extends State<TelaResultadoBerlin> {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await FirebaseService().salvarQuestionarioDoPaciente(
+                widget.paciente,
+                Berlin,
+                widget.resultadoBerlin.mapaDeRespostasEPontuacao,
+              );
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);

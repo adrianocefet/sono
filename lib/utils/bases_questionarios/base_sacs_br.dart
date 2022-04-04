@@ -18,8 +18,8 @@ List<Map<String, dynamic>> baseSacsBR = [
       "Não sei dizer",
       "Nunca",
       "Raramente (1-2 vezes por ano)",
-      "Ocasionalmente (4-8 vezes ao ano)"
-          "Algumas vezes (1-2 vezes por mês)",
+      "Ocasionalmente (4-8 vezes ao ano)",
+      "Algumas vezes (1-2 vezes por mês)",
       "Frequentemente (3-5 vezes por semana)",
       "Sempre (todas as noites)"
     ],
@@ -35,8 +35,8 @@ List<Map<String, dynamic>> baseSacsBR = [
       "Não sei dizer",
       "Nunca",
       "Raramente (1-2 vezes por ano)",
-      "Ocasionalmente (4-8 vezes ao ano)"
-          "Algumas vezes (1-2 vezes por mês)",
+      "Ocasionalmente (4-8 vezes ao ano)",
+      "Algumas vezes (1-2 vezes por mês)",
       "Frequentemente (3-5 vezes por semana)",
       "Sempre (todas as noites)"
     ],

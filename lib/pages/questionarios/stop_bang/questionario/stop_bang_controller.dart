@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/questionarios/stop_bang/resultado/resultado_stop_bang.dart';
 import 'package:sono/utils/bases_questionarios/base_stopbang.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import '../../widgets/resposta_afirmativa.dart';
-
+import 'widgets/resposta_afirmativa_stopbang.dart';
 
 class StopBangController {
   final List<Pergunta> _perguntas = baseStopBang.map(
@@ -19,6 +19,7 @@ class StopBangController {
   ).toList();
 
   dynamic _resultado;
+  final int _pontuacaoTotal = 0;
 
   List<RespostaAfirmativaStopBang> listaDeRespostas(
           Future<void> Function() passarPagina) =>
@@ -35,59 +36,26 @@ class StopBangController {
 
   get resultado => _resultado;
 
-  ResultadoStopBang _gerarResultadoDoQuestionario() {
-    int pontuacaoDasPerguntasIniciais = 0;
-    int pontuacaoTotal = 0;
-    Map mapaDeRepostas = {};
-
-    for (Pergunta pergunta in _perguntas) {
-      int? resposta = pergunta.resposta;
-
-      mapaDeRepostas[pergunta.codigo] = pergunta.resposta;
-
-      if (_perguntas.indexOf(pergunta) <= 3) {
-        pontuacaoDasPerguntasIniciais += resposta!;
-      }
-
-      pontuacaoTotal += resposta!;
-    }
-
-    if (pontuacaoDasPerguntasIniciais >= 2) {
-      for (Pergunta pergunta in _perguntas.where(
-        (pergunta) => ['imc', 'pescoco_grosso', 'sexo_masculino']
-            .contains(pergunta.codigo),
-      )) {
-        if (pergunta.resposta == 1) {
-          return ResultadoStopBang.altoRiscoDeAOS;
-        } else {
-          continue;
-        }
-      }
-    }
-
-    if (pontuacaoTotal <= 2) {
-      return ResultadoStopBang.riscoBaixoDeAOS;
-    } else if ([3, 4].contains(pontuacaoTotal)) {
-      return ResultadoStopBang.riscoIntermediarioDeAOS;
-    } else {
-      return ResultadoStopBang.altoRiscoDeAOS;
-    }
-  }
-
-  @override
   ResultadoStopBang? validarFormulario(GlobalKey<FormState> formKey) {
     if (!_perguntas.any((element) {
       return element.resposta == null;
     })) {
       formKey.currentState!.save();
-      return _gerarResultadoDoQuestionario();
+      return ResultadoStopBang(_perguntas);
     }
     return null;
   }
-}
 
-enum ResultadoStopBang {
-  altoRiscoDeAOS,
-  riscoIntermediarioDeAOS,
-  riscoBaixoDeAOS
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in _perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["pontuacao"] = _pontuacaoTotal;
+    mapa["resultado"] = resultado;
+
+    return mapa;
+  }
 }

@@ -12,8 +12,6 @@ class SacsBRController {
   List<RespostaWidget> listaDeRespostas = [];
   List<Pergunta> get listaDePerguntas => _perguntas;
 
-  
-
   List<RespostaWidget> gerarListaDeRespostas(
       context, Future<void> Function() passarPagina) {
     listaDeRespostas = [
@@ -49,7 +47,7 @@ class SacsBRController {
 }
 
 class ResultadoSACSBR {
-  final List<Pergunta> perguntas;
+  late final List<Pergunta> perguntas;
 
   late final bool comHAS;
   late final int valorFrequenciaDeRonco;
@@ -79,6 +77,27 @@ class ResultadoSACSBR {
     pontuacao = _gerarResultadoDoQuestionario();
   }
 
+  ResultadoSACSBR.porMapa(Map<String, dynamic> mapa) {
+    perguntas = baseSacsBR.map((e) => Pergunta.pelaBase(e)).toList();
+
+    for (Pergunta pergunta in perguntas) {
+      if ([int, null].contains(mapa[pergunta.codigo].runtimeType)) {
+        pergunta.resposta = mapa[pergunta.codigo];
+      }
+      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
+          ? mapa[pergunta.codigo]
+          : null;
+    }
+
+    pontuacao = mapa["pontuacao"];
+  }
+
+  String get resultadoEmString {
+    return pontuacao > 15
+        ? "Alta probabilidade de SAOS!"
+        : "Baixa probabilidade de SAOS!";
+  }
+
   int _gerarResultadoDoQuestionario() {
     int colunaDaMatrizDeResultado =
         valorFrequenciaDeRonco + valorFrequenciaEngasgo;
@@ -92,5 +111,17 @@ class ResultadoSACSBR {
       return matrixDeResultado[linhaDaMatrixDeResultado]
           [colunaDaMatrizDeResultado];
     }
+  }
+
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["pontuacao"] = pontuacao;
+
+    return mapa;
   }
 }

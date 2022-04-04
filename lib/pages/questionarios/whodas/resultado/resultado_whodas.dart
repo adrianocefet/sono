@@ -1,14 +1,34 @@
 import 'dart:math';
-
+import 'package:sono/utils/bases_questionarios/base_whodas.dart';
 import '../../../../utils/models/pergunta.dart';
 
 class ResultadoWHODAS {
+  late final List<Pergunta> perguntas;
   Map<String, dynamic> resultado = {};
   num _somaPontuacaoTotal = 0;
   num _somaPesosMaxTotal = 0;
 
-  ResultadoWHODAS(List<Pergunta> perguntas) {
+  ResultadoWHODAS(this.perguntas) {
     _gerarResultadoDoFormulario(perguntas);
+  }
+
+  ResultadoWHODAS.porMapa(Map<String, dynamic> mapa) {
+    perguntas = baseWHODAS.map((e) => Pergunta.pelaBase(e)).toList();
+
+    for (Pergunta pergunta in perguntas) {
+      if ([int, null].contains(mapa[pergunta.codigo].runtimeType)) {
+        pergunta.resposta = mapa[pergunta.codigo];
+      }
+      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
+          ? mapa[pergunta.codigo]
+          : null;
+    }
+
+    _gerarResultadoDoFormulario(perguntas);
+  }
+
+  String get resultadoEmString {
+    return resultado["total"].toString();
   }
 
   Map<String, dynamic> _gerarResultadoDoFormulario(perguntas) {
@@ -107,5 +127,17 @@ class ResultadoWHODAS {
     return numNaoSeAplica == perguntas.length
         ? -1
         : (soma / somaPesosMax) * 100;
+  }
+
+  Map<String, dynamic> get mapaDeRespostasEPontuacao {
+    Map<String, dynamic> mapa = {};
+
+    for (Pergunta pergunta in perguntas) {
+      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.resposta;
+    }
+
+    mapa["resultado"] = resultado;
+
+    return mapa;
   }
 }

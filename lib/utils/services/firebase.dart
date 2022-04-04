@@ -2,6 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
+import 'package:sono/pages/questionarios/epworth/questionario/epworth_view.dart';
+import 'package:sono/pages/questionarios/goal/questionario/goal.dart';
+import 'package:sono/pages/questionarios/pittsburg/questionario/pittsburg_view.dart';
+import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
+import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 import '../models/equipamento.dart';
@@ -19,6 +26,7 @@ class FirebaseService {
 
   static const String _stringPaciente = 'Paciente';
   static const String _stringEquipamento = "Equipamento";
+  static const String _stringQuestionarios = "Questionarios";
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
     return await _db.collection(_stringPaciente).doc(idPaciente).get().then(
@@ -28,16 +36,18 @@ class FirebaseService {
         );
   }
 
-  Future<Equipamento> obterEquipamentoPorID(String idEquipamento) async {
+  Future<Equipamento?> obterEquipamentoPorID(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
 
-    Map<String, dynamic> dadosEquipamento = snapshot.data()!;
-    dadosEquipamento["id"] = idEquipamento;
+    Map<String, dynamic>? dadosEquipamento = snapshot.data();
+    dadosEquipamento?["id"] = idEquipamento;
 
-    return Equipamento.porMap(
-      dadosEquipamento,
-    );
+    return dadosEquipamento == null
+        ? null
+        : Equipamento.porMap(
+            dadosEquipamento,
+          );
   }
 
   static Future<void> atualizarEquipamento(
@@ -152,6 +162,23 @@ class FirebaseService {
     return idEquipamento;
   }
 
+  Future removerEquipamento(String idEquipamento) async {
+    DocumentSnapshot<Map<String, dynamic>> info =
+        await _db.collection(_stringEquipamento).doc(idEquipamento).get();
+
+    await devolverEquipamento(
+      Equipamento.porMap(
+        info.data(),
+      ),
+    );
+
+    await _db.collection(_stringEquipamento).doc(idEquipamento).delete();
+    try {
+      await deletarImagemDoFirebaseStorage(idEquipamento);
+      // ignore: empty_catches
+    } on Exception {}
+  }
+
   Future removerPaciente(String idPaciente) async {
     await _db.collection(_stringPaciente).doc(idPaciente).delete();
     try {
@@ -172,14 +199,6 @@ class FirebaseService {
     if (query.docs.isNotEmpty) idPaciente = query.docs[0].id;
 
     return idPaciente;
-  }
-
-  Future removerEquipamento(String idEquipamento) async {
-    await _db.collection(_stringPaciente).doc(idEquipamento).delete();
-    try {
-      await deletarImagemDoFirebaseStorage(idEquipamento);
-      // ignore: empty_catches
-    } on Exception {}
   }
 
   Future<String> uploadDadosDoPaciente(Map<String, dynamic> data,
@@ -214,6 +233,52 @@ class FirebaseService {
     }
 
     return idPaciente;
+  }
+
+  Future<void> salvarQuestionarioDoPaciente(Paciente paciente,
+      dynamic tipoQuestionario, Map<String, dynamic> resultado) async {
+    String nomeDoQuestionario = "";
+    switch (tipoQuestionario) {
+      case Berlin:
+        nomeDoQuestionario = "Berlin";
+        break;
+      case StopBang:
+        nomeDoQuestionario = "Stop-Bang";
+        break;
+      case SacsBR:
+        nomeDoQuestionario = "SACS-BR";
+        break;
+      case WHODAS:
+        nomeDoQuestionario = "WHODAS";
+        break;
+      case GOAL:
+        nomeDoQuestionario = "GOAL";
+        break;
+      case Pittsburg:
+        nomeDoQuestionario = "Pittsburg";
+        break;
+      case Epworth:
+        nomeDoQuestionario = "Epworth";
+        break;
+    }
+
+    _db
+        .collection(_stringPaciente)
+        .doc(paciente.id)
+        .collection(_stringQuestionarios)
+        .doc(nomeDoQuestionario)
+        .set({
+      DateTime.now().toString(): resultado,
+    });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamQuestionarios(
+      String idPaciente) {
+    return _db
+        .collection(_stringPaciente)
+        .doc(idPaciente)
+        .collection(_stringQuestionarios)
+        .snapshots();
   }
 
   Future<String> adicionarImageDoPacienteAoFirebaseStorage({

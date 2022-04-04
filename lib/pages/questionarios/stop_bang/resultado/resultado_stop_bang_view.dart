@@ -1,42 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/questionarios/epworth/questionario/epworth_view.dart';
+import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'resultado_epworth.dart';
+import 'resultado_stop_bang.dart';
 
-class ResultadoEpworthView extends StatelessWidget {
-  final ResultadoEpworth resultado;
+class TelaResultadoStopBang extends StatelessWidget {
+  final ResultadoStopBang resultadoStopBang;
   final Paciente paciente;
-
-  const ResultadoEpworthView({
-    required this.resultado,
-    required this.paciente,
-    Key? key,
-  }) : super(key: key);
+  const TelaResultadoStopBang(this.resultadoStopBang,
+      {required this.paciente, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color? corResultado() {
-      switch (resultado.indiceResultado) {
-        case 1:
-          return Colors.green;
-        case 2:
-          return Colors.orange;
-        case 3:
-          return Colors.red;
+    Color _cor = Colors.green;
+    String resultadoEmString() {
+      switch (resultadoStopBang.resultado) {
+        case ResultadoStopBangEnum.altoRiscoDeAOS:
+          _cor = Colors.red;
+          return "Alto Risco de AOS!";
+        case ResultadoStopBangEnum.riscoIntermediarioDeAOS:
+          _cor = Colors.orange;
+          return "Risco Intermediário de AOS!";
         default:
-          return null;
+          _cor = Colors.green;
+          return "Risco Baixo de AOS!";
       }
     }
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: const Text(
           'Resultado',
         ),
-        backgroundColor: Constantes.corAzulEscuroPrincipal,
+        backgroundColor: Constantes.corPrincipalQuestionarios,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -54,27 +52,13 @@ class ResultadoEpworthView extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: RichText(
+              child: Text(
+                resultadoEmString(),
                 textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: resultado.resultado,
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: corResultado(),
-                      ),
-                    ),
-                    TextSpan(
-                      text: "\n\nPontuação: ${resultado.pontuacao}",
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.w500,
-                        color: corResultado(),
-                      ),
-                    ),
-                  ],
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: _cor,
                 ),
               ),
             ),
@@ -86,7 +70,7 @@ class ResultadoEpworthView extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Constantes.corAzulEscuroPrincipal,
+                primary: Constantes.corPrincipalQuestionarios,
                 minimumSize: const Size(0, 140)),
             child: const Text(
               "Salvar resultado no perfil do paciente",
@@ -96,8 +80,8 @@ class ResultadoEpworthView extends StatelessWidget {
             onPressed: () async {
               await FirebaseService().salvarQuestionarioDoPaciente(
                 paciente,
-                Epworth,
-                resultado.mapaDeRespostasEPontuacao,
+                StopBang,
+                resultadoStopBang.mapaDeRespostasEPontuacao,
               );
               Navigator.pop(context);
               Navigator.pop(context);

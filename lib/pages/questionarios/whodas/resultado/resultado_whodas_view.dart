@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
+import 'package:sono/utils/services/firebase.dart';
 import '../../../../utils/dialogs/error_message.dart';
 import '../../../../utils/models/paciente.dart';
 import 'resultado_whodas.dart';
@@ -63,7 +65,7 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
           backgroundColor: Constantes.corAzulEscuroPrincipal,
           title: const Text('Resultados'),
           centerTitle: true,
-          actions: <Widget>[],
+          actions: const <Widget>[],
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -151,7 +153,12 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
                             ),
                             child: FlatButton(
                               onPressed: () async {
-                                //return salvarFormulario();
+                                await FirebaseService()
+                                    .salvarQuestionarioDoPaciente(
+                                  widget.paciente,
+                                  WHODAS,
+                                  widget.resultado.mapaDeRespostasEPontuacao,
+                                );
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },

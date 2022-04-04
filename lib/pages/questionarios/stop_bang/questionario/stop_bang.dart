@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang_controller.dart';
 import 'package:sono/pages/questionarios/stop_bang/resultado/resultado_stop_bang.dart';
+import 'package:sono/pages/questionarios/stop_bang/resultado/resultado_stop_bang_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-
 import '../../widgets/dialogs/sair_questionario.dart';
 
 class StopBang extends StatefulWidget {
@@ -99,6 +99,7 @@ class _StopBangState extends State<StopBang> {
                       builder: (_) {
                         return TelaResultadoStopBang(
                           resultadoQuestionario,
+                          paciente: widget.paciente,
                         );
                       },
                     ),

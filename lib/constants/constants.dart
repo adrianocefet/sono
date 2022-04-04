@@ -25,6 +25,16 @@ abstract class Constantes {
   static const dom52Color = Color(0Xffe05780);
   static const dom6Color = Color(0XFFFF9D00);
 
+  static const nomesQuestionarios = [
+    "Berlin",
+    "Stop-Bang",
+    "SACS-BR",
+    "WHODAS",
+    "GOAL",
+    "Pittsburg",
+    "Epworth"
+  ];
+
   static const codigosDominiosWHODAS = [
     'total',
     'dom_1',
