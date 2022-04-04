@@ -38,19 +38,19 @@ class _PacienteVisaoGeralState extends State<HistoricoDeQuestionarios> {
   dynamic _gerarClasseResultadoDoQuestionario(
       String nomeQuestionario, Map<String, dynamic> mapa) {
     switch (nomeQuestionario) {
-      case "Berlin":
+      case "berlin":
         return ResultadoBerlin.porMapa(mapa);
-      case "Stop-Bang":
+      case "stopbang":
         return ResultadoStopBang.porMapa(mapa);
-      case "SACS-BR":
+      case "sacsbr":
         return ResultadoSACSBR.porMapa(mapa);
-      case "WHODAS":
+      case "whodas":
         return ResultadoWHODAS.porMapa(mapa);
-      case "GOAL":
+      case "goal":
         return ResultadoGOAL.porMapa(mapa);
-      case "Pittsburg":
+      case "pittsburg":
         return ResultadoPittsburg.porMapa(mapa);
-      case "Epworth":
+      case "epworth":
         return ResultadoEpworth.porMapa(mapa);
     }
   }
@@ -82,15 +82,19 @@ class _PacienteVisaoGeralState extends State<HistoricoDeQuestionarios> {
             List<QueryDocumentSnapshot<Map<String, dynamic>>>
                 historicosDisponiveis = snapshot.data!.docs
                     .where((historico) =>
-                        Constantes.nomesQuestionarios.contains(historico.id))
+                        Constantes.codigosQuestionarios.contains(historico.id))
                     .toList();
+
             List<Widget> paginas = [
               ListView.separated(
                 itemCount: historicosDisponiveis.length,
                 itemBuilder: (context, i) {
                   return ListTile(
                     title: Text(
-                      historicosDisponiveis[i].id,
+                      Constantes.nomesQuestionarios[
+                          Constantes.codigosQuestionarios.indexOf(
+                        historicosDisponiveis[i].id,
+                      )],
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 22,
@@ -207,7 +211,22 @@ class _PacienteVisaoGeralState extends State<HistoricoDeQuestionarios> {
             return PageView(
               controller: _pageViewController,
               physics: const NeverScrollableScrollPhysics(),
-              children: paginas,
+              children: historicosDisponiveis.isEmpty
+                  ? [
+                      const Center(
+                        child: Text(
+                          "Este paciente não possui questionários respondidos!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: Constantes.corAzulEscuroPrincipal,
+                          ),
+                        ),
+                      ),
+                    ]
+                  : paginas,
             );
         }
       },

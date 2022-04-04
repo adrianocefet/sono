@@ -64,7 +64,7 @@ class _PerfilDoPacienteState extends State<PerfilDoPaciente> {
                         )
                       ],
                       bottom: const TabBar(
-                        indicatorPadding: EdgeInsets.only(top: 5),
+                        labelPadding: EdgeInsets.only(bottom: 10),
                         tabs: [
                           Text(
                             "Visão Geral",

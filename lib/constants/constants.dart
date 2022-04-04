@@ -35,6 +35,16 @@ abstract class Constantes {
     "Epworth"
   ];
 
+  static const codigosQuestionarios = [
+    "berlin",
+    "stopbang",
+    "sacsbr",
+    "whodas",
+    "goal",
+    "pittsburg",
+    "epworth"
+  ];
+
   static const codigosDominiosWHODAS = [
     'total',
     'dom_1',

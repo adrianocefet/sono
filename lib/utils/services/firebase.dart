@@ -26,7 +26,7 @@ class FirebaseService {
 
   static const String _stringPaciente = 'Paciente';
   static const String _stringEquipamento = "Equipamento";
-  static const String _stringQuestionarios = "Questionarios";
+  static const String _stringQuestionarios = "questionarios";
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
     return await _db.collection(_stringPaciente).doc(idPaciente).get().then(
@@ -240,25 +240,25 @@ class FirebaseService {
     String nomeDoQuestionario = "";
     switch (tipoQuestionario) {
       case Berlin:
-        nomeDoQuestionario = "Berlin";
+        nomeDoQuestionario = "berlin";
         break;
       case StopBang:
-        nomeDoQuestionario = "Stop-Bang";
+        nomeDoQuestionario = "stopbang";
         break;
       case SacsBR:
-        nomeDoQuestionario = "SACS-BR";
+        nomeDoQuestionario = "sacsbr";
         break;
       case WHODAS:
-        nomeDoQuestionario = "WHODAS";
+        nomeDoQuestionario = "whodas";
         break;
       case GOAL:
-        nomeDoQuestionario = "GOAL";
+        nomeDoQuestionario = "goal";
         break;
       case Pittsburg:
-        nomeDoQuestionario = "Pittsburg";
+        nomeDoQuestionario = "pittsburg";
         break;
       case Epworth:
-        nomeDoQuestionario = "Epworth";
+        nomeDoQuestionario = "epworth";
         break;
     }
 
@@ -267,9 +267,12 @@ class FirebaseService {
         .doc(paciente.id)
         .collection(_stringQuestionarios)
         .doc(nomeDoQuestionario)
-        .set({
-      DateTime.now().toString(): resultado,
-    });
+        .set(
+      {
+        DateTime.now().toString(): resultado,
+      },
+      SetOptions(merge: true),
+    );
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamQuestionarios(
