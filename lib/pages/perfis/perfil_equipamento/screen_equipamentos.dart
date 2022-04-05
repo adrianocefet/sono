@@ -8,6 +8,8 @@ import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 import '../../../constants/constants.dart';
+import '../../../utils/dialogs/devolver_equipamento_dialog.dart';
+import '../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../utils/models/equipamento.dart';
 import '../../../utils/models/user_model.dart';
 import 'widgets/editar_status.dart';
@@ -90,11 +92,24 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                               padding: const EdgeInsets.only(
                                 right: 20.0,
                               ),
-                              child: Image.network(
-                                equipamento.urlFotoDePerfil ?? model.semimagem,
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                height: MediaQuery.of(context).size.width * 0.5,
-                                fit: BoxFit.cover,
+                              child: Column(
+                                children: [
+                                  Image.network(
+                                  equipamento.urlFotoDePerfil ?? model.semimagem,
+                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  height: MediaQuery.of(context).size.width * 0.5,
+                                  fit: BoxFit.cover,
+                                ),
+                                model.editar?
+                                    GestureDetector(
+                                      child: IconButton(iconSize: 100 ,onPressed: (){}, icon: Icon(Icons.camera_alt),),
+                                      onTap: (){
+                                        
+                                      },
+                                      ) : SizedBox()
+                                    
+                                  
+                                ]
                               ),
                             ),
                             Column(
@@ -139,6 +154,74 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                     equipamento: equipamento,
                                   ),
                                 ),
+                                Visibility(
+                                  visible: equipamento.status.emString=="Disponível",
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children:[
+                                       SizedBox(height: 20,),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                    onPressed: () async{
+                                      Paciente? pacienteEscolhido =
+                                      await mostrarDialogEscolherPaciente(context);
+                                    },
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: const Text(
+                                          "Emprestar",
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                          ),
+                                        ),
+                                    ),
+                                   ),
+                                      ),
+                                      SizedBox(height: 20,),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                    onPressed: () async{
+                                      Paciente? pacienteEscolhido =
+                                      await mostrarDialogEscolherPaciente(context);
+                                    },
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: const Text(
+                                          "Desinfectar",
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                          ),
+                                        ),
+                                    ),
+                                   ),
+                                      ),
+                                   SizedBox(height: 20,),
+                                   SizedBox(
+                                     width:MediaQuery.of(context).size.width,
+                                     child: ElevatedButton(
+                                      onPressed: () async{
+                                      Paciente? pacienteEscolhido =
+                                      await mostrarDialogEscolherPaciente(context);
+                                    },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: const Text(
+                                          "Manutenção",
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                          ),
+                                        ),
+                                      ),
+                                     ),
+                                   ),
+
+                                   ] 
+                                  ),
+                                ),
+                                
+                                
                                 const Divider(
                                   thickness: 5,
                                   color: Colors.black,

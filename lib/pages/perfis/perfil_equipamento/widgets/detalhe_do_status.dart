@@ -34,6 +34,7 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
         } else if (snapshot.hasData) {
           Paciente? pacienteResponsavel = snapshot.data;
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Divider(
                 thickness: 5,
@@ -45,6 +46,7 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
                     'Detalhe do Status',
                     style: TextStyle(
                       fontSize: 30,
+                      decoration: TextDecoration.underline
                     ),
                   ),
                 ],
@@ -64,51 +66,78 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
                     height: 150,
                     fit: BoxFit.cover,
                   ),
+                  Text(
+                    '''
+                    Paciente Responsável: ${pacienteResponsavel!.nome}
+                    Data de Expedicão: ${widget.equipamento.dataDeExpedicaoEmStringFormatada}
+                    Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               ),
-              Text(
-                '''
-                Paciente Responsável: ${pacienteResponsavel!.nome}
-                Data de Expedicão: ${widget.equipamento.dataDeExpedicaoEmStringFormatada}
-                Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
-                style: const TextStyle(
-                  fontSize: 30,
-                  color: Colors.black,
-                ),
-              ),
+              
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: () async => await mostrarDialogDevolverEquipamento(
-                    context, widget.equipamento),
-                child: const Text(
-                  "Devolver",
-                  style: TextStyle(
-                    fontSize: 40,
-                  ),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () async => await mostrarDialogDevolverEquipamento(
+                            context, widget.equipamento),
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              "Devolver",
+                              style: TextStyle(
+                                fontSize: 40,
+                              ),
+                            ),
+                        ),
+                        ),
+                    ),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () async => await mostrarDialogDevolverEquipamento(
+                            context, widget.equipamento),
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              "Desinfectar",
+                              style: TextStyle(
+                                fontSize: 40,
+                              ),
+                            ),
+                        ),
+                        ),
+                    ),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () async => await mostrarDialogDevolverEquipamento(
+                            context, widget.equipamento),
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              "Manutenção",
+                              style: TextStyle(
+                                fontSize: 40,
+                              ),
+                            ),
+                        ),
+                        ),
+                    ),
+                  ],
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () async => await mostrarDialogDevolverEquipamento(
-                    context, widget.equipamento),
-                child: const Text(
-                  "Desifectar",
-                  style: TextStyle(
-                    fontSize: 40,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async => await mostrarDialogDevolverEquipamento(
-                    context, widget.equipamento),
-                child: const Text(
-                  "Manutenção",
-                  style: TextStyle(
-                    fontSize: 40,
-                  ),
-                ),
-              ),
             ],
           );
         } else {
