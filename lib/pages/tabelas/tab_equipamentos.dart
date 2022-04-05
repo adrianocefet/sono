@@ -69,6 +69,16 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                     appBar: AppBar(
                       title: Text(model.equipamento),
                       centerTitle: true,
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            showSearch(
+                                context: context,
+                                delegate: CustomSearchDelegate(),);
+                          },
+                          icon: const Icon(Icons.search),
+                        ),
+                    ],
                     ),
                     body: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -185,4 +195,82 @@ void escolherOpcao(context, String editarID) {
           )),
     ),
   );
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  List<String> Equipamentos = [
+    'Máscara facial',
+    'CPAP System One',
+    'Máscara Nasal Pico Philips',
+    'Resmed S9 AutoSet',
+    'Máscara Pillow AirFit30i ResMed',
+    'AutoCPAP G1 BMC',
+    'Máscara Nasal N5 BMC',
+    'Máscara Facial F&P Simplus',
+    'Máscara Nasal N5 Média BMC',
+    'Máscara Nasal AirFit30i ResMed',
+    'Máscara Nasal Wisp',
+    'Cpap Dreamstation Auto Philips Respironics'
+  ];
+
+  
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var equipamento in Equipamentos) {
+      if (equipamento.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(equipamento);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var equipamento in Equipamentos) {
+      if (equipamento.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(equipamento);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+  }
 }
