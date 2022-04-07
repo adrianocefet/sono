@@ -5,6 +5,7 @@ import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
 
+import '../../widgets/pesquisa.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 import '../../utils/dialogs/adicionar_paciente_dialog.dart';
 
@@ -22,70 +23,79 @@ class TabelaDePacientes extends StatefulWidget {
 class _TabelaDePacientesState extends State<TabelaDePacientes> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pacientes"),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      drawer: CustomDrawer(widget.pageController),
-      drawerEnableOpenDragGesture: true,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model) {
-            return StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('Paciente')
-                  .where('Hospital', isEqualTo: model.hospital)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return const Text(
-                      "ERRO DE CONEXÃO",
-                    );
-                  case ConnectionState.waiting:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  default:
-                    return GridView(
-                      padding: EdgeInsets.zero,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 1,
-                      ),
-                      scrollDirection: Axis.vertical,
-                      children: snapshot.data!.docs.reversed
-                          .map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        return FotoDePerfil.paciente(
-                          data['Foto'] ?? model.semimagem,
-                          data['Nome'] ?? 'sem nome',
-                          document.id,
-                        );
-                      }).toList(),
-                    );
-                }
-              },
-            );
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model){
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Pacientes"),
+          centerTitle: true,
+          backgroundColor: Colors.red,
+          actions: [
+              IconButton(
+                onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: BarraDePesquisa('Paciente',model.hospital),); 
+                },
+                icon: const Icon(Icons.search),
+              ),
+            ],
+        ),
+        drawer: CustomDrawer(widget.pageController),
+        drawerEnableOpenDragGesture: true,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Paciente')
+                    .where('Hospital', isEqualTo: model.hospital)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return const Text(
+                        "ERRO DE CONEXÃO",
+                      );
+                    case ConnectionState.waiting:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    default:
+                      return GridView(
+                        padding: EdgeInsets.zero,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1,
+                        ),
+                        scrollDirection: Axis.vertical,
+                        children: snapshot.data!.docs.reversed
+                            .map((DocumentSnapshot document) {
+                          Map<String, dynamic> data =
+                              document.data()! as Map<String, dynamic>;
+                          return FotoDePerfil.paciente(
+                            data['Foto'] ?? model.semimagem,
+                            data['Nome'] ?? 'sem nome',
+                            document.id,
+                          );
+                        }).toList(),
+                      );
+                  }
+                },
+              )
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          child: const Icon(
+            Icons.add,
+          ),
+          onPressed: () {
+            mostrarDialogAdicionarPaciente(context);
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.red,
-        child: const Icon(
-          Icons.add,
-        ),
-        onPressed: () {
-          mostrarDialogAdicionarPaciente(context);
-        },
-      ),
+      );}
     );
   }
 
