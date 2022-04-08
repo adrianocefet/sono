@@ -13,7 +13,7 @@ class BarraDePesquisa extends SearchDelegate {
 
   static const String _stringPaciente = 'Paciente';
   static const String _stringEquipamento = "Equipamento";
-
+  
  @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -62,7 +62,7 @@ class BarraDePesquisa extends SearchDelegate {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection(identificador).where('Hospital',isEqualTo: hospital).snapshots(),
+          stream: identificador=='Paciente'?FirebaseFirestore.instance.collection(identificador).where('Hospital',isEqualTo: hospital).snapshots():FirebaseFirestore.instance.collection(identificador).where('Hospital',isEqualTo: hospital).where('Equipamento', isEqualTo: model.equipamento).snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             
             switch(snapshot.connectionState){
@@ -77,7 +77,7 @@ class BarraDePesquisa extends SearchDelegate {
                   ).isEmpty){
                     return Center(child: Text("Nenhuma Resposta encontrada"),);
                   }else{
-                     return GridView(
+                     return identificador =='Paciente' ? GridView(
                             padding: EdgeInsets.only(top:15),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -87,9 +87,29 @@ class BarraDePesquisa extends SearchDelegate {
                               childAspectRatio: 1,
                             ),
                             scrollDirection: Axis.vertical,
-                            children: [
-                            ...snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())).map((QueryDocumentSnapshot<Object?> data){
+                            children: [ 
+                            ...snapshot.data!.docs.reversed.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())).map((QueryDocumentSnapshot<Object?> data){
                               return FotoDePerfil.paciente(
+                                data['Foto'] ?? model.semimagem,
+                                data['Nome'] ?? 'sem nome',
+                                data.id,
+                              );
+                            }).toList()]
+                            ) 
+                            : 
+                             GridView(
+                            padding: EdgeInsets.only(top:15),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1,
+                            ),
+                            scrollDirection: Axis.vertical,
+                            children: [ 
+                            ...snapshot.data!.docs.reversed.where((DocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())).map((DocumentSnapshot<Object?> data){
+                              return FotoDePerfil.equipamento(
                                 data['Foto'] ?? model.semimagem,
                                 data['Nome'] ?? 'sem nome',
                                 data.id,

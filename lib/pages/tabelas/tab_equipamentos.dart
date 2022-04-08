@@ -71,16 +71,17 @@ class _EquipamentoState extends State<TabelaDeEquipamentos> {
                     appBar: AppBar(
                       title: Text(model.equipamento),
                       centerTitle: true,
-                      /* actions: [
+                       actions: [
+                        if(model.equipamento != "Equipamento")
                         IconButton(
                           onPressed: () {
                                showSearch(
                                 context: context,
-                                delegate: BarraDePesquisa('Equipamento',model.hospital),);   
+                                delegate: BarraDePesquisa('Equipamento',model.hospital),);
                           },
                           icon: const Icon(Icons.search),
-                        ),
-                    ], */
+                        )
+                    ],
                     ),
                     body: Padding(
                       padding: const EdgeInsets.all(8.0),
