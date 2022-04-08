@@ -43,33 +43,16 @@ class BarraDePesquisa extends SearchDelegate {
         return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection(identificador).where('hospital',isEqualTo: hospital).snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if(snapshot.hasError){
-                return Text('Erro: ${snapshot.error}');
-              }
-              if(snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())
-              ).isEmpty){
-                return Center(child: Text("Nenhuma Resposta encontrada"),);
-              }else{
-                return GridView(
-                            padding: EdgeInsets.only(top:15),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 1,
-                            ),
-                            scrollDirection: Axis.vertical,
-                            children: [
-                            ...snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())).map((QueryDocumentSnapshot<Object?> data){
-                              return FotoDePerfil.paciente(
-                                data['Foto'] ?? model.semimagem,
-                                data['Nome'] ?? 'sem nome',
-                                data.id,
-                              );
-                            }).toList()]
-                            );
-              }}
+              switch(snapshot.connectionState){
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                default:
+                  if(snapshot.hasError ){
+                    return Text('Error: ${snapshot.error}');
+                  }else{    
+                    return buildSuggestions(context);
+            }}
+          },
         );}
     );
   }
@@ -81,14 +64,15 @@ class BarraDePesquisa extends SearchDelegate {
         return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection(identificador).where('Hospital',isEqualTo: hospital).snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if(snapshot.hasError){
-              return Text('Error: ${snapshot.error}');
-            }
-    
+            
             switch(snapshot.connectionState){
                 case ConnectionState.waiting:
                   return Center(child: CircularProgressIndicator());
                 default:
+                  if(snapshot.hasError || snapshot.data!.docs.isEmpty){
+                    return Text('Error: ${snapshot.error}');
+                  }else{
+    
                   if(snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())
                   ).isEmpty){
                     return Center(child: Text("Nenhuma Resposta encontrada"),);
@@ -113,7 +97,7 @@ class BarraDePesquisa extends SearchDelegate {
                             }).toList()]
                             );
                   }
-            }
+            }}
           },
         );}
     );
