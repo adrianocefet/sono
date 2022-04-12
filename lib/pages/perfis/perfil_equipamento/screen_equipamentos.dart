@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributo_equip.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/detalhe_do_status.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/editar_atributo_equip.dart';
+import 'package:sono/utils/dialogs/selecionar_origem_foto.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -102,7 +103,12 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                 ),
                                 model.editar?
                                     GestureDetector(
-                                      child: IconButton(iconSize: 100 ,onPressed: (){}, icon: Icon(Icons.camera_alt),),
+                                      child: IconButton(
+                                        iconSize: 100 ,
+                                        onPressed: (){
+                                          selecionarOrigemFoto(context);
+                                        }, 
+                                        icon: Icon(Icons.camera_alt),),
                                       onTap: (){
                                         
                                       },

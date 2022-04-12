@@ -75,7 +75,7 @@ class BarraDePesquisa extends SearchDelegate {
     
                   if(snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => element['Nome'].toString().toLowerCase().contains(query.toLowerCase())
                   ).isEmpty){
-                    return Center(child: Text("Nenhuma Resposta encontrada"),);
+                    return Center(child: Text("Esse ${identificador} não foi encontrado"),);
                   }else{
                      return identificador =='Paciente' ? GridView(
                             padding: EdgeInsets.only(top:15),
