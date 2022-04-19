@@ -10,6 +10,7 @@ import 'package:sono/utils/services/firebase.dart';
 
 import '../../../constants/constants.dart';
 import '../../../utils/dialogs/devolver_equipamento_dialog.dart';
+import '../../../utils/dialogs/editar_foto.dart';
 import '../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../utils/models/equipamento.dart';
 import '../../../utils/models/user_model.dart';
@@ -100,19 +101,21 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                   width: MediaQuery.of(context).size.width * 0.5,
                                   height: MediaQuery.of(context).size.width * 0.5,
                                   fit: BoxFit.cover,
+                                  frameBuilder: (context,child,frame,wasSynchronouslyLoaded){
+                                    return child;
+                                  },
+                                  loadingBuilder: (context,child,loadingProgress){
+                                    if(loadingProgress==null){
+                                      return child;
+                                    }else{
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
                                 ),
-                                model.editar?
-                                    GestureDetector(
-                                      child: IconButton(
-                                        iconSize: 100 ,
-                                        onPressed: (){
-                                          selecionarOrigemFoto(context);
-                                        }, 
-                                        icon: Icon(Icons.camera_alt),),
-                                      onTap: (){
-                                        
-                                      },
-                                      ) : SizedBox()
+                                model.editar?   
+                              EditarFoto(widget.idEquipamento) : SizedBox()
                                     
                                   
                                 ]
@@ -161,7 +164,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: equipamento.status.emString=="Disponível",
+                                  visible: equipamento.status.emString=="Disponível" && model.editar==false,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children:[

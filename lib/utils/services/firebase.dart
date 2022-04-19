@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
 import 'package:sono/pages/questionarios/epworth/questionario/epworth_view.dart';
 import 'package:sono/pages/questionarios/goal/questionario/goal.dart';
@@ -313,4 +314,33 @@ class FirebaseService {
 
     await ref.delete();
   }
+
+  Future<XFile?> selecionarArquivoGaleria() async{
+  return await ImagePicker().pickImage(source: ImageSource.gallery);
+}
+
+Future<XFile?> selecionarArquivoCamera() async{
+  return await ImagePicker().pickImage(source: ImageSource.camera);
+}
+
+Future<String> uparArquivo(XFile imagem,String idEquipamento) async{
+  Reference db =
+  FirebaseStorage.instance.ref("${_stringEquipamento}/perfil_${idEquipamento}");
+  await db.putFile(File(imagem.path));
+  return await db.getDownloadURL();
+}
+
+Future<void> atualizarFoto(String idEquipamento,String imagem) async{
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  try {
+    await _db.collection(_stringEquipamento).doc(idEquipamento).update(
+     {"Foto": imagem,}
+   );
+  } catch (e) {
+    rethrow;
+  }
+  
+
+}
+  
 }
