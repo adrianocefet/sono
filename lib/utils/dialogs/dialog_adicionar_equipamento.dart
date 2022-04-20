@@ -40,7 +40,7 @@ void mostrarDialogAdicionarEquipamento(BuildContext context) {
                   formKey.currentState!.save();
                   mostrarDialogCarregando(context);
                   try {
-                    switch (await helper.registrarEquipamento(model.hospital)) {
+                    switch (await helper.registrarEquipamento(model.hospital,model.equipamento)) {
                       case StatusCadastroEquipamento.jaExistenteNoBancoDeDados:
                         Navigator.pop(context);
                         mostrarAvisoJaPossuiEquipamento(context);

@@ -24,7 +24,7 @@ class RegistroEquipamentoHelper {
     ];
   }
 
-  Map<String, dynamic> _gerarMapaDeRespostas(String hospital) {
+  Map<String, dynamic> _gerarMapaDeRespostas(String hospital,String tipo) {
     for (Pergunta p in perguntas) {
       switch (p.tipo) {
         case TipoPergunta.foto:
@@ -36,13 +36,14 @@ class RegistroEquipamentoHelper {
     }
 
     respostas['Hospital'] = hospital;
+    respostas['Equipamento'] = tipo;
 
     return respostas;
   }
 
   Future<StatusCadastroEquipamento> registrarEquipamento(
-      String hospital) async {
-    _gerarMapaDeRespostas(hospital);
+      String hospital,String tipo) async {
+    _gerarMapaDeRespostas(hospital,tipo);
 
     StatusCadastroEquipamento status = await _checarSeEquipamentoJaExiste();
     if (status == StatusCadastroEquipamento.equipamentoNovo) {
