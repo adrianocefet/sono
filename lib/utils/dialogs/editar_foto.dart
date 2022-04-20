@@ -39,33 +39,6 @@ class _EditarFotoState extends State<EditarFoto> {
             AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,) {
               return Column(
             children:[ 
-               /* singleImage!=null && singleImage!.isNotEmpty ?
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical:50),
-                            child: Text("Nova Imagem:",style: TextStyle(fontSize: 40,decoration: TextDecoration.underline,fontWeight: FontWeight.bold),),
-                          ),
-                          Image.network(
-                            singleImage!,
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            height: MediaQuery.of(context).size.width * 0.5,
-                            frameBuilder: (context,child,frame,wasSynchronouslyLoaded){
-                              return child;
-                            },
-                            loadingBuilder: (context,child,loadingProgress){
-                              if(loadingProgress==null){
-                                return child;
-                              }else{
-                                return const Center(
-                                  child: CircularProgressIndicator(color: Constantes.corAzulEscuroPrincipal,),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ) : 
-                      SizedBox.shrink(), */ 
               IconButton(
                     iconSize: 100 ,
                     onPressed: (){
@@ -134,9 +107,11 @@ class _EditarFotoState extends State<EditarFoto> {
             TextButton(
               child: const Text("Alterar"),
               onPressed: ()async{
-                Navigator.of(context).pop();
+                mostrarDialogCarregando(context);
                 singleImage = await FirebaseService().uparArquivo(imagem,idEquipamento);
-                FirebaseService().atualizarFoto(idEquipamento, singleImage!);
+                await FirebaseService().atualizarFoto(idEquipamento, singleImage!);
+                Navigator.pop(context,true);
+                Navigator.pop(context);
               }
             ),
             TextButton(
