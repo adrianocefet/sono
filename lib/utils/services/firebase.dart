@@ -323,14 +323,14 @@ Future<XFile?> selecionarArquivoCamera() async{
   return await ImagePicker().pickImage(source: ImageSource.camera);
 }
 
-Future<String> uparArquivo(XFile imagem,String idEquipamento) async{
+Future<String> uparArquivoEquipamento(XFile imagem,String idEquipamento) async{
   Reference db =
   FirebaseStorage.instance.ref("${_stringEquipamento}/perfil_${idEquipamento}");
   await db.putFile(File(imagem.path));
   return await db.getDownloadURL();
 }
 
-Future<void> atualizarFoto(String idEquipamento,String imagem) async{
+Future<void> atualizarFotoEquipamento(String idEquipamento,String imagem) async{
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   try {
     await _db.collection(_stringEquipamento).doc(idEquipamento).update(
@@ -339,8 +339,24 @@ Future<void> atualizarFoto(String idEquipamento,String imagem) async{
   } catch (e) {
     rethrow;
   }
-  
+}
 
+Future<String> uparArquivoPaciente(XFile imagem,String idPaciente) async{
+  Reference db =
+  FirebaseStorage.instance.ref("${_stringPaciente}/perfil_${idPaciente}");
+  await db.putFile(File(imagem.path));
+  return await db.getDownloadURL();
+}
+
+Future<void> atualizarFotoPaciente(String idPacient,String imagem) async{
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  try {
+    await _db.collection(_stringPaciente).doc(idPacient).update(
+     {"Foto": imagem,}
+   );
+  } catch (e) {
+    rethrow;
+  }
 }
   
 }

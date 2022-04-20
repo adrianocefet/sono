@@ -14,12 +14,10 @@ import 'aviso_ja_possui_equipamento.dart';
 import 'carregando.dart';
 import 'error_message.dart';
 
-const String _stringPaciente = 'Paciente';
-const String _stringEquipamento = "Equipamento";
-
 class EditarFoto extends StatefulWidget {
-  final String idEquipamento;
-  const EditarFoto(this.idEquipamento,{ Key? key }) : super(key: key);
+  final String identificador;
+  final String idIdentificador;
+  const EditarFoto(this.idIdentificador,this.identificador,{ Key? key }) : super(key: key);
 
   @override
   State<EditarFoto> createState() => _EditarFotoState();
@@ -33,14 +31,14 @@ class _EditarFotoState extends State<EditarFoto> {
       builder: (context, child, model) {
       return StreamBuilder(
         stream: FirebaseService.streamEquipamento(
-            widget.idEquipamento,
+            widget.idIdentificador,
           ),
         builder: (context,
             AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,) {
               return Column(
             children:[ 
               IconButton(
-                    iconSize: 100 ,
+                    iconSize: widget.identificador=='Paciente'? 50 : 100 ,
                     onPressed: (){
                       showModalBottomSheet(
                         context: context, 
@@ -54,7 +52,7 @@ class _EditarFotoState extends State<EditarFoto> {
                                 XFile? _imagem = await FirebaseService().selecionarArquivoCamera();
                                 if(_imagem!=null && _imagem.path.isNotEmpty){
                                   Navigator.pop(context);
-                                  confirmarFoto(_imagem,widget.idEquipamento);
+                                  confirmarFoto(_imagem,widget.idIdentificador,widget.identificador);
                                   setState(() {});
                                 }
                               },
@@ -66,7 +64,7 @@ class _EditarFotoState extends State<EditarFoto> {
                                 XFile? _imagem = await FirebaseService().selecionarArquivoGaleria();
                                 if(_imagem!=null && _imagem.path.isNotEmpty){
                                   Navigator.pop(context);
-                                  confirmarFoto(_imagem,widget.idEquipamento);
+                                  confirmarFoto(_imagem,widget.idIdentificador,widget.identificador);
                                   setState(() {});
                                 }
                               },
@@ -84,7 +82,7 @@ class _EditarFotoState extends State<EditarFoto> {
     );
   }
 
-  void confirmarFoto(XFile imagem,String idEquipamento) {
+  void confirmarFoto(XFile imagem,String idIdentificador,String identificador) {
     String? singleImage;
     showDialog(
     context: context,
@@ -108,8 +106,13 @@ class _EditarFotoState extends State<EditarFoto> {
               child: const Text("Alterar"),
               onPressed: ()async{
                 mostrarDialogCarregando(context);
-                singleImage = await FirebaseService().uparArquivo(imagem,idEquipamento);
-                await FirebaseService().atualizarFoto(idEquipamento, singleImage!);
+                if(identificador=="Equipamento"){
+                  singleImage = await FirebaseService().uparArquivoEquipamento(imagem,idIdentificador);
+                  await FirebaseService().atualizarFotoEquipamento(idIdentificador, singleImage!);
+                }else{
+                  singleImage = await FirebaseService().uparArquivoPaciente(imagem,idIdentificador);
+                  await FirebaseService().atualizarFotoPaciente(idIdentificador, singleImage!);
+                }
                 Navigator.pop(context,true);
                 Navigator.pop(context);
               }

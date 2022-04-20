@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/utils/dialogs/editar_foto.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 
@@ -29,11 +30,17 @@ class _PacienteVisaoGeralState extends State<UsoDoCPAP> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
-                    widget.paciente.urlFotoDePerfil ?? widget.model.semimagem,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    fit: BoxFit.cover,
+                  Column(
+                    children: [
+                      Image.network(
+                        widget.paciente.urlFotoDePerfil ?? widget.model.semimagem,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.3,
+                        fit: BoxFit.cover,
+                      ),
+                      widget.model.editar?
+                      EditarFoto(widget.paciente.id!,"Paciente"):SizedBox()
+                    ],
                   ),
                   const SizedBox(
                     width: 12,

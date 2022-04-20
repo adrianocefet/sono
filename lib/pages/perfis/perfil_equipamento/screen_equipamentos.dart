@@ -115,7 +115,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                   },
                                 ),
                                 model.editar?   
-                              EditarFoto(widget.idEquipamento) : SizedBox()
+                              EditarFoto(widget.idEquipamento,"Equipamento") : SizedBox()
                                     
                                   
                                 ]
