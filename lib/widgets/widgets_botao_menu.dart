@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/utils/dialogs/dialog_adicionar_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
+
+import '../pages/perfis/perfil_equipamento/adicionar_equipamento.dart';
 
 class BotaoMenu extends StatefulWidget {
   const BotaoMenu({Key? key}) : super(key: key);
@@ -53,7 +54,10 @@ class _BotaoMenuState extends State<BotaoMenu>
         List<MapEntry<Icon, void Function()?>> informacoesDosBotoes = [
           MapEntry(
             const Icon(Icons.add),
-            () => mostrarDialogAdicionarEquipamento(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AdicionarEquipamento()),
+            ),
           ),
           MapEntry(
             const Icon(Icons.sort_by_alpha),
