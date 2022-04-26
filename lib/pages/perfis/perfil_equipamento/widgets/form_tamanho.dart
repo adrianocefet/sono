@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/tamanho_equipamento.dart';
-
 import 'editar_tamanho_item.dart';
+import 'package:sono/globais/global.dart' as global;
 
 class formTamanhos extends StatelessWidget {
   @override
@@ -18,6 +18,7 @@ class formTamanhos extends StatelessWidget {
               return null;
             },
             builder: (state) {
+              state.value!=null? global.tamanhos=state.value! : null;
               return Column(
                 children: <Widget>[
                   Row(
@@ -42,10 +43,9 @@ class formTamanhos extends StatelessWidget {
                                 : null;
 
                             state.value!.add(TamanhoItem(nome: "", estoque: 0));
-
+                            
                             state.didChange(state.value);
 
-                            print(state.value);
                           })
                     ],
                   ),

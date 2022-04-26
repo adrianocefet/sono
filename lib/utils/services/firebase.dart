@@ -12,6 +12,7 @@ import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 
+import '../../globais/global.dart';
 import '../models/equipamento.dart';
 
 class FirebaseService {
@@ -84,6 +85,16 @@ class FirebaseService {
           .collection(_stringEquipamento)
           .doc(idEquipamento)
           .set(dadosDoEquipamento);
+
+      final Map<String, dynamic> data = {
+        'Tamanhos': exportarListaDeTamanhos(),
+      };
+
+      await _db
+          .collection(_stringEquipamento)
+          .doc(idEquipamento)
+          .update(data);
+
     } catch (e) {
       rethrow;
     }
