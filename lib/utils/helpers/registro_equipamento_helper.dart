@@ -37,6 +37,7 @@ class RegistroEquipamentoHelper {
 
     respostas['Hospital'] = hospital;
     respostas['Equipamento'] = tipo;
+    respostas['status'] = "Disponível";
 
     return respostas;
   }

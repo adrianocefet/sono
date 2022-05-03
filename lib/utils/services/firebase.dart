@@ -177,18 +177,22 @@ class FirebaseService {
   Future removerEquipamento(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> info =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
-
-    await devolverEquipamento(
+    if(info["status"]=="Emprestado"){
+    Map<String,dynamic> dadosEquipamento = info.data()!;
+    dadosEquipamento["id"] = info.id;
+    
+     await devolverEquipamento(
       Equipamento.porMap(
-        info.data(),
+        dadosEquipamento,
       ),
-    );
+    ); 
+    } 
 
     await _db.collection(_stringEquipamento).doc(idEquipamento).delete();
     try {
       await deletarImagemDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches
-    } on Exception {}
+    } on Exception {} 
   }
 
   Future removerPaciente(String idPaciente) async {
