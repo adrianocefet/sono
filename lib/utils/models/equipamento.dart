@@ -117,6 +117,16 @@ class Equipamento {
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
+
+  Future<void> desinfectar() async{
+      await FirebaseService().desinfectarEquipamento(this);
+  }
+  Future<void> manutencao() async{
+      await FirebaseService().desinfectarEquipamento(this);
+  }
+  Future<void> disponibilizar() async{
+      await FirebaseService().disponibilizarEquipamento(this);
+  }
 }
 
 enum TipoEquipamento {

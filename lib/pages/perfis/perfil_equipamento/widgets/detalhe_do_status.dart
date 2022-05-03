@@ -82,62 +82,6 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
               const SizedBox(
                 height: 20,
               ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                        onPressed: () async => await mostrarDialogDevolverEquipamento(
-                            context, widget.equipamento),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const Text(
-                              "Devolver",
-                              style: TextStyle(
-                                fontSize: 40,
-                              ),
-                            ),
-                        ),
-                        ),
-                    ),
-                    SizedBox(height: 20,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                        onPressed: () async => await mostrarDialogDevolverEquipamento(
-                            context, widget.equipamento),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const Text(
-                              "Desinfectar",
-                              style: TextStyle(
-                                fontSize: 40,
-                              ),
-                            ),
-                        ),
-                        ),
-                    ),
-                    SizedBox(height: 20,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                        onPressed: () async => await mostrarDialogDevolverEquipamento(
-                            context, widget.equipamento),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const Text(
-                              "Manutenção",
-                              style: TextStyle(
-                                fontSize: 40,
-                              ),
-                            ),
-                        ),
-                        ),
-                    ),
-                  ],
-                ),
             ],
           );
         } else {

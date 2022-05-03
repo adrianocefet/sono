@@ -159,6 +159,45 @@ class FirebaseService {
     }
   }
 
+  Future<void> desinfectarEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.desinfeccao.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> repararEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.manutencao.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> disponibilizarEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.disponivel.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String?> procurarEquipamentoNoBancoDeDados(
       Map<String, dynamic> data) async {
     String? idEquipamento;
@@ -373,5 +412,4 @@ Future<void> atualizarFotoPaciente(String idPacient,String imagem) async{
     rethrow;
   }
 }
-  
 }
