@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:sono/globais/global.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/tamanho_equipamento.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class Equipamento {
@@ -13,6 +15,7 @@ class Equipamento {
   late String? idPacienteResponsavel;
   late final String? urlFotoDePerfil;
   late final String? idStatus;
+  late final List<TamanhoItem> tamanhos;
 
   DateTime? get dataDeExpedicao {
     return (infoMap["data_de_expedicao"] as Timestamp?)?.toDate();
@@ -41,13 +44,14 @@ class Equipamento {
         "data_de_expedicao": dataDeExpedicaoEmStringFormatada,
         "paciente_responsavel": idPacienteResponsavel,
         "descricao": descricao,
+        "tamanhos": exportarListaTamanhos(),
       };
 
   Equipamento(
     this.nome,
     this.id,
     this.tipo,
-    this.status, {
+    this.status, /* this.tamanhos, */ {
     this.urlFotoDePerfil,
   });
 
@@ -69,12 +73,13 @@ class Equipamento {
           equipamentoInfoMap["Status"] ??
           "Disponível",
     )!;
+     tamanhos= (equipamentoInfoMap['Tamanhos'] as List<dynamic>).map(
+            (t) => TamanhoItem.fromMap(t as Map<String, dynamic>)).toList(); 
 
     infoMap = equipamentoInfoMap;
   }
 
-  String? _formatarData(DateTime? data) =>
-      DateFormat("dd/MM/yy").format(data!);
+  String? _formatarData(DateTime? data) => DateFormat("dd/MM/yy").format(data!);
 
   StatusDoEquipamento? _lerStatusDoEquipamentoDoBancoDeDados(
     String status,
@@ -118,14 +123,16 @@ class Equipamento {
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
 
-  Future<void> desinfectar() async{
-      await FirebaseService().desinfectarEquipamento(this);
+  Future<void> desinfectar() async {
+    await FirebaseService().desinfectarEquipamento(this);
   }
-  Future<void> manutencao() async{
-      await FirebaseService().desinfectarEquipamento(this);
+
+  Future<void> manutencao() async {
+    await FirebaseService().repararEquipamento(this);
   }
-  Future<void> disponibilizar() async{
-      await FirebaseService().disponibilizarEquipamento(this);
+
+  Future<void> disponibilizar() async {
+    await FirebaseService().disponibilizarEquipamento(this);
   }
 }
 
@@ -177,4 +184,16 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Desinfecção";
     }
   }
+}
+
+TamanhoItem procurarTamanho(String nome) {
+  try {
+    return tamanhos.firstWhere((s) => s.nome == nome);
+  } catch (e) {
+    rethrow;
+  }
+}
+
+List<Map<String, dynamic>> exportarListaTamanhos() {
+  return tamanhos.map((tamanho) => tamanho.toMap()).toList();
 }
