@@ -1,16 +1,14 @@
 import 'dart:io';
-import 'package:sono/pages/questionarios/whodas/questionario/whodas_controller.dart';
 
 class Pergunta {
   dynamic enunciado = '';
   TipoPergunta tipo = TipoPergunta.afirmativa;
-  WHODASController? whodas;
   dynamic codigo = '';
   List<int> pesos = [];
   String dominio = '';
   int? resposta;
   String? respostaExtenso;
-  List<String?>? respostaLocalizacao;
+  List respostaLista = [];
   List<String>? opcoes = [''];
   String? Function(String? value)? validador;
   File? respostaArquivo;
@@ -21,7 +19,6 @@ class Pergunta {
     this.pesos,
     this.dominio,
     this.codigo, {
-    this.whodas,
     this.opcoes,
     this.validador,
   });
@@ -69,9 +66,12 @@ enum TipoPergunta {
   extensoCadastros,
   marcar,
   afirmativa,
+  afirmativaCadastros,
   multipla,
   multiplaCondicionalBerlin,
   data,
   dropdown,
+  dropdownCadastros,
   foto,
+  comorbidades,
 }

@@ -72,34 +72,28 @@ class CustomDrawer extends StatelessWidget {
                 0,
               ),
               DrawerTile(
-                Icons.check_box,
-                "Questionários",
-                pageController,
-                1,
-              ),
-              DrawerTile(
                 Icons.people,
                 "Pacientes",
                 pageController,
-                2,
+                1,
               ),
               DrawerTile(
                 Icons.masks,
                 "Equipamentos",
                 pageController,
-                3,
+                2,
               ),
               DrawerTile(
                 Icons.chat_bubble,
                 "Comunicação",
                 pageController,
-                5,
+                4,
               ),
               DrawerTile(
                 Icons.info,
                 "Fale Conosco",
                 pageController,
-                4,
+                3,
               ),
             ],
           )

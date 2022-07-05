@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,6 @@ import 'package:sono/widgets/foto_de_perfil.dart';
 
 import '../../widgets/pesquisa.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
-import '../../utils/dialogs/adicionar_paciente_dialog.dart';
 
 class TabelaDePacientes extends StatefulWidget {
   final PageController pageController;
@@ -23,44 +23,45 @@ class TabelaDePacientes extends StatefulWidget {
 class _TabelaDePacientesState extends State<TabelaDePacientes> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model){
+    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Pacientes"),
           centerTitle: true,
           backgroundColor: Colors.red,
           actions: [
-              IconButton(
-                onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: BarraDePesquisa('Paciente',model.hospital),); 
-                },
-                icon: const Icon(Icons.search),
-              ),
-            ],
+            IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: BarraDePesquisa('Paciente', model.hospital),
+                );
+              },
+              icon: const Icon(Icons.search),
+            ),
+          ],
         ),
         drawer: CustomDrawer(widget.pageController),
         drawerEnableOpenDragGesture: true,
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('Paciente')
-                    .where('Hospital', isEqualTo: model.hospital)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return const Text(
-                        "ERRO DE CONEXÃO",
-                      );
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
+            padding: const EdgeInsets.all(8.0),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('Paciente')
+                  .where('Hospital', isEqualTo: model.hospital)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return const Text(
+                      "ERRO DE CONEXÃO",
+                    );
+                  case ConnectionState.waiting:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  default:
+                    if (snapshot.hasData) {
                       return GridView(
                         padding: EdgeInsets.zero,
                         gridDelegate:
@@ -82,21 +83,30 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
                           );
                         }).toList(),
                       );
-                  }
-                },
-              )
-        ),
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                }
+              },
+            )),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
           child: const Icon(
             Icons.add,
           ),
           onPressed: () {
-            mostrarDialogAdicionarPaciente(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CadastroPaciente(),
+              ),
+            );
           },
         ),
-      );}
-    );
+      );
+    });
   }
 
   Widget geraImagemDoPaciente(String imagem, String texto, String id) {

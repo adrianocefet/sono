@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaData extends StatefulWidget {
@@ -19,7 +18,6 @@ class _RespostaDataState extends State<RespostaData> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      locale: const Locale('pt'),
       context: context,
       initialDate: DateTime(DateTime.now().year - 18),
       initialDatePickerMode: DatePickerMode.day,
@@ -45,27 +43,38 @@ class _RespostaDataState extends State<RespostaData> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.pergunta.enunciado,
-            style: const TextStyle(
-              fontSize: Constantes.fontSizeEnunciados,
-            ),
-          ),
-          const SizedBox(
-            height: 5.0,
-          ),
           TextFormField(
             readOnly: true,
             controller: _formController,
-            minLines: 1,
-            maxLines: 4,
-            decoration: const InputDecoration(
+            maxLines: 1,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
               suffixIcon: Icon(
                 Icons.calendar_today,
+                color: Theme.of(context).primaryColor,
               ),
-              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColorLight,
+                  width: 1.5,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 1.5,
+                ),
+              ),
+              focusedErrorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1.2),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1.2),
+              ),
+              labelText: widget.pergunta.enunciado,
               labelStyle: TextStyle(
-                color: Color.fromRGBO(88, 98, 143, 1),
+                color: Theme.of(context).primaryColor,
                 fontSize: 14,
               ),
             ),

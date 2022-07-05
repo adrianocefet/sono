@@ -21,14 +21,21 @@ class RespostaAfirmativa extends StatefulWidget {
 class _RespostaAfirmativaState extends State<RespostaAfirmativa> {
   @override
   Widget build(BuildContext context) {
+    bool respostaInvalida = false;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Visibility(
           visible: false,
           child: TextFormField(
-            validator: (value) => widget.pergunta.resposta == null
-                ? "Pergunta obrigatória."
+            validator: (value) => widget.pergunta.respostaExtenso == null
+                ? () {
+                    setState(() {
+                      respostaInvalida = true;
+                    });
+                    return "Pergunta obrigatória.";
+                  }()
                 : null,
           ),
           maintainState: true,

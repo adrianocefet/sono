@@ -6,23 +6,19 @@ import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../constants/constants.dart';
-import '../../pagina_inicial/widgets/widgets_drawer.dart';
 import '../goal/questionario/goal.dart';
 
-class SelecaoDeQuestionario extends StatefulWidget {
-  final PageController pageController;
-  const SelecaoDeQuestionario({Key? key, required this.pageController})
+class SelecaoDeQuestionarios extends StatefulWidget {
+  final Paciente paciente;
+  const SelecaoDeQuestionarios({Key? key, required this.paciente})
       : super(key: key);
 
   @override
-  _SelecaoDeQuestionarioState createState() => _SelecaoDeQuestionarioState();
+  _SelecaoDeQuestionariosState createState() => _SelecaoDeQuestionariosState();
 }
 
-class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
-  Paciente? _pacienteEscolhido;
-
+class _SelecaoDeQuestionariosState extends State<SelecaoDeQuestionarios> {
   List tiposDeQuestionarios = [
     StopBang,
     Berlin,
@@ -71,35 +67,31 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
         ),
       ),
       onTap: () async {
-        _pacienteEscolhido = await mostrarDialogEscolherPaciente(context);
-
-        if (_pacienteEscolhido != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) {
-                return () {
-                  switch (tipoDeQuestionario) {
-                    case Berlin:
-                      return Berlin(paciente: _pacienteEscolhido!);
-                    case SacsBR:
-                      return SacsBR(paciente: _pacienteEscolhido!);
-                    case WHODAS:
-                      return WHODAS(paciente: _pacienteEscolhido!);
-                    case GOAL:
-                      return GOAL(paciente: _pacienteEscolhido!);
-                    case Epworth:
-                      return Epworth(paciente: _pacienteEscolhido!);
-                    case Pittsburg:
-                      return Pittsburg(paciente: _pacienteEscolhido!);
-                    default:
-                      return StopBang(paciente: _pacienteEscolhido!);
-                  }
-                }();
-              },
-            ),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) {
+              return () {
+                switch (tipoDeQuestionario) {
+                  case Berlin:
+                    return Berlin(paciente: widget.paciente);
+                  case SacsBR:
+                    return SacsBR(paciente: widget.paciente);
+                  case WHODAS:
+                    return WHODAS(paciente: widget.paciente);
+                  case GOAL:
+                    return GOAL(paciente: widget.paciente);
+                  case Epworth:
+                    return Epworth(paciente: widget.paciente);
+                  case Pittsburg:
+                    return Pittsburg(paciente: widget.paciente);
+                  default:
+                    return StopBang(paciente: widget.paciente);
+                }
+              }();
+            },
+          ),
+        );
       },
     );
   }
@@ -112,7 +104,6 @@ class _SelecaoDeQuestionarioState extends State<SelecaoDeQuestionario> {
         centerTitle: true,
         backgroundColor: Constantes.corAzulEscuroPrincipal,
       ),
-      drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
       body: ListView.separated(
         itemCount: tiposDeQuestionarios.length,

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/cadastros/widgets/afirmativa_resposta.dart';
+import 'package:sono/pages/cadastros/widgets/comorbidades_resposta.dart';
+import 'package:sono/pages/cadastros/widgets/data_resposta.dart';
+import 'package:sono/pages/cadastros/widgets/dropdown_resposta_cadastro.dart';
+import 'package:sono/pages/cadastros/widgets/extenso_resposta_cadastro.dart';
+import 'package:sono/pages/cadastros/widgets/foto_perfil_resposta.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../pages/questionarios/widgets/afirmativa_resposta.dart';
-import '../../pages/questionarios/widgets/data_resposta.dart';
 import '../../pages/questionarios/widgets/dropdown_resposta.dart';
 import '../../pages/questionarios/widgets/extenso_resposta.dart';
-import '../../pages/questionarios/widgets/extenso_resposta_cadastro.dart';
-import '../../pages/questionarios/widgets/foto_perfil_resposta.dart';
 import '../../pages/questionarios/widgets/multipla_resposta.dart';
 
 class RespostaWidget extends StatefulWidget {
@@ -68,7 +71,8 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             pergunta: pergunta,
             paciente: widget.paciente,
             corTexto: widget.corTexto,
-            autoPreencher: widget.autoPreencher ?? '',
+            autoPreencher:
+                widget.autoPreencher ?? widget.pergunta.respostaExtenso,
           );
         }
       case TipoPergunta.extensoNumericoCadastros:
@@ -81,7 +85,8 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             corDominio:
                 Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
                     Constantes.corAzulEscuroSecundario,
-            autoPreencher: widget.autoPreencher ?? '',
+            autoPreencher:
+                widget.autoPreencher ?? widget.pergunta.respostaExtenso,
           );
         }
       case TipoPergunta.dropdown:
@@ -90,6 +95,13 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             pergunta: pergunta,
             autoPreencher: widget.autoPreencher,
             notificarParent: widget.notifyParent,
+          );
+        }
+      case TipoPergunta.dropdownCadastros:
+        {
+          return RespostaDropdownCadastros(
+            pergunta: pergunta,
+            autoPreencher: widget.autoPreencher,
           );
         }
       case TipoPergunta.marcar:
@@ -109,6 +121,13 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             passarPagina: widget.notifyParent as Future<void> Function(),
           );
         }
+      case TipoPergunta.afirmativaCadastros:
+        {
+          return RespostaAfirmativaCadastro(
+            pergunta: pergunta,
+            autoPreencher: widget.autoPreencher ?? widget.pergunta.resposta,
+          );
+        }
       case TipoPergunta.multipla:
         {
           return RespostaMultipla(
@@ -120,18 +139,25 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaData(
             pergunta: pergunta,
-            autoPreencher: widget.autoPreencher,
+            autoPreencher:
+                widget.autoPreencher ?? widget.pergunta.respostaExtenso,
           );
         }
       case TipoPergunta.foto:
         return RegistrarFotoPerfil(
           pergunta: pergunta,
-          autoPreencher: widget.autoPreencher,
+          autoPreencher:
+              widget.autoPreencher ?? widget.pergunta.respostaArquivo,
         );
       case TipoPergunta.multiplaCondicionalBerlin:
         return RespostaMultiplaBerlin(
           pergunta: pergunta,
           passarPagina: widget.notifyParent as Future<void> Function(),
+        );
+      case TipoPergunta.comorbidades:
+        return RespostaComorbidades(
+          pergunta: pergunta,
+          autoPreencher: widget.autoPreencher ?? widget.pergunta.respostaLista,
         );
       default:
         {

@@ -193,7 +193,7 @@ class FirebaseService {
 
     QuerySnapshot query = await _db
         .collection(_stringPaciente)
-        .where("Nome", isEqualTo: data['Nome'])
+        .where("Nome", isEqualTo: data["Nome"])
         .where("Hospital", isEqualTo: data["Hospital"])
         .get();
 
@@ -325,7 +325,7 @@ Future<XFile?> selecionarArquivoCamera() async{
 
 Future<String> uparArquivoEquipamento(XFile imagem,String idEquipamento) async{
   Reference db =
-  FirebaseStorage.instance.ref("${_stringEquipamento}/perfil_${idEquipamento}");
+  FirebaseStorage.instance.ref("$_stringEquipamento/perfil_$idEquipamento");
   await db.putFile(File(imagem.path));
   return await db.getDownloadURL();
 }
@@ -343,7 +343,7 @@ Future<void> atualizarFotoEquipamento(String idEquipamento,String imagem) async{
 
 Future<String> uparArquivoPaciente(XFile imagem,String idPaciente) async{
   Reference db =
-  FirebaseStorage.instance.ref("${_stringPaciente}/perfil_${idPaciente}");
+  FirebaseStorage.instance.ref("$_stringPaciente/perfil_$idPaciente");
   await db.putFile(File(imagem.path));
   return await db.getDownloadURL();
 }

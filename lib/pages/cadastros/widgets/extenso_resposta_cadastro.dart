@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
@@ -22,7 +21,7 @@ class RespostaExtensoCadastro extends StatefulWidget {
     this.autoPreencher,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher!;
+    _extensoController.text = autoPreencher ?? "";
     _enabled = true;
   }
 
@@ -44,65 +43,49 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.pergunta.enunciado,
-            style: const TextStyle(
-              fontSize: Constantes.fontSizeEnunciados,
-            ),
-          ),
-          const SizedBox(
-            height: 5.0,
-          ),
           TextFormField(
             enabled: widget._enabled,
             controller: widget._extensoController,
+            validator: widget.pergunta.validador,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
             minLines: 1,
-            maxLines: 4,
-            textCapitalization:
-                ['F1', 'F2', 'cid'].contains(widget.pergunta.codigo)
-                    ? TextCapitalization.characters
-                    : ['nome_completo'].contains(widget.pergunta.codigo)
-                        ? TextCapitalization.words
-                        : TextCapitalization.none,
-            keyboardType:
-                ['A3', 'H1', 'H2', 'H3'].contains(widget.pergunta.codigo) ||
-                        (widget.numerico ?? false)
-                    ? TextInputType.number
-                    : TextInputType.text,
+            maxLines: 3,
+            keyboardType: widget.numerico ?? false
+                ? TextInputType.number
+                : TextInputType.text,
             decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              labelStyle: const TextStyle(
-                color: Constantes.corAzulEscuroSecundario,
+              labelText: widget.pergunta.enunciado,
+              filled: true,
+              fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor, width: 1.2),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor, width: 1.2),
+              ),
+              focusedErrorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1.2),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 1.2),
+              ),
+              labelStyle: TextStyle(
+                color: Theme.of(context).primaryColor,
                 fontSize: 14,
               ),
-              suffixIcon:
-                  widget._enabled && widget._extensoController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(
-                            Icons.clear_rounded,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                widget._extensoController.clear();
-                              },
-                            );
-                          },
-                        )
-                      : null,
             ),
             onChanged: (value) {
               if (value.length <= 1) {
                 setState(() {});
               }
             },
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
             onSaved: (String? value) {
               setState(
                 () {
@@ -115,7 +98,6 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
                 },
               );
             },
-            validator: widget.pergunta.validador,
           )
         ],
       ),
