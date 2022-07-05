@@ -95,6 +95,12 @@ class CustomDrawer extends StatelessWidget {
                 pageController,
                 3,
               ),
+              DrawerTile(
+                Icons.masks_outlined,
+                "Controle de Estoque",
+                pageController,
+                6,
+              ),
             ],
           )
         ],

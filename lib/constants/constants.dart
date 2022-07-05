@@ -118,4 +118,25 @@ abstract class Constantes {
     'dom_52': Constantes.dom52Color,
     'dom_6': Constantes.dom6Color,
   };
+  static const List<String> status = [
+    'Disponível',
+    'Empréstimos',
+    'Reparos',
+    'Desinfecção'
+  ];
+  static const List<String> status2 = [
+    'Disponível',
+    'Emprestado',
+    'Manutenção',
+    'Desinfecção'
+  ];
+  static const List<Color> cor=[
+    Color.fromARGB(255, 51, 255, 58),Colors.yellow,Colors.red,Color.fromARGB(255, 0, 225, 255)
+  ];
+  static const List<IconData> icone=[
+    Icons.check,Icons.people_sharp,Icons.build_rounded,Icons.clean_hands_sharp
+  ];
+  static const List<String> tipo=[
+    'Máscara Nasal','Máscara Oronasal','Máscara Pillow','Máscara Facial','Aparelho PAP','Almofadas','Fixadores','Traqueia'
+  ];
 }
