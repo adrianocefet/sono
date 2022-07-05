@@ -55,9 +55,14 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
                     ? await mostrarDialogDeletarEquipmaneto(context, widget.id)
                     : false) {
             } else {
-              setState(() {
+              try {
+               setState((){
                 opacity = 0;
-              });
+              }); 
+              } catch (e) {
+                rethrow;
+              }
+              
             }
           },
           onTap: () {

@@ -12,6 +12,7 @@ import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 
+import '../../globais/global.dart';
 import '../models/equipamento.dart';
 
 class FirebaseService {
@@ -84,6 +85,16 @@ class FirebaseService {
           .collection(_stringEquipamento)
           .doc(idEquipamento)
           .set(dadosDoEquipamento);
+
+      final Map<String, dynamic> data = {
+        'Tamanhos': exportarListaDeTamanhos(),
+      };
+
+      await _db
+          .collection(_stringEquipamento)
+          .doc(idEquipamento)
+          .update(data);
+
     } catch (e) {
       rethrow;
     }
@@ -148,6 +159,45 @@ class FirebaseService {
     }
   }
 
+  Future<void> desinfectarEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.desinfeccao.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> repararEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.manutencao.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> disponibilizarEquipamento(Equipamento equipamento) async{
+    try {
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.disponivel.emString,
+        },
+      );
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String?> procurarEquipamentoNoBancoDeDados(
       Map<String, dynamic> data) async {
     String? idEquipamento;
@@ -166,18 +216,22 @@ class FirebaseService {
   Future removerEquipamento(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> info =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
-
-    await devolverEquipamento(
+    if(info["status"]=="Emprestado"){
+    Map<String,dynamic> dadosEquipamento = info.data()!;
+    dadosEquipamento["id"] = info.id;
+    
+     await devolverEquipamento(
       Equipamento.porMap(
-        info.data(),
+        dadosEquipamento,
       ),
-    );
+    ); 
+    } 
 
     await _db.collection(_stringEquipamento).doc(idEquipamento).delete();
     try {
       await deletarImagemDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches
-    } on Exception {}
+    } on Exception {} 
   }
 
   Future removerPaciente(String idPaciente) async {
@@ -358,5 +412,4 @@ Future<void> atualizarFotoPaciente(String idPacient,String imagem) async{
     rethrow;
   }
 }
-  
 }
