@@ -7,16 +7,16 @@ import 'package:sono/pages/perfis/perfil_paciente/widgets/visao_geral.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 
-class PerfilDoPaciente extends StatefulWidget {
-  const PerfilDoPaciente(this.idPaciente, {Key? key}) : super(key: key);
+class NovoPerfilDoPaciente extends StatefulWidget {
+  const NovoPerfilDoPaciente(this.idPaciente, {Key? key}) : super(key: key);
 
   final String idPaciente;
 
   @override
-  _PerfilDoPacienteState createState() => _PerfilDoPacienteState();
+  _NovoPerfilDoPacienteState createState() => _NovoPerfilDoPacienteState();
 }
 
-class _PerfilDoPacienteState extends State<PerfilDoPaciente> {
+class _NovoPerfilDoPacienteState extends State<NovoPerfilDoPaciente> {
 
 
   @override
@@ -44,7 +44,7 @@ class _PerfilDoPacienteState extends State<PerfilDoPaciente> {
                   length: 3,
                   child: Scaffold(
                     appBar: AppBar(
-                      title: Text(paciente.nome),
+                      title: Text(paciente.nomeCompleto),
                       actions: [
                         IconButton(
                           onPressed: () {

@@ -63,7 +63,7 @@ class _PacienteVisaoGeralState extends State<HistoricoDeQuestionarios> {
     return Scaffold(
       floatingActionButton: _AdicionarQuestionario(widget.paciente),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseService().streamQuestionarios(widget.paciente.id!),
+        stream: FirebaseService().streamQuestionarios(widget.paciente.id),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:

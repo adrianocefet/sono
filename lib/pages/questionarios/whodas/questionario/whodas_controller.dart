@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/widgets/enunciado_dominio.dart.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/widgets/resposta_ativ_trab.dart';
 import 'package:sono/utils/bases_questionarios/base_whodas.dart';
@@ -228,7 +226,7 @@ class WHODASController {
   dynamic _autoPreencher(Pergunta pergunta, Paciente paciente) {
     switch (pergunta.codigo) {
       case "nome":
-        return paciente.nome;
+        return paciente.nomeCompleto;
       case "F4":
         return DateFormat("dd/MM/yyyy").format(DateTime.now());
       case "A2":

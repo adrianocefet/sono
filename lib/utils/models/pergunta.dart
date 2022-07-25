@@ -48,6 +48,9 @@ class Pergunta {
   void setRespostaArquivo(File? respostaArquivo) =>
       this.respostaArquivo = respostaArquivo;
 
+  void setRespostaLista(List? respostaArquivo) =>
+      respostaLista = respostaLista;
+
   void setResposta(int? resposta) {
     this.resposta = resposta;
   }
@@ -74,4 +77,5 @@ enum TipoPergunta {
   dropdownCadastros,
   foto,
   comorbidades,
+  mallampati
 }

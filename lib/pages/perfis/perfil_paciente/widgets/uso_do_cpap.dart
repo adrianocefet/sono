@@ -33,13 +33,15 @@ class _PacienteVisaoGeralState extends State<UsoDoCPAP> {
                   Column(
                     children: [
                       Image.network(
-                        widget.paciente.urlFotoDePerfil ?? widget.model.semimagem,
+                        widget.paciente.urlFotoDePerfil ??
+                            widget.model.semimagem,
                         width: MediaQuery.of(context).size.width * 0.3,
                         height: MediaQuery.of(context).size.width * 0.3,
                         fit: BoxFit.cover,
                       ),
-                      widget.model.editar?
-                      EditarFoto(widget.paciente.id!,"Paciente"):SizedBox()
+                      widget.model.editar
+                          ? EditarFoto(widget.paciente.id, "Paciente")
+                          : const SizedBox()
                     ],
                   ),
                   const SizedBox(
@@ -51,7 +53,7 @@ class _PacienteVisaoGeralState extends State<UsoDoCPAP> {
                       widget.model.editar
                           ? FittedBox(
                               child: Text(
-                                widget.paciente.nome,
+                                widget.paciente.nomeCompleto,
                                 style: const TextStyle(
                                   fontSize: 40,
                                 ),

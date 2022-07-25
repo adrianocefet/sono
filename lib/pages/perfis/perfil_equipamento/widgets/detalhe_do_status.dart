@@ -3,7 +3,6 @@ import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
-import 'package:sono/utils/dialogs/devolver_equipamento_dialog.dart';
 
 class DisplayDetalheDoStatus extends StatefulWidget {
   final Equipamento equipamento;
@@ -68,7 +67,7 @@ class _DisplayDetalheDoStatusState extends State<DisplayDetalheDoStatus> {
                   ),
                   Text(
                     '''
-                    Paciente Responsável: ${pacienteResponsavel!.nome}
+                    Paciente Responsável: ${pacienteResponsavel!.nomeCompleto}
                     Data de Expedicão: ${widget.equipamento.dataDeExpedicaoEmStringFormatada}
                     Data de Devolução: ${widget.equipamento.dataDeDevolucaoEmStringFormatada}''',
                     style: const TextStyle(

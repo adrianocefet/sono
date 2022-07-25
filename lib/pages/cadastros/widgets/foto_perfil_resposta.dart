@@ -51,7 +51,8 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
       child: Container(
         decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Theme.of(context).primaryColor, width: 1.2),
+            border:
+                Border.all(color: Theme.of(context).primaryColor, width: 1.2),
             borderRadius: const BorderRadius.all(Radius.circular(5))),
         padding: const EdgeInsets.all(5),
         child: Column(
@@ -78,9 +79,10 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                 widget.pergunta.enunciado,
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    fontSize: Constantes.fontSizeEnunciados,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold),
+                  fontSize: Constantes.fontSizeEnunciados,
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(

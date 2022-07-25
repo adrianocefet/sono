@@ -37,14 +37,12 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
                 fillColor: Colors.white,
                 label: Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Expanded(
-                    child: Text(
-                      widget.pergunta.enunciado,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    widget.pergunta.enunciado,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -53,13 +51,19 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).primaryColor,
-                    width: 1.5,
+                    width: 1.2,
+                  ),
+                ),
+                errorBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: 1.2,
                   ),
                 ),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).primaryColorLight,
-                    width: 1.5,
+                    width: 1.2,
                   ),
                 ),
               ),
@@ -83,8 +87,11 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
               onSaved: (value) {
                 widget.pergunta.setResposta(_escolha);
               },
-              validator: (value) =>
-                  _escolha != null ? null : "Dado obrigatório",
+              validator: (value) => widget.pergunta.validador != null
+                  ? _escolha != null
+                      ? null
+                      : "Dado obrigatório"
+                  : null,
               items: _opcoes.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

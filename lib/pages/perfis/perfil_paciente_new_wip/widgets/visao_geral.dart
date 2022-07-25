@@ -42,7 +42,7 @@ class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
                       widget.model.editar
                           ? FittedBox(
                               child: Text(
-                                widget.paciente.nome,
+                                widget.paciente.nomeCompleto,
                                 style: const TextStyle(
                                   fontSize: 40,
                                 ),
@@ -51,7 +51,7 @@ class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
                           : Container(),
                       EquipamentosEmprestados(
                         listaDeEquipamentos:
-                            widget.paciente.equipamentosEmprestados,
+                            widget.paciente.equipamentosEmprestados ?? [],
                       ),
                     ],
                   ),

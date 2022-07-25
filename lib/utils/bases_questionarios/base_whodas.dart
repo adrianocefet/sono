@@ -100,14 +100,6 @@ Nenhuma, leve, moderada, grave, extrema ou não consegue fazer.
 
 List<Map<String, dynamic>> baseWHODAS = [
   {
-    'enunciado': 'Nome do entrevistado',
-    'tipo': TipoPergunta.extenso,
-    'pesos': <int>[],
-    'dominio': '',
-    'codigo': 'nome',
-    'validador': (value) {},
-  },
-  {
     'enunciado': 'F1 - Número da identidade do entrevistado (opcional)',
     'tipo': TipoPergunta.extenso,
     'pesos': <int>[],

@@ -49,128 +49,184 @@ class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
                       widget.model.editar
                           ? FittedBox(
                               child: Text(
-                                widget.paciente.nome,
+                                widget.paciente.nomeCompleto,
                                 style: const TextStyle(
                                   fontSize: 40,
                                 ),
                               ),
                             )
-                          : 
-                          Visibility(
-                            visible: widget.paciente.equipamentosEmprestados.isEmpty,
-                            child: Column(
-                              children: [
-                                ticket != '' ?
-                                  Column(
-                                    children: [
-                                      equipamento!=null ?
-                                      Column(
-                                        children: [
-                                          equipamento!.idPacienteResponsavel==null ?
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical:10.0),
-                                                child: Text('Nome Equipamento: ${equipamento!.nome}'),
-                                              ),
-                                              Image.network(
-                                                equipamento!.urlFotoDePerfil ?? widget.model.semimagem,
-                                                width: MediaQuery.of(context).size.width * 0.3,
-                                                height: MediaQuery.of(context).size.width * 0.3,
-                                                fit: BoxFit.cover,
-                                              ),
-                                              Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text('Deseja emprestar esse equipamento para ${widget.paciente.nome}?'),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                                      child: ElevatedButton(
-                                                        onPressed: (){
-                                                          setState(() {
-                                                            ticket='';
-                                                          });
-                                                        },
-                                                        child: const Text('Cancelar'),
+                          : Visibility(
+                              visible:
+                                  widget.paciente.equipamentosEmprestados !=
+                                      null,
+                              child: Column(
+                                children: [
+                                  ticket != ''
+                                      ? Column(
+                                          children: [
+                                            equipamento != null
+                                                ? Column(
+                                                    children: [
+                                                      equipamento!.idPacienteResponsavel ==
+                                                              null
+                                                          ? Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      vertical:
+                                                                          10.0),
+                                                                  child: Text(
+                                                                      'Nome Equipamento: ${equipamento!.nome}'),
+                                                                ),
+                                                                Image.network(
+                                                                  equipamento!
+                                                                          .urlFotoDePerfil ??
+                                                                      widget
+                                                                          .model
+                                                                          .semimagem,
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.3,
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.3,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          8.0),
+                                                                  child: Text(
+                                                                      'Deseja emprestar esse equipamento para ${widget.paciente.nomeCompleto}?'),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              8.0),
+                                                                      child:
+                                                                          ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            ticket =
+                                                                                '';
+                                                                          });
+                                                                        },
+                                                                        child: const Text(
+                                                                            'Cancelar'),
+                                                                      ),
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        if (equipamento !=
+                                                                            null) {
+                                                                          equipamento!.status =
+                                                                              StatusDoEquipamento.emprestado;
+                                                                          FirebaseService().emprestarEquipamento(
+                                                                              equipamento!,
+                                                                              widget.paciente);
+                                                                        } else {
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text(
+                                                                              'Equipamento não encontrado',
+                                                                              style: TextStyle(color: Colors.white),
+                                                                            ),
+                                                                            backgroundColor:
+                                                                                Constantes.corAzulEscuroSecundario,
+                                                                          ));
+                                                                        }
+                                                                        setState(
+                                                                            () {});
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Sim'),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            )
+                                                          : Column(
+                                                              children: [
+                                                                Text(
+                                                                    '${equipamento!.nome} já emprestado, tente outro!'),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child:
+                                                                      ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      setState(
+                                                                          () {
+                                                                        ticket =
+                                                                            '';
+                                                                      });
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Tente Novamente'),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                    ],
+                                                  )
+                                                : Column(
+                                                    children: [
+                                                      const Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 10.0),
+                                                        child: Text(
+                                                            'Equipamento não encontrado'),
                                                       ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      onPressed: ()async{
-                                                        if(equipamento!=null){
-                                                          equipamento!.status = StatusDoEquipamento.emprestado;
-                                                          FirebaseService().emprestarEquipamento(equipamento!, widget.paciente);
-                                                        }else{
-                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                          const SnackBar(
-                                                          content: Text(
-                                                            'Equipamento não encontrado',
-                                                            style: TextStyle(color: Colors.white),
-                                                          ),
-                                                          backgroundColor: Constantes.corAzulEscuroSecundario,
-                                                          )
-                                                        );}
-                                                        setState(() {});
-                                                      },
-                                                      child: const Text('Sim'),
-                                                    ),
-                                                  ],
-                                                )
-                                            ],
-                                          ) : Column(
-                                            children: [
-                                              Text('${equipamento!.nome} já emprestado, tente outro!'),
-                                              Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    8.0),
                                                         child: ElevatedButton(
-                                                          onPressed: (){
+                                                          onPressed: () {
                                                             setState(() {
-                                                              ticket='';
+                                                              ticket = '';
                                                             });
                                                           },
-                                                          child: const Text('Tente Novamente'),
+                                                          child: const Text(
+                                                              'Tente Novamente'),
                                                         ),
                                                       ),
-                                            ],
-                                          ),
-
-                                        ],
-                                      ) 
-                                      :
-                                      Column(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(vertical:10.0),
-                                            child: Text('Equipamento não encontrado'),
-                                          ),
-                                          Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                        child: ElevatedButton(
-                                          onPressed: (){
-                                            setState(() {
-                                              ticket='';
-                                            });
-                                          },
-                                          child: const Text('Tente Novamente'),
+                                                    ],
+                                                  ),
+                                          ],
+                                        )
+                                      : ElevatedButton.icon(
+                                          onPressed: LerQRCode,
+                                          icon: const Icon(Icons.qr_code),
+                                          label:
+                                              const Text('Validar equipamento'),
                                         ),
-                                      ),       
-                                        ],
-                                      ),
-                                                                     
-                                    ],
-                                  ) :
-                                ElevatedButton.icon(
-                                  onPressed: LerQRCode,
-                                  icon: const Icon(Icons.qr_code),
-                                  label: const Text('Validar equipamento'),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
                       EquipamentosEmprestados(
                         listaDeEquipamentos:
-                            widget.paciente.equipamentosEmprestados,
+                            widget.paciente.equipamentosEmprestados ?? [],
                       ),
                     ],
                   ),
@@ -196,6 +252,7 @@ class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
       ),
     );
   }
+
   LerQRCode() async {
     String code = await FlutterBarcodeScanner.scanBarcode(
       "#FFFFFF",
@@ -206,7 +263,5 @@ class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
     ticket = code != '-1' ? code : 'Não validado';
     equipamento = await FirebaseService().obterEquipamentoPorID(ticket);
     setState(() {});
+  }
 }
-}
-
-

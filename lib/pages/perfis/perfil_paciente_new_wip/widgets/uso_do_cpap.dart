@@ -39,7 +39,7 @@ class _PacienteVisaoGeralState extends State<UsoDoCPAP> {
                         fit: BoxFit.cover,
                       ),
                       widget.model.editar?
-                      EditarFoto(widget.paciente.id!,"Paciente"):SizedBox()
+                      EditarFoto(widget.paciente.id,"Paciente"):const SizedBox()
                     ],
                   ),
                   const SizedBox(
@@ -51,7 +51,7 @@ class _PacienteVisaoGeralState extends State<UsoDoCPAP> {
                       widget.model.editar
                           ? FittedBox(
                               child: Text(
-                                widget.paciente.nome,
+                                widget.paciente.nomeCompleto,
                                 style: const TextStyle(
                                   fontSize: 40,
                                 ),

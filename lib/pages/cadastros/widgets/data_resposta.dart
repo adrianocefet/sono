@@ -57,13 +57,13 @@ class _RespostaDataState extends State<RespostaData> {
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Theme.of(context).primaryColorLight,
-                  width: 1.5,
+                  width: 1.2,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Theme.of(context).primaryColor,
-                  width: 1.5,
+                  width: 1.2,
                 ),
               ),
               focusedErrorBorder: const OutlineInputBorder(

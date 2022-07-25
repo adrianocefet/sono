@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente_controller.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/models/user_model.dart';
+
+import '../../perfis/perfil_paciente/perfil_paciente.dart';
 
 class CadastroPaciente extends StatefulWidget {
   const CadastroPaciente({Key? key}) : super(key: key);
@@ -38,20 +41,16 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
             }
           },
           child: Scaffold(
-            extendBody: true,
             appBar: AppBar(
               title: const Text("Registrar paciente"),
               centerTitle: true,
               backgroundColor: Theme.of(context).primaryColor,
               bottom: PreferredSize(
                 preferredSize: Size.zero,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 800),
-                  child: LinearProgressIndicator(
-                    backgroundColor: Colors.transparent,
-                    value: (controller.paginaAtual + 1) / 3,
-                    color: Theme.of(context).focusColor,
-                  ),
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  value: (controller.paginaAtual + 1) / 2,
+                  color: Theme.of(context).focusColor,
                 ),
               ),
             ),
@@ -64,61 +63,79 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                   stops: [0, 0.2],
                 ),
               ),
-              child: PageView(
+              child: PageView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: controller.pageController,
                 onPageChanged: (index) {
                   controller.paginaAtual = index;
                   setState(() {});
                 },
-                children: [
-                  for (String index in ['1', '2', '3'])
-                    SingleChildScrollView(
-                      controller: ScrollController(),
-                      child: Form(
-                        key: controller.formKeys[int.parse(index) - 1],
-                        child: ListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: [
-                            for (Pergunta pergunta in controller.perguntas)
-                              if (pergunta.dominio == index)
-                                RespostaWidget(pergunta),
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (/*controller.salvarRespostasDaPaginaAtual()*/ true) {
+                itemCount: 2,
+                itemBuilder: (context, i) {
+                  String dominio = ['conversa', 'exame fisico'][i];
+
+                  return SingleChildScrollView(
+                    controller: ScrollController(),
+                    child: Form(
+                      key: controller.formKeys[dominio == 'conversa' ? 0 : 1],
+                      child: Column(
+                        children: [
+                          for (Pergunta pergunta in controller.perguntas)
+                            if (pergunta.dominio == dominio)
+                              RespostaWidget(pergunta),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (controller.salvarRespostasDaPaginaAtual()) {
+                                  if (controller.paginaAtual == 1) {
+                                    mostrarDialogCarregando(context);
+                                    await Future.delayed(
+                                      const Duration(seconds: 3),
+                                    );
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NovoPerfilDoPaciente(
+                                          'idPaciente',
+                                        ),
+                                      ),
+                                    );
+                                  } else {
                                     await controller.pageController.nextPage(
                                       curve: Curves.easeIn,
                                       duration:
                                           const Duration(milliseconds: 400),
                                     );
                                   }
-                                },
-                                child: Text(
-                                  controller.paginaAtual == 2
-                                      ? "Registrar paciente"
-                                      : "Avançar",
+                                }
+                              },
+                              child: Text(
+                                controller.paginaAtual == 1
+                                    ? "Registrar paciente"
+                                    : "Avançar",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                elevation: 5.0,
+                                fixedSize: Size(
+                                  MediaQuery.of(context).size.width,
+                                  50,
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0.0,
-                                  shadowColor: Colors.transparent,
-                                  fixedSize: Size(
-                                      MediaQuery.of(context).size.width,
-                                      50),
-                                  primary: Colors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  ),
+                                primary: Theme.of(context).focusColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                ],
+                  );
+                },
               ),
             ),
           ),

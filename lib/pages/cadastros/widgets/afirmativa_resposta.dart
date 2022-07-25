@@ -31,6 +31,7 @@ class RespostaAfirmativaCadastro extends StatefulWidget {
 
 class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
   Paciente? paciente;
+  bool valido = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,49 +41,82 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Theme.of(context).primaryColor, width: 1.2),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Visibility(
+            visible: false,
+            maintainState: true,
+            maintainSize: false,
+            child: TextFormField(
+              onSaved: (value) {
+                setState(
+                  () {
+                    valido =
+                        widget.pergunta.respostaExtenso != null ? true : false;
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Text(
-                widget.pergunta.enunciado,
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                  color: valido ? Theme.of(context).primaryColor : Colors.red,
+                  width: 1.2),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _BotaoBinario(
-                    'Sim',
-                    pergunta: widget.pergunta,
-                    atualizarMarcacao: () => setState(() {}),
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    widget.pergunta.enunciado,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  _BotaoBinario(
-                    'Não',
-                    pergunta: widget.pergunta,
-                    atualizarMarcacao: () => setState(() {}),
-                  )
-                ],
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _BotaoBinario(
+                        'Sim',
+                        pergunta: widget.pergunta,
+                        atualizarMarcacao: () => setState(() {}),
+                      ),
+                      _BotaoBinario(
+                        'Não',
+                        pergunta: widget.pergunta,
+                        atualizarMarcacao: () => setState(() {}),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Visibility(
+            visible: !valido,
+            child: const Padding(
+              padding: EdgeInsets.only(left: 10, top: 5),
+              child: Text(
+                'Dado obrigatório.',
+                style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -104,7 +138,8 @@ class __BotaoBinarioState extends State<_BotaoBinario> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
         width: 40,
         height: 40,
         decoration: BoxDecoration(

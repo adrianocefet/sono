@@ -59,7 +59,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
                                     fit: BoxFit.cover,
                                   ),
                                   Text(
-                                    paciente.nome,
+                                    paciente.nomeCompleto,
                                     //style: TextStyle(fontSize: 30,),
                                   ),
                                 ],

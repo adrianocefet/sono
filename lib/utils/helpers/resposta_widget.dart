@@ -6,6 +6,7 @@ import 'package:sono/pages/cadastros/widgets/data_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/dropdown_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/extenso_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/foto_perfil_resposta.dart';
+import 'package:sono/pages/cadastros/widgets/mallampati_resposta.dart';
 import 'package:sono/pages/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
@@ -158,6 +159,12 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         return RespostaComorbidades(
           pergunta: pergunta,
           autoPreencher: widget.autoPreencher ?? widget.pergunta.respostaLista,
+        );
+      case TipoPergunta.mallampati:
+        return RespostaMallampati(
+          pergunta: pergunta,
+          autoPreencher: widget.autoPreencher ?? widget.pergunta.resposta,
+          paciente: widget.paciente,
         );
       default:
         {

@@ -34,7 +34,7 @@ class CadastroPacienteController {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => PerfilDoPaciente(helper.idPaciente!),
+                builder: (context) => NovoPerfilDoPaciente(helper.idPaciente!),
               ),
             );
             break;
@@ -71,8 +71,8 @@ class CadastroPacienteController {
       formKeys.map((key) => key.currentState!.save());
 
   bool salvarRespostasDaPaginaAtual() {
+    formKeys[paginaAtual].currentState!.save();
     if (formKeys[paginaAtual].currentState!.validate()) {
-      formKeys[paginaAtual].currentState!.save();
       return true;
     } else {
       return false;

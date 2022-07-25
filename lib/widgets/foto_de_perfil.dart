@@ -82,7 +82,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PerfilDoPaciente(widget.id),
+                  builder: (context) => NovoPerfilDoPaciente(widget.id),
                 ),
               );
             }

@@ -98,7 +98,7 @@ List<Map<String, dynamic>> baseBerlin = [
     'dominio': 'categoria_1',
     "pesos": [1, 0],
     'opcoes': ["Sim", "Não"],
-    'codigo': 'incomodou',
+    'codigo': 'ronco_ja_incomodou',
   },
   {
     'enunciado': "Alguém notou que você pára de respirar enquanto dorme?",
