@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/widgets/qrCodeGerado.dart';
 import 'package:sono/pdf/pdf_api.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -23,7 +24,8 @@ class TelaEquipamento extends StatefulWidget {
 
 class _TelaEquipamentoState extends State<TelaEquipamento> {
   late YoutubePlayerController controller;
-  
+  double altura=200;
+  bool clicado=false;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +135,15 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                             ),
                             Material(
                                 child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      qrCodeGerado(
+                                                        idEquipamento: widget.equipamento.id??'4646d65jdfgjfk',
+                                                      )));
+                              },
                               icon: Icon(
                                 Icons.qr_code,
                                 color: Constantes.corAzulEscuroPrincipal,
@@ -545,6 +555,60 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                     ),
                   ),
                 ),
+                Visibility(
+                  visible: widget.equipamento.observacao==null,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: AnimatedContainer(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height*0.2
+                      ),
+                      decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(width: 1)),
+                      duration: Duration(seconds: 2),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: const 
+                              BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                              ),
+                              color: Constantes.corAzulEscuroSecundario,),
+                              height: 30,
+                              child: Text("Observações",style: TextStyle(fontWeight: FontWeight.bold),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                             'Se a máscara ou arnês estiverem tocando sua pele e te incomodando, você pode comprar almofadas nasais para o encaixe ser melhor e, assim, reduzir a fricção contra a pele, você não precisa ter que aguentar isto. Você pode comprar acessórios para a máscara com almofadas nasais para que se encaixe no seu nariz e assim reduzir qualquer fricção contra sua pele. Se a máscara ou arnês estiverem tocando sua pele e te incomodando, você pode comprar almofadas nasais para o encaixe ser melhor e, assim, reduzir a fricção contra a pele, você não precisa ter que aguentar isto. Você pode comprar acessórios para a máscara com almofadas nasais para que se encaixe no seu nariz e assim reduzir qualquer fricção contra sua pele.'
+                             ,maxLines: clicado==true?null:3,
+                             overflow: clicado==true?null:TextOverflow.ellipsis,
+                             textAlign: TextAlign.justify,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical:8.0),
+                            child: ElevatedButton(
+                              onPressed: mostrarMais, 
+                              child: Text(clicado==true?'Mostrar menos':'Mostrar mais',style: TextStyle(color: Colors.black),),
+                              style: ElevatedButton.styleFrom(
+                                            primary: const Color.fromRGBO(97, 253, 125, 1),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            )),
+                              ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           )),
@@ -552,4 +616,11 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
   }
 
   void abrirPDF(BuildContext context, File arquivo)=> Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaPDF(arquivo: arquivo)));
+
+  void mostrarMais(){
+    setState(() {
+      clicado = !clicado;
+      clicado==true? altura=MediaQuery.of(context).size.height*0.5: altura=MediaQuery.of(context).size.height*0.2;
+    });
+  }
 }

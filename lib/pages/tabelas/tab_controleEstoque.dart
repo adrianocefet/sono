@@ -6,7 +6,10 @@ import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_tiposEquipamentos.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
+import '../perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
+import '../perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio.dart';
+import '../perfis/perfil_equipamento/relatorio/relatorio_geral.dart';
 
 class TabelaControleEstoque extends StatefulWidget {
   final PageController pageController;
@@ -17,15 +20,22 @@ class TabelaControleEstoque extends StatefulWidget {
 }
 
 class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
-  final List<ChartData> chartData=[
-    ChartData('Máscaras',70,30,40,50),
-    ChartData('Traqueias',40,20,10,16),
-    ChartData('Filtros',20,15,10,30),
-    ChartData('PAP',20,10,11,8),
-  ];
+  late List<Equipamento> equipamentos;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    equipamentos = List.of(todosEquipamentos);
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final List<ChartData> chartData=[
+      for(int i=0;i<8;i++)
+      ChartData(Constantes.tipo[i],calcularQuantidade(0, i, equipamentos),calcularQuantidade(1, i, equipamentos),calcularQuantidade(2, i, equipamentos),calcularQuantidade(3, i, equipamentos)),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Controle de Estoque"),
@@ -205,9 +215,13 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                   ),),
                               ),
                               SfCartesianChart(
+                                zoomPanBehavior: ZoomPanBehavior(
+                                  enablePinching: true,
+                                  enablePanning: true
+                                ),
                                 legend: Legend(isVisible: true,position: LegendPosition.bottom),
                                 enableAxisAnimation: true,
-                                primaryXAxis: CategoryAxis(labelStyle: const TextStyle(fontSize: 10)),
+                                primaryXAxis: CategoryAxis(labelStyle: const TextStyle(fontSize: 5)),
                                 series: <ChartSeries> [
                                   StackedColumnSeries<ChartData,String>(
                                     name: "Disponível",
@@ -269,6 +283,14 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
     );
   }
 }
+
+int calcularQuantidade(int status,int tipo, List<Equipamento> equipamentos,{bool calcularTotal=false}){
+    int contador=0;
+    calcularTotal==false?
+    equipamentos.forEach((Equipamento equipamento) {equipamento.status==Constantes.status2[status]&&equipamento.tipo==Constantes.tipo[tipo]?contador++:null;}):
+    equipamentos.forEach((Equipamento equipamento) {equipamento.tipo==Constantes.tipo[tipo]?contador++:null;});
+    return contador;
+  }
 
 class ChartData{
   final String x;

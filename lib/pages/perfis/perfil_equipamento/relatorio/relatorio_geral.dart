@@ -15,12 +15,11 @@ class relatorioGeral extends StatefulWidget {
 
 class _relatorioGeralState extends State<relatorioGeral> {
   late List<Equipamento> equipamentos;
-  late List<GDPData> _infoGrafico;
+  
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _infoGrafico = pegarDadosGrafico();
     equipamentos = List.of(todosEquipamentos);
   }
   
@@ -42,21 +41,23 @@ class _relatorioGeralState extends State<relatorioGeral> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Table(
-                  border: TableBorder.all(borderRadius: BorderRadius.all(Radius.circular(10))),
+                  border: TableBorder.all(borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
                   columnWidths: {
-                    0:FractionColumnWidth(0.4),
+                    0:FractionColumnWidth(0.25),
                     1:FractionColumnWidth(0.15),
                     2:FractionColumnWidth(0.15),
                     3:FractionColumnWidth(0.15),
                     4:FractionColumnWidth(0.15),
+                    5:FractionColumnWidth(0.15),
                   },
                   children: [
-                    mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção'],topo: true),
-                      for(var i=0;i<8;i++) mostrarlinhas([Constantes.tipo[i],calcularQuantidade(0,i,equipamentos).toString(),calcularQuantidade(1,i,equipamentos).toString(),calcularQuantidade(2,i,equipamentos).toString(),calcularQuantidade(3,i,equipamentos).toString()]),
+                    mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção','Total'],topo: true),
+                      for(var i=0;i<8;i++) mostrarlinhas([Constantes.tipo[i],calcularQuantidade(0,i,equipamentos).toString(),calcularQuantidade(1,i,equipamentos).toString(),calcularQuantidade(2,i,equipamentos).toString(),calcularQuantidade(3,i,equipamentos).toString(),calcularQuantidade(0, i, equipamentos,calcularTotal: true).toString()]),
                   ],
                 ),
               ),
             ),
+            for(int j=0;j<8;j++)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -76,13 +77,14 @@ class _relatorioGeralState extends State<relatorioGeral> {
                         color: Constantes.corAzulEscuroSecundario,
                       ),
                       height: 25,
-                      child: Text('Percentual(%)',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                      child: Text('Percentual ${Constantes.tipo[j].toLowerCase()}(%)',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                     ),
                     SfCircularChart(
+                      backgroundColor: Colors.white,
                       legend: Legend(isVisible: true,overflowMode: LegendItemOverflowMode.wrap,textStyle: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
                       series: <CircularSeries>[
                         PieSeries<GDPData, String>(
-                          dataSource: _infoGrafico,
+                          dataSource: pegarDadosGrafico(j),
                           xValueMapper: (GDPData data,_)=> data.tipo,
                           yValueMapper: (GDPData data,_)=> data.qntd,
                           dataLabelSettings: DataLabelSettings(
@@ -98,7 +100,7 @@ class _relatorioGeralState extends State<relatorioGeral> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -106,14 +108,16 @@ class _relatorioGeralState extends State<relatorioGeral> {
   }
 
 
-  int calcularQuantidade(int status,int tipo, List<Equipamento> equipamentos){
+  int calcularQuantidade(int status,int tipo, List<Equipamento> equipamentos,{bool calcularTotal=false}){
     int contador=0;
-    equipamentos.forEach((Equipamento equipamento) {equipamento.status==Constantes.status2[status]&&equipamento.tipo==Constantes.tipo[tipo]?contador++:null;});
+    calcularTotal==false?
+    equipamentos.forEach((Equipamento equipamento) {equipamento.status==Constantes.status2[status]&&equipamento.tipo==Constantes.tipo[tipo]?contador++:null;}):
+    equipamentos.forEach((Equipamento equipamento) {equipamento.tipo==Constantes.tipo[tipo]?contador++:null;});
     return contador;
   }
 
  TableRow mostrarlinhas(List<String> celula,{bool topo=false}) => TableRow(
-  decoration: BoxDecoration(color: topo?Constantes.corAzulEscuroSecundario:Colors.white,borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
+  decoration: BoxDecoration(color: topo?Constantes.corAzulEscuroSecundario:Colors.white,borderRadius: topo?BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)):null),
   children: celula.map((celula){ 
   final estilo = TextStyle(fontWeight: topo?FontWeight.bold:FontWeight.w300,fontSize: 15);
   final IconData icone;
@@ -133,25 +137,21 @@ class _relatorioGeralState extends State<relatorioGeral> {
       icone=Constantes.icone[3];
       break;
     default:
-      icone=Icons.abc_outlined;
+      icone=Icons.add;
   }
   return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: Center(child: topo&&celula!=''?Icon(icone):Text(celula,style: estilo,)),
+    child: Center(child: topo&&celula!=''&&celula!='Total'?Icon(icone):Text(celula,style: estilo,)),
 
   );}).toList(),
  );
 
-  List<GDPData> pegarDadosGrafico(){
+  List<GDPData> pegarDadosGrafico(int tipo){
     final List<GDPData> dadosGrafico = [
-      GDPData('Máscara Nasal', 6),
-      GDPData('Máscara Oronasal', 5),
-      GDPData('Máscara Pillow', 4),
-      GDPData('Máscara Facial', 12),
-      GDPData('Aparelho PAP', 11),
-      GDPData('Almofadas', 7),
-      GDPData('Fixadores', 9),
-      GDPData('Traqueia', 10),
+      GDPData('Disponíveis', (calcularQuantidade(0,tipo,equipamentos)*100~/(calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)==0?1:calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)))),
+      GDPData('Empréstimos', (calcularQuantidade(1,tipo,equipamentos)*100~/(calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)==0?1:calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)))),
+      GDPData('Manutenção', (calcularQuantidade(2,tipo,equipamentos)*100~/(calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)==0?1:calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)))),
+      GDPData('Desinfecção', (calcularQuantidade(3,tipo,equipamentos)*100~/(calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)==0?1:calcularQuantidade(0,tipo,equipamentos,calcularTotal: true)))),
     ];
     return dadosGrafico;
   }

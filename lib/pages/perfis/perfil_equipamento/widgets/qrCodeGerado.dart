@@ -16,6 +16,7 @@ class qrCodeGerado extends StatelessWidget {
     final ScreenshotController screenshotController = ScreenshotController();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text('QR CODE'),
         centerTitle: true,
       ),
@@ -46,6 +47,9 @@ class qrCodeGerado extends StatelessWidget {
               height: 30,
             ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).highlightColor
+                ),
                 onPressed: () async {
                   const snackBar = SnackBar(
                     content: Text(
@@ -62,7 +66,7 @@ class qrCodeGerado extends StatelessWidget {
                     return;
                   }
                 },
-                child: Text('Salvar na Galeria'))
+                child: Text('Salvar na Galeria',style: TextStyle(color: Colors.black),))
           ],
         ),
       ),

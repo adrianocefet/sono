@@ -29,24 +29,20 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        child: SingleChildScrollView(
+      body:ListView(
                 scrollDirection: Axis.vertical,
-                child:construirTabela()
+                children:[construirTabela()]
                 ),
-      ),
            );
   }
   
   Widget construirTabela() {
-    final colunas = ['Tipo','Equipamento','Status','Tamanho'];
+    final colunas = ['Tipo','Equipamento','Status','Tamanho','Data'];
     return DataTable(
       headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
       decoration: BoxDecoration(),
-      dataRowHeight: 80,
-      columnSpacing: 10,
+      dataRowHeight: 90,
+      columnSpacing: 5,
       horizontalMargin: 1,
       sortAscending: ordemCrescente,
       sortColumnIndex: indexOrdenarColuna,
@@ -74,7 +70,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     .toList();
   
   List<DataRow> pegarLinhas(List<Equipamento> equipamentos) => equipamentos.map((Equipamento equipamento) {
-    final celulas = [equipamento.tipo,equipamento.nome,equipamento.status,equipamento.tamanho];
+    final celulas = [equipamento.tipo,equipamento.nome,equipamento.status,equipamento.tamanho,equipamento.inicioStatus];
 
     return DataRow(
       cells: pegarCelulas(celulas),
@@ -84,7 +80,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
       );
   }).toList();
   
-  List<DataCell> pegarCelulas(List<String> celulas) => celulas.map((data) => DataCell(Center(child: Text('$data')))).toList();
+  List<DataCell> pegarCelulas(List<String> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',softWrap: true,overflow: TextOverflow.visible,))))).toList();
 
   void ordenar(int indexColuna, bool crescente) {
     if(indexColuna==0){
@@ -102,6 +98,10 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     else if(indexColuna==3){
       equipamentos.sort((equipamento1, equipamento2) =>
         comparararString(crescente, equipamento1.tamanho, equipamento2.tamanho));
+    }
+    else if(indexColuna==4){
+      equipamentos.sort((equipamento1, equipamento2) =>
+        comparararString(crescente, equipamento1.inicioStatus, equipamento2.inicioStatus));
     }
     setState(() {
       this.indexOrdenarColuna = indexColuna;

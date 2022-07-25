@@ -99,7 +99,7 @@ class CustomDrawer extends StatelessWidget {
                 Icons.masks_outlined,
                 "Controle de Estoque",
                 pageController,
-                6,
+                5,
               ),
             ],
           )
