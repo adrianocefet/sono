@@ -10,9 +10,12 @@ import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/dialogs/aviso_ja_possui_equipamento.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 
+import '../../../utils/models/pergunta.dart';
+
 
 class AdicionarEquipamento extends StatefulWidget {
-  const AdicionarEquipamento({Key? key}) : super(key: key);
+  final String tipo;
+  const AdicionarEquipamento(this.tipo,{Key? key}) : super(key: key);
 
   @override
   State<AdicionarEquipamento> createState() => _AdicionarEquipamentoState();
@@ -26,7 +29,8 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Criar Equipamento'),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('Cadastrar equipamento'),
           centerTitle: true,
         ),
         body:
@@ -41,53 +45,53 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     children: [
-                      RespostaWidget(helper.perguntas.first),
-                      RespostaWidget(helper.perguntas.last),
-                      formTamanhos(),
+                      for(Pergunta pergunta in helper.perguntas.getRange(0, 6))
+                        RespostaWidget(pergunta),
+                      if(widget.tipo==Constantes.tipo[0] || widget.tipo==Constantes.tipo[1] || widget.tipo==Constantes.tipo[2] || widget.tipo==Constantes.tipo[3])
+                        RespostaWidget(helper.perguntas.last),
+                      //formTamanhos(),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      mostrarDialogCarregando(context);
+                      try {
+                        switch (await helper.registrarEquipamento(
+                            model.hospital, model.equipamento)) {
+                          case StatusCadastroEquipamento
+                              .jaExistenteNoBancoDeDados:
+                            Navigator.pop(context);
+                            mostrarAvisoJaPossuiEquipamento(context);
+                            break;
+                          default:
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                        }
+                      } catch (e) {
+                        Navigator.pop(context);
+                        mostrarMensagemErro(context, e.toString());
+                      }
+                    }
+                  },
+                  child: Text('Adicionar equipamento'),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0.0,
+                    shadowColor: Colors.transparent,
+                    fixedSize: Size(
+                        MediaQuery.of(context).size.width,
+                        50),
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: const Text(
-                    "Adicionar",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    formKey.currentState!.save();
-                    mostrarDialogCarregando(context);
-                    try {
-                      switch (await helper.registrarEquipamento(
-                          model.hospital, model.equipamento)) {
-                        case StatusCadastroEquipamento
-                            .jaExistenteNoBancoDeDados:
-                          Navigator.pop(context);
-                          mostrarAvisoJaPossuiEquipamento(context);
-                          break;
-                        default:
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                      }
-                    } catch (e) {
-                      Navigator.pop(context);
-                      mostrarMensagemErro(context, e.toString());
-                    }
-                  }
-                },
               ),
               const SizedBox(
                 height: 20,

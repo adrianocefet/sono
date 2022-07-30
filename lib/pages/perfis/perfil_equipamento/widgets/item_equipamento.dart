@@ -104,7 +104,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                widget.equipamento.tipo!='Aparelho PAP'?
+                                widget.equipamento.tipo!=Constantes.tipo[5]||widget.equipamento.tipo!=Constantes.tipo[6]||widget.equipamento.tipo!=Constantes.tipo[7]||widget.equipamento.tipo!=Constantes.tipo[8]?
                                 Column(
                                   children: [
                                     Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),

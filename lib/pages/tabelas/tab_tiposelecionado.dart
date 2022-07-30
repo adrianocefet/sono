@@ -8,6 +8,7 @@ import 'package:sono/constants/constants.dart';
 import '../../utils/models/user_model.dart';
 import '../../widgets/foto_de_perfil.dart';
 import '../../widgets/pesquisa.dart';
+import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
 import '../perfis/perfil_equipamento/widgets/tipos_equip.dart';
 
 class TipoSelecionado extends StatefulWidget {
@@ -54,19 +55,12 @@ class _TipoSelecionadoState extends State<TipoSelecionado> {
               BotaoTipoEquipamento(titulo: 'Máscara Facial',imagem: 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTMvMDUvMjEvMjFfNDVfMjBfNDk5X0ZpdExpZmUuanBnIl1d/FitLife.jpg',paginaAtual: widget.status,),
               BotaoTipoEquipamento(titulo: 'Aparelho PAP',imagem: 'https://a4.vnda.com.br/1200x/pedeapoio/2019/10/02/31233-aparelho-cpap-apap-reswell-automatico-completo-com-mascara-n2-2550.png?v=1570018948',paginaAtual: widget.status,),
               BotaoTipoEquipamento(titulo: 'Traqueia',imagem: 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/mini-traqueia-para-mascara-swift-fx-resmed-720.jpg',paginaAtual: widget.status,),
-              BotaoTipoEquipamento(titulo: 'Fixadores',imagem: 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/fixador-para-mascara-facial-fitlife-e-performax-philips-respironics-1042.jpg',paginaAtual: widget.status,),
-              BotaoTipoEquipamento(titulo: 'Almofadas',imagem: 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg',paginaAtual: widget.status,),
+              BotaoTipoEquipamento(titulo: 'Fixador',imagem: 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/fixador-para-mascara-facial-fitlife-e-performax-philips-respironics-1042.jpg',paginaAtual: widget.status,),
+              BotaoTipoEquipamento(titulo: 'Almofada',imagem: 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg',paginaAtual: widget.status,),
             ],
               ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          print(widget.status);
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Constantes.corAzulEscuroPrincipal,
-        )
     );
   }
 }

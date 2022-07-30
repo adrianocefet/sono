@@ -12,13 +12,51 @@ class RegistroEquipamentoHelper {
   RegistroEquipamentoHelper() {
     perguntas = [
       Pergunta(
-          "Foto do equipamento (opcional)", TipoPergunta.foto, [], '', 'Foto'),
+          "Foto do equipamento", TipoPergunta.foto, [], '', 'Foto'),
       Pergunta(
-        'Nome do equipamento',
+        'Nome do equipamento*',
         TipoPergunta.extensoCadastros,
         [],
         '',
         "Nome",
+        validador: (value) => value != '' ? null : 'Dado obrigatório.',
+      ),
+      Pergunta(
+        'Fabricante*',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "Fabricante",
+        validador: (value) => value != '' ? null : 'Dado obrigatório.',
+      ),
+      Pergunta(
+        'Descrição*',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "Descrição",
+        validador: (value) => value != '' ? null : 'Dado obrigatório.',
+      ),
+      Pergunta(
+        'PDF Manual',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "Manual",
+      ),
+      Pergunta(
+        'Vídeo instrucional',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "VideoInstrucional",
+      ),
+      Pergunta(
+        'Tamanho*',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "Tamanho",
         validador: (value) => value != '' ? null : 'Dado obrigatório.',
       ),
     ];

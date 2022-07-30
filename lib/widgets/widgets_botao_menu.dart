@@ -56,7 +56,7 @@ class _BotaoMenuState extends State<BotaoMenu>
             const Icon(Icons.add),
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AdicionarEquipamento()),
+              MaterialPageRoute(builder: (context) => AdicionarEquipamento('Máscara')),
             ),
           ),
           MapEntry(
