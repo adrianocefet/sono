@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
+  String id = 'IDGENERICO';
   String texto = 'adriano';
   String hospital = 'HUWC';
   String equipamento = 'Equipamento';
@@ -12,15 +12,6 @@ class UserModel extends Model {
   void fazHome() async {
     equipamento = 'Equipamento';
     notifyListeners();
-  }
-
-  void adicionarEquipamento() async {
-    FirebaseFirestore.instance.collection('Equipamento').add(
-      {
-        'Hospital': hospital,
-        'Equipamento': equipamento,
-      },
-    );
   }
 
   void teste(String vai) async {

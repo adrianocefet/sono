@@ -18,10 +18,10 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _listaImagens = [
-      imagemHospital('HGCC', 0.9),
-      imagemHospital('HGF', 0.3),
-      imagemHospital('HM', -0.3),
-      imagemHospital('HUWC', -0.9),
+      imagemHospital('HGCC'),
+      imagemHospital('HGF'),
+      imagemHospital('HM'),
+      imagemHospital('HUWC'),
     ];
 
     return Scaffold(
@@ -78,7 +78,7 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget imagemHospital(String hospital, double x) {
+  Widget imagemHospital(String hospital) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         bool clicado = false;
@@ -86,8 +86,9 @@ class _HomeTabState extends State<HomeTab> {
           clicado = true;
         }
         return Material(
-          color:
-              clicado ? const Color.fromARGB(255, 35, 39, 104) : Colors.transparent,
+          color: clicado
+              ? const Color.fromARGB(255, 35, 39, 104)
+              : Colors.transparent,
           child: InkWell(
             splashColor: Constantes.corAzulEscuroSecundario,
             highlightColor: const Color.fromARGB(255, 35, 39, 104),

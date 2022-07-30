@@ -1,267 +1,96 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/equipamento.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
+import 'package:sono/pages/perfis/perfil_paciente/widgets/informacoes_gerais.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/user_model.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:sono/utils/services/firebase.dart';
-import '../../../../constants/constants.dart';
-import 'equipamentos_emprestados.dart';
 
-class PacienteVisaoGeral extends StatefulWidget {
-  final Paciente paciente;
-  final UserModel model;
-  const PacienteVisaoGeral(
-      {required this.paciente, required this.model, Key? key})
+class VisaoGeralPaciente extends StatefulWidget {
+  final ControllerPerfilClinicoPaciente controller;
+  const VisaoGeralPaciente({Key? key, required this.controller})
       : super(key: key);
 
   @override
-  State<PacienteVisaoGeral> createState() => _PacienteVisaoGeralState();
+  State<VisaoGeralPaciente> createState() => _VisaoGeralPacienteState();
 }
 
-class _PacienteVisaoGeralState extends State<PacienteVisaoGeral> {
-  String ticket = '';
-  Equipamento? equipamento;
+class _VisaoGeralPacienteState extends State<VisaoGeralPaciente> {
+  @override
+  Widget build(BuildContext context) {
+    final Paciente paciente = widget.controller.paciente;
+
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.92,
+          margin: const EdgeInsets.only(top: 65),
+          padding: const EdgeInsets.fromLTRB(10, 45, 10, 10),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            border: Border.all(
+              width: 2,
+              color: Theme.of(context).primaryColor,
+            ),
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  'Status: ${paciente.statusFormatado}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              InformacoesGerais(paciente: paciente),
+            ],
+          ),
+        ),
+        _FotoDoPaciente(paciente.urlFotoDePerfil),
+      ],
+    );
+  }
+}
+
+class _FotoDoPaciente extends StatelessWidget {
+  final String? urlImagem;
+  const _FotoDoPaciente(
+    this.urlImagem, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Column(
-          children: [
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    widget.paciente.urlFotoDePerfil ?? widget.model.semimagem,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      widget.model.editar
-                          ? FittedBox(
-                              child: Text(
-                                widget.paciente.nomeCompleto,
-                                style: const TextStyle(
-                                  fontSize: 40,
-                                ),
-                              ),
-                            )
-                          : Visibility(
-                              visible:
-                                  widget.paciente.equipamentosEmprestados !=
-                                      null,
-                              child: Column(
-                                children: [
-                                  ticket != ''
-                                      ? Column(
-                                          children: [
-                                            equipamento != null
-                                                ? Column(
-                                                    children: [
-                                                      equipamento!.idPacienteResponsavel ==
-                                                              null
-                                                          ? Column(
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          10.0),
-                                                                  child: Text(
-                                                                      'Nome Equipamento: ${equipamento!.nome}'),
-                                                                ),
-                                                                Image.network(
-                                                                  equipamento!
-                                                                          .urlFotoDePerfil ??
-                                                                      widget
-                                                                          .model
-                                                                          .semimagem,
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.3,
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.3,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          8.0),
-                                                                  child: Text(
-                                                                      'Deseja emprestar esse equipamento para ${widget.paciente.nomeCompleto}?'),
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .symmetric(
-                                                                          horizontal:
-                                                                              8.0),
-                                                                      child:
-                                                                          ElevatedButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          setState(
-                                                                              () {
-                                                                            ticket =
-                                                                                '';
-                                                                          });
-                                                                        },
-                                                                        child: const Text(
-                                                                            'Cancelar'),
-                                                                      ),
-                                                                    ),
-                                                                    ElevatedButton(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        if (equipamento !=
-                                                                            null) {
-                                                                          equipamento!.status =
-                                                                              StatusDoEquipamento.emprestado;
-                                                                          FirebaseService().emprestarEquipamento(
-                                                                              equipamento!,
-                                                                              widget.paciente);
-                                                                        } else {
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(const SnackBar(
-                                                                            content:
-                                                                                Text(
-                                                                              'Equipamento não encontrado',
-                                                                              style: TextStyle(color: Colors.white),
-                                                                            ),
-                                                                            backgroundColor:
-                                                                                Constantes.corAzulEscuroSecundario,
-                                                                          ));
-                                                                        }
-                                                                        setState(
-                                                                            () {});
-                                                                      },
-                                                                      child: const Text(
-                                                                          'Sim'),
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            )
-                                                          : Column(
-                                                              children: [
-                                                                Text(
-                                                                    '${equipamento!.nome} já emprestado, tente outro!'),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                      horizontal:
-                                                                          8.0),
-                                                                  child:
-                                                                      ElevatedButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      setState(
-                                                                          () {
-                                                                        ticket =
-                                                                            '';
-                                                                      });
-                                                                    },
-                                                                    child: const Text(
-                                                                        'Tente Novamente'),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                    ],
-                                                  )
-                                                : Column(
-                                                    children: [
-                                                      const Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 10.0),
-                                                        child: Text(
-                                                            'Equipamento não encontrado'),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    8.0),
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              ticket = '';
-                                                            });
-                                                          },
-                                                          child: const Text(
-                                                              'Tente Novamente'),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                          ],
-                                        )
-                                      : ElevatedButton.icon(
-                                          onPressed: LerQRCode,
-                                          icon: const Icon(Icons.qr_code),
-                                          label:
-                                              const Text('Validar equipamento'),
-                                        ),
-                                ],
-                              ),
-                            ),
-                      EquipamentosEmprestados(
-                        listaDeEquipamentos:
-                            widget.paciente.equipamentosEmprestados ?? [],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.paciente.infoMap.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                MapEntry<String, dynamic> atributo =
-                    widget.paciente.infoMap.entries.toList()[index];
-                return ListTile(
-                  title: Text(atributo.key),
-                  subtitle: Text(atributo.value.toString()),
-                );
-              },
-            )
-          ],
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: urlImagem == null
+              ? const NetworkImage(
+                  'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
+                )
+              : NetworkImage(urlImagem!),
         ),
-      ),
+        Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Theme.of(context).primaryColor,
+          ),
+          child: const FaIcon(
+            FontAwesomeIcons.smile,
+            color: Colors.white,
+          ),
+        )
+      ],
     );
-  }
-
-  LerQRCode() async {
-    String code = await FlutterBarcodeScanner.scanBarcode(
-      "#FFFFFF",
-      "Cancelar",
-      false,
-      ScanMode.QR,
-    );
-    ticket = code != '-1' ? code : 'Não validado';
-    equipamento = await FirebaseService().obterEquipamentoPorID(ticket);
-    setState(() {});
   }
 }

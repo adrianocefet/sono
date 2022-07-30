@@ -158,8 +158,11 @@ class __BotaoBinarioState extends State<_BotaoBinario> {
         if (widget.pergunta.respostaExtenso != widget.estado) {
           widget.pergunta
               .setRespostaExtenso(widget.estado == 'Sim' ? 'Sim' : 'Não');
+          widget.pergunta
+              .setRespostaBooleana(widget.estado == 'Sim' ? true : false);
         } else {
           widget.pergunta.setRespostaExtenso(null);
+          widget.pergunta.setRespostaBooleana(null);
         }
         widget.atualizarMarcacao();
       },

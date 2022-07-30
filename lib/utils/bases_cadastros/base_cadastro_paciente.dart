@@ -46,7 +46,7 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     'enunciado': "Endereço *",
     'tipo': TipoPergunta.extensoCadastros,
     'dominio': 'conversa',
-    'codigo': 'endereço',
+    'codigo': 'endereco',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },
   {
@@ -65,13 +65,13 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     'enunciado': "Telefone principal",
     'tipo': TipoPergunta.extensoNumericoCadastros,
     'dominio': 'conversa',
-    'codigo': 'telefone principal',
+    'codigo': 'telefone_principal',
   },
   {
     'enunciado': "Telefone secundário",
     'tipo': TipoPergunta.extensoNumericoCadastros,
     'dominio': 'conversa',
-    'codigo': 'telefone secundario',
+    'codigo': 'telefone_secundario',
   },
   {
     'enunciado': "Escolaridade",
@@ -135,7 +135,7 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     'enunciado': "Peso (kg) *",
     'tipo': TipoPergunta.extensoNumericoCadastros,
     'dominio': 'exame fisico',
-    'codigo': 'altura',
+    'codigo': 'peso',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },
   {
@@ -149,7 +149,7 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     'enunciado': "Mallampati *",
     'tipo': TipoPergunta.mallampati,
     'dominio': 'exame fisico',
-    'codigo': 'altura',
+    'codigo': 'mallampati',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },
   {

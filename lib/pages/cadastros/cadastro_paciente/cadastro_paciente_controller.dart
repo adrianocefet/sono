@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/perfis/perfil_paciente/perfil_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/utils/dialogs/aviso_ja_possui_paciente.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
@@ -28,13 +28,13 @@ class CadastroPacienteController {
       _salvarRespostasDoFormulario();
       try {
         mostrarDialogCarregando(context);
-        switch (await helper.registrarPaciente(model.hospital)) {
+        switch (await helper.registrarPaciente()) {
           case StatusPaciente.pacienteNovo:
             Navigator.pop(context);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => NovoPerfilDoPaciente(helper.idPaciente!),
+                builder: (context) => PerfilClinicoPaciente(helper.idPaciente!),
               ),
             );
             break;

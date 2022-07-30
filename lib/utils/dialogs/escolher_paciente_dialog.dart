@@ -39,8 +39,9 @@ Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
                       scrollDirection: Axis.vertical,
                       children: snapshot.data!.docs.reversed.map(
                         (DocumentSnapshot document) {
-                          Paciente paciente =
-                              Paciente.porDocumentSnapshot(document);
+                          Paciente paciente = Paciente.porDocumentSnapshot(
+                              document
+                                  as DocumentSnapshot<Map<String, dynamic>>);
                           return FittedBox(
                             fit: BoxFit.fitHeight,
                             child: InkWell(

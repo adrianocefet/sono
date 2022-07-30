@@ -9,6 +9,7 @@ class Pergunta {
   int? resposta;
   String? respostaExtenso;
   List respostaLista = [];
+  bool? respostaBooleana;
   List<String>? opcoes = [''];
   String? Function(String? value)? validador;
   File? respostaArquivo;
@@ -48,8 +49,11 @@ class Pergunta {
   void setRespostaArquivo(File? respostaArquivo) =>
       this.respostaArquivo = respostaArquivo;
 
-  void setRespostaLista(List? respostaArquivo) =>
-      respostaLista = respostaLista;
+  void setRespostaLista(List respostaLista) =>
+      this.respostaLista = respostaLista;
+
+  void setRespostaBooleana(bool? respostaBooleana) =>
+      respostaBooleana = respostaBooleana;
 
   void setResposta(int? resposta) {
     this.resposta = resposta;

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Paciente {
   late final Map<String, dynamic> infoMap;
@@ -9,19 +10,20 @@ class Paciente {
   late final String sexo;
   late final String status;
   late final String endereco;
-  late final String telefone;
+  late final String? telefonePrincipal;
+  late final String? telefoneSecundario;
   late final DateTime dataDeNascimento;
   late final DateTime dataDeCadastro;
   late final double peso;
-  late final int altura;
+  late final double altura;
   late final double imc;
   late final int mallampati;
   late final double circunferenciaDoPescoco;
   late final List<String>? equipamentosEmprestados;
   late final List<String>? comorbidades;
-  late final List<String> hospitais;
+  late final List<String> hospitaisVinculados;
   late final bool temAcessoAInternet;
-  late final bool sinalEstavelInternet;
+  late final bool sinalTelefonicoEstavel;
   late final bool temWhatsApp;
   late final bool usaSmartphone;
   late final bool trabalhadorDeTurno;
@@ -31,37 +33,102 @@ class Paciente {
   late final String? escolaridade;
   late final String? profissao;
 
+  int get idade {
+    return DateTime.now().difference(dataDeNascimento).inDays ~/ 365;
+  }
+
+  String get dataDeCadastroEmString {
+    return DateFormat('dd/MM/yyyy').format(dataDeCadastro);
+  }
+
+  String get dataDeNascimentoEmString {
+    return DateFormat('dd/MM/yyyy').format(dataDeNascimento);
+  }
+
+  String get sinalTelefonicoEstavelEmString {
+    return sinalTelefonicoEstavel ? 'Sim' : 'Não';
+  }
+
+  String get temAcessoAInternetEmString {
+    return temAcessoAInternet ? 'Sim' : 'Não';
+  }
+
+  String get trabalhadorDeTurnoEmString {
+    return trabalhadorDeTurno ? 'Sim' : 'Não';
+  }
+
+  String? get dataDaProximaAvaliacaoEmString {
+    return '01/11/2022';
+  }
+
+  bool get proximaAvaliacaoEHoje {
+    return false;
+  }
+
+  String get statusFormatado {
+    switch (status) {
+      case 'aguardando_cpap':
+        return 'Aguardando CPAP';
+      case 'em_adaptacao':
+        return 'Em adaptação';
+      case 'acomp_servico_terciario':
+        return 'Acompanhando em serviço terciário';
+      case 'acomp_servico_secundario':
+        return 'Acompanhando em serviço secundário';
+      case 'nao_aderente':
+        return 'Não aderente';
+      default:
+        return 'Em assistência hospitalar';
+    }
+  }
+
+  String get sexoReduzido {
+    switch (sexo) {
+      case 'Masculino':
+        return 'Masc.';
+      default:
+        return 'Fem.';
+    }
+  }
+
   Paciente(this.infoMap) {
     id = infoMap["id"];
     _setarAtributos();
   }
 
-  Paciente.porDocumentSnapshot(DocumentSnapshot document) {
+  Paciente.porDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> document) {
     infoMap = document.data() as Map<String, dynamic>;
     id = document.id;
     _setarAtributos();
   }
 
   void _setarAtributos() {
+    nomeDaMae = infoMap['nome_da_mae'];
+    sexo = infoMap['sexo'];
+    status = infoMap["status"];
     idCadastrador = infoMap["id_cadastrador"];
     nomeCompleto = infoMap["nome_completo"];
-    urlFotoDePerfil = infoMap["url_foto_perfil"];
+    urlFotoDePerfil = infoMap["url_foto_de_perfil"];
     endereco = infoMap["endereco"];
     cpf = infoMap["cpf"];
-    hospitais = infoMap["hospitais"];
+    hospitaisVinculados = List<String>.from(infoMap['hospitais_vinculados']);
     numeroProntuario = infoMap["numero_prontuario"];
-    temAcessoAInternet = infoMap["tem_acesso_a_internet"];
-    sinalEstavelInternet = infoMap["sinal_estavel_internet"];
+    temAcessoAInternet = infoMap["acesso_a_internet"];
+    sinalTelefonicoEstavel = infoMap["sinal_telefonico_estavel"];
     temWhatsApp = infoMap["tem_whatsapp"];
-    comorbidades = infoMap['comorbidades'];
-    dataDeNascimento = (infoMap["data_de_nascimento"] as Timestamp).toDate();
+    comorbidades = List<String>.from(infoMap['comorbidades']);
+    dataDeNascimento = DateTime.parse(DateFormat('dd/MM/yyyy')
+        .parse(infoMap["data_de_nascimento"])
+        .toString());
     dataDeCadastro = (infoMap["data_de_cadastro"] as Timestamp).toDate();
-    telefone = infoMap["telefone"];
+    telefonePrincipal = infoMap["telefone_principal"];
+    telefoneSecundario = infoMap["telefone_secundario"];
     escolaridade = infoMap["escolaridade"];
     profissao = infoMap["profissao"];
-    altura = int.parse(infoMap["altura"]);
-    peso = double.parse(infoMap["peso"]);
-    imc = double.parse(infoMap["imc"]);
+    altura = double.parse(infoMap["altura"].replaceAll(',', '.'));
+    peso = double.parse(infoMap["peso"].replaceAll(',', '.'));
+    imc = infoMap["imc"];
     circunferenciaDoPescoco =
         double.parse(infoMap["circunferencia_do_pescoco"]);
     mallampati = infoMap["mallampati"];

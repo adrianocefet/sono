@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
-import 'package:sono/pages/perfis/perfil_paciente/screen_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/widgets/foto_de_perfil.dart';
@@ -23,7 +23,7 @@ class TabelaDePacientes extends StatefulWidget {
 class _TabelaDePacientesState extends State<TabelaDePacientes> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+    return ScopedModelDescendant<UserModel>(builder: (context, child, usuario) {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Pacientes"),
@@ -34,7 +34,7 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: BarraDePesquisa('Paciente', model.hospital),
+                  delegate: BarraDePesquisa('Paciente', usuario.hospital),
                 );
               },
               icon: const Icon(Icons.search),
@@ -45,10 +45,11 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
         drawerEnableOpenDragGesture: true,
         body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<QuerySnapshot>(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
-                  .collection('Paciente')
-                  .where('Hospital', isEqualTo: model.hospital)
+                  .collection('pacientes')
+                  .where('hospitais_vinculados',
+                      arrayContains: usuario.hospital)
                   .snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
@@ -72,13 +73,12 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
                           childAspectRatio: 1,
                         ),
                         scrollDirection: Axis.vertical,
-                        children: snapshot.data!.docs.reversed
-                            .map((DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                              document.data()! as Map<String, dynamic>;
+                        children: snapshot.data!.docs.reversed.map(
+                            (DocumentSnapshot<Map<String, dynamic>> document) {
+                          Map<String, dynamic> data = document.data()!;
                           return FotoDePerfil.paciente(
-                            data['Foto'] ?? model.semimagem,
-                            data['Nome'] ?? 'sem nome',
+                            data['url_foto_de_perfil'] ?? usuario.semimagem,
+                            data['nome_completo'] ?? 'sem nome',
                             document.id,
                           );
                         }).toList(),
@@ -113,7 +113,7 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
     return InkWell(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ScreenPaciente(id)));
+            MaterialPageRoute(builder: (context) => PerfilClinicoPaciente(id)));
       },
       child: Column(
         mainAxisSize: MainAxisSize.max,

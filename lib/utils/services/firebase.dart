@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +10,6 @@ import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
-
 import '../../globais/global.dart';
 import '../models/equipamento.dart';
 
@@ -26,16 +24,21 @@ class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  static const String _stringPaciente = 'Paciente';
-  static const String _stringEquipamento = "Equipamento";
+  static const String _strPacientes = 'pacientes';
+  static const String _stringEquipamento = "equipamentos";
   static const String _stringQuestionarios = "questionarios";
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
-    return await _db.collection(_stringPaciente).doc(idPaciente).get().then(
+    return await _db.collection(_strPacientes).doc(idPaciente).get().then(
           (document) => Paciente.porDocumentSnapshot(
             document,
           ),
         );
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoPacientePorID(
+      String idPaciente) {
+    return _db.collection(_strPacientes).doc(idPaciente).snapshots();
   }
 
   Future<Equipamento?> obterEquipamentoPorID(String idEquipamento) async {
@@ -90,11 +93,7 @@ class FirebaseService {
         'Tamanhos': exportarListaDeTamanhos(),
       };
 
-      await _db
-          .collection(_stringEquipamento)
-          .doc(idEquipamento)
-          .update(data);
-
+      await _db.collection(_stringEquipamento).doc(idEquipamento).update(data);
     } catch (e) {
       rethrow;
     }
@@ -124,7 +123,7 @@ class FirebaseService {
         },
       );
 
-      await _db.collection(_stringPaciente).doc(paciente.id).update(
+      await _db.collection(_strPacientes).doc(paciente.id).update(
         {
           "equipamentos": FieldValue.arrayUnion([equipamento.id])
         },
@@ -147,7 +146,7 @@ class FirebaseService {
       );
 
       await _db
-          .collection(_stringPaciente)
+          .collection(_strPacientes)
           .doc(equipamento.idPacienteResponsavel)
           .update(
         {
@@ -159,40 +158,37 @@ class FirebaseService {
     }
   }
 
-  Future<void> desinfectarEquipamento(Equipamento equipamento) async{
+  Future<void> desinfectarEquipamento(Equipamento equipamento) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.desinfeccao.emString,
         },
       );
-
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> repararEquipamento(Equipamento equipamento) async{
+  Future<void> repararEquipamento(Equipamento equipamento) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.manutencao.emString,
         },
       );
-
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> disponibilizarEquipamento(Equipamento equipamento) async{
+  Future<void> disponibilizarEquipamento(Equipamento equipamento) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.disponivel.emString,
         },
       );
-
     } catch (e) {
       rethrow;
     }
@@ -203,7 +199,7 @@ class FirebaseService {
     String? idEquipamento;
 
     QuerySnapshot query = await _db
-        .collection(_stringPaciente)
+        .collection(_strPacientes)
         .where("Nome", isEqualTo: data['Nome'])
         .where("Hospital", isEqualTo: data["Hospital"])
         .get();
@@ -216,26 +212,26 @@ class FirebaseService {
   Future removerEquipamento(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> info =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
-    if(info["status"]=="Emprestado"){
-    Map<String,dynamic> dadosEquipamento = info.data()!;
-    dadosEquipamento["id"] = info.id;
-    
-     await devolverEquipamento(
-      Equipamento.porMap(
-        dadosEquipamento,
-      ),
-    ); 
-    } 
+    if (info["status"] == "Emprestado") {
+      Map<String, dynamic> dadosEquipamento = info.data()!;
+      dadosEquipamento["id"] = info.id;
+
+      await devolverEquipamento(
+        Equipamento.porMap(
+          dadosEquipamento,
+        ),
+      );
+    }
 
     await _db.collection(_stringEquipamento).doc(idEquipamento).delete();
     try {
       await deletarImagemDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches
-    } on Exception {} 
+    } on Exception {}
   }
 
   Future removerPaciente(String idPaciente) async {
-    await _db.collection(_stringPaciente).doc(idPaciente).delete();
+    await _db.collection(_strPacientes).doc(idPaciente).delete();
     try {
       await deletarImagemDoFirebaseStorage(idPaciente);
     } on Exception {}
@@ -246,9 +242,8 @@ class FirebaseService {
     String? idPaciente;
 
     QuerySnapshot query = await _db
-        .collection(_stringPaciente)
-        .where("Nome", isEqualTo: data["Nome"])
-        .where("Hospital", isEqualTo: data["Hospital"])
+        .collection(_strPacientes)
+        .where("nome_completo", isEqualTo: data["nome_completo"])
         .get();
 
     if (query.docs.isNotEmpty) idPaciente = query.docs[0].id;
@@ -258,7 +253,7 @@ class FirebaseService {
 
   Future<String> uploadDadosDoPaciente(Map<String, dynamic> data,
       {File? fotoDePerfil}) async {
-    String idPaciente = _db.collection(_stringPaciente).doc().id;
+    String idPaciente = _db.collection(_strPacientes).doc().id;
     String urlImagem = '';
 
     try {
@@ -269,9 +264,9 @@ class FirebaseService {
           idPaciente: idPaciente,
         );
       }
-      if (urlImagem.isNotEmpty) data['Foto'] = urlImagem;
+      if (urlImagem.isNotEmpty) data['url_foto_de_perfil'] = urlImagem;
 
-      await _db.collection(_stringPaciente).doc(idPaciente).set(data);
+      await _db.collection(_strPacientes).doc(idPaciente).set(data);
     } catch (e) {
       rethrow;
     }
@@ -282,7 +277,7 @@ class FirebaseService {
   Future<String> updateDadosDoPaciente(
       Map<String, dynamic> data, String idPaciente) async {
     try {
-      await _db.collection(_stringPaciente).doc(idPaciente).update(data);
+      await _db.collection(_strPacientes).doc(idPaciente).update(data);
     } catch (e) {
       rethrow;
     }
@@ -318,7 +313,7 @@ class FirebaseService {
     }
 
     _db
-        .collection(_stringPaciente)
+        .collection(_strPacientes)
         .doc(paciente.id)
         .collection(_stringQuestionarios)
         .doc(nomeDoQuestionario)
@@ -333,7 +328,7 @@ class FirebaseService {
   Stream<QuerySnapshot<Map<String, dynamic>>> streamQuestionarios(
       String idPaciente) {
     return _db
-        .collection(_stringPaciente)
+        .collection(_strPacientes)
         .doc(idPaciente)
         .collection(_stringQuestionarios)
         .snapshots();
@@ -344,7 +339,7 @@ class FirebaseService {
     String? idPaciente,
   }) async {
     Reference ref = _storage.ref(
-      '$_stringPaciente/perfil_$idPaciente',
+      '$_strPacientes/perfil_$idPaciente',
     );
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();
@@ -369,47 +364,49 @@ class FirebaseService {
     await ref.delete();
   }
 
-  Future<XFile?> selecionarArquivoGaleria() async{
-  return await ImagePicker().pickImage(source: ImageSource.gallery);
-}
-
-Future<XFile?> selecionarArquivoCamera() async{
-  return await ImagePicker().pickImage(source: ImageSource.camera);
-}
-
-Future<String> uparArquivoEquipamento(XFile imagem,String idEquipamento) async{
-  Reference db =
-  FirebaseStorage.instance.ref("$_stringEquipamento/perfil_$idEquipamento");
-  await db.putFile(File(imagem.path));
-  return await db.getDownloadURL();
-}
-
-Future<void> atualizarFotoEquipamento(String idEquipamento,String imagem) async{
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  try {
-    await _db.collection(_stringEquipamento).doc(idEquipamento).update(
-     {"Foto": imagem,}
-   );
-  } catch (e) {
-    rethrow;
+  Future<XFile?> selecionarArquivoGaleria() async {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
   }
-}
 
-Future<String> uparArquivoPaciente(XFile imagem,String idPaciente) async{
-  Reference db =
-  FirebaseStorage.instance.ref("$_stringPaciente/perfil_$idPaciente");
-  await db.putFile(File(imagem.path));
-  return await db.getDownloadURL();
-}
-
-Future<void> atualizarFotoPaciente(String idPacient,String imagem) async{
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  try {
-    await _db.collection(_stringPaciente).doc(idPacient).update(
-     {"Foto": imagem,}
-   );
-  } catch (e) {
-    rethrow;
+  Future<XFile?> selecionarArquivoCamera() async {
+    return await ImagePicker().pickImage(source: ImageSource.camera);
   }
-}
+
+  Future<String> uparArquivoEquipamento(
+      XFile imagem, String idEquipamento) async {
+    Reference db = FirebaseStorage.instance
+        .ref("$_stringEquipamento/perfil_$idEquipamento");
+    await db.putFile(File(imagem.path));
+    return await db.getDownloadURL();
+  }
+
+  Future<void> atualizarFotoEquipamento(
+      String idEquipamento, String imagem) async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    try {
+      await _db.collection(_stringEquipamento).doc(idEquipamento).update({
+        "url_foto_de_perfil": imagem,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> uparArquivoPaciente(XFile imagem, String idPaciente) async {
+    Reference db =
+        FirebaseStorage.instance.ref("$_strPacientes/perfil_$idPaciente");
+    await db.putFile(File(imagem.path));
+    return await db.getDownloadURL();
+  }
+
+  Future<void> atualizarFotoPaciente(String idPacient, String imagem) async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    try {
+      await _db.collection(_strPacientes).doc(idPacient).update({
+        "url_foto_de_perfil": imagem,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

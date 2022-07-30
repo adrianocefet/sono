@@ -9,7 +9,7 @@ import 'package:sono/utils/models/pergunta.dart';
 
 class RegistrarFotoPerfil extends StatefulWidget {
   final Pergunta pergunta;
-  final Uint8List? autoPreencher;
+  final dynamic autoPreencher;
   const RegistrarFotoPerfil(
       {required this.pergunta, this.autoPreencher, Key? key})
       : super(key: key);
@@ -108,31 +108,46 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                                 width: 2,
                               ),
                             ),
-                            child: Center(
-                              child: _imageFile == null &&
-                                      widget.autoPreencher == null
-                                  ? FaIcon(
-                                      FontAwesomeIcons.userAlt,
-                                      size: MediaQuery.of(context).size.width *
-                                          0.23,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    )
-                                  : SizedBox(
-                                      height: Constantes.alturaFotoDePerfil,
-                                      width: Constantes.larguraFotoDePerfil,
-                                      child: _imageFile == null
-                                          ? Image.memory(
-                                              widget.autoPreencher!,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.file(
-                                              File(
-                                                _imageFile!.path,
-                                              ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                    ),
+                            child: FutureBuilder<Uint8List?>(
+                              future: () async {
+                                Uint8List? foto =
+                                    widget.autoPreencher.runtimeType ==
+                                            Uint8List
+                                        ? widget.autoPreencher
+                                        : await (widget.autoPreencher as File?)
+                                            ?.readAsBytes();
+                                return foto;
+                              }(),
+                              builder: (context, snapshot) {
+                                return Center(
+                                  child: _imageFile == null &&
+                                          snapshot.data == null
+                                      ? FaIcon(
+                                          FontAwesomeIcons.userAlt,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.23,
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                        )
+                                      : SizedBox(
+                                          height: Constantes.alturaFotoDePerfil,
+                                          width: Constantes.larguraFotoDePerfil,
+                                          child: _imageFile == null
+                                              ? Image.memory(
+                                                  snapshot.data!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.file(
+                                                  File(
+                                                    _imageFile!.path,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
+                                );
+                              },
                             ),
                           ),
                           Padding(

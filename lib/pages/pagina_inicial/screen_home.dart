@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_home.dart';
-import 'package:sono/pages/tabelas/tab_fale.dart';
-import 'package:sono/pages/tabelas/tab_04.dart';
 import 'package:sono/pages/tabelas/tab_paciente.dart';
 import '../../utils/models/user_model.dart';
 import '../tabelas/tab_controleEstoque.dart';
@@ -29,9 +27,6 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             HomeTab(pageController: _pageController),
             TabelaDePacientes(pageController: _pageController),
-            TabelaDeEquipamentos(pageController: _pageController),
-            Fale(pageController: _pageController),
-            Tab04(pageController: _pageController),
             TabelaControleEstoque(pageController: _pageController),
           ],
         );

@@ -82,6 +82,7 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
                 setState(() {
                   _escolha = _opcoes.indexOf(value.toString());
                   widget.pergunta.setResposta(_escolha ?? 0);
+                  widget.pergunta.setRespostaExtenso(value);
                 });
               },
               onSaved: (value) {

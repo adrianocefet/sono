@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
-import 'package:sono/pages/perfis/perfil_paciente/perfil_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/dialogs/deletar_equipamento.dart';
 import 'package:sono/utils/dialogs/deletar_paciente.dart';
@@ -56,13 +56,12 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
                     : false) {
             } else {
               try {
-               setState((){
-                opacity = 0;
-              }); 
+                setState(() {
+                  opacity = 0;
+                });
               } catch (e) {
                 rethrow;
               }
-              
             }
           },
           onTap: () {
@@ -82,7 +81,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NovoPerfilDoPaciente(widget.id),
+                  builder: (context) => PerfilClinicoPaciente(widget.id),
                 ),
               );
             }

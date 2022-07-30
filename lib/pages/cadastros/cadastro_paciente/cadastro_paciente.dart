@@ -6,7 +6,7 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/models/user_model.dart';
 
-import '../../perfis/perfil_paciente/perfil_paciente.dart';
+import '../../perfis/perfil_paciente/perfil_clinico_paciente.dart';
 
 class CadastroPaciente extends StatefulWidget {
   const CadastroPaciente({Key? key}) : super(key: key);
@@ -27,6 +27,7 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, _, model) {
+        controller.helper.usuario = model;
         return WillPopScope(
           onWillPop: () async {
             if (controller.paginaAtual == 0) {
@@ -90,16 +91,14 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                                 if (controller.salvarRespostasDaPaginaAtual()) {
                                   if (controller.paginaAtual == 1) {
                                     mostrarDialogCarregando(context);
-                                    await Future.delayed(
-                                      const Duration(seconds: 3),
-                                    );
+                                    await controller.helper.registrarPaciente();
                                     Navigator.pop(context);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const NovoPerfilDoPaciente(
-                                          'idPaciente',
+                                            PerfilClinicoPaciente(
+                                          controller.helper.idPaciente!,
                                         ),
                                       ),
                                     );
@@ -126,7 +125,7 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                                 ),
                                 primary: Theme.of(context).focusColor,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderRadius: BorderRadius.circular(25),
                                 ),
                               ),
                             ),
