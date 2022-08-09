@@ -53,7 +53,7 @@ class Pergunta {
       this.respostaLista = respostaLista;
 
   void setRespostaBooleana(bool? respostaBooleana) =>
-      respostaBooleana = respostaBooleana;
+      this.respostaBooleana = respostaBooleana;
 
   void setResposta(int? resposta) {
     this.resposta = resposta;
@@ -69,6 +69,7 @@ class Pergunta {
 enum TipoPergunta {
   extenso,
   extensoNumerico,
+  numericaCadastros,
   extensoNumericoCadastros,
   extensoCadastros,
   marcar,

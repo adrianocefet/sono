@@ -275,12 +275,24 @@ class FirebaseService {
   }
 
   Future<String> updateDadosDoPaciente(
-      Map<String, dynamic> data, String idPaciente) async {
-    try {
-      await _db.collection(_strPacientes).doc(idPaciente).update(data);
-    } catch (e) {
-      rethrow;
+      Map<String, dynamic> data, String idPaciente,
+      {File? fotoDePerfil}) async {
+    String? urlImagem;
+
+    if (fotoDePerfil != null) {
+      await deletarImagemDoFirebaseStorage(idPaciente);
+
+      urlImagem =
+          await FirebaseService().adicionarImageDoPacienteAoFirebaseStorage(
+        idPaciente: idPaciente,
+        imageFile: fotoDePerfil,
+      );
+    } else {
+      await deletarImagemDoFirebaseStorage(idPaciente);
     }
+
+    data['url_foto_de_perfil'] = urlImagem;
+    await _db.collection(_strPacientes).doc(idPaciente).update(data);
 
     return idPaciente;
   }
@@ -358,10 +370,12 @@ class FirebaseService {
 
   Future deletarImagemDoFirebaseStorage(String idElemento) async {
     Reference ref = _storage.ref(
-      "fotos_de_perfil/perfil_$idElemento",
+      "$_strPacientes/perfil_$idElemento",
     );
 
-    await ref.delete();
+    try {
+      await ref.delete();
+    } on Exception {}
   }
 
   Future<XFile?> selecionarArquivoGaleria() async {
@@ -399,10 +413,10 @@ class FirebaseService {
     return await db.getDownloadURL();
   }
 
-  Future<void> atualizarFotoPaciente(String idPacient, String imagem) async {
+  Future<void> atualizarFotoPaciente(String idPaciente, String imagem) async {
     final FirebaseFirestore _db = FirebaseFirestore.instance;
     try {
-      await _db.collection(_strPacientes).doc(idPacient).update({
+      await _db.collection(_strPacientes).doc(idPaciente).update({
         "url_foto_de_perfil": imagem,
       });
     } catch (e) {

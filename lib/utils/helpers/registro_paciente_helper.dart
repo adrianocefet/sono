@@ -25,12 +25,17 @@ class RegistroPacienteHelper {
         case TipoPergunta.comorbidades:
           respostas[p.codigo] = p.respostaLista;
           break;
+        case TipoPergunta.mallampati:
+          respostas[p.codigo] = p.resposta;
+          break;
         case TipoPergunta.afirmativaCadastros:
           respostas[p.codigo] = p.respostaBooleana;
           break;
-        case TipoPergunta.extensoNumericoCadastros:
-          respostas[p.codigo] = double.parse(p.respostaExtenso!);
+        case TipoPergunta.numericaCadastros:
+          respostas[p.codigo] =
+              double.parse(p.respostaExtenso!.replaceAll(',', '.'));
           break;
+
         default:
           respostas[p.codigo] = p.respostaExtenso;
       }
@@ -45,9 +50,16 @@ class RegistroPacienteHelper {
     return respostas;
   }
 
-  double _gerarIMC(String alturaEmString, String pesoEmString) {
-    double altura = double.parse(alturaEmString.trim().replaceAll(",", "."));
-    double peso = double.parse(pesoEmString.trim().replaceAll(",", "."));
+  double _gerarIMC(dynamic respostaAltura, dynamic respostaPeso) {
+    double altura = respostaAltura;
+    double peso = respostaPeso;
+    if (respostaAltura.runtimeType == String) {
+      altura = double.parse(respostaAltura.trim().replaceAll(",", "."));
+    }
+
+    if (respostaPeso.runtimeType == String) {
+      peso = double.parse(respostaPeso.trim().replaceAll(",", "."));
+    }
 
     return peso / (altura * altura);
   }
@@ -58,6 +70,17 @@ class RegistroPacienteHelper {
     StatusPaciente status = await _checarSePacienteJaExiste();
     if (status == StatusPaciente.pacienteNovo) {
       idPaciente = await _adicionarNovoPacienteAoBancoDeDados();
+    }
+
+    return status;
+  }
+
+  Future<StatusPaciente> editarPaciente() async {
+    print(_gerarMapaDeRespostas());
+
+    StatusPaciente status = await _checarSePacienteJaExiste();
+    if (status == StatusPaciente.jaExistenteNoBancoDeDados) {
+      idPaciente = await _editarInfomarcoesDoPacienteNoBancoDeDados();
     }
 
     return status;
@@ -83,6 +106,14 @@ class RegistroPacienteHelper {
   Future<String> _adicionarNovoPacienteAoBancoDeDados() async {
     return await FirebaseService()
         .uploadDadosDoPaciente(respostas, fotoDePerfil: _fotoDePerfil);
+  }
+
+  Future<String> _editarInfomarcoesDoPacienteNoBancoDeDados() async {
+    return await FirebaseService().updateDadosDoPaciente(
+      respostas,
+      paciente!.id,
+      fotoDePerfil: _fotoDePerfil,
+    );
   }
 }
 

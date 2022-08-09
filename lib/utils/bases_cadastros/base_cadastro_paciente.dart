@@ -5,7 +5,7 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     "enunciado": "Foto de perfil",
     'tipo': TipoPergunta.foto,
     'dominio': 'conversa',
-    'codigo': 'foto_de_perfil',
+    'codigo': 'url_foto_de_perfil',
   },
   {
     "enunciado": "Nome completo *",
@@ -126,21 +126,21 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
   },
   {
     'enunciado': "Altura (m) *",
-    'tipo': TipoPergunta.extensoNumericoCadastros,
+    'tipo': TipoPergunta.numericaCadastros,
     'dominio': 'exame fisico',
     'codigo': 'altura',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },
   {
     'enunciado': "Peso (kg) *",
-    'tipo': TipoPergunta.extensoNumericoCadastros,
+    'tipo': TipoPergunta.numericaCadastros,
     'dominio': 'exame fisico',
     'codigo': 'peso',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },
   {
     'enunciado': "Circunferencia do pescoço (cm) *",
-    'tipo': TipoPergunta.extensoNumericoCadastros,
+    'tipo': TipoPergunta.numericaCadastros,
     'dominio': 'exame fisico',
     'codigo': 'circunferencia_do_pescoco',
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',

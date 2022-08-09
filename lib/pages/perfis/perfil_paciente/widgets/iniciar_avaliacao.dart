@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 class IniciarAvaliacao extends StatelessWidget {
@@ -75,7 +76,14 @@ class IniciarAvaliacao extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Avaliacao(),
+                ),
+              );
+            },
             child: Text(
               paciente.dataDaProximaAvaliacaoEmString == null
                   ? 'Fazer avaliação'

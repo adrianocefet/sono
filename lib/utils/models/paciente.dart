@@ -126,11 +126,10 @@ class Paciente {
     telefoneSecundario = infoMap["telefone_secundario"];
     escolaridade = infoMap["escolaridade"];
     profissao = infoMap["profissao"];
-    altura = double.parse(infoMap["altura"].replaceAll(',', '.'));
-    peso = double.parse(infoMap["peso"].replaceAll(',', '.'));
+    altura = infoMap["altura"];
+    peso = infoMap["peso"];
     imc = infoMap["imc"];
-    circunferenciaDoPescoco =
-        double.parse(infoMap["circunferencia_do_pescoco"]);
+    circunferenciaDoPescoco = infoMap["circunferencia_do_pescoco"];
     mallampati = infoMap["mallampati"];
     usaSmartphone = infoMap["usa_smartphone"];
     trabalhadorDeTurno = infoMap["trabalhador_de_turno"];

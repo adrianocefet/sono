@@ -8,7 +8,7 @@ class RespostaExtensoCadastro extends StatefulWidget {
   final bool? numerico;
   final Color? corTexto;
   final Color? corDominio;
-  final String? autoPreencher;
+  final dynamic autoPreencher;
   final TextEditingController _extensoController = TextEditingController();
   late final bool _enabled;
 
@@ -21,7 +21,7 @@ class RespostaExtensoCadastro extends StatefulWidget {
     this.autoPreencher,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher ?? "";
+    _extensoController.text = autoPreencher == null ? "" : autoPreencher.toString();
     _enabled = true;
   }
 
@@ -90,10 +90,12 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
               setState(
                 () {
                   widget.pergunta.setRespostaExtenso(
-                    (value!.trim()).replaceAll(
-                      RegExp(' +'),
-                      ' ',
-                    ),
+                    value!.isEmpty
+                        ? null
+                        : (value.trim()).replaceAll(
+                            RegExp(' +'),
+                            ' ',
+                          ),
                   );
                 },
               );

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +21,7 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
   final ImagePicker _picker = ImagePicker();
 
   XFile? _imageFile;
+  bool autoPreencherDeletado = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +50,15 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            border:
-                Border.all(color: Theme.of(context).primaryColor, width: 1.2),
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
+          color: Colors.white,
+          border: Border.all(
+            color: Theme.of(context).primaryColor,
+            width: 1.2,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5),
+          ),
+        ),
         padding: const EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,90 +93,106 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
             const SizedBox(
               height: 15,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
+            Stack(
+              alignment: Alignment.bottomRight,
               children: [
-                Expanded(
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: _selecionarFoto,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomStart,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            height: MediaQuery.of(context).size.width * 0.25,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).primaryColorLight,
-                                width: 2,
-                              ),
+                Center(
+                  child: GestureDetector(
+                    onTap: _selecionarFoto,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomStart,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          height: MediaQuery.of(context).size.width * 0.25,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).primaryColorLight,
+                              width: 2,
                             ),
-                            child: FutureBuilder<Uint8List?>(
-                              future: () async {
-                                Uint8List? foto =
-                                    widget.autoPreencher.runtimeType ==
-                                            Uint8List
-                                        ? widget.autoPreencher
-                                        : await (widget.autoPreencher as File?)
-                                            ?.readAsBytes();
-                                return foto;
-                              }(),
-                              builder: (context, snapshot) {
-                                return Center(
-                                  child: _imageFile == null &&
-                                          snapshot.data == null
-                                      ? FaIcon(
-                                          FontAwesomeIcons.userAlt,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.23,
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                        )
-                                      : SizedBox(
-                                          height: Constantes.alturaFotoDePerfil,
-                                          width: Constantes.larguraFotoDePerfil,
-                                          child: _imageFile == null
-                                              ? Image.memory(
-                                                  snapshot.data!,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : Image.file(
-                                                  File(
-                                                    _imageFile!.path,
-                                                  ),
-                                                  fit: BoxFit.cover,
+                          ),
+                          child: FutureBuilder<dynamic>(
+                            future: () async {
+                              dynamic foto;
+                              if (widget.autoPreencher.runtimeType == File) {
+                                foto = await (widget.autoPreencher as File?)
+                                    ?.readAsBytes();
+                              } else {
+                                foto = autoPreencherDeletado
+                                    ? null
+                                    : widget.autoPreencher;
+                              }
+
+                              return foto;
+                            }(),
+                            builder: (context, snapshot) {
+                              return Center(
+                                child: _imageFile == null &&
+                                        snapshot.data == null
+                                    ? FaIcon(
+                                        FontAwesomeIcons.userAlt,
+                                        size:
+                                            MediaQuery.of(context).size.width *
+                                                0.23,
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                      )
+                                    : SizedBox(
+                                        height: Constantes.alturaFotoDePerfil,
+                                        width: Constantes.larguraFotoDePerfil,
+                                        child: _imageFile == null
+                                            ? snapshot.data!.runtimeType ==
+                                                    String
+                                                ? Image.network(
+                                                    snapshot.data,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.memory(
+                                                    snapshot.data,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                            : Image.file(
+                                                File(
+                                                  _imageFile!.path,
                                                 ),
-                                        ),
-                                );
-                              },
-                            ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
+                              );
+                            },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 3.0),
-                            child: FaIcon(
-                              FontAwesomeIcons.camera,
-                              size: 24,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3.0),
+                          child: FaIcon(
+                            FontAwesomeIcons.camera,
+                            size: 24,
+                            color: Theme.of(context).primaryColor,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Visibility(
                   maintainState: true,
                   maintainAnimation: true,
-                  visible: _imageFile != null,
+                  visible: _imageFile != null ||
+                      (widget.autoPreencher != null &&
+                          autoPreencherDeletado == false),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: GestureDetector(
                       onTap: () => setState(
-                        () => _imageFile = null,
+                        () {
+                          if (_imageFile != null) {
+                            _imageFile = null;
+                          }
+                          if (widget.autoPreencher != null) {
+                            autoPreencherDeletado = true;
+                            widget.pergunta.setRespostaArquivo(null);
+                          }
+                        },
                       ),
                       child: const Icon(
                         Icons.clear_rounded,

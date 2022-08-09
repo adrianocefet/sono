@@ -8,9 +8,8 @@ class RespostaAfirmativaCadastro extends StatefulWidget {
   final bool? numerico;
   final Color? corTexto;
   final Color? corDominio;
-  final String? autoPreencher;
+  final bool? autoPreencher;
   final TextEditingController _extensoController = TextEditingController();
-  late final bool _enabled;
 
   RespostaAfirmativaCadastro({
     required this.pergunta,
@@ -21,8 +20,11 @@ class RespostaAfirmativaCadastro extends StatefulWidget {
     this.autoPreencher,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher ?? "";
-    _enabled = true;
+    _extensoController.text = autoPreencher != null
+        ? autoPreencher!
+            ? "Sim"
+            : "Não"
+        : "";
   }
 
   @override
@@ -52,8 +54,15 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
               onSaved: (value) {
                 setState(
                   () {
-                    valido =
-                        widget.pergunta.respostaExtenso != null ? true : false;
+                    valido = (widget.pergunta.respostaExtenso ??
+                                widget.autoPreencher) !=
+                            null
+                        ? true
+                        : false;
+  
+                    widget.pergunta.setRespostaBooleana(
+                        widget.pergunta.respostaBooleana ??
+                            widget.autoPreencher);
                   },
                 );
               },
@@ -93,11 +102,21 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
                       _BotaoBinario(
                         'Sim',
                         pergunta: widget.pergunta,
+                        autoPreencher: widget.autoPreencher != null
+                            ? widget.autoPreencher!
+                                ? "Sim"
+                                : "Não"
+                            : null,
                         atualizarMarcacao: () => setState(() {}),
                       ),
                       _BotaoBinario(
                         'Não',
                         pergunta: widget.pergunta,
+                        autoPreencher: widget.autoPreencher != null
+                            ? widget.autoPreencher!
+                                ? "Sim"
+                                : "Não"
+                            : null,
                         atualizarMarcacao: () => setState(() {}),
                       )
                     ],
@@ -125,9 +144,13 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
 class _BotaoBinario extends StatefulWidget {
   final Pergunta pergunta;
   final String estado;
+  final String? autoPreencher;
   final void Function() atualizarMarcacao;
   const _BotaoBinario(this.estado,
-      {Key? key, required this.pergunta, required this.atualizarMarcacao})
+      {Key? key,
+      required this.pergunta,
+      required this.atualizarMarcacao,
+      required this.autoPreencher})
       : super(key: key);
 
   @override
@@ -144,7 +167,8 @@ class __BotaoBinarioState extends State<_BotaoBinario> {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: widget.pergunta.respostaExtenso == widget.estado
+          color: (widget.pergunta.respostaExtenso ?? widget.autoPreencher) ==
+                  widget.estado
               ? widget.estado == 'Sim'
                   ? Theme.of(context).focusColor
                   : Colors.redAccent

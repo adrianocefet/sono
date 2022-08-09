@@ -3,7 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaDropdownCadastros extends StatefulWidget {
   final Pergunta pergunta;
-  final int? autoPreencher;
+  final String? autoPreencher;
   const RespostaDropdownCadastros(
       {required this.pergunta, this.autoPreencher, Key? key})
       : super(key: key);
@@ -19,7 +19,10 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
   @override
   Widget build(BuildContext context) {
     _opcoes = widget.pergunta.opcoes!;
-    _escolha = _escolha ?? widget.autoPreencher;
+    _escolha = _escolha ??
+        (widget.autoPreencher != null
+            ? _opcoes.indexOf(widget.autoPreencher!)
+            : null);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
@@ -87,6 +90,7 @@ class _RespostaDropdownState extends State<RespostaDropdownCadastros> {
               },
               onSaved: (value) {
                 widget.pergunta.setResposta(_escolha);
+                widget.pergunta.setRespostaExtenso(_opcoes[_escolha!]);
               },
               validator: (value) => widget.pergunta.validador != null
                   ? _escolha != null

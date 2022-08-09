@@ -3,13 +3,16 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente_controller.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../perfis/perfil_paciente/perfil_clinico_paciente.dart';
 
 class CadastroPaciente extends StatefulWidget {
-  const CadastroPaciente({Key? key}) : super(key: key);
+  final Paciente? pacienteJaCadastrado;
+  const CadastroPaciente({Key? key, this.pacienteJaCadastrado})
+      : super(key: key);
 
   @override
   State<CadastroPaciente> createState() => _CadastroPacienteState();
@@ -25,6 +28,8 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
 
   @override
   Widget build(BuildContext context) {
+    controller.helper.paciente = widget.pacienteJaCadastrado;
+
     return ScopedModelDescendant<UserModel>(
       builder: (context, _, model) {
         controller.helper.usuario = model;
@@ -43,7 +48,11 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
           },
           child: Scaffold(
             appBar: AppBar(
-              title: const Text("Registrar paciente"),
+              title: Text(
+                widget.pacienteJaCadastrado == null
+                    ? "Registrar paciente"
+                    : "Editar paciente",
+              ),
               centerTitle: true,
               backgroundColor: Theme.of(context).primaryColor,
               bottom: PreferredSize(
@@ -83,25 +92,48 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                         children: [
                           for (Pergunta pergunta in controller.perguntas)
                             if (pergunta.dominio == dominio)
-                              RespostaWidget(pergunta),
+                              RespostaWidget(
+                                pergunta,
+                                autoPreencher:
+                                    widget.pacienteJaCadastrado != null
+                                        ? widget.pacienteJaCadastrado!
+                                            .infoMap[pergunta.codigo]
+                                        : null,
+                              ),
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (controller.salvarRespostasDaPaginaAtual()) {
                                   if (controller.paginaAtual == 1) {
-                                    mostrarDialogCarregando(context);
-                                    await controller.helper.registrarPaciente();
-                                    Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            PerfilClinicoPaciente(
-                                          controller.helper.idPaciente!,
+                                    try {
+                                      mostrarDialogCarregando(context);
+                                      if (widget.pacienteJaCadastrado != null) {
+                                        await controller.helper
+                                            .editarPaciente();
+                                      } else {
+                                        await controller.helper
+                                            .registrarPaciente();
+                                      }
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
+                                    }
+
+                                    if (widget.pacienteJaCadastrado == null) {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PerfilClinicoPaciente(
+                                            controller.helper.idPaciente!,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    } else {
+                                      Navigator.pop(context);
+                                    }
                                   } else {
                                     await controller.pageController.nextPage(
                                       curve: Curves.easeIn,
@@ -113,7 +145,9 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                               },
                               child: Text(
                                 controller.paginaAtual == 1
-                                    ? "Registrar paciente"
+                                    ? widget.pacienteJaCadastrado == null
+                                        ? "Registrar paciente"
+                                        : "Editar paciente"
                                     : "Avançar",
                                 style: const TextStyle(color: Colors.black),
                               ),

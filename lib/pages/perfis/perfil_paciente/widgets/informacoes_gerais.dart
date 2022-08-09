@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 class InformacoesGerais extends StatefulWidget {
@@ -48,6 +49,7 @@ class _InformacoesGeraisState extends State<InformacoesGerais> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
+                _Comorbidades(paciente: widget.paciente),
                 Row(
                   children: [
                     _AtributoPacienteFlex(
@@ -132,7 +134,13 @@ class _InformacoesGeraisState extends State<InformacoesGerais> {
                   borderRadius: BorderRadius.circular(25),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CadastroPaciente(
+                    pacienteJaCadastrado: widget.paciente,
+                  ),
+                ),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 mainAxisSize: MainAxisSize.min,
@@ -331,6 +339,73 @@ class _Contatos extends StatelessWidget {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Comorbidades extends StatelessWidget {
+  final Paciente paciente;
+  const _Comorbidades({Key? key, required this.paciente}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Text(
+              'Comorbidades',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          () {
+            if (paciente.comorbidades == null) {
+              return const Text(
+                'Não cadastrado',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              );
+            } else {
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  ...paciente.comorbidades!.map(
+                    (e) => ListTile(
+                      dense: true,
+                      horizontalTitleGap: 0,
+                      minLeadingWidth: 25,
+                      leading: Icon(
+                        Icons.circle,
+                        size: 12,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      title: Text(
+                        e.replaceAll('Outra(s) : ', ''),
+                        style: const TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          }(),
+          Divider(
+            color: Theme.of(context).primaryColorLight,
+            thickness: 1.5,
+          )
         ],
       ),
     );

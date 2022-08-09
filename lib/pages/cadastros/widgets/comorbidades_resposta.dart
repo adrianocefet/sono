@@ -3,10 +3,14 @@ import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaComorbidades extends StatefulWidget {
   final Pergunta pergunta;
-  final List autoPreencher;
-  const RespostaComorbidades(
+  final List? autoPreencher;
+  RespostaComorbidades(
       {Key? key, required this.pergunta, required this.autoPreencher})
-      : super(key: key);
+      : super(key: key) {
+    if (autoPreencher != null) {
+      pergunta.setRespostaLista(autoPreencher!);
+    }
+  }
 
   @override
   State<RespostaComorbidades> createState() => _RespostaComorbidadesState();
@@ -444,17 +448,17 @@ class _ComplementoComorbidadeState extends State<ComplementoComorbidade> {
 
 class OutrasComorbidades extends StatefulWidget {
   final Pergunta pergunta;
-  final List autoPreencher;
+  final List? autoPreencher;
   final TextEditingController _controller = TextEditingController();
 
   OutrasComorbidades(
       {Key? key, required this.pergunta, required this.autoPreencher})
       : super(key: key) {
-    String respostaOutros = autoPreencher.firstWhere(
+    String? respostaOutros = autoPreencher?.firstWhere(
         (element) => element.contains("Outra(s) :"),
         orElse: () => '');
 
-    _controller.text = respostaOutros.replaceAll("Outra(s) : ", '');
+    _controller.text = respostaOutros?.replaceAll("Outra(s) : ", '') ?? '';
   }
 
   @override

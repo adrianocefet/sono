@@ -54,8 +54,13 @@ class _RespostaExtensoState extends State<RespostaMallampati> {
                     onSaved: (value) {
                       setState(
                         () {
-                          valido =
-                              widget.pergunta.resposta != null ? true : false;
+                          valido = (widget.pergunta.resposta ??
+                                      widget.autoPreencher) !=
+                                  null
+                              ? true
+                              : false;
+                          widget.pergunta.setResposta(
+                              widget.pergunta.resposta ?? widget.autoPreencher);
                         },
                       );
                     },
@@ -83,6 +88,7 @@ class _RespostaExtensoState extends State<RespostaMallampati> {
                       for (int indice = 1; indice <= 4; indice++)
                         _SelecionarMallampati(
                           pergunta: widget.pergunta,
+                          autoPreencher: widget.autoPreencher,
                           indice: indice,
                           atualizarWidget: () => setState(() {}),
                         )
@@ -111,12 +117,14 @@ class _RespostaExtensoState extends State<RespostaMallampati> {
 class _SelecionarMallampati extends StatefulWidget {
   final Pergunta pergunta;
   final int indice;
+  final int? autoPreencher;
   final void Function() atualizarWidget;
   const _SelecionarMallampati({
     Key? key,
     required this.pergunta,
     required this.indice,
     required this.atualizarWidget,
+    required this.autoPreencher,
   }) : super(key: key);
 
   @override
@@ -137,7 +145,8 @@ class _SelecionarMallampatiState extends State<_SelecionarMallampati> {
     }
   }
 
-  bool get estaSelecionado => widget.pergunta.resposta == widget.indice;
+  bool get estaSelecionado =>
+      (widget.pergunta.resposta ?? widget.autoPreencher) == widget.indice;
 
   @override
   Widget build(BuildContext context) {
