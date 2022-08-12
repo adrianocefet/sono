@@ -83,7 +83,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     Map<String, dynamic> dadosEquipamento = data.data()! as Map<String, dynamic>;
     dadosEquipamento["id"]=data.id;
     Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
-    final celulas = [equipamento.tipo,equipamento.fabricante,equipamento.nome,equipamento.status.emString];
+    final celulas = [equipamento.tipo.emString,equipamento.fabricante,equipamento.nome,equipamento.status.emStringMaiuscula];
 
     return DataRow(
       cells: pegarCelulas(celulas),

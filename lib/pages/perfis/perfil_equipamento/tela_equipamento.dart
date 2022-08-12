@@ -160,7 +160,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           ),
                                         ),
                                         Text("Status: " +
-                                            Constantes.status2[Constantes.status3.indexOf(equipamento.status.emString)])
+                                            equipamento.status.emStringMaiuscula)
                                       ],
                                     ),
                                     Material(
@@ -253,7 +253,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 Visibility(
-                                  visible: Constantes.status2.indexOf(equipamento.status.emString) == 0,
+                                  visible: equipamento.status==StatusDoEquipamento.disponivel,
                                   child: Column(
                                     children: [
                                       Padding(
@@ -289,7 +289,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 )),
                                             onPressed: () {},
                                             child: const Text(
-                                              "Solicitar reparo",
+                                              "Reparar",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(color: Colors.black),
                                             ),
@@ -309,7 +309,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 )),
                                             onPressed: () {},
                                             child: const Text(
-                                              "Solicitar desinfecção",
+                                              "Desinfectar",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(color: Colors.black),
                                             ),
@@ -324,7 +324,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                           ),
                         ),
                         Visibility(
-                          visible: Constantes.status3.indexOf(equipamento.status.emString)>0,
+                          visible: equipamento.status!=StatusDoEquipamento.disponivel,
                           child: Padding(
                             padding: const EdgeInsets.only(top:8.0),
                             child: Container(
@@ -354,7 +354,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           ),
                                     ),
                                   Visibility(
-                                    visible: Constantes.status3.indexOf(equipamento.status.emString)==1,
+                                    visible: equipamento.status==StatusDoEquipamento.emprestado,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -414,7 +414,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ),
                                   ),
                                   Visibility(
-                                    visible: Constantes.status3.indexOf(equipamento.status.emString)>1,
+                                    visible: equipamento.status==StatusDoEquipamento.manutencao && equipamento.status==StatusDoEquipamento.desinfeccao,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -448,7 +448,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             ),
                                             Divider(),
                                           Visibility(
-                                            visible: Constantes.status3.indexOf(equipamento.status.emString)==3,
+                                            visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               // ignore: prefer_const_literals_to_create_immutables

@@ -126,39 +126,4 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
         );
   }
   
-  /* List<Widget> itensEquipamento(List<Equipamento> equipamentos)=> 
-    equipamentos.where((equipamento) => tipo==equipamento.tipo&&status==Constantes.status2.indexOf(equipamento.status)).isNotEmpty?
-    equipamentos.map((Equipamento equipamento) {
-      return tipo==equipamento.tipo&&status==Constantes.status2.indexOf(equipamento.status)?Padding(
-        padding: const EdgeInsets.symmetric(horizontal:8.0),
-        child: ItemEquipamento(equipamento: equipamento),
-      ):Container();
-    }).toList():[
-        Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cancel,
-                      size: 80.0,
-                      color: Constantes.corAzulEscuroPrincipal,
-                    ),
-                    SizedBox(height: 16.0,),
-                    Text(
-                      'Nenhum(a) ${tipo.toLowerCase()} ${Constantes.status3[status].toLowerCase()}!',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Constantes.corAzulEscuroPrincipal,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-      
-      ]; */
 }

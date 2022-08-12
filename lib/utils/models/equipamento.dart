@@ -10,7 +10,7 @@ class Equipamento {
   late final String nome;
   late final String id;
   late final String fabricante;
-  late final String tipo;
+  late final TipoEquipamento tipo;
   late final String? idEmpresaResponsavel;
   late final String? descricao;
   late final String? observacao;
@@ -72,7 +72,7 @@ class Equipamento {
         equipamentoInfoMap["url_foto"] ?? equipamentoInfoMap["Foto"];
     descricao =
         equipamentoInfoMap["descrição"] ?? equipamentoInfoMap["Descrição"];
-    tipo = equipamentoInfoMap["tipo"];
+    tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"]??equipamentoInfoMap["Tipo"])!;
     fabricante =
         equipamentoInfoMap["fabricante"];
     idEmpresaResponsavel =
@@ -115,18 +115,22 @@ class Equipamento {
 
   TipoEquipamento? _lerTipoDeEquipamentoDoBancoDeDados(String tipo) {
     switch (tipo) {
-      case "Almofadas":
+      case "almofada":
         return TipoEquipamento.almofada;
-      case "CPAPs":
-        return TipoEquipamento.cpap;
-      case "Traqueias":
+      case "aparelho_pap":
+        return TipoEquipamento.pap;
+      case "traqueia":
         return TipoEquipamento.traqueia;
-      case "Interfaces":
-        return TipoEquipamento.interface;
-      case "Fixadores":
+      case "mascara_nasal":
+        return TipoEquipamento.nasal;
+      case "fixador":
         return TipoEquipamento.fixador;
-      case "Filtros":
-        return TipoEquipamento.filtro;
+      case "mascara_oronasal":
+        return TipoEquipamento.oronasal;
+      case "mascara_pillow":
+        return TipoEquipamento.pillow;
+      case "mascara_facial":
+        return TipoEquipamento.facial;
     }
 
     return null;
@@ -152,29 +156,35 @@ class Equipamento {
 }
 
 enum TipoEquipamento {
-  interface,
-  almofada,
-  fixador,
+  nasal,
+  oronasal,
+  pillow,
+  facial,
   traqueia,
-  filtro,
-  cpap,
+  fixador,
+  almofada,
+  pap,
 }
 
 extension ExtensaoTipoEquipamento on TipoEquipamento {
   String get emString {
     switch (this) {
       case TipoEquipamento.almofada:
-        return "Almofadas";
-      case TipoEquipamento.cpap:
-        return "CPAPs";
+        return "Almofada";
+      case TipoEquipamento.pap:
+        return "Aparelho PAP";
       case TipoEquipamento.traqueia:
-        return "Traqueias";
-      case TipoEquipamento.interface:
-        return "Interfaces";
+        return "Traqueia";
       case TipoEquipamento.fixador:
-        return "Fixadores";
-      case TipoEquipamento.filtro:
-        return "Filtros";
+        return "Fixador";
+      case TipoEquipamento.nasal:
+        return "Máscara Nasal";
+      case TipoEquipamento.pillow:
+        return "Máscara Pillow";
+      case TipoEquipamento.facial:
+        return "Máscara Facial";
+      case TipoEquipamento.oronasal:
+        return "Máscara Oronasal";
     }
   }
 }
@@ -197,6 +207,30 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "em reparo";
       case StatusDoEquipamento.desinfeccao:
         return "em desinfecção";
+    }
+  }
+  String get emStringMaiuscula {
+    switch (this) {
+      case StatusDoEquipamento.emprestado:
+        return "Emprestado";
+      case StatusDoEquipamento.disponivel:
+        return "Disponível";
+      case StatusDoEquipamento.manutencao:
+        return "Manutenção";
+      case StatusDoEquipamento.desinfeccao:
+        return "Desinfecção";
+    }
+  }
+  String get emStringPlural {
+    switch (this) {
+      case StatusDoEquipamento.emprestado:
+        return "Empréstimos";
+      case StatusDoEquipamento.disponivel:
+        return "Disponíveis";
+      case StatusDoEquipamento.manutencao:
+        return "Reparos";
+      case StatusDoEquipamento.desinfeccao:
+        return "Desinfecção";
     }
   }
 }
