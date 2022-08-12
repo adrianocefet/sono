@@ -27,6 +27,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
 
   @override
   Widget build(BuildContext context) {
+    final tipo=Constantes.tipoSnakeCase[Constantes.tipo.indexOf(widget.tipo)];
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -49,7 +50,6 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                         RespostaWidget(pergunta),
                       if(widget.tipo==Constantes.tipo[0] || widget.tipo==Constantes.tipo[1] || widget.tipo==Constantes.tipo[2] || widget.tipo==Constantes.tipo[3])
                         RespostaWidget(helper.perguntas.last),
-                      //formTamanhos(),
                     ],
                   ),
                 ),
@@ -63,7 +63,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                       mostrarDialogCarregando(context);
                       try {
                         switch (await helper.registrarEquipamento(
-                            model.hospital, model.equipamento)) {
+                            model.hospital, tipo)) {
                           case StatusCadastroEquipamento
                               .jaExistenteNoBancoDeDados:
                             Navigator.pop(context);

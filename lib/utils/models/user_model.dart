@@ -8,6 +8,8 @@ class UserModel extends Model {
   String semimagem =
       'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
   bool editar = false;
+  String tipo='';
+  int status=0;
 
   void fazHome() async {
     equipamento = 'Equipamento';

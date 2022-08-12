@@ -61,7 +61,7 @@ class FirebaseService {
     dadosAtualizados.remove("id");
 
     await FirebaseFirestore.instance
-        .collection('Equipamento')
+        .collection(_stringEquipamento)
         .doc(equipamentoAtualizado.id)
         .update(
           equipamentoAtualizado.infoMap,
@@ -82,18 +82,13 @@ class FirebaseService {
           idEquipamento: idEquipamento,
         );
       }
-      if (urlImagem.isNotEmpty) dadosDoEquipamento['Foto'] = urlImagem;
-
+      if (urlImagem.isNotEmpty) dadosDoEquipamento['url_foto'] = urlImagem;
+      
       await _db
           .collection(_stringEquipamento)
-          .doc(idEquipamento)
+          .doc()
           .set(dadosDoEquipamento);
 
-      final Map<String, dynamic> data = {
-        'Tamanhos': exportarListaDeTamanhos(),
-      };
-
-      await _db.collection(_stringEquipamento).doc(idEquipamento).update(data);
     } catch (e) {
       rethrow;
     }
@@ -102,10 +97,10 @@ class FirebaseService {
   }
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> streamEquipamento(
-    String idEquipamento,
+    String idEquipamento
   ) {
     return FirebaseFirestore.instance
-        .collection('Equipamento')
+        .collection(_stringEquipamento)
         .doc(idEquipamento)
         .snapshots();
   }
@@ -199,9 +194,11 @@ class FirebaseService {
     String? idEquipamento;
 
     QuerySnapshot query = await _db
-        .collection(_strPacientes)
-        .where("Nome", isEqualTo: data['Nome'])
-        .where("Hospital", isEqualTo: data["Hospital"])
+        .collection(_stringEquipamento)
+        .where("nome", isEqualTo: data['nome'])
+        .where("hospital", isEqualTo: data["hospital"])
+        .where("tipo",isEqualTo: data["tipo"])
+        .where("tamanho",isEqualTo: data["tamanho"])
         .get();
 
     if (query.docs.isNotEmpty) idEquipamento = query.docs[0].id;

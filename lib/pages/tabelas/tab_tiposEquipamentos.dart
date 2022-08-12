@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_tiposelecionado.dart';
+import 'package:sono/utils/models/user_model.dart';
 
 import '../../constants/constants.dart';
 int currentIndex=0;
 class TiposEquipamentos extends StatefulWidget {
-  final int status;
-  const TiposEquipamentos(this.status,{Key? key}) : super(key: key);
+  const TiposEquipamentos({Key? key}) : super(key: key);
   @override
   State<TiposEquipamentos> createState() => _TiposEquipamentosState();
 }
 
 class _TiposEquipamentosState extends State<TiposEquipamentos> {
     final telas=[
-      TipoSelecionado(0),
-      TipoSelecionado(1),
-      TipoSelecionado(2),
-      TipoSelecionado(3),
+      TipoSelecionado(),
+      TipoSelecionado(),
+      TipoSelecionado(),
+      TipoSelecionado(),
     ];
     
     bool inicializado=false;
   @override
   Widget build(BuildContext context) {
-    
+    return ScopedModelDescendant<UserModel>(
+      builder:(context, child, model) {
     if (inicializado==false){
-      currentIndex=widget.status;
+      currentIndex=model.status;
       inicializado=true;
     }
     
@@ -40,7 +42,10 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
         selectedItemColor: Colors.white,
         showUnselectedLabels: false,
         unselectedItemColor: Color.fromARGB(255, 33, 35, 87),
-        onTap: (index)=>setState(()=>currentIndex=index),
+        onTap: (index)=>setState((){
+          currentIndex=index;
+          model.status=index;
+        }),
         // ignore: prefer_const_literals_to_create_immutables
         items: [
           const BottomNavigationBarItem(
@@ -61,6 +66,7 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
           ),
         ],
         ),
-    );
+    );          
+      });      
   }
 }

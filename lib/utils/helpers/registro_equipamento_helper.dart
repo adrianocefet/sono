@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -12,13 +13,13 @@ class RegistroEquipamentoHelper {
   RegistroEquipamentoHelper() {
     perguntas = [
       Pergunta(
-          "Foto do equipamento", TipoPergunta.foto, [], '', 'Foto'),
+          "Foto do equipamento", TipoPergunta.foto, [], '', 'url_foto'),
       Pergunta(
         'Nome do equipamento*',
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "Nome",
+        "nome",
         validador: (value) => value != '' ? null : 'Dado obrigatório.',
       ),
       Pergunta(
@@ -26,7 +27,7 @@ class RegistroEquipamentoHelper {
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "Fabricante",
+        "fabricante",
         validador: (value) => value != '' ? null : 'Dado obrigatório.',
       ),
       Pergunta(
@@ -34,7 +35,7 @@ class RegistroEquipamentoHelper {
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "Descrição",
+        "descrição",
         validador: (value) => value != '' ? null : 'Dado obrigatório.',
       ),
       Pergunta(
@@ -42,21 +43,21 @@ class RegistroEquipamentoHelper {
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "Manual",
+        "manual",
       ),
       Pergunta(
         'Vídeo instrucional',
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "VideoInstrucional",
+        "video_instrucional",
       ),
       Pergunta(
         'Tamanho*',
         TipoPergunta.extensoCadastros,
         [],
         '',
-        "Tamanho",
+        "tamanho",
         validador: (value) => value != '' ? null : 'Dado obrigatório.',
       ),
     ];
@@ -73,9 +74,10 @@ class RegistroEquipamentoHelper {
       }
     }
 
-    respostas['Hospital'] = hospital;
-    respostas['Equipamento'] = tipo;
-    respostas['status'] = "Disponível";
+    respostas['hospital'] = hospital;
+    respostas['tipo'] = tipo;
+    respostas['status'] = "disponível";
+    respostas['data_ultima_alteracao'] = FieldValue.serverTimestamp();;
 
     return respostas;
   }

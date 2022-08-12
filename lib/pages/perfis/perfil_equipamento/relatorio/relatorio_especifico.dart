@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
+
+import '../../../../utils/models/equipamento.dart';
+import '../../../../utils/models/user_model.dart';
 
 class relatorioEspecifico extends StatefulWidget {
   const relatorioEspecifico({Key? key}) : super(key: key);
@@ -15,17 +18,9 @@ class relatorioEspecifico extends StatefulWidget {
 }
 
 class _relatorioEspecificoState extends State<relatorioEspecifico> {
-  late List<Equipamento> equipamentos;
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    this.equipamentos = List.of(todosEquipamentos);
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,23 +32,38 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
   }
   
   Widget construirTabela() {
-    final colunas = ['Tipo','Equipamento','Status','Tamanho','Data'];
-    return DataTable(
-      headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
-      decoration: BoxDecoration(),
-      dataRowHeight: 90,
-      columnSpacing: 5,
-      horizontalMargin: 1,
-      sortAscending: ordemCrescente,
-      sortColumnIndex: indexOrdenarColuna,
-      dataTextStyle: TextStyle(
-        overflow: TextOverflow.ellipsis,
-        fontSize: 10,
-        color: Colors.black
+    final colunas = ['Tipo','Fabricante','Equipamento','Status'];
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) =>
+       StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('equipamentos').where('hospital',isEqualTo: model.hospital).snapshots(),
+        builder: (context, snapshot,){
+          switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              default:
+                return DataTable(
+                  headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
+                  decoration: BoxDecoration(),
+                  dataRowHeight: 90,
+                  columnSpacing: 5,
+                  horizontalMargin: 1,
+                  sortAscending: ordemCrescente,
+                  sortColumnIndex: indexOrdenarColuna,
+                  dataTextStyle: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 10,
+                    color: Colors.black
+                  ),
+                  columns: pegarColunas(colunas), 
+                  rows: pegarLinhas(context, snapshot.data!.docs),
+                  );}
+        }
       ),
-      columns: pegarColunas(colunas), 
-      rows: pegarLinhas(equipamentos),
-      );
+    );
   }
   
   List<DataColumn> pegarColunas(List<String> colunas) => colunas.map((String coluna) => 
@@ -64,28 +74,31 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
             Text(coluna,style: TextStyle(fontSize: 10)),
       ),
     ),
-    onSort: ordenar,
+    //onSort: ordenar,
     ))
     
     .toList();
   
-  List<DataRow> pegarLinhas(List<Equipamento> equipamentos) => equipamentos.map((Equipamento equipamento) {
-    final celulas = [equipamento.tipo,equipamento.nome,equipamento.status,equipamento.tamanho,equipamento.inicioStatus];
+  List<DataRow> pegarLinhas(BuildContext context, List<DocumentSnapshot> snapshot) => snapshot.map((DocumentSnapshot data) {
+    Map<String, dynamic> dadosEquipamento = data.data()! as Map<String, dynamic>;
+    dadosEquipamento["id"]=data.id;
+    Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
+    final celulas = [equipamento.tipo,equipamento.fabricante,equipamento.nome,equipamento.status.emString];
 
     return DataRow(
       cells: pegarCelulas(celulas),
       onLongPress:(){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaEquipamento(equipamento:equipamento)));
-      }
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaEquipamento(id:equipamento.id)));
+      } 
       );
   }).toList();
   
-  List<DataCell> pegarCelulas(List<String> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',softWrap: true,overflow: TextOverflow.visible,))))).toList();
+  List<DataCell> pegarCelulas(List<Object?> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.visible,))))).toList();
 
-  void ordenar(int indexColuna, bool crescente) {
+  /* void ordenar(int indexColuna, bool crescente) {
     if(indexColuna==0){
       equipamentos.sort((equipamento1, equipamento2) =>
-        comparararString(crescente, equipamento1.tipo, equipamento2.tipo));
+        comparararString(crescente, equipamento1.fabricante, equipamento2.fabricante));
     }
     else if(indexColuna==1){
       equipamentos.sort((equipamento1, equipamento2) =>
@@ -93,7 +106,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     }
     else if(indexColuna==2){
       equipamentos.sort((equipamento1, equipamento2) =>
-        comparararString(crescente, equipamento1.status, equipamento2.status));
+        comparararString(crescente, equipamento1.status.emString, equipamento2.status.emString));
     }
     else if(indexColuna==3){
       equipamentos.sort((equipamento1, equipamento2) =>
@@ -107,7 +120,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
       this.indexOrdenarColuna = indexColuna;
       this.ordemCrescente = crescente;
     });
-  }
+  } */
   
   int comparararString(bool crescente, String string1, String string2) {
     return crescente ? string1.compareTo(string2) : string2.compareTo(string1);

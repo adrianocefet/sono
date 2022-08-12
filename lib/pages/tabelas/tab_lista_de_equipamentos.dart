@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/utils/models/user_model.dart';
 
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
 import '../perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
@@ -10,70 +13,123 @@ import '../perfis/perfil_equipamento/widgets/item_equipamento.dart';
 import '../perfis/perfil_equipamento/widgets/pesquisaEquipamento.dart';
 
 class ListaDeEquipamentos extends StatefulWidget {
-  final String tipo;
-  final int status;
-  const ListaDeEquipamentos({required this.tipo,required this.status,Key? key}) : super(key: key);
+  const ListaDeEquipamentos({Key? key}) : super(key: key);
 
   @override
   State<ListaDeEquipamentos> createState() => _ListaDeEquipamentosState();
 }
 
 class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
-  late List<Equipamento> equipamentos;
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    this.equipamentos = List.of(todosEquipamentos);
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.tipo),
-        actions: [
-          IconButton(onPressed: (){
-            showSearch(
-              context: context,
-              delegate: PesquisaEquipamento(tipo: widget.tipo,status: widget.status),);
-          }, icon: Icon(Icons.search))
-        ],
-        backgroundColor: Constantes.corAzulEscuroPrincipal,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color.fromARGB(255, 194, 195, 255),Colors.white],
-            stops: [0,0.4]
-            )
-        ),
-        child:ListView(
-            children:itensEquipamento(equipamentos), 
-          ),
-        ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AdicionarEquipamento(widget.tipo)),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('equipamentos')
+            .where('hospital',isEqualTo: model.hospital)
+            .where('status',isEqualTo: Constantes.status3[model.status])
+            .where('tipo',isEqualTo: Constantes.tipoSnakeCase[Constantes.tipo.indexOf(model.tipo)])
+            .snapshots(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      title: Text(model.tipo),
+                      centerTitle: true,
+                    ),
+                    body: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                default:
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(model.tipo),
+                actions: [
+                  IconButton(onPressed: (){
+                    showSearch(
+                      context: context,
+                      delegate: PesquisaEquipamento(tipo: model.tipo,status: model.status),);
+                  }, icon: Icon(Icons.search))
+                ],
+                backgroundColor: Constantes.corAzulEscuroPrincipal,
+              ),
+              body: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color.fromARGB(255, 194, 195, 255),Colors.white],
+                    stops: [0,0.4]
+                    )
+                ),
+                child:
+                snapshot.data!.docs.isNotEmpty?
+                  ListView(
+                    children:snapshot.data!.docs.map(
+                          (DocumentSnapshot document) {
+                            Map<String, dynamic> data =
+                                document.data()! as Map<String, dynamic>;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal:8.0),
+                              child: ItemEquipamento(
+                                id:document.id
+                              ),
+                            );
+                          },
+                        ).toList(), 
+                  ):
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.cancel,
+                            size: 80.0,
+                            color: Constantes.corAzulEscuroPrincipal,
+                          ),
+                          SizedBox(height: 16.0,),
+                          Text(
+                            'Nenhum(a) ${model.tipo.toLowerCase()} ${Constantes.status3[model.status].toLowerCase()}!',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Constantes.corAzulEscuroPrincipal,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdicionarEquipamento(model.tipo)),
+                    );
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Constantes.corAzulEscuroPrincipal,
+                ),
             );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Constantes.corAzulEscuroPrincipal,
-        ),
-    );
+          }}
+        );
+        }
+        );
   }
   
-  List<Widget> itensEquipamento(List<Equipamento> equipamentos)=> 
-    equipamentos.where((equipamento) => widget.tipo==equipamento.tipo&&widget.status==Constantes.status2.indexOf(equipamento.status)).isNotEmpty?
+  /* List<Widget> itensEquipamento(List<Equipamento> equipamentos)=> 
+    equipamentos.where((equipamento) => tipo==equipamento.tipo&&status==Constantes.status2.indexOf(equipamento.status)).isNotEmpty?
     equipamentos.map((Equipamento equipamento) {
-      return widget.tipo==equipamento.tipo&&widget.status==Constantes.status2.indexOf(equipamento.status)?Padding(
+      return tipo==equipamento.tipo&&status==Constantes.status2.indexOf(equipamento.status)?Padding(
         padding: const EdgeInsets.symmetric(horizontal:8.0),
         child: ItemEquipamento(equipamento: equipamento),
       ):Container();
@@ -91,7 +147,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                     ),
                     SizedBox(height: 16.0,),
                     Text(
-                      'Nenhum(a) ${widget.tipo.toLowerCase()} ${Constantes.status3[widget.status].toLowerCase()}!',
+                      'Nenhum(a) ${tipo.toLowerCase()} ${Constantes.status3[status].toLowerCase()}!',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -104,5 +160,5 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
               ),
             ),
       
-      ];
+      ]; */
 }

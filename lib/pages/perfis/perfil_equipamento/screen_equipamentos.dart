@@ -47,7 +47,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
       builder: (context, child, model) {
         return StreamBuilder(
           stream: FirebaseService.streamEquipamento(
-            widget.idEquipamento,
+            widget.idEquipamento
           ),
           builder: (
             context,
@@ -176,17 +176,6 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                                   equipamento,
                                                   atrib,
                                                 ),
-                                Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4),
-                                      child: Wrap(
-                                        direction: Axis.vertical,
-                                        spacing: 6,
-                                        runSpacing: 1,
-                                        children: equipamento.tamanhos.map((t) {
-                                                    return mostrarTamanho(tamanho: t);
-                                                  }).toList(),
-                                      ),
-                                    ),  
                                 Visibility(
                                   visible:
                                       equipamento.idPacienteResponsavel != null,
@@ -202,7 +191,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                       children: [
                                         Visibility(
                                           visible:
-                                              equipamento.status.emString ==
+                                              equipamento.status ==
                                                   "Disponível",
                                           child: Column(
                                               crossAxisAlignment:

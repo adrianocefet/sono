@@ -9,13 +9,18 @@ class Equipamento {
   late final Map<String, dynamic> infoMap;
   late final String nome;
   late final String id;
+  late final String fabricante;
+  late final String tipo;
+  late final String? idEmpresaResponsavel;
   late final String? descricao;
-  late final TipoEquipamento tipo;
+  late final String? observacao;
+  late final String? manualPdf;
+  late final String? videoInstrucional;
   late StatusDoEquipamento status;
   late String? idPacienteResponsavel;
   late final String? urlFotoDePerfil;
   late final String? idStatus;
-  late final List<TamanhoItem> tamanhos;
+  late final String? tamanho;
 
   DateTime? get dataDeExpedicao {
     return (infoMap["data_de_expedicao"] as Timestamp?)?.toDate();
@@ -38,43 +43,53 @@ class Equipamento {
   Map<String, dynamic> _setInfoMap() => {
         'nome': nome,
         "id": id,
-        "equipamento": tipo,
         "status": status,
-        "foto_de_perfil": urlFotoDePerfil,
+        "tipo": tipo,
+        "fabricante":fabricante,
+        "url_foto": urlFotoDePerfil,
         "data_de_expedicao": dataDeExpedicaoEmStringFormatada,
         "paciente_responsavel": idPacienteResponsavel,
-        "descricao": descricao,
-        "tamanhos": exportarListaTamanhos(),
+        "empresa_responsavel": idEmpresaResponsavel,
+        "video_instrucional": videoInstrucional,
+        "manual": manualPdf,
+        "descrição": descricao,
+        "tamanho": tamanho,
+        "observação": observacao,
       };
 
   Equipamento(
     this.nome,
     this.id,
-    this.tipo,
-    this.status, /* this.tamanhos, */ {
+    this.status,{
     this.urlFotoDePerfil,
   });
 
   Equipamento.porMap(equipamentoInfoMap) {
-    nome = equipamentoInfoMap["Nome"] ?? equipamentoInfoMap["nome"];
+    nome = equipamentoInfoMap["nome"] ?? equipamentoInfoMap["Nome"];
     id = equipamentoInfoMap["id"];
     idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
     urlFotoDePerfil =
-        equipamentoInfoMap["foto_de_perfil"] ?? equipamentoInfoMap["Foto"];
+        equipamentoInfoMap["url_foto"] ?? equipamentoInfoMap["Foto"];
     descricao =
-        equipamentoInfoMap["descricao"] ?? equipamentoInfoMap["Descrição"];
-
-    tipo = _lerTipoDeEquipamentoDoBancoDeDados(
-      equipamentoInfoMap["tipo"] ?? equipamentoInfoMap["Equipamento"],
-    )!;
-
-    status = _lerStatusDoEquipamentoDoBancoDeDados(
+        equipamentoInfoMap["descrição"] ?? equipamentoInfoMap["Descrição"];
+    tipo = equipamentoInfoMap["tipo"];
+    fabricante =
+        equipamentoInfoMap["fabricante"];
+    idEmpresaResponsavel =
+        equipamentoInfoMap["empresa_responsavel"];
+    manualPdf =
+        equipamentoInfoMap["manual"] ?? equipamentoInfoMap["Manual"];
+    videoInstrucional =
+        equipamentoInfoMap["video_instrucional"] ?? equipamentoInfoMap["Video_instrucional"];
+     status = _lerStatusDoEquipamentoDoBancoDeDados(
       equipamentoInfoMap["status"] ??
           equipamentoInfoMap["Status"] ??
-          "Disponível",
+          "disponível",
     )!;
-     tamanhos= (equipamentoInfoMap['Tamanhos'] as List<dynamic>).map(
-            (t) => TamanhoItem.fromMap(t as Map<String, dynamic>)).toList(); 
+     
+     tamanho= equipamentoInfoMap["tamanho"] ?? equipamentoInfoMap["Tamanho"];
+
+     observacao = equipamentoInfoMap["observação"];
 
     infoMap = equipamentoInfoMap;
   }
@@ -85,13 +100,13 @@ class Equipamento {
     String status,
   ) {
     switch (status) {
-      case "Emprestado":
+      case "em empréstimo":
         return StatusDoEquipamento.emprestado;
-      case "Disponível":
+      case "disponível":
         return StatusDoEquipamento.disponivel;
-      case "Manutenção":
+      case "em reparo":
         return StatusDoEquipamento.manutencao;
-      case "Desinfecção":
+      case "em desinfecção":
         return StatusDoEquipamento.desinfeccao;
     }
 
@@ -175,25 +190,14 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
   String get emString {
     switch (this) {
       case StatusDoEquipamento.emprestado:
-        return "Emprestado";
+        return "em empréstimo";
       case StatusDoEquipamento.disponivel:
-        return "Disponível";
+        return "disponível";
       case StatusDoEquipamento.manutencao:
-        return "Manutenção";
+        return "em reparo";
       case StatusDoEquipamento.desinfeccao:
-        return "Desinfecção";
+        return "em desinfecção";
     }
   }
 }
 
-TamanhoItem procurarTamanho(String nome) {
-  try {
-    return tamanhos.firstWhere((s) => s.nome == nome);
-  } catch (e) {
-    rethrow;
-  }
-}
-
-List<Map<String, dynamic>> exportarListaTamanhos() {
-  return tamanhos.map((tamanho) => tamanho.toMap()).toList();
-}
