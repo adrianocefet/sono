@@ -101,7 +101,7 @@ class _ExameState extends State<Exame> {
                   ),
                 )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: exameRealizado
                       ? [

@@ -44,53 +44,53 @@ class _TabelaDePacientesState extends State<TabelaDePacientes> {
         drawer: CustomDrawer(widget.pageController),
         drawerEnableOpenDragGesture: true,
         body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseFirestore.instance
-                  .collection('pacientes')
-                  .where('hospitais_vinculados',
-                      arrayContains: usuario.hospital)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return const Text(
-                      "ERRO DE CONEXÃO",
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: FirebaseFirestore.instance
+                .collection('pacientes')
+                .where('hospitais_vinculados', arrayContains: usuario.hospital)
+                .snapshots(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return const Text(
+                    "ERRO DE CONEXÃO",
+                  );
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                default:
+                  if (snapshot.hasData) {
+                    return GridView(
+                      padding: EdgeInsets.zero,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 1,
+                      ),
+                      scrollDirection: Axis.vertical,
+                      children: snapshot.data!.docs.reversed.map(
+                          (DocumentSnapshot<Map<String, dynamic>> document) {
+                        Map<String, dynamic> data = document.data()!;
+                        return FotoDePerfil.paciente(
+                          data['url_foto_de_perfil'] ?? usuario.semimagem,
+                          data['nome_completo'] ?? 'sem nome',
+                          document.id,
+                        );
+                      }).toList(),
                     );
-                  case ConnectionState.waiting:
+                  } else {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  default:
-                    if (snapshot.hasData) {
-                      return GridView(
-                        padding: EdgeInsets.zero,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1,
-                        ),
-                        scrollDirection: Axis.vertical,
-                        children: snapshot.data!.docs.reversed.map(
-                            (DocumentSnapshot<Map<String, dynamic>> document) {
-                          Map<String, dynamic> data = document.data()!;
-                          return FotoDePerfil.paciente(
-                            data['url_foto_de_perfil'] ?? usuario.semimagem,
-                            data['nome_completo'] ?? 'sem nome',
-                            document.id,
-                          );
-                        }).toList(),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                }
-              },
-            )),
+                  }
+              }
+            },
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
           child: const Icon(

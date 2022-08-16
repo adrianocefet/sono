@@ -10,6 +10,7 @@ class Paciente {
   late final String sexo;
   late final String status;
   late final String endereco;
+  late final String? email;
   late final String? telefonePrincipal;
   late final String? telefoneSecundario;
   late final DateTime dataDeNascimento;
@@ -122,6 +123,7 @@ class Paciente {
         .parse(infoMap["data_de_nascimento"])
         .toString());
     dataDeCadastro = (infoMap["data_de_cadastro"] as Timestamp).toDate();
+    email = infoMap["email"];
     telefonePrincipal = infoMap["telefone_principal"];
     telefoneSecundario = infoMap["telefone_secundario"];
     escolaridade = infoMap["escolaridade"];

@@ -62,6 +62,12 @@ List<Map<String, dynamic>> baseCadastroPaciente = [
     'codigo': 'cpf',
   },
   {
+    'enunciado': "E-mail",
+    'tipo': TipoPergunta.extensoCadastros,
+    'dominio': 'conversa',
+    'codigo': 'email',
+  },
+  {
     'enunciado': "Telefone principal",
     'tipo': TipoPergunta.extensoNumericoCadastros,
     'dominio': 'conversa',

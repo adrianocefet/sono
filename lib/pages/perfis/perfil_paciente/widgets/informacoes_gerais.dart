@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/dialogs/selecionar_telefone.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InformacoesGerais extends StatefulWidget {
   final Paciente paciente;
@@ -283,63 +285,122 @@ class _Contatos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              'Contatos',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+    return Visibility(
+      visible: (paciente.email ??
+              paciente.telefonePrincipal ??
+              paciente.telefoneSecundario) !=
+          null,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Contatos',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Theme.of(context).primaryColorLight,
-                        width: 1.5,
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Theme.of(context).primaryColorLight,
+                          width: 1.5,
+                        ),
                       ),
                     ),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Visibility(
+                          visible: (paciente.telefonePrincipal ??
+                                  paciente.telefoneSecundario) !=
+                              null,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.phone,
+                                color: Theme.of(context).primaryColor,
+                                size: 40,
+                              ),
+                              onPressed: () async {
+                                String? telefone = await showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        DialogSelecionarTelefone(
+                                          paciente: paciente,
+                                        ));
+                                if (telefone != null) {
+                                  if (!await launchUrlString(
+                                    "tel://$telefone",
+                                  )) {
+                                    throw "Could not launch $telefone";
+                                  }
+                                }
+                              }),
+                        ),
+                        Visibility(
+                          visible: paciente.email != null,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.email,
+                                color: Theme.of(context).primaryColor,
+                                size: 40,
+                              ),
+                              onPressed: () async {
+                                if (!await launchUrlString(
+                                  "mailto:<${paciente.email}>?",
+                                )) throw "Could not launch ${paciente.email}";
+                              }),
+                        ),
+                        Visibility(
+                          visible: (paciente.telefonePrincipal ??
+                                  paciente.telefoneSecundario) !=
+                              null,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.whatsapp,
+                              color: Theme.of(context).primaryColor,
+                              size: 40,
+                            ),
+                            onPressed: () async {
+                              String? telefone = await showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      DialogSelecionarTelefone(
+                                        paciente: paciente,
+                                      ));
+                              if (telefone != null) {
+                                if (!await launchUrlString(
+                                  "https://wa.me/$telefone",
+                                  mode: LaunchMode.externalApplication,
+                                )) {
+                                  throw "Could not launch $telefone";
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        color: Theme.of(context).primaryColor,
-                        size: 40,
-                      ),
-                      Icon(
-                        Icons.email,
-                        color: Theme.of(context).primaryColor,
-                        size: 40,
-                      ),
-                      Icon(
-                        Icons.whatsapp,
-                        color: Theme.of(context).primaryColor,
-                        size: 40,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
