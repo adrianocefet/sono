@@ -20,6 +20,7 @@ class relatorioEspecifico extends StatefulWidget {
 class _relatorioEspecificoState extends State<relatorioEspecifico> {
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
+  List<Equipamento> equipamentos=[];
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
   }
   
   Widget construirTabela() {
-    final colunas = ['Tipo','Fabricante','Equipamento','Status'];
+    final colunas = ['Tipo','Equipamento','Status','Data de expedição'];
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) =>
        StreamBuilder<QuerySnapshot>(
@@ -47,13 +48,13 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
               default:
                 return DataTable(
                   headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
-                  decoration: BoxDecoration(),
+                  headingRowHeight: 60,
                   dataRowHeight: 90,
                   columnSpacing: 5,
                   horizontalMargin: 1,
                   sortAscending: ordemCrescente,
                   sortColumnIndex: indexOrdenarColuna,
-                  dataTextStyle: TextStyle(
+                  dataTextStyle: const TextStyle(
                     overflow: TextOverflow.ellipsis,
                     fontSize: 10,
                     color: Colors.black
@@ -71,7 +72,9 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     label: Expanded(
       child: Center(
           child:
-            Text(coluna,style: TextStyle(fontSize: 10)),
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 10,maxWidth: 65),
+              child: Text(coluna,style: const TextStyle(fontSize: 10),softWrap: true,overflow: TextOverflow.visible,textAlign: TextAlign.center,)),
       ),
     ),
     //onSort: ordenar,
@@ -83,7 +86,7 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     Map<String, dynamic> dadosEquipamento = data.data()! as Map<String, dynamic>;
     dadosEquipamento["id"]=data.id;
     Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
-    final celulas = [equipamento.tipo.emString,equipamento.fabricante,equipamento.nome,equipamento.status.emStringMaiuscula];
+    final celulas = [equipamento.tipo.emString,equipamento.nome,equipamento.status.emStringMaiuscula,equipamento.dataDeExpedicaoEmString];
 
     return DataRow(
       cells: pegarCelulas(celulas),
@@ -93,12 +96,12 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
       );
   }).toList();
   
-  List<DataCell> pegarCelulas(List<Object?> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.visible,))))).toList();
+  List<DataCell> pegarCelulas(List<Object?> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.visible,))))).toList();
 
-  /* void ordenar(int indexColuna, bool crescente) {
+  void ordenar(int indexColuna, bool crescente) {
     if(indexColuna==0){
       equipamentos.sort((equipamento1, equipamento2) =>
-        comparararString(crescente, equipamento1.fabricante, equipamento2.fabricante));
+        comparararString(crescente, equipamento1.tipo.emString, equipamento2.tipo.emString));
     }
     else if(indexColuna==1){
       equipamentos.sort((equipamento1, equipamento2) =>
@@ -110,17 +113,13 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
     }
     else if(indexColuna==3){
       equipamentos.sort((equipamento1, equipamento2) =>
-        comparararString(crescente, equipamento1.tamanho, equipamento2.tamanho));
-    }
-    else if(indexColuna==4){
-      equipamentos.sort((equipamento1, equipamento2) =>
-        comparararString(crescente, equipamento1.inicioStatus, equipamento2.inicioStatus));
+        comparararString(crescente, equipamento1.dataDeExpedicaoEmString, equipamento2.dataDeExpedicaoEmString));
     }
     setState(() {
-      this.indexOrdenarColuna = indexColuna;
-      this.ordemCrescente = crescente;
+      indexOrdenarColuna = indexColuna;
+      ordemCrescente = crescente;
     });
-  } */
+  } 
   
   int comparararString(bool crescente, String string1, String string2) {
     return crescente ? string1.compareTo(string2) : string2.compareTo(string1);

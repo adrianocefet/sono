@@ -12,6 +12,7 @@ import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
 import '../../globais/global.dart';
 import '../models/equipamento.dart';
+import '../models/user_model.dart';
 
 class FirebaseService {
   static final FirebaseService _firebaseService = FirebaseService._internal();
@@ -68,6 +69,30 @@ class FirebaseService {
         );
   }
 
+  Future<void> updateDadosDoEquipamento(
+      Map<String, dynamic> data, String idEquipamento,
+      {File? fotoDePerfil}) async {
+    String? urlImagem;
+
+    if (fotoDePerfil != null) {
+      await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento);
+
+      urlImagem =
+          await FirebaseService().adicionarImageDoEquipamentoAoFirebaseStorage(
+        idEquipamento: idEquipamento,
+        imageFile: fotoDePerfil,
+      );
+    } else {
+      urlImagem!=null?
+      await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento):null;
+    }
+    urlImagem!=null?
+    data['url_foto'] = urlImagem:null;
+    
+    await _db.collection(_stringEquipamento).doc(idEquipamento).update(data);
+
+  }
+
   Future<String> adicionarEquipamentoAoBancoDeDados(
       Map<String, dynamic> dadosDoEquipamento,
       {File? fotoDePerfil}) async {
@@ -103,6 +128,26 @@ class FirebaseService {
         .collection(_stringEquipamento)
         .doc(idEquipamento)
         .snapshots();
+  }
+
+  Future<void> solicitarEmprestimoEquipamento(
+    Equipamento equipamento,
+    Paciente paciente,
+    UserModel usuario,
+  )async{
+    try {
+      await _db.collection("solicitacoes").doc().set(
+        {
+          "equipamento": equipamento.id,
+          "paciente": paciente.id,
+          "solicitante": usuario.id,
+          "data_da_solicitacao": FieldValue.serverTimestamp(),
+          "confirmacao": "pendente"
+        },
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> emprestarEquipamento(
@@ -153,11 +198,13 @@ class FirebaseService {
     }
   }
 
-  Future<void> desinfectarEquipamento(Equipamento equipamento) async {
+  Future<void> desinfectarEquipamento(Equipamento equipamento, UserModel usuario) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.desinfeccao.emString,
+          "alterado_por": usuario.id,
+          "data_de_expedicao": FieldValue.serverTimestamp()
         },
       );
     } catch (e) {
@@ -165,11 +212,13 @@ class FirebaseService {
     }
   }
 
-  Future<void> repararEquipamento(Equipamento equipamento) async {
+  Future<void> repararEquipamento(Equipamento equipamento, UserModel usuario) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.manutencao.emString,
+          "alterado_por": usuario.id,
+          "data_de_expedicao": FieldValue.serverTimestamp()
         },
       );
     } catch (e) {
@@ -182,6 +231,8 @@ class FirebaseService {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
           "status": StatusDoEquipamento.disponivel.emString,
+          "alterado_por": FieldValue.delete(),
+          "data_de_expedicao": FieldValue.delete()
         },
       );
     } catch (e) {
@@ -198,7 +249,7 @@ class FirebaseService {
         .where("nome", isEqualTo: data['nome'])
         .where("hospital", isEqualTo: data["hospital"])
         .where("tipo",isEqualTo: data["tipo"])
-        .where("tamanho",isEqualTo: data["tamanho"])
+        .where("status",isEqualTo: data["status"])
         .get();
 
     if (query.docs.isNotEmpty) idEquipamento = query.docs[0].id;
@@ -209,7 +260,7 @@ class FirebaseService {
   Future removerEquipamento(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> info =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
-    if (info["status"] == "Emprestado") {
+    if (info["status"] == "em empréstimo") {
       Map<String, dynamic> dadosEquipamento = info.data()!;
       dadosEquipamento["id"] = info.id;
 
@@ -368,6 +419,16 @@ class FirebaseService {
   Future deletarImagemDoFirebaseStorage(String idElemento) async {
     Reference ref = _storage.ref(
       "$_strPacientes/perfil_$idElemento",
+    );
+
+    try {
+      await ref.delete();
+    } on Exception {}
+  }
+
+  Future deletarImagemEquipamentoDoFirebaseStorage(String idElemento) async {
+    Reference ref = _storage.ref(
+      "$_stringEquipamento/perfil_$idElemento",
     );
 
     try {

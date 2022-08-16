@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/constants.dart';
+
 void mostrarDialogCarregando(BuildContext context) {
   showDialog(
     context: context,
@@ -9,7 +11,7 @@ void mostrarDialogCarregando(BuildContext context) {
         child: const AbsorbPointer(
           absorbing: true,
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Constantes.corAzulEscuroPrincipal,),
           ),
         ),
       );

@@ -4,79 +4,142 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 
-Future<Paciente?> mostrarDialogEscolherPaciente(context) async {
-  return await showDialog(
+Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
+  return await showDialog<Paciente>(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Escolher Paciente'),
-      content: SizedBox(
-        width: 400,
-        height: 200,
-        child: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model) {
-            return StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('Paciente')
-                  .where('Hospital', isEqualTo: model.hospital)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  default:
-                    return GridView(
-                      padding: EdgeInsets.zero,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 1,
+    builder: (BuildContext context){ 
+      return Center(
+        child: Container(
+            margin: const EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+          child: Material(
+            borderRadius: const BorderRadius.all(Radius.circular(20),),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(17),
+                        topRight: Radius.circular(17),
                       ),
-                      scrollDirection: Axis.vertical,
-                      children: snapshot.data!.docs.reversed.map(
-                        (DocumentSnapshot document) {
-                          Paciente paciente = Paciente.porDocumentSnapshot(
-                              document
-                                  as DocumentSnapshot<Map<String, dynamic>>);
-                          return FittedBox(
-                            fit: BoxFit.fitHeight,
-                            child: InkWell(
-                              onTap: () {
-                                // map_equipamento['ID do Status'] = id;
-                                // print(map_equipamento.toString());
-                                Navigator.pop(context, paciente);
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Image.network(
-                                    paciente.urlFotoDePerfil ?? model.semimagem,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Text(
-                                    paciente.nomeCompleto,
-                                    //style: TextStyle(fontSize: 30,),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                    );
-                }
-              },
-            );
-          },
-        ),
-      ),
-    ),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Selecione o paciente',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                          width: 400,
+                          height: 200,
+                          child: ScopedModelDescendant<UserModel>(
+                            builder: (context, child, model) {
+                              return StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('pacientes')
+                                    .where('hospitais_vinculados', arrayContains: model.hospital)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting: 
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    default:
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GridView(
+                                            padding: EdgeInsets.zero,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4,
+                                              crossAxisSpacing: 10,
+                                              mainAxisSpacing: 10,
+                                              childAspectRatio: 1,
+                                            ),
+                                            scrollDirection: Axis.vertical,
+                                            children: snapshot.data!.docs.reversed.map(
+                                              (DocumentSnapshot document) {
+                                                Paciente paciente = Paciente.porDocumentSnapshot(
+                                                    document
+                                                        as DocumentSnapshot<Map<String, dynamic>>);
+                                                return FittedBox(
+                                                  fit: BoxFit.fitWidth,
+                                                  child: OutlinedButton(
+                                                    style: OutlinedButton.styleFrom(backgroundColor: Colors.white),
+                                                    onPressed: () {
+                                                      // map_equipamento['ID do Status'] = id;
+                                                      // print(map_equipamento.toString());
+                                                      Navigator.pop(context, paciente);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Center(
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              child: CircleAvatar(
+                                                                radius: 25,
+                                                                backgroundImage: NetworkImage(
+                                                                  paciente.urlFotoDePerfil?? model.semimagem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4,),
+                                                            ConstrainedBox(constraints: 
+                                                                      BoxConstraints(
+                                                                        minWidth: MediaQuery.of(context).size.width * 0.1,
+                                                                        maxWidth: MediaQuery.of(context).size.width * 0.2),
+                                                                        child: Text(
+                                                                          paciente.nomeCompleto,
+                                                                          style: TextStyle(
+                                                                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                                                                            fontWeight: FontWeight.w300,
+                                                                            color: Colors.black
+                                                                          ),
+                                                                          textAlign: TextAlign.center,
+                                                                          softWrap: true,
+                                                                          overflow: TextOverflow.visible,)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                            ),
+                                                      ),
+                                                );
+                                              },
+                                            ).toList(),
+                                        ),
+                                      );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                ],
+              ),
+          ),
+          ),
+      );}
   );
 }
 

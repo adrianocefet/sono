@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -63,7 +64,7 @@ class RegistroEquipamentoHelper {
     ];
   }
 
-  Map<String, dynamic> _gerarMapaDeRespostas(String hospital,String tipo) {
+  Map<String, dynamic> _gerarMapaDeRespostas(String hospital,String tipo,{String status="disponível"}) {
     for (Pergunta p in perguntas) {
       switch (p.tipo) {
         case TipoPergunta.foto:
@@ -76,8 +77,7 @@ class RegistroEquipamentoHelper {
 
     respostas['hospital'] = hospital;
     respostas['tipo'] = tipo;
-    respostas['status'] = "disponível";
-    respostas['data_ultima_alteracao'] = FieldValue.serverTimestamp();;
+    respostas['status'] = status;
 
     return respostas;
   }
@@ -95,16 +95,16 @@ class RegistroEquipamentoHelper {
   }
 
   Future<StatusCadastroEquipamento> _checarSeEquipamentoJaExiste() async {
-    bool jaPossuiPaciente = false;
+    bool jaPossuiEquipamento= false;
 
     idEquipamentoPreexistente =
         await FirebaseService().procurarEquipamentoNoBancoDeDados(respostas);
 
     if (idEquipamentoPreexistente != null) {
-      jaPossuiPaciente = true;
+      jaPossuiEquipamento = true;
     }
 
-    if (jaPossuiPaciente) {
+    if (jaPossuiEquipamento) {
       return StatusCadastroEquipamento.jaExistenteNoBancoDeDados;
     } else {
       return StatusCadastroEquipamento.equipamentoNovo;
@@ -114,6 +114,21 @@ class RegistroEquipamentoHelper {
   Future<void> _adicionarNovoEquipamentoAoBancoDeDados() async {
     idEquipamento = await FirebaseService().adicionarEquipamentoAoBancoDeDados(
       respostas,
+      fotoDePerfil: _fotoDePerfil,
+    );
+  }
+
+  Future<void> editarEquipamento(Equipamento equipamento) async {
+    _gerarMapaDeRespostas(equipamento.hospital,equipamento.tipo.emStringSnakeCase,status: equipamento.status.emString);
+
+    await _editarInformacoesDoEquipamentoNoBancoDeDados(equipamento.id);
+
+  }
+
+  Future<void> _editarInformacoesDoEquipamentoNoBancoDeDados(String id,) async {
+    await FirebaseService().updateDadosDoEquipamento(
+      respostas,
+      id,
       fotoDePerfil: _fotoDePerfil,
     );
   }

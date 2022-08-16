@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:sono/globais/global.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/tamanho_equipamento.dart';
+import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class Equipamento {
@@ -11,6 +12,7 @@ class Equipamento {
   late final String id;
   late final String fabricante;
   late final TipoEquipamento tipo;
+  late final String hospital;
   late final String? idEmpresaResponsavel;
   late final String? descricao;
   late final String? observacao;
@@ -21,23 +23,31 @@ class Equipamento {
   late final String? urlFotoDePerfil;
   late final String? idStatus;
   late final String? tamanho;
+  late final DateTime? dataDeExpedicao;
+  late final DateTime? dataDeDevolucao;
 
-  DateTime? get dataDeExpedicao {
+/*   DateTime? get dataDeExpedicao {
     return (infoMap["data_de_expedicao"] as Timestamp?)?.toDate();
-  }
+  } */
 
   String? get dataDeExpedicaoEmStringFormatada {
     return dataDeExpedicao != null ? _formatarData(dataDeExpedicao) : null;
   }
 
-  DateTime? get dataDeDevolucao {
+  DateTime? get calcularDataDeDevolucao {
     return dataDeExpedicao?.add(
       const Duration(days: 30),
     );
   }
 
+  String get dataDeExpedicaoEmString {
+    return dataDeExpedicao!=null?
+    DateFormat('dd/MM/yyyy kk:mm:ss').format(dataDeExpedicao!):'-';
+    
+  }
+
   String? get dataDeDevolucaoEmStringFormatada {
-    return dataDeExpedicao != null ? _formatarData(dataDeDevolucao) : null;
+    return dataDeExpedicao != null ? _formatarData(calcularDataDeDevolucao) : null;
   }
 
   Map<String, dynamic> _setInfoMap() => {
@@ -45,9 +55,9 @@ class Equipamento {
         "id": id,
         "status": status,
         "tipo": tipo,
+        "hospital": hospital,
         "fabricante":fabricante,
         "url_foto": urlFotoDePerfil,
-        "data_de_expedicao": dataDeExpedicaoEmStringFormatada,
         "paciente_responsavel": idPacienteResponsavel,
         "empresa_responsavel": idEmpresaResponsavel,
         "video_instrucional": videoInstrucional,
@@ -55,6 +65,8 @@ class Equipamento {
         "descrição": descricao,
         "tamanho": tamanho,
         "observação": observacao,
+        "data_de_expedicao": dataDeExpedicaoEmString,
+        "data_de_devolucao": dataDeDevolucaoEmStringFormatada 
       };
 
   Equipamento(
@@ -69,10 +81,11 @@ class Equipamento {
     id = equipamentoInfoMap["id"];
     idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
     urlFotoDePerfil =
-        equipamentoInfoMap["url_foto"] ?? equipamentoInfoMap["Foto"];
+        equipamentoInfoMap["url_foto"];
     descricao =
         equipamentoInfoMap["descrição"] ?? equipamentoInfoMap["Descrição"];
     tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"]??equipamentoInfoMap["Tipo"])!;
+    hospital=equipamentoInfoMap["hospital"];
     fabricante =
         equipamentoInfoMap["fabricante"];
     idEmpresaResponsavel =
@@ -88,8 +101,10 @@ class Equipamento {
     )!;
      
      tamanho= equipamentoInfoMap["tamanho"] ?? equipamentoInfoMap["Tamanho"];
-
-     observacao = equipamentoInfoMap["observação"];
+     equipamentoInfoMap["data_de_expedicao"]!=null?
+     dataDeExpedicao = (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate():dataDeExpedicao=null;
+     dataDeDevolucao = equipamentoInfoMap["data_de_devolucao"];
+     observacao = equipamentoInfoMap["observacao"];
 
     infoMap = equipamentoInfoMap;
   }
@@ -139,15 +154,18 @@ class Equipamento {
   Future<void> emprestarPara(Paciente paciente) async =>
       await FirebaseService().emprestarEquipamento(this, paciente);
 
+  Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
+      await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
+
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
 
-  Future<void> desinfectar() async {
-    await FirebaseService().desinfectarEquipamento(this);
+  Future<void> desinfectar(UserModel usuario) async {
+    await FirebaseService().desinfectarEquipamento(this, usuario);
   }
 
-  Future<void> manutencao() async {
-    await FirebaseService().repararEquipamento(this);
+  Future<void> manutencao(UserModel usuario) async {
+    await FirebaseService().repararEquipamento(this,usuario);
   }
 
   Future<void> disponibilizar() async {
@@ -185,6 +203,26 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "Máscara Facial";
       case TipoEquipamento.oronasal:
         return "Máscara Oronasal";
+    }
+  }
+  String get emStringSnakeCase {
+    switch (this) {
+      case TipoEquipamento.almofada:
+        return "almofada";
+      case TipoEquipamento.pap:
+        return "aparelho_pap";
+      case TipoEquipamento.traqueia:
+        return "traqueia";
+      case TipoEquipamento.fixador:
+        return "fixador";
+      case TipoEquipamento.nasal:
+        return "mascara_nasal";
+      case TipoEquipamento.pillow:
+        return "mascara_pillow";
+      case TipoEquipamento.facial:
+        return "mascara_facial";
+      case TipoEquipamento.oronasal:
+        return "mascara_oronasal";
     }
   }
 }

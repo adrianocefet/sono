@@ -6,6 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../../../constants/constants.dart';
+import '../../../../utils/dialogs/deletar_equipamento.dart';
 import '../../../../utils/models/equipamento.dart';
 import '../../../../utils/services/firebase.dart';
 import '../tela_equipamento.dart';
@@ -44,6 +45,9 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: InkWell(
                     splashColor: Constantes.corAzulEscuroSecundario,
+                    onLongPress: (){
+                      mostrarDialogDeletarEquipamento(context,equipamento.id);
+                    },
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaEquipamento(id:widget.id)));
                     },
@@ -126,7 +130,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            model.tipo==Constantes.tipo[0]||model.tipo==Constantes.tipo[1]||model.tipo==Constantes.tipo[2]||model.tipo==Constantes.tipo[3]?
+                                            equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow?
                                             Column(
                                               children: [
                                                 Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
@@ -151,7 +155,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 ),   
                                             
                                             Visibility(
-                                              visible: equipamento.idPacienteResponsavel!=null,
+                                              visible: equipamento.status==StatusDoEquipamento.emprestado,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: Column(
@@ -163,31 +167,31 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 ),
                                               )),
                                             Visibility(
-                                              visible: Constantes.status3.indexOf(equipamento.status.emString)>1,
+                                              visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text("Empresa responsável",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                    Text(equipamento.idEmpresaResponsavel??"Sem nome",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
+                                                    Text("Previsão para entrega",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                    Text(equipamento.dataDeDevolucaoEmStringFormatada??"Indefinida",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
                                                   ],
                                                 ),
                                               )),
                                             Visibility(
-                                              visible: Constantes.status3.indexOf(equipamento.status.emString)!=0,
+                                              visible: equipamento.status!=StatusDoEquipamento.disponivel,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text("Data de despache",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                    Text(equipamento.idPacienteResponsavel??"Sem data",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
+                                                    Text(equipamento.dataDeExpedicaoEmString,style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
                                                   ],
                                                 ),
                                               )),
                                             Visibility(
-                                              visible: Constantes.status3.indexOf(equipamento.status.emString)==1,
+                                              visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: Column(

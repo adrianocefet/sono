@@ -52,7 +52,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
             if (widget._tipo == TipoElemento.paciente
                 ? await mostrarDialogDeletarPaciente(context, widget.id)
                 : model.equipamento != 'Equipamento'
-                    ? await mostrarDialogDeletarEquipmaneto(context, widget.id)
+                    ? await mostrarDialogDeletarEquipamento(context, widget.id)
                     : false) {
             } else {
               try {

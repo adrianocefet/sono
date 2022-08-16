@@ -4,7 +4,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributo_equip.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/detalhe_do_status.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/editar_atributo_equip.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/mostrar_tamanho.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/qrCodeGerado.dart';
 import 'package:sono/utils/dialogs/selecionar_origem_foto.dart';
 import 'package:sono/utils/models/paciente.dart';
@@ -321,7 +320,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                                     onPressed: () async {
                                                       try {
                                                         await equipamento
-                                                            .desinfectar();
+                                                            .desinfectar(model);
                                                         equipamento.status =
                                                             StatusDoEquipamento
                                                                 .desinfeccao;
@@ -355,7 +354,7 @@ class _ScreenEquipamentosState extends State<ScreenEquipamento> {
                                                   child: ElevatedButton(
                                                     onPressed: () async {
                                                       await equipamento
-                                                          .manutencao();
+                                                          .manutencao(model);
                                                       equipamento.status =
                                                           StatusDoEquipamento
                                                               .manutencao;

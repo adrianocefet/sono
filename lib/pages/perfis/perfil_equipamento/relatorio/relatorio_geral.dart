@@ -55,8 +55,8 @@ class _relatorioGeralState extends State<relatorioGeral> {
                           5:FractionColumnWidth(0.15),
                         },
                         children: [
-                          mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção','Total'],topo: true),
-                            for(var i=0;i<8;i++) 
+                            mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção','Total'],topo: true),
+                            for(var i=0;i<Constantes.tipo.length;i++) 
                             mostrarlinhas([Constantes.tipo[i],
                             documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
                             documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
@@ -67,7 +67,7 @@ class _relatorioGeralState extends State<relatorioGeral> {
                       ),
                     ),
                   ),
-                  for(int j=0;j<8;j++)
+                  for(int j=0;j<Constantes.tipo.length;j++)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(

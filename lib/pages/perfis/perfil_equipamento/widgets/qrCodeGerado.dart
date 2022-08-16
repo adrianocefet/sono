@@ -30,7 +30,7 @@ class qrCodeGerado extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Text('Código gerado do equipamento: $idEquipamento',
+            Text('Código gerado do equipamento: \n$idEquipamento',
                 style: const TextStyle(color: Colors.black),textAlign: TextAlign.center,),
             const SizedBox(
               height: 10,

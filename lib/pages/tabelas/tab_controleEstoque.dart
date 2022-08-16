@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
@@ -8,8 +9,6 @@ import 'package:sono/pages/tabelas/tab_tiposEquipamentos.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/user_model.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
-import '../perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
-import '../perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio_geral.dart';
 
@@ -22,22 +21,9 @@ class TabelaControleEstoque extends StatefulWidget {
 }
 
 class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
-  late List<Equipamento> equipamentos;
   
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    equipamentos = List.of(todosEquipamentos);
-  }
-
-
-  @override
   Widget build(BuildContext context) {
-    final List<ChartData> chartData=[
-      for(int i=0;i<8;i++)
-      ChartData(Constantes.tipo[i],calcularQuantidade(0, i, equipamentos),calcularQuantidade(1, i, equipamentos),calcularQuantidade(2, i, equipamentos),calcularQuantidade(3, i, equipamentos)),
-    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Controle de Estoque"),
@@ -71,7 +57,7 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                           spacing: 50,
                           runSpacing: 20,
                           children: [
-                            for(int i=0;i<4;i++)
+                            for(int status=0;status<Constantes.status.length;status++)
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
@@ -80,7 +66,7 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                 backgroundColor: Colors.white
                               ),
                               onPressed:(){
-                                model.status=i;
+                                model.status=status;
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>TiposEquipamentos()));
                               }, 
                               child: SizedBox(
@@ -90,10 +76,10 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
                                     Icon(
-                                      Constantes.icone2[i],
+                                      Constantes.icone2[status],
                                       size: 34,
                                       color: Color.fromRGBO(97, 253, 125, 1),),
-                                    Text(Constantes.status[i],
+                                    Text(Constantes.status[status],
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w300,
                                         color: Colors.black
@@ -132,42 +118,70 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                     color: Colors.white
                                     ),),
                                 ),
-                                SfCartesianChart(
-                                  zoomPanBehavior: ZoomPanBehavior(
-                                    enablePinching: true,
-                                    enablePanning: true
-                                  ),
-                                  legend: Legend(isVisible: true,position: LegendPosition.bottom),
-                                  enableAxisAnimation: true,
-                                  primaryXAxis: CategoryAxis(labelStyle: const TextStyle(fontSize: 5)),
-                                  series: <ChartSeries> [
-                                    StackedColumnSeries<ChartData,String>(
-                                      name: "Disponível",
-                                      color: Constantes.corVerdeClaroPrincipal,
-                                      dataSource: chartData, 
-                                      xValueMapper: (ChartData ch, _) => ch.x, 
-                                      yValueMapper: (ChartData ch, _) => ch.y1,
-                                      ),
-                                    StackedColumnSeries<ChartData,String>(
-                                      name: "Empréstimos",
-                                      color: Constantes.corPrincipalQuestionarios,
-                                      dataSource: chartData, 
-                                      xValueMapper: (ChartData ch, _) => ch.x, 
-                                      yValueMapper: (ChartData ch, _) => ch.y2,
-                                      ),
-                                    StackedColumnSeries<ChartData,String>(
-                                      name: "Manutenção",
-                                      color: Constantes.dom4Color,
-                                      dataSource: chartData, 
-                                      xValueMapper: (ChartData ch, _) => ch.x, 
-                                      yValueMapper: (ChartData ch, _) => ch.y3),
-                                    StackedColumnSeries<ChartData,String>(
-                                      name: "Desinfecção",
-                                      color: Constantes.corAzulEscuroPrincipal,
-                                      dataSource: chartData, 
-                                      xValueMapper: (ChartData ch, _) => ch.x, 
-                                      yValueMapper: (ChartData ch, _) => ch.y4),
-                                  ],
+                                ScopedModelDescendant<UserModel>(
+                                    builder: (context, child, model) =>StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance.collection('equipamentos').snapshots(),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                          case ConnectionState.waiting:
+                                            return const Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: CircularProgressIndicator(color: Constantes.corAzulEscuroPrincipal,),
+                                                ),
+                                            );
+                                          default:
+                                            List<QueryDocumentSnapshot<Object?>> documentos=snapshot.data!.docs;
+                                            final List<ChartData> chartData=[
+                                                for(int tipo=0;tipo<Constantes.tipo.length;tipo++)
+                                                ChartData(
+                                                  Constantes.tipo[tipo],
+                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                ),
+                                              ];
+                                            return SfCartesianChart(
+                                              zoomPanBehavior: ZoomPanBehavior(
+                                                enablePinching: true,
+                                                enablePanning: true
+                                              ),
+                                              legend: Legend(isVisible: true,position: LegendPosition.bottom),
+                                              enableAxisAnimation: true,
+                                              primaryXAxis: CategoryAxis(labelStyle: const TextStyle(fontSize: 5)),
+                                              series: <ChartSeries> [
+                                                StackedColumnSeries<ChartData,String>(
+                                                  name: "Disponível",
+                                                  color: Constantes.corVerdeClaroPrincipal,
+                                                  dataSource: chartData, 
+                                                  xValueMapper: (ChartData ch, _) => ch.x, 
+                                                  yValueMapper: (ChartData ch, _) => ch.y1,
+                                                  ),
+                                                StackedColumnSeries<ChartData,String>(
+                                                  name: "Empréstimos",
+                                                  color: Constantes.corPrincipalQuestionarios,
+                                                  dataSource: chartData, 
+                                                  xValueMapper: (ChartData ch, _) => ch.x, 
+                                                  yValueMapper: (ChartData ch, _) => ch.y2,
+                                                  ),
+                                                StackedColumnSeries<ChartData,String>(
+                                                  name: "Manutenção",
+                                                  color: Constantes.dom4Color,
+                                                  dataSource: chartData, 
+                                                  xValueMapper: (ChartData ch, _) => ch.x, 
+                                                  yValueMapper: (ChartData ch, _) => ch.y3),
+                                                StackedColumnSeries<ChartData,String>(
+                                                  name: "Desinfecção",
+                                                  color: Constantes.corAzulEscuroPrincipal,
+                                                  dataSource: chartData, 
+                                                  xValueMapper: (ChartData ch, _) => ch.x, 
+                                                  yValueMapper: (ChartData ch, _) => ch.y4),
+                                              ],
+                                            );
+                                    }
+                                      }),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical:10.0,horizontal: 10),
@@ -180,7 +194,7 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                       onPressed:(){
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaRelatorio()));
                                       }, 
-                                      child:  Text("Gerar relatório",
+                                      child:  const Text("Gerar relatório",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.black
@@ -202,14 +216,6 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
     );
   }
 }
-
-int calcularQuantidade(int status,int tipo, List<Equipamento> equipamentos,{bool calcularTotal=false}){
-    int contador=0;
-    calcularTotal==false?
-    equipamentos.forEach((Equipamento equipamento) {equipamento.status==Constantes.status2[status]&&equipamento.tipo==Constantes.tipo[tipo]?contador++:null;}):
-    equipamentos.forEach((Equipamento equipamento) {equipamento.tipo==Constantes.tipo[tipo]?contador++:null;});
-    return contador;
-  }
 
 class ChartData{
   final String x;

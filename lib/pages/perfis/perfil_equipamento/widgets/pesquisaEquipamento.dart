@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/item_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
@@ -13,9 +11,6 @@ class PesquisaEquipamento extends SearchDelegate {
   final String tipo;
   final int status;
   PesquisaEquipamento({required this.tipo, required this.status});
-
-  late List<Equipamento> equipamentos=List.of(todosEquipamentos);
-
 
   @override
   List<Widget> buildActions(BuildContext context) {

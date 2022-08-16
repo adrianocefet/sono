@@ -7,8 +7,6 @@ import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
-import '../perfis/perfil_equipamento/relatorio/DadosTeste/EquipamentosCriados.dart';
-import '../perfis/perfil_equipamento/relatorio/DadosTeste/classeEquipamentoteste.dart';
 import '../perfis/perfil_equipamento/widgets/item_equipamento.dart';
 import '../perfis/perfil_equipamento/widgets/pesquisaEquipamento.dart';
 
@@ -113,7 +111,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                 onPressed: (){
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AdicionarEquipamento(model.tipo)),
+                      MaterialPageRoute(builder: (context) => AdicionarEquipamento(tipo:model.tipo)),
                     );
                 },
                 child: Icon(Icons.add),
