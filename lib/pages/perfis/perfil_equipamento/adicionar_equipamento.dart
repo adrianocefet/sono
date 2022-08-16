@@ -47,7 +47,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     children: [
-                      for(Pergunta pergunta in helper.perguntas.getRange(0, 6))
+                      for(Pergunta pergunta in helper.perguntas.getRange(0, 7))
                         RespostaWidget(pergunta,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[pergunta.codigo]:null),
                       if(tipo==Constantes.tipoSnakeCase[0] || tipo==Constantes.tipoSnakeCase[1] || tipo==Constantes.tipoSnakeCase[2] || tipo==Constantes.tipoSnakeCase[3])
                         RespostaWidget(helper.perguntas.last,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[helper.perguntas.last.codigo]:null),

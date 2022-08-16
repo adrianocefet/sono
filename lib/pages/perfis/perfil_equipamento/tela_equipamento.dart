@@ -48,7 +48,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
       
   _testarUrl(String value) {
    String pattern = r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
-   RegExp regExp = new RegExp(pattern);
+   RegExp regExp = RegExp(pattern);
    if (!regExp.hasMatch(value)||value=='') {
     return false;
    }
@@ -77,7 +77,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                 Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
               controller = YoutubePlayerController(
               initialVideoId: YoutubePlayer.convertUrlToId(equipamento.videoInstrucional??'')??'',
-              flags: YoutubePlayerFlags(
+              flags: const YoutubePlayerFlags(
                 autoPlay: false,
                 loop: false,
                 hideControls: false
@@ -146,7 +146,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                               alignment: Alignment.center,
                                               height: 30,
                                               width: 30,
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                 color:
                                                     Constantes.corAzulEscuroPrincipal,
                                                 shape: BoxShape.circle,
@@ -180,7 +180,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             equipamento.nome,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 3,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -200,7 +200,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                 idEquipamento:equipamento.id,
                                                               )));
                                       },
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.qr_code,
                                         color: Constantes.corAzulEscuroPrincipal,
                                         size: 30,
@@ -209,17 +209,17 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ))
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Text(
+                                const Text(
                                   "Fabricante",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromARGB(221, 171, 171, 171)),
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Text(
                                   equipamento.fabricante,
                                   style: TextStyle(fontSize: 12),
@@ -229,17 +229,17 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 20,
                                         ),
-                                      Text(
+                                      const Text(
                                     "Tamanho",
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Color.fromARGB(221, 171, 171, 171)),
                                                           ),
-                                                          Divider(),
+                                                          const Divider(),
                                                           Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -253,7 +253,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     width: 40,
                                     child: Text(
                                       equipamento.tamanho??'N/A',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black,
                                           fontSize: 15),
@@ -263,17 +263,17 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           ),
                                   ),
                                 
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Text(
+                                const Text(
                                   "Descrição",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromARGB(221, 171, 171, 171)),
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Text(
                                   equipamento.descricao??'Sem descrição',
                                   style: TextStyle(fontSize: 12),
@@ -421,7 +421,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           color: Constantes.corAzulEscuroSecundario,
                                         ),
                                         height: 30,
-                                        child: Text(
+                                        child: const Text(
                                           "Detalhes",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold
@@ -446,7 +446,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                                SizedBox(width: 20,),
+                                                const SizedBox(width: 20,),
                                                 SizedBox(
                                                   width:
                                                       MediaQuery.of(context).size.width * 0.6,
@@ -461,7 +461,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 ),
                                               ],
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                           const Padding(
                                             padding: EdgeInsets.only(top:8.0),
                                             child: Text("Médico responsável",
@@ -613,12 +613,12 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ),
                                     color: Constantes.corAzulEscuroSecundario,),
                                     height: 30,
-                                    child: Text("Manual do equipamento",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    child: const Text("Manual do equipamento",style: TextStyle(fontWeight: FontWeight.bold),),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical:4.0),
                                   child: ElevatedButton.icon(
-                                    icon: Icon(Icons.picture_as_pdf,color: Colors.black,),
+                                    icon: const Icon(Icons.picture_as_pdf,color: Colors.black,),
                                     style: ElevatedButton.styleFrom(
                                                   primary: const Color.fromRGBO(97, 253, 125, 1),
                                                   shape: RoundedRectangleBorder(
@@ -630,7 +630,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       final arquivo = await PDFapi.carregarLink(url);
                                       abrirPDF(context, arquivo);
                                     }:null, 
-                                    label: Text(_testarUrl(equipamento.manualPdf??'')?"Visualizar PDF":"PDF indisponível",style: TextStyle(color: Colors.black),)),
+                                    label: Text(_testarUrl(equipamento.manualPdf??'')?"Visualizar PDF":"PDF indisponível",style: const TextStyle(color: Colors.black),)),
                                 ),
                               ],
                             ),
@@ -659,7 +659,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       ),
                                       color: Constantes.corAzulEscuroSecundario,),
                                       height: 30,
-                                      child: Text("Modo de uso",style: TextStyle(fontWeight: FontWeight.bold),),
+                                      child: const Text("Modo de uso",style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
                                   YoutubePlayerBuilder(
                                   player: YoutubePlayer(controller: controller), 
@@ -699,7 +699,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       ),
                                       color: Constantes.corAzulEscuroSecundario,),
                                       height: 30,
-                                      child: Text("Observações",style: TextStyle(fontWeight: FontWeight.bold),),
+                                      child: const Text("Observações",style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
                                   equipamento.observacao!=null?
                                   Column(
@@ -716,7 +716,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       Visibility(
                                         visible: equipamento.observacao!.length>141,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical:8.0),
+                                          padding: const EdgeInsets.only(bottom:10.0),
                                           child: ElevatedButton(
                                             onPressed: mostrarMais, 
                                             child: Text(clicado?'Mostrar menos':'Mostrar mais',style: TextStyle(color: Colors.black),),

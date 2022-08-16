@@ -54,6 +54,13 @@ class RegistroEquipamentoHelper {
         "video_instrucional",
       ),
       Pergunta(
+        'Observações',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "observacao",
+      ),
+      Pergunta(
         'Tamanho*',
         TipoPergunta.extensoCadastros,
         [],

@@ -191,7 +191,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 ),
                                               )),
                                             Visibility(
-                                              visible: equipamento.status==StatusDoEquipamento.desinfeccao,
+                                              visible: equipamento.status==StatusDoEquipamento.emprestado,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: Column(
