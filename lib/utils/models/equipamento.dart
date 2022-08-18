@@ -182,6 +182,7 @@ enum TipoEquipamento {
   fixador,
   almofada,
   pap,
+  cpap
 }
 
 extension ExtensaoTipoEquipamento on TipoEquipamento {
@@ -203,6 +204,8 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "Máscara Facial";
       case TipoEquipamento.oronasal:
         return "Máscara Oronasal";
+      case TipoEquipamento.cpap:
+        return "CPAP";
     }
   }
   String get emStringSnakeCase {
@@ -223,7 +226,31 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "mascara_facial";
       case TipoEquipamento.oronasal:
         return "mascara_oronasal";
+      case TipoEquipamento.cpap:
+        return "cpap";
     }
+  }
+  String get imagens{
+  switch(this){
+    case TipoEquipamento.nasal:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTgvMTVfMDZfMjhfOTk2X1RydWVCbHVlXzEuanBnIl1d/TrueBlue-1.jpg';
+    case TipoEquipamento.oronasal:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTcvMTNfNDNfMDZfODUwX0FtYXJhXzEuanBnIl0sWyJwIiwidGh1bWIiLCI0MDB4NDAwPiJdXQ/Amara-1.jpg';
+    case TipoEquipamento.pillow:
+      return 'https://a3.vnda.com.br/650x/espacoquallys/2019/09/13/10252-mascara-cpap-pillow-breeze-sefam-5146.jpg?v=1568415183';
+    case TipoEquipamento.facial:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTMvMDUvMjEvMjFfNDVfMjBfNDk5X0ZpdExpZmUuanBnIl1d/FitLife.jpg';
+    case TipoEquipamento.pap:
+      return 'https://a4.vnda.com.br/1200x/pedeapoio/2019/10/02/31233-aparelho-cpap-apap-reswell-automatico-completo-com-mascara-n2-2550.png?v=1570018948';
+    case TipoEquipamento.traqueia:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/mini-traqueia-para-mascara-swift-fx-resmed-720.jpg';
+    case TipoEquipamento.fixador:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/fixador-para-mascara-facial-fitlife-e-performax-philips-respironics-1042.jpg';
+    case TipoEquipamento.almofada:
+      return 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg';
+    case TipoEquipamento.cpap:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/cpap-basico-airsense-s10-com-umidificador-integrado-resmed-916.png';
+  }  
   }
 }
 

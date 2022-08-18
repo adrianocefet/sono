@@ -7,6 +7,7 @@ import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_tiposEquipamentos.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../utils/models/equipamento.dart';
 import '../../utils/models/user_model.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio.dart';
@@ -134,13 +135,13 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                           default:
                                             List<QueryDocumentSnapshot<Object?>> documentos=snapshot.data!.docs;
                                             final List<ChartData> chartData=[
-                                                for(int tipo=0;tipo<Constantes.tipo.length;tipo++)
+                                                for(var tipo in TipoEquipamento.values)
                                                 ChartData(
-                                                  Constantes.tipo[tipo],
-                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length,
-                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length,
-                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length,
-                                                  documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[tipo])&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  tipo.emString,
+                                                  documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length,
+                                                  documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length,
                                                 ),
                                               ];
                                             return SfCartesianChart(
@@ -161,20 +162,20 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                                                   ),
                                                 StackedColumnSeries<ChartData,String>(
                                                   name: "Empréstimos",
-                                                  color: Constantes.corPrincipalQuestionarios,
+                                                  color: Color.fromARGB(255, 255, 191, 87),
                                                   dataSource: chartData, 
                                                   xValueMapper: (ChartData ch, _) => ch.x, 
                                                   yValueMapper: (ChartData ch, _) => ch.y2,
                                                   ),
                                                 StackedColumnSeries<ChartData,String>(
                                                   name: "Manutenção",
-                                                  color: Constantes.dom4Color,
+                                                  color: Color.fromARGB(255, 255, 112, 122),
                                                   dataSource: chartData, 
                                                   xValueMapper: (ChartData ch, _) => ch.x, 
                                                   yValueMapper: (ChartData ch, _) => ch.y3),
                                                 StackedColumnSeries<ChartData,String>(
                                                   name: "Desinfecção",
-                                                  color: Constantes.corAzulEscuroPrincipal,
+                                                  color: Color.fromARGB(255, 116, 239, 255),
                                                   dataSource: chartData, 
                                                   xValueMapper: (ChartData ch, _) => ch.x, 
                                                   yValueMapper: (ChartData ch, _) => ch.y4),

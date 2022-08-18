@@ -15,7 +15,7 @@ import '../../../utils/models/pergunta.dart';
 
 class AdicionarEquipamento extends StatefulWidget {
   final Equipamento? equipamentoJaCadastrado;
-  final String? tipo;
+  final TipoEquipamento? tipo;
   const AdicionarEquipamento({Key? key,this.tipo,this.equipamentoJaCadastrado}) : super(key: key);
 
   @override
@@ -28,7 +28,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
 
   @override
   Widget build(BuildContext context) {
-    final tipo=widget.equipamentoJaCadastrado==null?Constantes.tipoSnakeCase[Constantes.tipo.indexOf(widget.tipo!)]:widget.equipamentoJaCadastrado!.tipo.emStringSnakeCase;
+    final tipo=widget.equipamentoJaCadastrado==null?widget.tipo!:widget.equipamentoJaCadastrado!.tipo;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -49,7 +49,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                     children: [
                       for(Pergunta pergunta in helper.perguntas.getRange(0, 7))
                         RespostaWidget(pergunta,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[pergunta.codigo]:null),
-                      if(tipo==Constantes.tipoSnakeCase[0] || tipo==Constantes.tipoSnakeCase[1] || tipo==Constantes.tipoSnakeCase[2] || tipo==Constantes.tipoSnakeCase[3])
+                      if(tipo==TipoEquipamento.nasal || tipo==TipoEquipamento.oronasal || tipo==TipoEquipamento.pillow || tipo==TipoEquipamento.facial)
                         RespostaWidget(helper.perguntas.last,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[helper.perguntas.last.codigo]:null),
                     ],
                   ),
@@ -65,7 +65,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                       if(widget.equipamentoJaCadastrado==null){
                         try {
                         switch (await helper.registrarEquipamento(
-                            model.hospital, tipo)) {
+                            model.hospital, tipo.emStringSnakeCase)) {
                           case StatusCadastroEquipamento
                               .jaExistenteNoBancoDeDados:
                             Navigator.pop(context);
