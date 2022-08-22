@@ -234,13 +234,17 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                         ),
                                       const Text(
                                     "Tamanho",
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Color.fromARGB(221, 171, 171, 171)),
                                                           ),
-                                                          const Divider(),
-                                                          Container(
+                                    const Divider(),
+                                    Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth: MediaQuery.of(context).size.width
+                                    ),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         width: 1,
@@ -249,10 +253,12 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       color: Constantes.corAzulEscuroSecundario,
                                     ),
                                     alignment: Alignment.center,
-                                    height: 20,
-                                    width: 40,
+                                    //height: 20,
+                                    //width: 40,
                                     child: Text(
                                       equipamento.tamanho??'N/A',
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black,
@@ -535,12 +541,22 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
+                                          Padding(
+                                                  padding: EdgeInsets.symmetric(vertical:8.0),
+                                                  child: Text("${equipamento.status.emStringMaiuscula} alterado por",
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Constantes.corAzulEscuroSecundario ,
+                                                      decoration: TextDecoration.underline
+                                                  ),
+                                                  ),
+                                                ),
                                           Row(
                                               children: [
                                                 ClipRRect(
                                                   borderRadius: BorderRadius.circular(25),
                                                   child: Image.network(
-                                                    "https://www.onze.com.br/blog/wp-content/uploads/2019/11/shutterstock_1413966269.jpg",
+                                                    model.semimagem,
                                                     width: 50,
                                                     height: 50,
                                                     fit: BoxFit.fill,
@@ -551,7 +567,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                   width:
                                                       MediaQuery.of(context).size.width * 0.6,
                                                   child: Text(
-                                                    equipamento.idEmpresaResponsavel??"Empresa sem nome",
+                                                    equipamento.alteradoPor??'Sem nome',
                                                     overflow: TextOverflow.ellipsis,
                                                     maxLines: 2,
                                                     style: const TextStyle(

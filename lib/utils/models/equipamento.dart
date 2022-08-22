@@ -11,7 +11,7 @@ class Equipamento {
   late final String fabricante;
   late final TipoEquipamento tipo;
   late final String hospital;
-  late final String? idEmpresaResponsavel;
+  late final String? alteradoPor;
   late final String? descricao;
   late final String? observacao;
   late final String? manualPdf;
@@ -57,7 +57,7 @@ class Equipamento {
         "fabricante":fabricante,
         "url_foto": urlFotoDePerfil,
         "paciente_responsavel": idPacienteResponsavel,
-        "empresa_responsavel": idEmpresaResponsavel,
+        "alterado_por": alteradoPor,
         "video_instrucional": videoInstrucional,
         "manual": manualPdf,
         "descrição": descricao,
@@ -86,8 +86,8 @@ class Equipamento {
     hospital=equipamentoInfoMap["hospital"];
     fabricante =
         equipamentoInfoMap["fabricante"];
-    idEmpresaResponsavel =
-        equipamentoInfoMap["empresa_responsavel"];
+    alteradoPor =
+        equipamentoInfoMap["alterado_por"];
     manualPdf =
         equipamentoInfoMap["manual"] ?? equipamentoInfoMap["Manual"];
     videoInstrucional =
@@ -183,7 +183,10 @@ enum TipoEquipamento {
   fixador,
   almofada,
   pap,
-  cpap
+  cpap,
+  bilevel,
+  avap,
+  autocpap
 }
 
 extension ExtensaoTipoEquipamento on TipoEquipamento {
@@ -207,6 +210,12 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "Máscara Oronasal";
       case TipoEquipamento.cpap:
         return "CPAP";
+      case TipoEquipamento.bilevel:
+        return 'BiLevel';
+      case TipoEquipamento.autocpap:
+        return 'AutoCPAP';
+      case TipoEquipamento.avap:
+        return 'AVAPS';
     }
   }
   String get emStringSnakeCase {
@@ -229,6 +238,12 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "mascara_oronasal";
       case TipoEquipamento.cpap:
         return "cpap";
+      case TipoEquipamento.bilevel:
+        return 'bilevel';
+      case TipoEquipamento.autocpap:
+        return 'autocpap';
+      case TipoEquipamento.avap:
+        return 'avaps';
     }
   }
   String get imagens{
@@ -251,6 +266,12 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
       return 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg';
     case TipoEquipamento.cpap:
       return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/cpap-basico-airsense-s10-com-umidificador-integrado-resmed-916.png';
+    case TipoEquipamento.autocpap:
+      return 'https://cdn.awsli.com.br/600x450/49/49309/produto/41467334/7a540efde2.jpg';
+    case TipoEquipamento.bilevel:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMjEvMDMvMDkvMDlfMjBfMzNfODE0X2JpcGFwX3loXzczMF9nYXNsaXZlX3l1d2VsbC5qcGciXSxbInAiLCJ0aHVtYiIsIjQwMHg0MDA%2BIl1d/bipap-yh-730-gaslive-yuwell.jpg';
+    case TipoEquipamento.avap:
+      return 'https://cdn.awsli.com.br/600x450/437/437629/produto/21439696/6beb7653fe.jpg';
   }  
   }
 }

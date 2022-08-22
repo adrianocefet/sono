@@ -226,6 +226,7 @@ class FirebaseService {
         {
           "status": StatusDoEquipamento.disponivel.emString,
           "paciente_responsavel": FieldValue.delete(),
+          "alterado_por": FieldValue.delete(),
           "data_de_expedicao": FieldValue.delete(),
         },
       );
