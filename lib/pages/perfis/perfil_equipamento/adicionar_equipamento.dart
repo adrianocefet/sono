@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/form_tamanho.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/helpers/registro_equipamento_helper.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';

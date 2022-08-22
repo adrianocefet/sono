@@ -8,6 +8,7 @@ import 'package:sono/utils/models/user_model.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/deletar_equipamento.dart';
 import '../../../../utils/models/equipamento.dart';
+import '../../../../utils/models/paciente.dart';
 import '../../../../utils/services/firebase.dart';
 import '../tela_equipamento.dart';
 
@@ -104,7 +105,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                         alignment: Alignment.center,
                                         height: 30,
                                         width: 30,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: Constantes.corAzulEscuroPrincipal,
                                           shape: BoxShape.circle,
                                         ),
@@ -124,7 +125,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                   ],
                                   
                                 ),
-                                SizedBox(width: 10,),
+                                const SizedBox(width: 10,),
                                 Expanded(
                                     child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -133,8 +134,8 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                             equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow?
                                             Column(
                                               children: [
-                                                Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                SizedBox(height: 8,),                    
+                                                const Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                const SizedBox(height: 8,),                    
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     border: Border.all(width: 1,color: Constantes.corAzulEscuroPrincipal,),
@@ -149,23 +150,36 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                             ):Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text("Fabricante",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                    Text(equipamento.fabricante,style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
+                                                    const Text("Fabricante",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                    Text(equipamento.fabricante,style: const TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
                                                   ],
                                                 ),   
                                             
                                             Visibility(
                                               visible: equipamento.status==StatusDoEquipamento.emprestado,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:8.0),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Paciente emprestado",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                    Text(equipamento.idPacienteResponsavel??"Sem nome",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
-                                                  ],
-                                                ),
-                                              )),
+                                              child: StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
+                                                stream: FirebaseService().streamInfoPacientePorID(equipamento.idPacienteResponsavel??'N/A'),
+                                                builder: (context, snapshot) {
+                                                  switch (snapshot.connectionState) {
+                                                    case ConnectionState.none:
+                                                    case ConnectionState.waiting:
+                                                      return const Center(
+                                                        child: CircularProgressIndicator(),
+                                                      );
+                                                    default:
+                                                  Paciente pacienteEmprestado = Paciente.porDocumentSnapshot(snapshot.data!);
+                                                  return Padding(
+                                                    padding: const EdgeInsets.only(top:8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        const Text("Paciente emprestado",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                        Text(pacienteEmprestado.nomeCompleto,style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
+                                                      ],
+                                                    ),
+                                                  );
+                                                }
+                                              })),
                                             Visibility(
                                               visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                               child: Padding(
@@ -173,7 +187,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text("Previsão para entrega",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                    const Text("Previsão para entrega",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
                                                     Text(equipamento.dataDeDevolucaoEmStringFormatada??"Indefinida",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
                                                   ],
                                                 ),
@@ -185,27 +199,15 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text("Data de despache",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
+                                                    const Text("Data de despache",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
                                                     Text(equipamento.dataDeExpedicaoEmString,style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
-                                                  ],
-                                                ),
-                                              )),
-                                            Visibility(
-                                              visible: equipamento.status==StatusDoEquipamento.emprestado,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:8.0),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Médico responsável",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                    Text(equipamento.idPacienteResponsavel??"Sem nome",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w300,color: Colors.black),),
                                                   ],
                                                 ),
                                               )),
                                           ],
                                         ),
                                       ),
-                                Icon(Icons.arrow_forward_ios,color: Constantes.corAzulEscuroPrincipal,)
+                                const Icon(Icons.arrow_forward_ios,color: Constantes.corAzulEscuroPrincipal,)
                               ],
                             ),
                           )

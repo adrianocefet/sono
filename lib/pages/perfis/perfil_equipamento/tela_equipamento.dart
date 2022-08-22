@@ -430,63 +430,103 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ),
                                   Visibility(
                                     visible: equipamento.status==StatusDoEquipamento.emprestado,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                  child: Image.network(
-                                                    equipamento.idPacienteResponsavel??"https://cdn-icons-png.flaticon.com/512/17/17004.png",
-                                                    width: 50,
-                                                    height: 50,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                    child: StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
+                                      stream: FirebaseService().streamInfoPacientePorID(equipamento.idPacienteResponsavel??'N/A'),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                          case ConnectionState.waiting:
+                                            return const Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          default:
+                                        Paciente pacienteEmprestado = Paciente.porDocumentSnapshot(snapshot.data!);
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.circular(25),
+                                                      child: Image.network(
+                                                        pacienteEmprestado.urlFotoDePerfil??model.semimagem,
+                                                        width: 50,
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 20,),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context).size.width * 0.6,
+                                                      child: Text(
+                                                        pacienteEmprestado.nomeCompleto,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 2,
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                const SizedBox(width: 20,),
-                                                SizedBox(
-                                                  width:
-                                                      MediaQuery.of(context).size.width * 0.6,
-                                                  child: Text(
-                                                    equipamento.idPacienteResponsavel??"Sem nome",
-                                                    overflow: TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: const TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold),
-                                                  ),
+                                                const Divider(),
+                                              const Padding(
+                                                padding: EdgeInsets.only(top:8.0),
+                                                child: Text("Data de expedição",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Constantes.corAzulEscuroSecundario,
+                                                    decoration: TextDecoration.underline
                                                 ),
-                                              ],
-                                            ),
-                                            const Divider(),
-                                          const Padding(
-                                            padding: EdgeInsets.only(top:8.0),
-                                            child: Text("Médico responsável",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Constantes.corAzulEscuroSecundario ,
-                                                decoration: TextDecoration.underline
-                                            ),
-                                            ),
+                                                ),
+                                              ),
+                                              Text(equipamento.dataDeExpedicaoEmString),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:8.0),
+                                                child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(18.0),
+                                                          )),
+                                                      onPressed: () async {
+                                                                    try {
+                                                                      await equipamento
+                                                                        .solicitarDevolucao(
+                                                                          pacienteEmprestado,model);
+                                                                    } catch (e) {
+                                                                      mostrarMensagemErro(
+                                                                          context,
+                                                                          e.toString());
+                                                                    }
+                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                        const SnackBar(
+                                                                          backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                                          content: Text(
+                                                                            "Solicitação enviada à dispensação!"
+                                                                          ),
+                                                                        ),
+                                                                    );
+                                                                  },
+                                                      child: const Text(
+                                                        "Solicitar devolução",
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(color: Colors.black),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(equipamento.idPacienteResponsavel??"Sem nome"),
-                                          const Padding(
-                                            padding: EdgeInsets.only(top:8.0),
-                                            child: Text("Data expedição",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Constantes.corAzulEscuroSecundario,
-                                                decoration: TextDecoration.underline
-                                            ),
-                                            ),
-                                          ),
-                                          Text(equipamento.dataDeExpedicaoEmString),
-                                        ],
-                                      ),
-                                    ),
+                                        );
+                                      }
+                                    })
                                   ),
                                   Visibility(
                                     visible: equipamento.status==StatusDoEquipamento.manutencao || equipamento.status==StatusDoEquipamento.desinfeccao,
@@ -553,39 +593,39 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             ),
                                           ),
                                           Text(equipamento.dataDeExpedicaoEmString),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(18.0),
+                                                    )),
+                                                onPressed: () async {
+                                                              try {
+                                                                equipamento
+                                                                    .disponibilizar();
+                                                                equipamento.status =
+                                                                    StatusDoEquipamento
+                                                                        .disponivel;
+                                                              } catch (e) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    e.toString());
+                                                              }
+                                                            },
+                                                child: const Text(
+                                                  "Disponibilizar",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: const Color.fromRGBO(97, 253, 125, 1),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                            )),
-                                        onPressed: () async {
-                                                      try {
-                                                        equipamento
-                                                            .disponibilizar();
-                                                        equipamento.status =
-                                                            StatusDoEquipamento
-                                                                .disponivel;
-                                                      } catch (e) {
-                                                        mostrarMensagemErro(
-                                                            context,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                        child: const Text(
-                                          "Disponibilizar",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
                                       ),
                                     ),
                                   ),

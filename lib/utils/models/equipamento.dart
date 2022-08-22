@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:sono/globais/global.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/tamanho_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -156,6 +154,9 @@ class Equipamento {
 
   Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
       await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
+
+  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario) async =>
+      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario);
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);

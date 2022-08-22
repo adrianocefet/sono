@@ -83,7 +83,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                                     document
                                                         as DocumentSnapshot<Map<String, dynamic>>);
                                                 return FittedBox(
-                                                  fit: BoxFit.fitWidth,
+                                                  fit: BoxFit.fitHeight,
                                                   child: OutlinedButton(
                                                     style: OutlinedButton.styleFrom(backgroundColor: Colors.white),
                                                     onPressed: () {
@@ -104,21 +104,23 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                                                 ),
                                                               ),
                                                             ),
-                                                            SizedBox(height: 4,),
-                                                            ConstrainedBox(constraints: 
-                                                                      BoxConstraints(
-                                                                        minWidth: MediaQuery.of(context).size.width * 0.1,
-                                                                        maxWidth: MediaQuery.of(context).size.width * 0.2),
-                                                                        child: Text(
-                                                                          paciente.nomeCompleto,
-                                                                          style: TextStyle(
-                                                                            fontSize: MediaQuery.of(context).size.width * 0.03,
-                                                                            fontWeight: FontWeight.w300,
-                                                                            color: Colors.black
-                                                                          ),
-                                                                          textAlign: TextAlign.center,
-                                                                          softWrap: true,
-                                                                          overflow: TextOverflow.visible,)),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical:8.0),
+                                                              child: ConstrainedBox(constraints: 
+                                                                        BoxConstraints(
+                                                                          minWidth: MediaQuery.of(context).size.width * 0.15,
+                                                                          maxWidth: MediaQuery.of(context).size.width * 0.15),
+                                                                          child: Text(
+                                                                            paciente.nomeCompleto,
+                                                                            style: TextStyle(
+                                                                              fontSize: MediaQuery.of(context).size.width * 0.03,
+                                                                              fontWeight: FontWeight.w300,
+                                                                              color: Colors.black
+                                                                            ),
+                                                                            textAlign: TextAlign.center,
+                                                                            softWrap: true,
+                                                                            overflow: TextOverflow.visible,)),
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
