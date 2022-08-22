@@ -233,38 +233,23 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           height: 20,
                                         ),
                                       const Text(
-                                    "Tamanho",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(221, 171, 171, 171)),
-                                                          ),
-                                    const Divider(),
-                                    Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: MediaQuery.of(context).size.width
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Constantes.corAzulEscuroPrincipal,
+                                      "Tamanho",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(221, 171, 171, 171)),
+                                                            ),
+                                      const Divider(),
+                                      Text(
+                                        equipamento.tamanho??'N/A',
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                            fontSize: 12),
                                       ),
-                                      color: Constantes.corAzulEscuroSecundario,
-                                    ),
-                                    alignment: Alignment.center,
-                                    //height: 20,
-                                    //width: 40,
-                                    child: Text(
-                                      equipamento.tamanho??'N/A',
-                                      softWrap: true,
-                                      overflow: TextOverflow.visible,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontSize: 15),
-                                    ),
-                                                          ),
                                     ],
                                                           ),
                                   ),

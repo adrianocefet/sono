@@ -131,27 +131,16 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow?
+                                            if(equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow)
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
-                                                const SizedBox(height: 8,),                    
-                                                Container(
-                                                  constraints: BoxConstraints(
-                                                    maxWidth: MediaQuery.of(context).size.width*0.5
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(width: 1,color: Constantes.corAzulEscuroPrincipal,),
-                                                    color: Constantes.corAzulEscuroSecundario,
-                                                  ),
-                                                  alignment: Alignment.center,
-                                                  height: 15,
-                                                  //width: 30,
-                                                  child: Text(equipamento.tamanho??"N/A",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 10),softWrap: true,overflow: TextOverflow.fade,),
-                                                ),
+                                                const Text("Tamanho",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),                  
+                                                Text(equipamento.tamanho??"N/A",style: const TextStyle(fontWeight: FontWeight.w300,color: Colors.black,fontSize: 10),softWrap: true,overflow: TextOverflow.fade,),
                                               ],
-                                            ):Column(
+                                            ),
+                                            const SizedBox(height: 8,),
+                                            Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const Text("Fabricante",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Color.fromARGB(221, 137, 137, 137),decoration: TextDecoration.underline),),
