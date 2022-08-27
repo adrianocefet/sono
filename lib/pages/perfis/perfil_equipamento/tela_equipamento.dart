@@ -562,7 +562,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 ),
                                               ],
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                           Visibility(
                                             visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                             child: Column(
@@ -678,6 +678,78 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                           ),
                         ),
                         Visibility(
+                          visible: equipamento.informacoesTecnicas!=null,
+                          child: Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(width: 1)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const 
+                                        BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        color: Constantes.corAzulEscuroSecundario,),
+                                        height: 30,
+                                        child: const Text("Informações técnicas",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                          equipamento.informacoesTecnicas==''?'Clique em editar para adicionar informações':equipamento.informacoesTecnicas,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ),
+                        Visibility(
+                          visible: equipamento.higieneECuidadosPaciente!=null&&equipamento.higieneECuidadosPaciente!='',
+                          child: Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(width: 1)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const 
+                                        BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        color: Constantes.corAzulEscuroSecundario,),
+                                        height: 30,
+                                        child: const Text("Higiene e informações ao paciente",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                          equipamento.higieneECuidadosPaciente??'Clique em editar para adicionar informações',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ),
+                        Visibility(
                           // ignore: unrelated_type_equality_checks
                           visible: _testarUrl(equipamento.videoInstrucional??'')==true,
                           child: Padding(
@@ -720,6 +792,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                         Padding(
                             padding: const EdgeInsets.only(top:8.0),
                             child: AnimatedContainer(
+                              curve: Curves.easeIn,
                               constraints: BoxConstraints(
                                 minHeight: MediaQuery.of(context).size.height*0.1
                               ),
@@ -727,7 +800,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(width: 1)),
-                              duration: Duration(seconds: 2),
+                              duration: Duration(milliseconds: 240),
                               child: Column(
                                 children: [
                                   Container(

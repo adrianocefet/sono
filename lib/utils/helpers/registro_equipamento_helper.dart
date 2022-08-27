@@ -33,7 +33,7 @@ class RegistroEquipamentoHelper {
       ),
       Pergunta(
         'Descrição*',
-        TipoPergunta.extensoCadastros,
+        TipoPergunta.multiLinhasCadastros,
         [],
         '',
         "descrição",
@@ -45,6 +45,7 @@ class RegistroEquipamentoHelper {
         [],
         '',
         "manual",
+        textoAjuda: 'Exemplo: https://www.cpaps.com.br/media/mconnect_uploadfiles/m/a/manual_cpap_airsense_resmed.pdf'
       ),
       Pergunta(
         'Vídeo instrucional',
@@ -52,13 +53,32 @@ class RegistroEquipamentoHelper {
         [],
         '',
         "video_instrucional",
+        textoAjuda: 'Exemplo: https://youtu.be/8SnRSVeJeAY'
+      ),
+      Pergunta(
+        'Informações técnicas e conectividade*',
+        TipoPergunta.multiLinhasCadastros,
+        [],
+        '',
+        "informacoes_tecnicas",
+        textoAjuda: 'Conectividade e telemonitoramento, modos ajustáveis, dispositivos de conforto e acessórios.',
+        validador: (value) => value != '' ? null : 'Dado obrigatório.',
+      ),
+      Pergunta(
+        'Higienização e informações ao paciente',
+        TipoPergunta.multiLinhasCadastros,
+        [],
+        '',
+        "higiene_e_cuidados_paciente",
+        textoAjuda: 'Higiene, cuidados pertinentes a serem apresentados ao paciente, informações sobre os filtros, fonte de energia.'
       ),
       Pergunta(
         'Observações',
-        TipoPergunta.extensoCadastros,
+        TipoPergunta.multiLinhasCadastros,
         [],
         '',
         "observacao",
+        textoAjuda: 'Informações adicionais.'
       ),
       Pergunta(
         'Tamanho*',

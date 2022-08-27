@@ -7,6 +7,7 @@ class Pergunta {
   List<int> pesos = [];
   String dominio = '';
   int? resposta;
+  String? textoAjuda;
   String? respostaExtenso;
   List respostaLista = [];
   bool? respostaBooleana;
@@ -20,6 +21,7 @@ class Pergunta {
     this.pesos,
     this.dominio,
     this.codigo, {
+    this.textoAjuda,
     this.opcoes,
     this.validador,
   });
@@ -31,6 +33,7 @@ class Pergunta {
     dominio = base['dominio'];
     codigo = base['codigo'];
     validador = base['validador'];
+    textoAjuda = base['texto_ajuda'];
     opcoes = tipo == TipoPergunta.marcar
         ? [
             "1 - Nenhuma",
@@ -72,6 +75,7 @@ enum TipoPergunta {
   numericaCadastros,
   extensoNumericoCadastros,
   extensoCadastros,
+  multiLinhasCadastros,
   marcar,
   afirmativa,
   afirmativaCadastros,

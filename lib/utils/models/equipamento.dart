@@ -11,6 +11,8 @@ class Equipamento {
   late final String fabricante;
   late final TipoEquipamento tipo;
   late final String hospital;
+  late final String informacoesTecnicas;
+  late final String? higieneECuidadosPaciente;
   late final String? alteradoPor;
   late final String? descricao;
   late final String? observacao;
@@ -56,6 +58,8 @@ class Equipamento {
         "hospital": hospital,
         "fabricante":fabricante,
         "url_foto": urlFotoDePerfil,
+        "informacoes_tecnicas":informacoesTecnicas,
+        "higiene_e_cuidados_paciente": higieneECuidadosPaciente,
         "paciente_responsavel": idPacienteResponsavel,
         "alterado_por": alteradoPor,
         "video_instrucional": videoInstrucional,
@@ -75,26 +79,29 @@ class Equipamento {
   });
 
   Equipamento.porMap(equipamentoInfoMap) {
-    nome = equipamentoInfoMap["nome"] ?? equipamentoInfoMap["Nome"];
+    nome = equipamentoInfoMap["nome"];
     id = equipamentoInfoMap["id"];
     idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
     urlFotoDePerfil =
         equipamentoInfoMap["url_foto"];
     descricao =
-        equipamentoInfoMap["descrição"] ?? equipamentoInfoMap["Descrição"];
-    tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"]??equipamentoInfoMap["Tipo"])!;
+        equipamentoInfoMap["descrição"];
+    tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"])!;
     hospital=equipamentoInfoMap["hospital"];
+    equipamentoInfoMap["informacoes_tecnicas"]!=null?
+    informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"]:informacoesTecnicas='';
+    equipamentoInfoMap["higiene_e_cuidados_paciente"]!=null?
+    higieneECuidadosPaciente = equipamentoInfoMap["higiene_e_cuidados_paciente"]:higieneECuidadosPaciente=null;
     fabricante =
         equipamentoInfoMap["fabricante"];
     alteradoPor =
         equipamentoInfoMap["alterado_por"];
     manualPdf =
-        equipamentoInfoMap["manual"] ?? equipamentoInfoMap["Manual"];
+        equipamentoInfoMap["manual"];
     videoInstrucional =
-        equipamentoInfoMap["video_instrucional"] ?? equipamentoInfoMap["Video_instrucional"];
+        equipamentoInfoMap["video_instrucional"];
      status = _lerStatusDoEquipamentoDoBancoDeDados(
       equipamentoInfoMap["status"] ??
-          equipamentoInfoMap["Status"] ??
           "disponível",
     )!;
      
@@ -128,10 +135,16 @@ class Equipamento {
 
   TipoEquipamento? _lerTipoDeEquipamentoDoBancoDeDados(String tipo) {
     switch (tipo) {
+      case "cpap":
+        return TipoEquipamento.cpap;
+      case 'bilevel':  
+        return TipoEquipamento.bilevel;
+      case 'autocpap': 
+        return TipoEquipamento.autocpap;
+      case 'avaps':  
+        return TipoEquipamento.avap; 
       case "almofada":
         return TipoEquipamento.almofada;
-      case "aparelho_pap":
-        return TipoEquipamento.pap;
       case "traqueia":
         return TipoEquipamento.traqueia;
       case "mascara_nasal":
@@ -182,7 +195,6 @@ enum TipoEquipamento {
   traqueia,
   fixador,
   almofada,
-  pap,
   cpap,
   bilevel,
   avap,
@@ -194,8 +206,6 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
     switch (this) {
       case TipoEquipamento.almofada:
         return "Almofada";
-      case TipoEquipamento.pap:
-        return "Aparelho PAP";
       case TipoEquipamento.traqueia:
         return "Traqueia";
       case TipoEquipamento.fixador:
@@ -222,8 +232,6 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
     switch (this) {
       case TipoEquipamento.almofada:
         return "almofada";
-      case TipoEquipamento.pap:
-        return "aparelho_pap";
       case TipoEquipamento.traqueia:
         return "traqueia";
       case TipoEquipamento.fixador:
@@ -256,8 +264,6 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
       return 'https://a3.vnda.com.br/650x/espacoquallys/2019/09/13/10252-mascara-cpap-pillow-breeze-sefam-5146.jpg?v=1568415183';
     case TipoEquipamento.facial:
       return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTMvMDUvMjEvMjFfNDVfMjBfNDk5X0ZpdExpZmUuanBnIl1d/FitLife.jpg';
-    case TipoEquipamento.pap:
-      return 'https://a4.vnda.com.br/1200x/pedeapoio/2019/10/02/31233-aparelho-cpap-apap-reswell-automatico-completo-com-mascara-n2-2550.png?v=1570018948';
     case TipoEquipamento.traqueia:
       return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/mini-traqueia-para-mascara-swift-fx-resmed-720.jpg';
     case TipoEquipamento.fixador:

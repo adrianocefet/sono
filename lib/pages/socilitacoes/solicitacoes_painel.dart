@@ -71,13 +71,13 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                              const Padding(
+                              Padding(
                               padding: EdgeInsets.only(top:8.0,left: 15),
                               child: 
                                 Text('Motivo',
-                                  style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                                  style: TextStyle(color: corStatus,fontSize: 15,fontWeight: FontWeight.bold),),
                             ),
-                            const Divider(),
+                            Divider(color: corStatus,),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                               child: Text(solicitacao.motivo??'Sem motivo definido!'),
@@ -91,13 +91,13 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                              const Padding(
+                              Padding(
                               padding: EdgeInsets.only(top:8.0,left: 15),
                               child: 
                                 Text('Data de resposta',
-                                  style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                                  style: TextStyle(color: corStatus,fontSize: 15,fontWeight: FontWeight.bold),),
                             ),
-                            const Divider(),
+                            Divider(color: corStatus,),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                               child: Text(solicitacao.dataDeRespostaEmString),

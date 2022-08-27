@@ -10,6 +10,7 @@ class Solicitacao{
   late Confirmacao confirmacao;
   late final String idSolicitante;
   late final DateTime dataDaSolicitacao;
+  late final String hospital;
   late final String? motivo;
   late final DateTime? dataDeResposta;
 
@@ -36,6 +37,7 @@ class Solicitacao{
     idEquipamento = infoMap['equipamento'];
     idPaciente = infoMap['paciente'];
     idSolicitante = infoMap['solicitante'];
+    hospital = infoMap['hospital'];
     confirmacao = _lerConfirmacao(infoMap['confirmacao']??'pendente')!;
     motivo = infoMap['motivo'];
     infoMap["data_da_solicitacao"]!=null?

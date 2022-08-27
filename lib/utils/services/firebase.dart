@@ -166,7 +166,8 @@ class FirebaseService {
           "paciente": paciente.id,
           "solicitante": usuario.id,
           "data_da_solicitacao": FieldValue.serverTimestamp(),
-          "confirmacao": "pendente"
+          "confirmacao": "pendente",
+          "hospital": equipamento.hospital
         },
       );
     } catch (e) {
@@ -187,7 +188,8 @@ class FirebaseService {
           "paciente": paciente.id,
           "solicitante": usuario.id,
           "data_da_solicitacao": FieldValue.serverTimestamp(),
-          "confirmacao": "pendente"
+          "confirmacao": "pendente",
+          "hospital": equipamento.hospital
         },
       );
     } catch (e) {
