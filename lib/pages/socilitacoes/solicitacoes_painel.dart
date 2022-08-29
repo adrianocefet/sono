@@ -110,9 +110,9 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         padding: EdgeInsets.only(top:8.0,left: 15),
                         child: 
                           Text('Solicitante',
-                            style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                            style: TextStyle(color: Constantes.corAzulEscuroPrincipal,fontSize: 15,fontWeight: FontWeight.bold),),
                       ),
-                      const Divider(),
+                      const Divider(color: Constantes.corAzulEscuroPrincipal,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                         child: Text(solicitacao.idSolicitante),
@@ -121,9 +121,9 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         padding: EdgeInsets.only(top:8.0,left: 15),
                         child: 
                           Text('Data da solicitação',
-                            style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                            style: TextStyle(color: Constantes.corAzulEscuroPrincipal,fontSize: 15,fontWeight: FontWeight.bold),),
                       ),
-                      const Divider(),
+                      const Divider(color: Constantes.corAzulEscuroPrincipal,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                         child: Text(solicitacao.dataDaSolicitacaoEmString),
@@ -132,9 +132,9 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         padding: EdgeInsets.only(top:8.0,left: 15),
                         child: 
                           Text('Equipamento',
-                            style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                            style: TextStyle(color: Constantes.corAzulEscuroPrincipal,fontSize: 15,fontWeight: FontWeight.bold),),
                       ),
-                      const Divider(),
+                      const Divider(color: Constantes.corAzulEscuroPrincipal,),
                       StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
                         stream: FirebaseService.streamEquipamento(solicitacao.idEquipamento),
                         builder: (context, snapshot) {
@@ -163,9 +163,9 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                       const Padding(
                         padding: EdgeInsets.only(top:8.0,left: 15),
                         child: Text('Paciente',
-                          style: TextStyle(color: Color.fromARGB(221, 171, 171, 171),fontSize: 15,fontWeight: FontWeight.bold),),
+                          style: TextStyle(color: Constantes.corAzulEscuroPrincipal,fontSize: 15,fontWeight: FontWeight.bold),),
                       ),
-                      const Divider(),
+                      const Divider(color: Constantes.corAzulEscuroPrincipal,),
                       StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
                         stream: FirebaseService().streamInfoPacientePorID(solicitacao.idPaciente),
                         builder: (context, snapshot) {
