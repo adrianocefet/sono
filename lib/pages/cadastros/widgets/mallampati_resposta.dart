@@ -54,13 +54,13 @@ class _RespostaExtensoState extends State<RespostaMallampati> {
                     onSaved: (value) {
                       setState(
                         () {
-                          valido = (widget.pergunta.resposta ??
+                          valido = (widget.pergunta.respostaNumerica ??
                                       widget.autoPreencher) !=
                                   null
                               ? true
                               : false;
-                          widget.pergunta.setResposta(
-                              widget.pergunta.resposta ?? widget.autoPreencher);
+                          widget.pergunta.setRespostaNumerica(
+                              widget.pergunta.respostaNumerica ?? widget.autoPreencher);
                         },
                       );
                     },
@@ -146,7 +146,7 @@ class _SelecionarMallampatiState extends State<_SelecionarMallampati> {
   }
 
   bool get estaSelecionado =>
-      (widget.pergunta.resposta ?? widget.autoPreencher) == widget.indice;
+      (widget.pergunta.respostaNumerica ?? widget.autoPreencher) == widget.indice;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,7 @@ class _SelecionarMallampatiState extends State<_SelecionarMallampati> {
         ),
       ),
       onTap: () {
-        widget.pergunta.setResposta(widget.indice);
+        widget.pergunta.setRespostaNumerica(widget.indice);
         widget.atualizarWidget();
       },
     );

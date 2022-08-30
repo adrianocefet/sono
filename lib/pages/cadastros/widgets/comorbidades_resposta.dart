@@ -74,21 +74,21 @@ class _RespostaComorbidadesState extends State<RespostaComorbidades> {
                   ),
                 ),
                 for (String comorbidade in comorbidadesSelecionadas)
-                  AdicionarComorbidade(
+                  _AdicionarComorbidade(
                     pergunta: widget.pergunta,
                     autoPreencher: comorbidade,
                     atualizarWidget: () => setState(() {}),
                   ),
                 Visibility(
                   visible: !widget.pergunta.respostaLista.contains('Nenhuma'),
-                  child: AdicionarComorbidade(
+                  child: _AdicionarComorbidade(
                     pergunta: widget.pergunta,
                     atualizarWidget: () => setState(() {}),
                   ),
                 ),
                 Visibility(
                   visible: !widget.pergunta.respostaLista.contains('Nenhuma'),
-                  child: OutrasComorbidades(
+                  child: _OutrasComorbidades(
                     pergunta: widget.pergunta,
                     autoPreencher: widget.autoPreencher,
                   ),
@@ -112,10 +112,10 @@ class _RespostaComorbidadesState extends State<RespostaComorbidades> {
   }
 }
 
-class ListaDeComorbidades extends StatelessWidget {
+class _ListaDeComorbidades extends StatelessWidget {
   final Pergunta pergunta;
   final bool comorbidadeJaSelecionada;
-  const ListaDeComorbidades(
+  const _ListaDeComorbidades(
       {Key? key,
       required this.pergunta,
       required this.comorbidadeJaSelecionada})
@@ -198,7 +198,7 @@ class ListaDeComorbidades extends StatelessWidget {
                             ].contains(opcao)) {
                               String? complemento = await showDialog(
                                 context: context,
-                                builder: (context) => ComplementoComorbidade(
+                                builder: (context) => _ComplementoComorbidade(
                                   texto: opcao == "Transplante"
                                       ? "Qual órgão?"
                                       : "Qual?",
@@ -254,12 +254,12 @@ class ListaDeComorbidades extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class AdicionarComorbidade extends StatefulWidget {
+class _AdicionarComorbidade extends StatefulWidget {
   final Pergunta pergunta;
   final String? autoPreencher;
   final void Function() atualizarWidget;
-  String? comorbidadeSelecionada;
-  AdicionarComorbidade(
+  late String? comorbidadeSelecionada;
+  _AdicionarComorbidade(
       {Key? key,
       this.autoPreencher,
       required this.pergunta,
@@ -269,10 +269,10 @@ class AdicionarComorbidade extends StatefulWidget {
   }
 
   @override
-  State<AdicionarComorbidade> createState() => _AdicionarComorbidadeState();
+  State<_AdicionarComorbidade> createState() => _AdicionarComorbidadeState();
 }
 
-class _AdicionarComorbidadeState extends State<AdicionarComorbidade> {
+class _AdicionarComorbidadeState extends State<_AdicionarComorbidade> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -281,7 +281,7 @@ class _AdicionarComorbidadeState extends State<AdicionarComorbidade> {
         onPressed: () async {
           dynamic selecao = await showDialog(
             context: context,
-            builder: (context) => ListaDeComorbidades(
+            builder: (context) => _ListaDeComorbidades(
               pergunta: widget.pergunta,
               comorbidadeJaSelecionada: widget.comorbidadeSelecionada != null,
             ),
@@ -344,16 +344,16 @@ class _AdicionarComorbidadeState extends State<AdicionarComorbidade> {
   }
 }
 
-class ComplementoComorbidade extends StatefulWidget {
+class _ComplementoComorbidade extends StatefulWidget {
   final String texto;
-  const ComplementoComorbidade({Key? key, required this.texto})
+  const _ComplementoComorbidade({Key? key, required this.texto})
       : super(key: key);
 
   @override
-  State<ComplementoComorbidade> createState() => _ComplementoComorbidadeState();
+  State<_ComplementoComorbidade> createState() => _ComplementoComorbidadeState();
 }
 
-class _ComplementoComorbidadeState extends State<ComplementoComorbidade> {
+class _ComplementoComorbidadeState extends State<_ComplementoComorbidade> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -446,12 +446,12 @@ class _ComplementoComorbidadeState extends State<ComplementoComorbidade> {
   }
 }
 
-class OutrasComorbidades extends StatefulWidget {
+class _OutrasComorbidades extends StatefulWidget {
   final Pergunta pergunta;
   final List? autoPreencher;
   final TextEditingController _controller = TextEditingController();
 
-  OutrasComorbidades(
+  _OutrasComorbidades(
       {Key? key, required this.pergunta, required this.autoPreencher})
       : super(key: key) {
     String? respostaOutros = autoPreencher?.firstWhere(
@@ -462,10 +462,10 @@ class OutrasComorbidades extends StatefulWidget {
   }
 
   @override
-  State<OutrasComorbidades> createState() => _OutrasComorbidadesState();
+  State<_OutrasComorbidades> createState() => _OutrasComorbidadesState();
 }
 
-class _OutrasComorbidadesState extends State<OutrasComorbidades> {
+class _OutrasComorbidadesState extends State<_OutrasComorbidades> {
   get nenhumaComorbidade => widget.pergunta.respostaLista.contains('Nenhuma');
 
   @override

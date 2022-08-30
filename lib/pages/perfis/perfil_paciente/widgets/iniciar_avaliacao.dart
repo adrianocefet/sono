@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/avaliacao/selecao_exame/selecao_exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 class IniciarAvaliacao extends StatelessWidget {
@@ -80,7 +80,7 @@ class IniciarAvaliacao extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const Avaliacao(),
+                  builder: (context) => SelecaoDeExames(paciente: paciente),
                 ),
               );
             },

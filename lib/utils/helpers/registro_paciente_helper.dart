@@ -26,7 +26,7 @@ class RegistroPacienteHelper {
           respostas[p.codigo] = p.respostaLista;
           break;
         case TipoPergunta.mallampati:
-          respostas[p.codigo] = p.resposta;
+          respostas[p.codigo] = p.respostaNumerica;
           break;
         case TipoPergunta.afirmativaCadastros:
           respostas[p.codigo] = p.respostaBooleana;

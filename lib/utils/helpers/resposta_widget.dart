@@ -7,13 +7,14 @@ import 'package:sono/pages/cadastros/widgets/dropdown_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/extenso_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/foto_perfil_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/mallampati_resposta.dart';
-import 'package:sono/pages/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
+import 'package:sono/pages/cadastros/widgets/multipla_cadastros_resposta.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import '../../pages/questionarios/widgets/afirmativa_resposta.dart';
-import '../../pages/questionarios/widgets/dropdown_resposta.dart';
-import '../../pages/questionarios/widgets/extenso_resposta.dart';
-import '../../pages/questionarios/widgets/multipla_resposta.dart';
+import '../../pages/avaliacao/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
+import '../../pages/avaliacao/questionarios/widgets/afirmativa_resposta.dart';
+import '../../pages/avaliacao/questionarios/widgets/dropdown_resposta.dart';
+import '../../pages/avaliacao/questionarios/widgets/extenso_resposta.dart';
+import '../../pages/avaliacao/questionarios/widgets/multipla_resposta.dart';
 
 class RespostaWidget extends StatefulWidget {
   final Pergunta pergunta;
@@ -90,7 +91,7 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
                 widget.autoPreencher ?? widget.pergunta.respostaExtenso,
           );
         }
-      case TipoPergunta.extensoNumericoCadastros:
+      case TipoPergunta.numerica:
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
@@ -119,7 +120,7 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             autoPreencher: widget.autoPreencher,
           );
         }
-      case TipoPergunta.marcar:
+      case TipoPergunta.multiplaWHODAS:
         {
           return RespostaMultipla(
             pergunta: pergunta,
@@ -140,7 +141,8 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaAfirmativaCadastro(
             pergunta: pergunta,
-            autoPreencher: widget.autoPreencher ?? widget.pergunta.resposta,
+            autoPreencher:
+                widget.autoPreencher ?? widget.pergunta.respostaNumerica,
           );
         }
       case TipoPergunta.multipla:
@@ -169,6 +171,11 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
           pergunta: pergunta,
           passarPagina: widget.notifyParent as Future<void> Function(),
         );
+      case TipoPergunta.multiplaCadastros:
+        return RespostaMultiplaCadastros(
+          pergunta: pergunta,
+          autoPreencher: widget.autoPreencher ?? widget.pergunta.respostaLista,
+        );
       case TipoPergunta.comorbidades:
         return RespostaComorbidades(
           pergunta: pergunta,
@@ -177,7 +184,8 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
       case TipoPergunta.mallampati:
         return RespostaMallampati(
           pergunta: pergunta,
-          autoPreencher: widget.autoPreencher ?? widget.pergunta.resposta,
+          autoPreencher:
+              widget.autoPreencher ?? widget.pergunta.respostaNumerica,
           paciente: widget.paciente,
         );
       default:

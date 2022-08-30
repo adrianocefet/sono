@@ -1,18 +1,19 @@
 import 'dart:io';
 
 class Pergunta {
-  dynamic enunciado = '';
+  dynamic enunciado;
   TipoPergunta tipo = TipoPergunta.afirmativa;
-  dynamic codigo = '';
-  List<int> pesos = [];
-  String dominio = '';
-  int? resposta;
+  dynamic codigo;
+  List<int>? pesos;
+  String? dominio;
+  num? respostaNumerica;
   String? respostaExtenso;
   List respostaLista = [];
   bool? respostaBooleana;
-  List<String>? opcoes = [''];
+  List<String>? opcoes;
   String? Function(String? value)? validador;
   File? respostaArquivo;
+  String? unidade;
 
   Pergunta(
     this.enunciado,
@@ -22,6 +23,7 @@ class Pergunta {
     this.codigo, {
     this.opcoes,
     this.validador,
+    this.unidade,
   });
 
   Pergunta.pelaBase(base) {
@@ -31,7 +33,7 @@ class Pergunta {
     dominio = base['dominio'];
     codigo = base['codigo'];
     validador = base['validador'];
-    opcoes = tipo == TipoPergunta.marcar
+    opcoes = tipo == TipoPergunta.multiplaWHODAS
         ? [
             "1 - Nenhuma",
             "2 - Leve",
@@ -41,6 +43,38 @@ class Pergunta {
             "6 - Não se aplica"
           ]
         : base['opcoes'];
+    unidade = base['unidade'];
+  }
+
+  dynamic get respostaPadrao {
+    switch (tipo) {
+      case TipoPergunta.afirmativa:
+      case TipoPergunta.afirmativaCadastros:
+        return respostaBooleana;
+
+      case TipoPergunta.multiplaCadastros:
+      case TipoPergunta.comorbidades:
+        return respostaLista;
+
+      case TipoPergunta.data:
+      case TipoPergunta.dropdown:
+      case TipoPergunta.dropdownCadastros:
+      case TipoPergunta.multipla:
+      case TipoPergunta.extensoCadastros:
+      case TipoPergunta.extenso:
+      case TipoPergunta.extensoNumerico:
+        return respostaExtenso;
+
+      case TipoPergunta.numericaCadastros:
+      case TipoPergunta.numerica:
+      case TipoPergunta.mallampati:
+      case TipoPergunta.multiplaWHODAS:
+      case TipoPergunta.multiplaCondicionalBerlin:
+        return respostaNumerica;
+
+      case TipoPergunta.foto:
+        return respostaArquivo;
+    }
   }
 
   void setRespostaExtenso(String? respostaExtenso) =>
@@ -55,12 +89,10 @@ class Pergunta {
   void setRespostaBooleana(bool? respostaBooleana) =>
       this.respostaBooleana = respostaBooleana;
 
-  void setResposta(int? resposta) {
-    this.resposta = resposta;
-  }
+  void setRespostaNumerica(num? resposta) => respostaNumerica = resposta;
 
   void limparRespostas() {
-    setResposta(null);
+    setRespostaNumerica(null);
     setRespostaArquivo(null);
     setRespostaExtenso(null);
   }
@@ -70,12 +102,13 @@ enum TipoPergunta {
   extenso,
   extensoNumerico,
   numericaCadastros,
-  extensoNumericoCadastros,
+  numerica,
   extensoCadastros,
-  marcar,
   afirmativa,
   afirmativaCadastros,
   multipla,
+  multiplaCadastros,
+  multiplaWHODAS,
   multiplaCondicionalBerlin,
   data,
   dropdown,

@@ -21,7 +21,8 @@ class RespostaExtensoCadastro extends StatefulWidget {
     this.autoPreencher,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher == null ? "" : autoPreencher.toString();
+    _extensoController.text =
+        autoPreencher == null ? "" : autoPreencher.toString();
     _enabled = true;
   }
 
@@ -59,12 +60,22 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
                 ? TextInputType.number
                 : TextInputType.text,
             decoration: InputDecoration(
+              suffix: widget.pergunta.unidade == null
+                  ? null
+                  : Text(
+                      widget.pergunta.unidade!,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
               labelText: widget.pergunta.enunciado,
               filled: true,
               fillColor: Colors.white,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor, width: 1.2),
+                  color: Theme.of(context).primaryColor,
+                  width: 1.2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -82,9 +93,7 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
               ),
             ),
             onChanged: (value) {
-              if (value.length <= 1) {
-                setState(() {});
-              }
+              print(value);
             },
             onSaved: (String? value) {
               setState(
@@ -97,6 +106,10 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
                             ' ',
                           ),
                   );
+                  widget.pergunta.setRespostaNumerica(value.isEmpty
+                      ? null
+                      : int.tryParse(value.trim()) ??
+                          double.tryParse(value.replaceAll(',', '.').trim()));
                 },
               );
             },

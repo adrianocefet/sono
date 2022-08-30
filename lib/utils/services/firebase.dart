@@ -2,15 +2,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sono/pages/questionarios/berlin/questionario/berlin.dart';
-import 'package:sono/pages/questionarios/epworth/questionario/epworth_view.dart';
-import 'package:sono/pages/questionarios/goal/questionario/goal.dart';
-import 'package:sono/pages/questionarios/pittsburg/questionario/pittsburg_view.dart';
-import 'package:sono/pages/questionarios/sacs_br/questionario/sacs_br.dart';
-import 'package:sono/pages/questionarios/stop_bang/questionario/stop_bang.dart';
-import 'package:sono/pages/questionarios/whodas/questionario/whodas_view.dart';
+import 'package:sono/pages/avaliacao/questionarios/berlin/questionario/berlin.dart';
+import 'package:sono/pages/avaliacao/questionarios/epworth/questionario/epworth_view.dart';
+import 'package:sono/pages/avaliacao/questionarios/goal/questionario/goal.dart';
+import 'package:sono/pages/avaliacao/questionarios/pittsburg/questionario/pittsburg_view.dart';
+import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br.dart';
+import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang.dart';
+import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
-import '../../globais/global.dart';
 import '../models/equipamento.dart';
 import '../models/user_model.dart';
 
@@ -83,14 +82,13 @@ class FirebaseService {
         imageFile: fotoDePerfil,
       );
     } else {
-      urlImagem!=null?
-      await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento):null;
+      urlImagem != null
+          ? await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento)
+          : null;
     }
-    urlImagem!=null?
-    data['url_foto'] = urlImagem:null;
-    
-    await _db.collection(_stringEquipamento).doc(idEquipamento).update(data);
+    urlImagem != null ? data['url_foto'] = urlImagem : null;
 
+    await _db.collection(_stringEquipamento).doc(idEquipamento).update(data);
   }
 
   Future<String> adicionarEquipamentoAoBancoDeDados(
@@ -108,12 +106,8 @@ class FirebaseService {
         );
       }
       if (urlImagem.isNotEmpty) dadosDoEquipamento['url_foto'] = urlImagem;
-      
-      await _db
-          .collection(_stringEquipamento)
-          .doc()
-          .set(dadosDoEquipamento);
 
+      await _db.collection(_stringEquipamento).doc().set(dadosDoEquipamento);
     } catch (e) {
       rethrow;
     }
@@ -122,8 +116,7 @@ class FirebaseService {
   }
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> streamEquipamento(
-    String idEquipamento
-  ) {
+      String idEquipamento) {
     return FirebaseFirestore.instance
         .collection(_stringEquipamento)
         .doc(idEquipamento)
@@ -134,7 +127,7 @@ class FirebaseService {
     Equipamento equipamento,
     Paciente paciente,
     UserModel usuario,
-  )async{
+  ) async {
     try {
       await _db.collection("solicitacoes").doc().set(
         {
@@ -198,7 +191,8 @@ class FirebaseService {
     }
   }
 
-  Future<void> desinfectarEquipamento(Equipamento equipamento, UserModel usuario) async {
+  Future<void> desinfectarEquipamento(
+      Equipamento equipamento, UserModel usuario) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
@@ -212,7 +206,8 @@ class FirebaseService {
     }
   }
 
-  Future<void> repararEquipamento(Equipamento equipamento, UserModel usuario) async {
+  Future<void> repararEquipamento(
+      Equipamento equipamento, UserModel usuario) async {
     try {
       await _db.collection(_stringEquipamento).doc(equipamento.id).update(
         {
@@ -248,8 +243,8 @@ class FirebaseService {
         .collection(_stringEquipamento)
         .where("nome", isEqualTo: data['nome'])
         .where("hospital", isEqualTo: data["hospital"])
-        .where("tipo",isEqualTo: data["tipo"])
-        .where("status",isEqualTo: data["status"])
+        .where("tipo", isEqualTo: data["tipo"])
+        .where("status", isEqualTo: data["status"])
         .get();
 
     if (query.docs.isNotEmpty) idEquipamento = query.docs[0].id;

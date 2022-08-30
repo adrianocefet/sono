@@ -230,14 +230,14 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D1.1 - Concentrar-se para fazer alguma coisa durante dez minutos?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D1.1',
     'dominio': 'dom_1',
   },
   {
     'enunciado': 'D1.2 - Lembrar-se de fazer coisas importantes?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_1',
     'codigo': 'D1.2',
@@ -245,7 +245,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D1.3 - Analisar e encontrar soluções para problemas do dia-a-dia?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D1.3',
     'dominio': 'dom_1',
@@ -253,77 +253,77 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D1.4 - Aprender uma nova tarefa, por exemplo, como chegar a um lugar desconhecido?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D1.4',
     'dominio': 'dom_1',
   },
   {
     'enunciado': 'D1.5 - Compreender de forma geral o que as pessoas dizem?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_1',
     'codigo': 'D1.5',
   },
   {
     'enunciado': 'D1.6 - Começar e manter uma conversa?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_1',
     'codigo': 'D1.6',
   },
   {
     'enunciado': 'D2.1 - Ficar em pé por longos períodos como 30 minutos?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_2',
     'codigo': 'D2.1',
   },
   {
     'enunciado': 'D2.2 - Levantar-se a partir da posição sentada?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_2',
     'codigo': 'D2.2',
   },
   {
     'enunciado': 'D2.3 - Movimentar-se dentro de sua casa?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_2',
     'codigo': 'D2.3',
   },
   {
     'enunciado': 'D2.4 - Sair da sua casa?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_2',
     'codigo': 'D2.4',
   },
   {
     'enunciado': 'D2.5 - Andar por longas distâncias como por 1 quilômetro?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_2',
     'codigo': 'D2.5',
   },
   {
     'enunciado': 'D3.1 - Lavar seu corpo inteiro?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_3',
     'codigo': 'D3.1',
   },
   {
     'enunciado': 'D3.2 - Vestir-se?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_3',
     'codigo': 'D3.2',
   },
   {
     'enunciado': 'D3.3 - Comer?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_3',
     'codigo': 'D3.3',
@@ -331,49 +331,49 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D3.4 - Ficar sozinho sem a ajuda de outras pessoas por alguns dias?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D3.4',
     'dominio': 'dom_3',
   },
   {
     'enunciado': 'D4.1 - Lidar com pessoas que você não conhece?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_4',
     'codigo': 'D4.1',
   },
   {
     'enunciado': 'D4.2 - Manter uma amizade?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_4',
     'codigo': 'D4.2',
   },
   {
     'enunciado': 'D4.3 - Relacionar-se com pessoas que são próximas a você?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_4',
     'codigo': 'D4.3',
   },
   {
     'enunciado': 'D4.4 - Fazer novas amizades?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_4',
     'codigo': 'D4.4',
   },
   {
     'enunciado': 'D4.5 - Ter atividades sexuais?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_4',
     'codigo': 'D4.5',
   },
   {
     'enunciado': 'D5.1 - Cuidar das suas responsabilidades domésticas?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_51',
     'codigo': 'D5.1',
@@ -381,21 +381,21 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D5.2 - Fazer bem as suas tarefas domésticas mais importantes?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D5.2',
     'dominio': 'dom_51',
   },
   {
     'enunciado': 'D5.3 - Fazer todas as tarefas domésticas que você precisava?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_51',
     'codigo': 'D5.3',
   },
   {
     'enunciado': 'D5.4 - Fazer as tarefas domésticas na velocidade necessária?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_51',
     'codigo': 'D5.4',
@@ -418,7 +418,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   },
   {
     'enunciado': 'D5.5 - Suas atividades diárias do trabalho/escola?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'dominio': 'dom_52',
     'codigo': 'D5.5',
@@ -426,21 +426,21 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D5.6 - Realizar bem as atividades mais importantes do trabalho/escola?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D5.6',
     'dominio': 'dom_52',
   },
   {
     'enunciado': 'D5.7 - Fazer todo o trabalho que você precisava?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_52',
     'codigo': 'D5.7',
   },
   {
     'enunciado': 'D5.8 - Fazer todo o trabalho na velocidade necessária?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'dominio': 'dom_52',
     'codigo': 'D5.8',
@@ -480,7 +480,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.1 - Quanta dificuldade você teve ao participar em atividades comunitárias (por exemplo, festividades,  atividades religiosas ou outra atividade) do mesmo modo que qualquer outra pessoa?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D6.1',
     'dominio': 'dom_6',
@@ -488,7 +488,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.2 - Quanta dificuldade você teve por causa de barreiras ou obstáculos no mundo à sua volta?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D6.2',
     'dominio': 'dom_6',
@@ -496,7 +496,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.3 - Quanta dificuldade você teve para viver com dignidade por causa das atitudes e ações de outros?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D6.3',
     'dominio': 'dom_6',
@@ -504,7 +504,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.4 - Quanto tempo você gastou com sua condição de saúde ou suas consequências?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D6.4',
     'dominio': 'dom_6',
@@ -512,7 +512,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.5 - Quanto você tem sido emocionalmente afetado por sua condição de saúde?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D6.5',
     'dominio': 'dom_6',
@@ -520,7 +520,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.6 - Quanto a sua saúde tem prejudicado financeiramente você ou sua família?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D6.6',
     'dominio': 'dom_6',
@@ -528,7 +528,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.7 - Quanta dificuldade sua família teve por causa da sua condição de saúde?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 2, 3, 4, 0],
     'codigo': 'D6.7',
     'dominio': 'dom_6',
@@ -536,7 +536,7 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado':
         'D6.8 - Quanta dificuldade você teve para fazer as coisas por si mesmo(a) para relaxamento ou lazer?',
-    'tipo': TipoPergunta.marcar,
+    'tipo': TipoPergunta.multiplaWHODAS,
     'pesos': <int>[0, 1, 1, 2, 2, 0],
     'codigo': 'D6.8',
     'dominio': 'dom_6',
