@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -56,18 +57,18 @@ class _relatorioGeralState extends State<relatorioGeral> {
                         },
                         children: [
                             mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção','Total'],topo: true),
-                            for(var i=0;i<Constantes.tipo.length;i++) 
-                            mostrarlinhas([Constantes.tipo[i],
-                            documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[i])&&element['hospital'].toString().contains(model.hospital)).length.toString()]), 
+                            for(var tipo in TipoEquipamento.values) 
+                            mostrarlinhas([tipo.emString,
+                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
+                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
+                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
+                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
+                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length.toString()]), 
                         ],
                       ),
                     ),
                   ),
-                  for(int j=0;j<Constantes.tipo.length;j++)
+                  for(var tipo in TipoEquipamento.values)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -90,7 +91,7 @@ class _relatorioGeralState extends State<relatorioGeral> {
                               color: Constantes.corAzulEscuroSecundario,
                             ),
                             height: 25,
-                            child: Text('Percentual ${Constantes.tipo[j].toLowerCase()}(%)',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                            child: Text('Percentual ${tipo.emString.toLowerCase()}(%)',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                           ),
                           SfCircularChart(
                             backgroundColor: Colors.white,
@@ -99,25 +100,25 @@ class _relatorioGeralState extends State<relatorioGeral> {
                               PieSeries<GDPData, String>(
                                 dataSource:  [
                                   GDPData('Disponíveis', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length))),
+                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length*100
+                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
 
                                   GDPData('Empréstimos', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length))),
+                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length*100
+                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
 
                                   GDPData('Manutenção', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length))),
+                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length*100
+                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
 
                                   GDPData('Desinfecção', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(Constantes.tipoSnakeCase[j])&&element['hospital'].toString().contains(model.hospital)).length))),
+                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length*100
+                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
                                 ],
                                 xValueMapper: (GDPData data,_)=> data.tipo,
                                 yValueMapper: (GDPData data,_)=> data.qntd,
                                 dataLabelSettings: DataLabelSettings(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontWeight: FontWeight.w300
                                   ),
                                   overflowMode: OverflowMode.shift,

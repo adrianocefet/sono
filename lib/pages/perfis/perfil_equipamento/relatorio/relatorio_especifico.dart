@@ -21,19 +21,9 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
   List<Equipamento> equipamentos=[];
-
+  bool inicializou=false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:ListView(
-                scrollDirection: Axis.vertical,
-                children:[construirTabela()]
-                ),
-           );
-  }
-  
-  Widget construirTabela() {
-    final colunas = ['Tipo','Equipamento','Status','Data de expedição'];
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) =>
        StreamBuilder<QuerySnapshot>(
@@ -46,26 +36,35 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
                   child: CircularProgressIndicator(),
                 );
               default:
-                return DataTable(
-                  headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
-                  headingRowHeight: 60,
-                  dataRowHeight: 90,
-                  columnSpacing: 5,
-                  horizontalMargin: 1,
-                  sortAscending: ordemCrescente,
-                  sortColumnIndex: indexOrdenarColuna,
-                  dataTextStyle: const TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    fontSize: 10,
-                    color: Colors.black
-                  ),
-                  columns: pegarColunas(colunas), 
-                  rows: pegarLinhas(context, snapshot.data!.docs),
-                  );}
-        }
-      ),
-    );
-  }
+                inicializou==false?
+                equipamentos = pegarEquipamentos(snapshot.data!.docs):null;
+                inicializou=true;
+                return Scaffold(
+                  body:ListView(
+                            scrollDirection: Axis.vertical,
+                            children:[construirTabela()]
+                            ),
+                      );}}));}
+
+  
+  Widget construirTabela() {
+    final colunas = ['Tipo','Equipamento','Status','Tamanho','Data de expedição'];
+      return DataTable(
+        headingRowColor: MaterialStateColor.resolveWith((states) => Constantes.corAzulEscuroSecundario),
+        headingRowHeight: 60,
+        dataRowHeight: 90,
+        columnSpacing: 5,
+        horizontalMargin: 1,
+        sortAscending: ordemCrescente,
+        sortColumnIndex: indexOrdenarColuna,
+        dataTextStyle: const TextStyle(
+          overflow: TextOverflow.ellipsis,
+          fontSize: 10,
+          color: Colors.black
+        ),
+        columns: pegarColunas(colunas), 
+        rows: pegarLinhas(context, equipamentos),
+        );}
   
   List<DataColumn> pegarColunas(List<String> colunas) => colunas.map((String coluna) => 
   DataColumn(
@@ -77,26 +76,31 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
               child: Text(coluna,style: const TextStyle(fontSize: 10),softWrap: true,overflow: TextOverflow.visible,textAlign: TextAlign.center,)),
       ),
     ),
-    //onSort: ordenar,
+    onSort: ordenar,
     ))
     
     .toList();
   
-  List<DataRow> pegarLinhas(BuildContext context, List<DocumentSnapshot> snapshot) => snapshot.map((DocumentSnapshot data) {
-    Map<String, dynamic> dadosEquipamento = data.data()! as Map<String, dynamic>;
-    dadosEquipamento["id"]=data.id;
-    Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
-    final celulas = [equipamento.tipo.emString,equipamento.nome,equipamento.status.emStringMaiuscula,equipamento.dataDeExpedicaoEmString];
+  List<DataRow> pegarLinhas(BuildContext context, List<Equipamento> equipamentos) => equipamentos.map((Equipamento equipamento) {
+    final celulas = [equipamento.tipo.emString,equipamento.nome,equipamento.status.emStringMaiuscula,equipamento.tamanho??'-',equipamento.dataDeExpedicaoEmString];
 
     return DataRow(
       cells: pegarCelulas(celulas),
       onLongPress:(){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaEquipamento(id:equipamento.id)));
+        inicializou=false;
       } 
       );
   }).toList();
+
+  List<Equipamento> pegarEquipamentos(List<DocumentSnapshot> snapshot) => snapshot.map((DocumentSnapshot data) {
+    Map<String, dynamic> dadosEquipamento = data.data()! as Map<String, dynamic>;
+    dadosEquipamento["id"]=data.id;
+    Equipamento equipamento = Equipamento.porMap(dadosEquipamento);
+    return equipamento;
+  }).toList();
   
-  List<DataCell> pegarCelulas(List<Object?> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.visible,))))).toList();
+  List<DataCell> pegarCelulas(List<String> celulas) => celulas.map((data) => DataCell(Center(child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 10,maxWidth: 60),child: Text('$data',textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.visible,))))).toList();
 
   void ordenar(int indexColuna, bool crescente) {
     if(indexColuna==0){
@@ -112,6 +116,10 @@ class _relatorioEspecificoState extends State<relatorioEspecifico> {
         comparararString(crescente, equipamento1.status.emString, equipamento2.status.emString));
     }
     else if(indexColuna==3){
+      equipamentos.sort((equipamento1, equipamento2) =>
+        comparararString(crescente, equipamento1.tamanho??'-', equipamento2.tamanho??'-'));
+    }
+    else if(indexColuna==4){
       equipamentos.sort((equipamento1, equipamento2) =>
         comparararString(crescente, equipamento1.dataDeExpedicaoEmString, equipamento2.dataDeExpedicaoEmString));
     }

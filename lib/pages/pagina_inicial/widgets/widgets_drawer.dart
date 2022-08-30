@@ -83,6 +83,12 @@ class CustomDrawer extends StatelessWidget {
                 pageController,
                 2,
               ),
+              DrawerTile(
+                Icons.assignment_rounded ,
+                "Solicitações",
+                pageController,
+                3,
+              ),
             ],
           )
         ],

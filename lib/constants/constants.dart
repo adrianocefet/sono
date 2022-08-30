@@ -145,10 +145,4 @@ abstract class Constantes {
   static const List<IconData> icone2=[
     Icons.check_circle,Icons.people_sharp,Icons.build_circle_rounded,Icons.clean_hands_sharp
   ];
-  static const List<String> tipo=[
-    'Máscara Nasal','Máscara Oronasal','Máscara Pillow','Máscara Facial','Aparelho PAP','Almofada','Fixador','Traqueia'
-  ];
-  static const List<String> tipoSnakeCase=[
-    'mascara_nasal','mascara_oronasal','mascara_pillow','mascara_facial','aparelho_pap','almofada','fixador','traqueia'
-  ];
 }

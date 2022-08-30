@@ -3,12 +3,13 @@ import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/item_equipamento.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../../../constants/constants.dart';
 
 class PesquisaEquipamento extends SearchDelegate {
-  final String tipo;
+  final TipoEquipamento tipo;
   final int status;
   PesquisaEquipamento({required this.tipo, required this.status});
 
@@ -47,7 +48,7 @@ class PesquisaEquipamento extends SearchDelegate {
          stream: FirebaseFirestore.instance.collection('equipamentos')
             .where('hospital',isEqualTo: model.hospital)
             .where('status',isEqualTo: Constantes.status3[model.status])
-            .where('tipo',isEqualTo: Constantes.tipoSnakeCase[Constantes.tipo.indexOf(model.tipo)])
+            .where('tipo',isEqualTo: model.tipo.emStringSnakeCase)
             .snapshots(),
          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {

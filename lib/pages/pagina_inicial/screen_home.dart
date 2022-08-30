@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_home.dart';
 import 'package:sono/pages/tabelas/tab_paciente.dart';
+import 'package:sono/pages/tabelas/tab_solicitacoes.dart';
 import '../../utils/models/user_model.dart';
 import '../tabelas/tab_controleEstoque.dart';
 
@@ -28,6 +29,7 @@ class HomeScreen extends StatelessWidget {
             HomeTab(pageController: _pageController),
             TabelaDePacientes(pageController: _pageController),
             TabelaControleEstoque(pageController: _pageController),
+            TabelaDeSolicitacoes(pageController: _pageController)
           ],
         );
       },

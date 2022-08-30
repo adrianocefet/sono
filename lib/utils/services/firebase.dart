@@ -10,6 +10,7 @@ import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br.
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/solicitacao.dart';
 import '../models/equipamento.dart';
 import '../models/user_model.dart';
 
@@ -27,6 +28,7 @@ class FirebaseService {
   static const String _strPacientes = 'pacientes';
   static const String _stringEquipamento = "equipamentos";
   static const String _stringQuestionarios = "questionarios";
+  static const String _stringSolicitacoes = "solicitacoes";
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
     return await _db.collection(_strPacientes).doc(idPaciente).get().then(
@@ -66,6 +68,19 @@ class FirebaseService {
         .update(
           equipamentoAtualizado.infoMap,
         );
+  }
+
+  static Future<void> atualizarSolicitacao(
+    Solicitacao solicitacaoAtualizada) async {
+    
+    solicitacaoAtualizada.infoMap['data_de_resposta'] = FieldValue.serverTimestamp();
+
+  await FirebaseFirestore.instance
+      .collection(_stringSolicitacoes)
+      .doc(solicitacaoAtualizada.id)
+      .update(
+        solicitacaoAtualizada.infoMap,
+      );
   }
 
   Future<void> updateDadosDoEquipamento(
@@ -123,19 +138,52 @@ class FirebaseService {
         .snapshots();
   }
 
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> streamSolicitacao(
+    String idSolicitacao
+  ) {
+    return FirebaseFirestore.instance
+        .collection(_stringSolicitacoes)
+        .doc(idSolicitacao)
+        .snapshots();
+  }
+
+  Future<void> solicitarDevolucaoEquipamento(
+    Equipamento equipamento,
+    Paciente paciente,
+    UserModel usuario,
+  )async{
+    try {
+      await _db.collection(_stringSolicitacoes).doc().set(
+        {
+          "tipo": "devolucao",
+          "equipamento": equipamento.id,
+          "paciente": paciente.id,
+          "solicitante": usuario.id,
+          "data_da_solicitacao": FieldValue.serverTimestamp(),
+          "confirmacao": "pendente",
+          "hospital": equipamento.hospital
+        },
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> solicitarEmprestimoEquipamento(
     Equipamento equipamento,
     Paciente paciente,
     UserModel usuario,
   ) async {
     try {
-      await _db.collection("solicitacoes").doc().set(
+      await _db.collection(_stringSolicitacoes).doc().set(
         {
+          "tipo": "emprestimo",
           "equipamento": equipamento.id,
           "paciente": paciente.id,
           "solicitante": usuario.id,
           "data_da_solicitacao": FieldValue.serverTimestamp(),
-          "confirmacao": "pendente"
+          "confirmacao": "pendente",
+          "hospital": equipamento.hospital
         },
       );
     } catch (e) {
@@ -160,7 +208,7 @@ class FirebaseService {
         {
           "equipamentos": FieldValue.arrayUnion([equipamento.id])
         },
-      );
+      ); 
     } catch (e) {
       rethrow;
     }
@@ -174,6 +222,7 @@ class FirebaseService {
         {
           "status": StatusDoEquipamento.disponivel.emString,
           "paciente_responsavel": FieldValue.delete(),
+          "alterado_por": FieldValue.delete(),
           "data_de_expedicao": FieldValue.delete(),
         },
       );

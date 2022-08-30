@@ -233,32 +233,23 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           height: 20,
                                         ),
                                       const Text(
-                                    "Tamanho",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(221, 171, 171, 171)),
-                                                          ),
-                                                          const Divider(),
-                                                          Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Constantes.corAzulEscuroPrincipal,
+                                      "Tamanho",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(221, 171, 171, 171)),
+                                                            ),
+                                      const Divider(),
+                                      Text(
+                                        equipamento.tamanho??'N/A',
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                            fontSize: 12),
                                       ),
-                                      color: Constantes.corAzulEscuroSecundario,
-                                    ),
-                                    alignment: Alignment.center,
-                                    height: 20,
-                                    width: 40,
-                                    child: Text(
-                                      equipamento.tamanho??'N/A',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontSize: 15),
-                                    ),
-                                                          ),
                                     ],
                                                           ),
                                   ),
@@ -430,63 +421,103 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ),
                                   Visibility(
                                     visible: equipamento.status==StatusDoEquipamento.emprestado,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                  child: Image.network(
-                                                    equipamento.idPacienteResponsavel??"https://cdn-icons-png.flaticon.com/512/17/17004.png",
-                                                    width: 50,
-                                                    height: 50,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                    child: StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
+                                      stream: FirebaseService().streamInfoPacientePorID(equipamento.idPacienteResponsavel??'N/A'),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                          case ConnectionState.waiting:
+                                            return const Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          default:
+                                        Paciente pacienteEmprestado = Paciente.porDocumentSnapshot(snapshot.data!);
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.circular(25),
+                                                      child: Image.network(
+                                                        pacienteEmprestado.urlFotoDePerfil??model.semimagem,
+                                                        width: 50,
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 20,),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context).size.width * 0.6,
+                                                      child: Text(
+                                                        pacienteEmprestado.nomeCompleto,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 2,
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                const SizedBox(width: 20,),
-                                                SizedBox(
-                                                  width:
-                                                      MediaQuery.of(context).size.width * 0.6,
-                                                  child: Text(
-                                                    equipamento.idPacienteResponsavel??"Sem nome",
-                                                    overflow: TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: const TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold),
-                                                  ),
+                                                const Divider(),
+                                              const Padding(
+                                                padding: EdgeInsets.only(top:8.0),
+                                                child: Text("Data de expedição",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Constantes.corAzulEscuroSecundario,
+                                                    decoration: TextDecoration.underline
                                                 ),
-                                              ],
-                                            ),
-                                            const Divider(),
-                                          const Padding(
-                                            padding: EdgeInsets.only(top:8.0),
-                                            child: Text("Médico responsável",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Constantes.corAzulEscuroSecundario ,
-                                                decoration: TextDecoration.underline
-                                            ),
-                                            ),
+                                                ),
+                                              ),
+                                              Text(equipamento.dataDeExpedicaoEmString),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:8.0),
+                                                child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(18.0),
+                                                          )),
+                                                      onPressed: () async {
+                                                                    try {
+                                                                      await equipamento
+                                                                        .solicitarDevolucao(
+                                                                          pacienteEmprestado,model);
+                                                                    } catch (e) {
+                                                                      mostrarMensagemErro(
+                                                                          context,
+                                                                          e.toString());
+                                                                    }
+                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                        const SnackBar(
+                                                                          backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                                          content: Text(
+                                                                            "Solicitação enviada à dispensação!"
+                                                                          ),
+                                                                        ),
+                                                                    );
+                                                                  },
+                                                      child: const Text(
+                                                        "Solicitar devolução",
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(color: Colors.black),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(equipamento.idPacienteResponsavel??"Sem nome"),
-                                          const Padding(
-                                            padding: EdgeInsets.only(top:8.0),
-                                            child: Text("Data expedição",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Constantes.corAzulEscuroSecundario,
-                                                decoration: TextDecoration.underline
-                                            ),
-                                            ),
-                                          ),
-                                          Text(equipamento.dataDeExpedicaoEmString),
-                                        ],
-                                      ),
-                                    ),
+                                        );
+                                      }
+                                    })
                                   ),
                                   Visibility(
                                     visible: equipamento.status==StatusDoEquipamento.manutencao || equipamento.status==StatusDoEquipamento.desinfeccao,
@@ -495,12 +526,22 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
+                                          Padding(
+                                                  padding: EdgeInsets.symmetric(vertical:8.0),
+                                                  child: Text("${equipamento.status.emStringMaiuscula} alterado por",
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Constantes.corAzulEscuroSecundario ,
+                                                      decoration: TextDecoration.underline
+                                                  ),
+                                                  ),
+                                                ),
                                           Row(
                                               children: [
                                                 ClipRRect(
                                                   borderRadius: BorderRadius.circular(25),
                                                   child: Image.network(
-                                                    "https://www.onze.com.br/blog/wp-content/uploads/2019/11/shutterstock_1413966269.jpg",
+                                                    model.semimagem,
                                                     width: 50,
                                                     height: 50,
                                                     fit: BoxFit.fill,
@@ -511,7 +552,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                   width:
                                                       MediaQuery.of(context).size.width * 0.6,
                                                   child: Text(
-                                                    equipamento.idEmpresaResponsavel??"Empresa sem nome",
+                                                    equipamento.alteradoPor??'Sem nome',
                                                     overflow: TextOverflow.ellipsis,
                                                     maxLines: 2,
                                                     style: const TextStyle(
@@ -521,7 +562,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 ),
                                               ],
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                           Visibility(
                                             visible: equipamento.status==StatusDoEquipamento.desinfeccao,
                                             child: Column(
@@ -553,39 +594,39 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             ),
                                           ),
                                           Text(equipamento.dataDeExpedicaoEmString),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(18.0),
+                                                    )),
+                                                onPressed: () async {
+                                                              try {
+                                                                equipamento
+                                                                    .disponibilizar();
+                                                                equipamento.status =
+                                                                    StatusDoEquipamento
+                                                                        .disponivel;
+                                                              } catch (e) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    e.toString());
+                                                              }
+                                                            },
+                                                child: const Text(
+                                                  "Disponibilizar",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: const Color.fromRGBO(97, 253, 125, 1),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                            )),
-                                        onPressed: () async {
-                                                      try {
-                                                        equipamento
-                                                            .disponibilizar();
-                                                        equipamento.status =
-                                                            StatusDoEquipamento
-                                                                .disponivel;
-                                                      } catch (e) {
-                                                        mostrarMensagemErro(
-                                                            context,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                        child: const Text(
-                                          "Disponibilizar",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
                                       ),
                                     ),
                                   ),
@@ -637,6 +678,78 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                           ),
                         ),
                         Visibility(
+                          visible: equipamento.informacoesTecnicas!=null,
+                          child: Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(width: 1)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const 
+                                        BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        color: Constantes.corAzulEscuroSecundario,),
+                                        height: 30,
+                                        child: const Text("Informações técnicas",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                          equipamento.informacoesTecnicas==''?'Clique em editar para adicionar informações':equipamento.informacoesTecnicas,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ),
+                        Visibility(
+                          visible: equipamento.higieneECuidadosPaciente!=null&&equipamento.higieneECuidadosPaciente!='',
+                          child: Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(width: 1)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const 
+                                        BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        color: Constantes.corAzulEscuroSecundario,),
+                                        height: 30,
+                                        child: const Text("Higiene e informações ao paciente",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                          equipamento.higieneECuidadosPaciente??'Clique em editar para adicionar informações',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ),
+                        Visibility(
                           // ignore: unrelated_type_equality_checks
                           visible: _testarUrl(equipamento.videoInstrucional??'')==true,
                           child: Padding(
@@ -679,6 +792,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                         Padding(
                             padding: const EdgeInsets.only(top:8.0),
                             child: AnimatedContainer(
+                              curve: Curves.easeIn,
                               constraints: BoxConstraints(
                                 minHeight: MediaQuery.of(context).size.height*0.1
                               ),
@@ -686,7 +800,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(width: 1)),
-                              duration: Duration(seconds: 2),
+                              duration: Duration(milliseconds: 240),
                               child: Column(
                                 children: [
                                   Container(

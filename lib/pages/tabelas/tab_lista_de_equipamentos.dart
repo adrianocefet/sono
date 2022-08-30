@@ -4,6 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
@@ -27,7 +28,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
           stream: FirebaseFirestore.instance.collection('equipamentos')
             .where('hospital',isEqualTo: model.hospital)
             .where('status',isEqualTo: Constantes.status3[model.status])
-            .where('tipo',isEqualTo: Constantes.tipoSnakeCase[Constantes.tipo.indexOf(model.tipo)])
+            .where('tipo',isEqualTo: model.tipo.emStringSnakeCase)
             .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -36,7 +37,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                   return Scaffold(
                     appBar: AppBar(
                       backgroundColor: Theme.of(context).primaryColor,
-                      title: Text(model.tipo),
+                      title: Text(model.tipo.emString),
                       centerTitle: true,
                     ),
                     body: const Center(
@@ -46,7 +47,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                 default:
             return Scaffold(
               appBar: AppBar(
-                title: Text(model.tipo),
+                title: Text(model.tipo.emString),
                 actions: [
                   IconButton(onPressed: (){
                     showSearch(
@@ -94,7 +95,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                           ),
                           SizedBox(height: 16.0,),
                           Text(
-                            'Nenhum(a) ${model.tipo.toLowerCase()} ${Constantes.status3[model.status].toLowerCase()}!',
+                            'Nenhum(a) ${model.tipo.emString.toLowerCase()} ${Constantes.status3[model.status].toLowerCase()}!',
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:sono/globais/global.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/tamanho_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -13,7 +11,9 @@ class Equipamento {
   late final String fabricante;
   late final TipoEquipamento tipo;
   late final String hospital;
-  late final String? idEmpresaResponsavel;
+  late final String informacoesTecnicas;
+  late final String? higieneECuidadosPaciente;
+  late final String? alteradoPor;
   late final String? descricao;
   late final String? observacao;
   late final String? manualPdf;
@@ -58,8 +58,10 @@ class Equipamento {
         "hospital": hospital,
         "fabricante":fabricante,
         "url_foto": urlFotoDePerfil,
+        "informacoes_tecnicas":informacoesTecnicas,
+        "higiene_e_cuidados_paciente": higieneECuidadosPaciente,
         "paciente_responsavel": idPacienteResponsavel,
-        "empresa_responsavel": idEmpresaResponsavel,
+        "alterado_por": alteradoPor,
         "video_instrucional": videoInstrucional,
         "manual": manualPdf,
         "descrição": descricao,
@@ -77,26 +79,29 @@ class Equipamento {
   });
 
   Equipamento.porMap(equipamentoInfoMap) {
-    nome = equipamentoInfoMap["nome"] ?? equipamentoInfoMap["Nome"];
+    nome = equipamentoInfoMap["nome"];
     id = equipamentoInfoMap["id"];
     idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
     urlFotoDePerfil =
         equipamentoInfoMap["url_foto"];
     descricao =
-        equipamentoInfoMap["descrição"] ?? equipamentoInfoMap["Descrição"];
-    tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"]??equipamentoInfoMap["Tipo"])!;
+        equipamentoInfoMap["descrição"];
+    tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"])!;
     hospital=equipamentoInfoMap["hospital"];
+    equipamentoInfoMap["informacoes_tecnicas"]!=null?
+    informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"]:informacoesTecnicas='';
+    equipamentoInfoMap["higiene_e_cuidados_paciente"]!=null?
+    higieneECuidadosPaciente = equipamentoInfoMap["higiene_e_cuidados_paciente"]:higieneECuidadosPaciente=null;
     fabricante =
         equipamentoInfoMap["fabricante"];
-    idEmpresaResponsavel =
-        equipamentoInfoMap["empresa_responsavel"];
+    alteradoPor =
+        equipamentoInfoMap["alterado_por"];
     manualPdf =
-        equipamentoInfoMap["manual"] ?? equipamentoInfoMap["Manual"];
+        equipamentoInfoMap["manual"];
     videoInstrucional =
-        equipamentoInfoMap["video_instrucional"] ?? equipamentoInfoMap["Video_instrucional"];
+        equipamentoInfoMap["video_instrucional"];
      status = _lerStatusDoEquipamentoDoBancoDeDados(
       equipamentoInfoMap["status"] ??
-          equipamentoInfoMap["Status"] ??
           "disponível",
     )!;
      
@@ -130,10 +135,16 @@ class Equipamento {
 
   TipoEquipamento? _lerTipoDeEquipamentoDoBancoDeDados(String tipo) {
     switch (tipo) {
+      case "cpap":
+        return TipoEquipamento.cpap;
+      case 'bilevel':  
+        return TipoEquipamento.bilevel;
+      case 'autocpap': 
+        return TipoEquipamento.autocpap;
+      case 'avaps':  
+        return TipoEquipamento.avap; 
       case "almofada":
         return TipoEquipamento.almofada;
-      case "aparelho_pap":
-        return TipoEquipamento.pap;
       case "traqueia":
         return TipoEquipamento.traqueia;
       case "mascara_nasal":
@@ -156,6 +167,9 @@ class Equipamento {
 
   Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
       await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
+
+  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario) async =>
+      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario);
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
@@ -181,7 +195,10 @@ enum TipoEquipamento {
   traqueia,
   fixador,
   almofada,
-  pap,
+  cpap,
+  bilevel,
+  avap,
+  autocpap
 }
 
 extension ExtensaoTipoEquipamento on TipoEquipamento {
@@ -189,8 +206,6 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
     switch (this) {
       case TipoEquipamento.almofada:
         return "Almofada";
-      case TipoEquipamento.pap:
-        return "Aparelho PAP";
       case TipoEquipamento.traqueia:
         return "Traqueia";
       case TipoEquipamento.fixador:
@@ -203,14 +218,20 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "Máscara Facial";
       case TipoEquipamento.oronasal:
         return "Máscara Oronasal";
+      case TipoEquipamento.cpap:
+        return "CPAP";
+      case TipoEquipamento.bilevel:
+        return 'BiLevel';
+      case TipoEquipamento.autocpap:
+        return 'AutoCPAP';
+      case TipoEquipamento.avap:
+        return 'AVAPS';
     }
   }
   String get emStringSnakeCase {
     switch (this) {
       case TipoEquipamento.almofada:
         return "almofada";
-      case TipoEquipamento.pap:
-        return "aparelho_pap";
       case TipoEquipamento.traqueia:
         return "traqueia";
       case TipoEquipamento.fixador:
@@ -223,7 +244,41 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "mascara_facial";
       case TipoEquipamento.oronasal:
         return "mascara_oronasal";
+      case TipoEquipamento.cpap:
+        return "cpap";
+      case TipoEquipamento.bilevel:
+        return 'bilevel';
+      case TipoEquipamento.autocpap:
+        return 'autocpap';
+      case TipoEquipamento.avap:
+        return 'avaps';
     }
+  }
+  String get imagens{
+  switch(this){
+    case TipoEquipamento.nasal:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTgvMTVfMDZfMjhfOTk2X1RydWVCbHVlXzEuanBnIl1d/TrueBlue-1.jpg';
+    case TipoEquipamento.oronasal:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTcvMTNfNDNfMDZfODUwX0FtYXJhXzEuanBnIl0sWyJwIiwidGh1bWIiLCI0MDB4NDAwPiJdXQ/Amara-1.jpg';
+    case TipoEquipamento.pillow:
+      return 'https://a3.vnda.com.br/650x/espacoquallys/2019/09/13/10252-mascara-cpap-pillow-breeze-sefam-5146.jpg?v=1568415183';
+    case TipoEquipamento.facial:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTMvMDUvMjEvMjFfNDVfMjBfNDk5X0ZpdExpZmUuanBnIl1d/FitLife.jpg';
+    case TipoEquipamento.traqueia:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/mini-traqueia-para-mascara-swift-fx-resmed-720.jpg';
+    case TipoEquipamento.fixador:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/fixador-para-mascara-facial-fitlife-e-performax-philips-respironics-1042.jpg';
+    case TipoEquipamento.almofada:
+      return 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg';
+    case TipoEquipamento.cpap:
+      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/cpap-basico-airsense-s10-com-umidificador-integrado-resmed-916.png';
+    case TipoEquipamento.autocpap:
+      return 'https://cdn.awsli.com.br/600x450/49/49309/produto/41467334/7a540efde2.jpg';
+    case TipoEquipamento.bilevel:
+      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMjEvMDMvMDkvMDlfMjBfMzNfODE0X2JpcGFwX3loXzczMF9nYXNsaXZlX3l1d2VsbC5qcGciXSxbInAiLCJ0aHVtYiIsIjQwMHg0MDA%2BIl1d/bipap-yh-730-gaslive-yuwell.jpg';
+    case TipoEquipamento.avap:
+      return 'https://cdn.awsli.com.br/600x450/437/437629/produto/21439696/6beb7653fe.jpg';
+  }  
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/utils/models/equipamento.dart';
 
 class UserModel extends Model {
   String id = 'IDGENERICO';
@@ -8,7 +9,7 @@ class UserModel extends Model {
   String semimagem =
       'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
   bool editar = false;
-  String tipo='';
+  TipoEquipamento tipo=TipoEquipamento.nasal;
   int status=0;
 
   void fazHome() async {

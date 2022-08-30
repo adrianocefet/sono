@@ -6,6 +6,7 @@ class RespostaExtensoCadastro extends StatefulWidget {
   final Pergunta pergunta;
   final Paciente? paciente;
   final bool? numerico;
+  final bool? multilinhas;
   final Color? corTexto;
   final Color? corDominio;
   final dynamic autoPreencher;
@@ -16,6 +17,7 @@ class RespostaExtensoCadastro extends StatefulWidget {
     required this.pergunta,
     this.paciente,
     this.numerico,
+    this.multilinhas,
     this.corTexto = Colors.black,
     this.corDominio = Colors.blue,
     this.autoPreencher,
@@ -55,10 +57,10 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
               fontWeight: FontWeight.bold,
             ),
             minLines: 1,
-            maxLines: 3,
+            maxLines: widget.multilinhas ?? false ? 5 : 3,
             keyboardType: widget.numerico ?? false
                 ? TextInputType.number
-                : TextInputType.text,
+                : widget.multilinhas ?? false ? TextInputType.multiline : TextInputType.text,
             decoration: InputDecoration(
               suffix: widget.pergunta.unidade == null
                   ? null
@@ -68,6 +70,8 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
+              helperText: widget.pergunta.textoAjuda,
+              helperMaxLines: 3,
               labelText: widget.pergunta.enunciado,
               filled: true,
               fillColor: Colors.white,

@@ -92,6 +92,21 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
           );
         }
       case TipoPergunta.numerica:
+      case TipoPergunta.multiLinhasCadastros:
+        {
+          return RespostaExtensoCadastro(
+            pergunta: pergunta,
+            paciente: widget.paciente,
+            multilinhas: true,
+            corTexto: widget.corTexto,
+            corDominio:
+                Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
+                    Constantes.corAzulEscuroSecundario,
+            autoPreencher:
+                widget.autoPreencher ?? widget.pergunta.respostaExtenso,
+          );
+        }
+      case TipoPergunta.extensoNumericoCadastros:
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
