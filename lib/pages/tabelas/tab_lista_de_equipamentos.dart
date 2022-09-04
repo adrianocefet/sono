@@ -47,7 +47,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                 default:
             return Scaffold(
               appBar: AppBar(
-                title: Text(model.tipo.emString),
+                title: Text('${model.tipo.emString} (${snapshot.data!.docs.length})'),
                 actions: [
                   IconButton(onPressed: (){
                     showSearch(

@@ -20,6 +20,7 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
       TipoSelecionado(),
       TipoSelecionado(),
       TipoSelecionado(),
+      TipoSelecionado(),
     ];
     
     bool inicializado=false;
@@ -38,6 +39,7 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Constantes.corAzulEscuroPrincipal,
+        selectedFontSize: 10 ,
         currentIndex: currentIndex,
         selectedItemColor: Colors.white,
         showUnselectedLabels: false,
@@ -63,6 +65,10 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.clean_hands_rounded),
             label:'Desinfecção'
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.assignment_ind),
+            label:'Concedidos'
           ),
         ],
         ),

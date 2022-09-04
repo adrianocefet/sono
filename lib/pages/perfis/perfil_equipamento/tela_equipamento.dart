@@ -324,64 +324,119 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 10.0),
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                primary: const Color.fromRGBO(97, 253, 125, 1),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(18.0),
-                                                )),
-                                            onPressed: () async {
-                                                      await equipamento
-                                                          .manutencao(model);
-                                                      equipamento.status =
-                                                          StatusDoEquipamento
-                                                              .manutencao;
-                                                    },
-                                            child: const Text(
-                                              "Reparar",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.black),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width*0.4,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(18.0),
+                                                    )),
+                                                onPressed: () async {
+                                                          await equipamento
+                                                              .manutencao(model);
+                                                          equipamento.status =
+                                                              StatusDoEquipamento
+                                                                  .manutencao;
+                                                        },
+                                                child: const Text(
+                                                  "Reparar",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 10.0),
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width, 
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                primary: const Color.fromRGBO(97, 253, 125, 1),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(18.0),
-                                                )),
-                                            onPressed: () async {
-                                                      try {
-                                                        await equipamento
-                                                            .desinfectar(model);
-                                                        equipamento.status =
-                                                            StatusDoEquipamento
-                                                                .desinfeccao;
-                                                      } catch (e) {
-                                                        mostrarMensagemErro(
-                                                            context,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                            child: const Text(
-                                              "Desinfectar",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.black),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width*0.4,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(18.0),
+                                                    )),
+                                                onPressed: () async {
+                                                          try {
+                                                            await equipamento
+                                                                .desinfectar(model);
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .desinfeccao;
+                                                          } catch (e) {
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                e.toString());
+                                                          }
+                                                        },
+                                                child: const Text(
+                                                  "Desinfectar",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
+                                      Padding(
+                                            padding: const EdgeInsets.only(top: 10.0),
+                                            child: SizedBox(
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(18.0),
+                                                    )),
+                                                onPressed: () async {
+                                                  Paciente?
+                                                          pacienteEscolhido =
+                                                          await mostrarDialogEscolherPaciente(
+                                                              context);
+                                                      if (pacienteEscolhido !=
+                                                          null) {
+                                                        try {
+                                                          await equipamento
+                                                              .conceder(
+                                                                  pacienteEscolhido,model);
+                                                        } catch (erro) {
+                                                          equipamento.status =
+                                                              StatusDoEquipamento
+                                                                  .disponivel;
+                                                          mostrarMensagemErro(
+                                                              context,
+                                                              erro.toString());
+                                                        }
+                                                        _definirPacienteResponsavel(
+                                                            pacienteEscolhido);
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                "Equipamento concedido ao paciente selecionado!"
+                                                              ),
+                                                            ),
+                                                        );
+                                                        }
+
+                                                },
+                                                child: const Text(
+                                                  "Conceder equipamento",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                     ],
                                   ),
                                 ),
@@ -420,7 +475,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           ),
                                     ),
                                   Visibility(
-                                    visible: equipamento.status==StatusDoEquipamento.emprestado,
+                                    visible: equipamento.status==StatusDoEquipamento.emprestado || equipamento.status==StatusDoEquipamento.concedido,
                                     child: StreamBuilder<DocumentSnapshot<Map<String,dynamic>>>(
                                       stream: FirebaseService().streamInfoPacientePorID(equipamento.idPacienteResponsavel??'N/A'),
                                       builder: (context, snapshot) {
@@ -437,6 +492,16 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(vertical:8.0),
+                                                child: Text("Paciente",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Constantes.corAzulEscuroSecundario,
+                                                    decoration: TextDecoration.underline
+                                                ),
+                                                ),
+                                              ),
                                               Row(
                                                   children: [
                                                     ClipRRect(
@@ -486,7 +551,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             borderRadius:
                                                                 BorderRadius.circular(18.0),
                                                           )),
-                                                      onPressed: () async {
+                                                      onPressed: equipamento.status==StatusDoEquipamento.emprestado?
+                                                                () async {
                                                                     try {
                                                                       await equipamento
                                                                         .solicitarDevolucao(
@@ -504,14 +570,57 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                           ),
                                                                         ),
                                                                     );
+                                                                  }:
+                                                                () async{
+                                                                    try {
+                                                                      await equipamento
+                                                                        .devolver();
+                                                                    } catch (e) {
+                                                                      mostrarMensagemErro(
+                                                                          context,
+                                                                          e.toString());
+                                                                    }
                                                                   },
-                                                      child: const Text(
-                                                        "Solicitar devolução",
+                                                      child: Text(
+                                                        equipamento.status==StatusDoEquipamento.emprestado?"Solicitar devolução":"Voltar ao hospital",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(color: Colors.black),
                                                       ),
                                                     ),
                                                   ),
+                                              ),
+                                              Visibility(
+                                                visible: equipamento.status==StatusDoEquipamento.emprestado,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top:8.0),
+                                                  child: SizedBox(
+                                                      width: MediaQuery.of(context).size.width,
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                            primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(18.0),
+                                                            )),
+                                                        onPressed: () async{
+                                                            try {
+                                                            await equipamento
+                                                                .conceder(
+                                                                    pacienteEmprestado,model);
+                                                          } catch (erro) {
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                erro.toString());
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                          "Conceder ao paciente",
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(color: Colors.black),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ),
                                               ),
                                             ],
                                           ),

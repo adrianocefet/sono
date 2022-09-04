@@ -122,27 +122,30 @@ abstract class Constantes {
     'Disponível',
     'Empréstimos',
     'Reparos',
-    'Desinfecção'
+    'Desinfecção',
+    'Concedidos'
   ];
   static const List<String> status2 = [
     'Disponível',
     'Emprestado',
     'Manutenção',
-    'Desinfecção'
+    'Desinfecção',
+    'Concedido'
   ];
   static const List<String> status3 = [
     'disponível',
     'em empréstimo',
     'em reparo',
-    'em desinfecção'
+    'em desinfecção',
+    'concedido'
   ];
   static const List<Color> cor=[
-    Color.fromARGB(255, 51, 255, 58),Colors.yellow,Colors.red,Color.fromARGB(255, 0, 225, 255)
+    Color.fromARGB(255, 51, 255, 58),Colors.yellow,Colors.red,Color.fromARGB(255, 0, 225, 255), Color.fromARGB(255, 236, 98, 0)
   ];
   static const List<IconData> icone=[
-    Icons.check,Icons.people_sharp,Icons.build_rounded,Icons.clean_hands_sharp
+    Icons.check,Icons.people_sharp,Icons.build_rounded,Icons.clean_hands_sharp,Icons.assignment_ind
   ];
   static const List<IconData> icone2=[
-    Icons.check_circle,Icons.people_sharp,Icons.build_circle_rounded,Icons.clean_hands_sharp
+    Icons.check_circle,Icons.people_sharp,Icons.build_circle_rounded,Icons.clean_hands_sharp,Icons.assignment_ind
   ];
 }
