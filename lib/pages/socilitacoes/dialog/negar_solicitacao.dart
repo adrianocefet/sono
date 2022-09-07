@@ -92,7 +92,7 @@ Future negarSolicitacao(BuildContext context,Solicitacao solicitacao)async{
                           _formKey.currentState!.save();
                           mostrarDialogCarregando(context);
                           try{
-                            solicitacao.infoMap['motivo']=_Textcontroller.value.text;
+                            solicitacao.infoMap['motivo_negacao']=_Textcontroller.value.text;
                             solicitacao.infoMap['confirmacao']='negado';
                             FirebaseService.atualizarSolicitacao(solicitacao);
                             Navigator.pop(context);

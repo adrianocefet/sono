@@ -151,6 +151,7 @@ class FirebaseService {
     Equipamento equipamento,
     Paciente paciente,
     UserModel usuario,
+    String justificativa
   )async{
     try {
       await _db.collection(_stringSolicitacoes).doc().set(
@@ -161,7 +162,8 @@ class FirebaseService {
           "solicitante": usuario.id,
           "data_da_solicitacao": FieldValue.serverTimestamp(),
           "confirmacao": "pendente",
-          "hospital": equipamento.hospital
+          "hospital": equipamento.hospital,
+          "justificativa_devolucao": justificativa
         },
       );
     } catch (e) {

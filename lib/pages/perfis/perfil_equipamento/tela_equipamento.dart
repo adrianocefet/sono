@@ -8,7 +8,9 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/adicionar_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/adicionarObservacao.dart';
+import 'package:sono/utils/dialogs/confirmar.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
+import 'package:sono/utils/dialogs/justificativa.dart';
 import 'package:sono/utils/models/paciente.dart';
 import '../../../../utils/models/equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/qrCodeGerado.dart';
@@ -16,6 +18,7 @@ import 'package:sono/pdf/pdf_api.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../pdf/tela_pdf.dart';
+import '../../../utils/dialogs/carregando.dart';
 import '../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../utils/services/firebase.dart';
 
@@ -316,10 +319,17 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                         }
                                                         
                                                     },
-                                            child: const Text(
-                                              "Solicitar empréstimo",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.black),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: const [
+                                                Text(
+                                                  "Solicitar empréstimo ",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
+                                                Icon(Icons.people,color: Colors.black,size: 16,)
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -339,16 +349,32 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           BorderRadius.circular(18.0),
                                                     )),
                                                 onPressed: () async {
+                                                      if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Manutenção')==true){
+                                                        mostrarDialogCarregando(context);
+                                                        try {
                                                           await equipamento
                                                               .manutencao(model);
                                                           equipamento.status =
                                                               StatusDoEquipamento
                                                                   .manutencao;
+                                                        } catch (e) {
+                                                          mostrarMensagemErro(
+                                                              context,
+                                                              e.toString());
+                                                        }
+                                                        Navigator.pop(context);
+                                                      }     
                                                         },
-                                                child: const Text(
-                                                  "Reparar",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(color: Colors.black),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: const [
+                                                    Text(
+                                                      "Reparar ",
+                                                      style: TextStyle(color: Colors.black),
+                                                    ),
+                                                    Icon(Icons.build_rounded,color: Colors.black,size: 16,)
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -365,22 +391,32 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           BorderRadius.circular(18.0),
                                                     )),
                                                 onPressed: () async {
-                                                          try {
-                                                            await equipamento
-                                                                .desinfectar(model);
-                                                            equipamento.status =
-                                                                StatusDoEquipamento
-                                                                    .desinfeccao;
-                                                          } catch (e) {
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                e.toString());
-                                                          }
+                                                  if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Desinfecção')==true){
+                                                    mostrarDialogCarregando(context);
+                                                    try {
+                                                      await equipamento
+                                                          .desinfectar(model);
+                                                      equipamento.status =
+                                                          StatusDoEquipamento
+                                                              .desinfeccao;
+                                                    } catch (e) {
+                                                      mostrarMensagemErro(
+                                                          context,
+                                                          e.toString());
+                                                    }
+                                                    Navigator.pop(context);
+                                                  }
                                                         },
-                                                child: const Text(
-                                                  "Desinfectar",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(color: Colors.black),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: const [
+                                                    Text(
+                                                      "Desinfectar ",
+                                                      style: TextStyle(color: Colors.black),
+                                                    ),
+                                                    Icon(Icons.clean_hands_sharp,color: Colors.black,size: 16,)
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -429,10 +465,16 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                         }
 
                                                 },
-                                                child: const Text(
-                                                  "Conceder equipamento",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(color: Colors.black),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: const [
+                                                    Text(
+                                                      "Conceder ",
+                                                      style: TextStyle(color: Colors.black),
+                                                    ),
+                                                    Icon(Icons.assignment_ind,color: Colors.black,size: 16,)
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -551,36 +593,29 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             borderRadius:
                                                                 BorderRadius.circular(18.0),
                                                           )),
-                                                      onPressed: equipamento.status==StatusDoEquipamento.emprestado?
-                                                                () async {
-                                                                    try {
-                                                                      await equipamento
-                                                                        .solicitarDevolucao(
-                                                                          pacienteEmprestado,model);
-                                                                    } catch (e) {
-                                                                      mostrarMensagemErro(
-                                                                          context,
-                                                                          e.toString());
-                                                                    }
-                                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                                        const SnackBar(
-                                                                          backgroundColor: Constantes.corAzulEscuroPrincipal,
-                                                                          content: Text(
-                                                                            "Solicitação enviada à dispensação!"
-                                                                          ),
+                                                      onPressed: () async{
+                                                                  if(await mostrarDialogConfirmacao(context, 'Deseja mesmo disponibilizar?', 'Ele será alterado para Disponível')==true){
+                                                                    String? justificativa = await mostrarDialogJustificativa(context, 'Retornar ao hospital?', 'Qual o motivo da devolução?');
+                                                                    if (justificativa !=null) {
+                                                                      try {
+                                                                        await equipamento
+                                                                          .solicitarDevolucao(
+                                                                            pacienteEmprestado,model,justificativa);
+                                                                      } catch (e) {
+                                                                        mostrarMensagemErro(
+                                                                            context,
+                                                                            e.toString());
+                                                                      }
+                                                                  }
+                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                      const SnackBar(
+                                                                        backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                                        content: Text(
+                                                                          "Solicitação enviada à dispensação!"
                                                                         ),
-                                                                    );
-                                                                  }:
-                                                                () async{
-                                                                    try {
-                                                                      await equipamento
-                                                                        .devolver();
-                                                                    } catch (e) {
-                                                                      mostrarMensagemErro(
-                                                                          context,
-                                                                          e.toString());
-                                                                    }
-                                                                  },
+                                                                      ),
+                                                                  );
+                                                                  }},
                                                       child: Text(
                                                         equipamento.status==StatusDoEquipamento.emprestado?"Solicitar devolução":"Voltar ao hospital",
                                                         textAlign: TextAlign.center,
@@ -603,15 +638,20 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                   BorderRadius.circular(18.0),
                                                             )),
                                                         onPressed: () async{
-                                                            try {
-                                                            await equipamento
-                                                                .conceder(
-                                                                    pacienteEmprestado,model);
-                                                          } catch (erro) {
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                erro.toString());
-                                                          }
+                                                          if(await mostrarDialogConfirmacao(context, 'Deseja mesmo conceder?', 'Ele será concedido ao paciente atualmente emprestado')==true){
+                                                              mostrarDialogCarregando(context);  
+                                                              try {
+                                                                await equipamento
+                                                                    .conceder(
+                                                                        pacienteEmprestado,model);
+                                                              } catch (erro) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    erro.toString());
+                                                              }
+                                                              Navigator.pop(context);
+                                                            }
+                                                          
                                                         },
                                                         child: const Text(
                                                           "Conceder ao paciente",
@@ -715,17 +755,22 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           BorderRadius.circular(18.0),
                                                     )),
                                                 onPressed: () async {
-                                                              try {
-                                                                equipamento
-                                                                    .disponibilizar();
-                                                                equipamento.status =
-                                                                    StatusDoEquipamento
-                                                                        .disponivel;
-                                                              } catch (e) {
-                                                                mostrarMensagemErro(
-                                                                    context,
-                                                                    e.toString());
-                                                              }
+                                                  if(await mostrarDialogConfirmacao(context, 'Deseja mesmo disponibilizar?', 'Ele será alterado para Disponível')==true){
+                                                    mostrarDialogCarregando(context);
+                                                    try {
+                                                      equipamento
+                                                          .disponibilizar();
+                                                      equipamento.status =
+                                                          StatusDoEquipamento
+                                                              .disponivel;
+                                                    } catch (e) {
+                                                      mostrarMensagemErro(
+                                                          context,
+                                                          e.toString());
+                                                    }
+                                                    Navigator.pop(context);
+                                                  }
+                                                              
                                                             },
                                                 child: const Text(
                                                   "Disponibilizar",

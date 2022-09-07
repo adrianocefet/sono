@@ -11,7 +11,8 @@ class Solicitacao{
   late final String idSolicitante;
   late final DateTime dataDaSolicitacao;
   late final String hospital;
-  late final String? motivo;
+  late final String? motivoNegacao;
+  late final String? justificativaDevolucao;
   late final DateTime? dataDeResposta;
 
   String get dataDaSolicitacaoEmString {
@@ -39,7 +40,8 @@ class Solicitacao{
     idSolicitante = infoMap['solicitante'];
     hospital = infoMap['hospital'];
     confirmacao = _lerConfirmacao(infoMap['confirmacao']??'pendente')!;
-    motivo = infoMap['motivo'];
+    motivoNegacao = infoMap['motivo_negacao'];
+    justificativaDevolucao = infoMap['justificativa_devolucao'];
     infoMap["data_da_solicitacao"]!=null?
     dataDaSolicitacao=(infoMap["data_da_solicitacao"] as Timestamp).toDate():dataDeResposta=null;
     tipo = _lerTipo(infoMap['tipo']??'emprestimo')!;

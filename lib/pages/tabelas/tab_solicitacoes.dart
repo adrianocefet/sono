@@ -48,7 +48,6 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                     );
                   default:
                     filtradas = solicitacoesFiltradas(snapshot.data!.docs);
-                    print(filtradas);
                     return Scaffold(
                       drawer: CustomDrawer(widget.pageController),
                       appBar: AppBar(
@@ -68,14 +67,16 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                               )
                             ),
                           child: filtradas.isNotEmpty?
-                              ListView(
-                                children:
-                                  filtradas.map(
-                                    (Solicitacao solicitacao){
-                                      return SolicitacoesPainel(idSolicitacao: solicitacao.id);
-                                    }
-                                  ).toList(),
-                                  
+                              SingleChildScrollView(
+                                    padding: EdgeInsets.only(bottom: 140),
+                                    child:
+                                      Column(
+                                        children:
+                                        filtradas.map(
+                                          (Solicitacao solicitacao){
+                                            return SolicitacoesPainel(idSolicitacao: solicitacao.id);
+                                          }
+                                        ).toList(),)
                               ):
                               Padding(
                                 padding: const EdgeInsets.all(16.0),

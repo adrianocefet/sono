@@ -170,8 +170,8 @@ class Equipamento {
   Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
       await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
 
-  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario) async =>
-      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario);
+  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario, String justificativa) async =>
+      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario, justificativa);
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
