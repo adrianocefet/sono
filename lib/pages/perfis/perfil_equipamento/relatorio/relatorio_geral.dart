@@ -25,15 +25,15 @@ class _relatorioGeralState extends State<relatorioGeral> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return Center(
+              return const Center(
                   child: CircularProgressIndicator(),
               );
             default:
            List<QueryDocumentSnapshot<Object?>> documentos=snapshot.data!.docs;
           return Scaffold(
             body: Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [Color.fromARGB(255, 194, 195, 255),Colors.white],
@@ -58,12 +58,12 @@ class _relatorioGeralState extends State<relatorioGeral> {
                         children: [
                             mostrarlinhas(['','Disponível','Emprestado','Manutenção','Desinfecção','Total'],topo: true),
                             for(var tipo in TipoEquipamento.values) 
-                            mostrarlinhas([tipo.emString,
-                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length.toString(),
-                            documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length.toString()]), 
+                              mostrarlinhas([
+                              tipo.emString,
+                                for(var status in StatusDoEquipamento.values.getRange(0, 4))
+                                calcularQuantidade(documentos, tipo, status.emString, model.hospital,emString: true),
+                                calcularQuantidade(documentos, tipo, StatusDoEquipamento.disponivel.emString, model.hospital,total: true,emString: true),
+                              ]), 
                         ],
                       ),
                     ),
@@ -74,7 +74,7 @@ class _relatorioGeralState extends State<relatorioGeral> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(width: 1.4),
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(9),
                           topRight: Radius.circular(9),
                         )
@@ -99,26 +99,16 @@ class _relatorioGeralState extends State<relatorioGeral> {
                             series: <CircularSeries>[
                               PieSeries<GDPData, String>(
                                 dataSource:  [
-                                  GDPData('Disponíveis', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[0])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
-
-                                  GDPData('Empréstimos', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[1])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
-
-                                  GDPData('Manutenção', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[2])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
-
-                                  GDPData('Desinfecção', 
-                                  (documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(Constantes.status3[3])&&element['hospital'].toString().contains(model.hospital)).length*100
-                                  ~/(documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length==0?1:documentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(model.hospital)).length))),
+                                  for(var status in StatusDoEquipamento.values.getRange(0, 4))
+                                  GDPData(status.emStringMaiuscula, 
+                                  (calcularQuantidade(documentos, tipo, status.emString, model.hospital)*100
+                                  ~/(calcularQuantidade(documentos, tipo, status.emString, model.hospital,total: true)==0?
+                                  1:calcularQuantidade(documentos, tipo, status.emString, model.hospital,total: true)))),
                                 ],
                                 xValueMapper: (GDPData data,_)=> data.tipo,
                                 yValueMapper: (GDPData data,_)=> data.qntd,
-                                dataLabelSettings: DataLabelSettings(
-                                  textStyle: const TextStyle(
+                                dataLabelSettings: const DataLabelSettings(
+                                  textStyle: TextStyle(
                                     fontWeight: FontWeight.w300
                                   ),
                                   overflowMode: OverflowMode.shift,
@@ -169,6 +159,18 @@ class _relatorioGeralState extends State<relatorioGeral> {
 
   );}).toList(),
  );
+
+ calcularQuantidade(List<QueryDocumentSnapshot<Object?>> equipamentos, TipoEquipamento tipo, String status, String hospital, {bool total=false,bool emString = false}){
+
+    int contador;
+    if(total){
+      contador = equipamentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['hospital'].toString().contains(hospital)&&!element['status'].toString().contains(StatusDoEquipamento.concedido.emString)).length; 
+    }else{
+      contador = equipamentos.where((element) => element['tipo'].toString().contains(tipo.emStringSnakeCase)&&element['status'].toString().contains(status)&&element['hospital'].toString().contains(hospital)).length;
+    }
+
+    return emString ? contador.toString() : contador;
+    }
 
 } 
 
