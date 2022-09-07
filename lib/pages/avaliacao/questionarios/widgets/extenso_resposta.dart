@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 import 'enunciado_respostas.dart';
 
 class RespostaExtensoQuestionario extends StatefulWidget {
   final Pergunta pergunta;
-  final Paciente? paciente;
   final bool? numerico;
   final Color? corDominio;
   final String? autoPreencher;
@@ -16,14 +14,13 @@ class RespostaExtensoQuestionario extends StatefulWidget {
 
   RespostaExtensoQuestionario({
     required this.pergunta,
-    this.paciente,
     this.numerico,
     this.corDominio = Colors.blue,
     this.autoPreencher,
     this.enabled = true,
     Key? key,
   }) : super(key: key) {
-    _extensoController.text = autoPreencher ?? pergunta.respostaExtenso ?? "";
+    _extensoController.text = autoPreencher ?? (pergunta.respostaPadrao ?? '').toString();
   }
 
   @override
@@ -31,14 +28,8 @@ class RespostaExtensoQuestionario extends StatefulWidget {
 }
 
 class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
-  Paciente? paciente;
-
   @override
   Widget build(BuildContext context) {
-    if (widget.paciente != null || widget.autoPreencher != null) {
-      paciente = widget.paciente;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,12 +95,12 @@ class _RespostaExtensoState extends State<RespostaExtensoQuestionario> {
               fontWeight: FontWeight.bold,
             ),
             onSaved: (String? value) {
-              setState(
-                () {
-                  widget.pergunta
-                      .setRespostaExtenso(value!.isEmpty ? null : value.trim());
-                },
-              );
+              widget.pergunta
+                  .setRespostaExtenso(value!.isEmpty ? null : value.trim());
+              widget.pergunta.setRespostaNumerica(value.isEmpty
+                  ? null
+                  : int.tryParse(value.trim()) ??
+                      double.tryParse(value.replaceAll(',', '.').trim()));
             },
             validator: widget.pergunta.validador,
           ),

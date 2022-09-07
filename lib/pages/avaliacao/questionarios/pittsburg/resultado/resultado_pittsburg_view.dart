@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/avaliacao/questionarios/pittsburg/resultado/resultado_pittsburg.dart';
-import 'package:sono/utils/models/paciente.dart';
 
 import '../../widgets/dialogs/sair_questionario.dart';
 
 class ResultadoPittsburgView extends StatelessWidget {
   final ResultadoPittsburg resultado;
-  final Paciente paciente;
-
+  final bool consultando;
   const ResultadoPittsburgView({
     required this.resultado,
-    required this.paciente,
+    this.consultando = false,
     Key? key,
   }) : super(key: key);
 
@@ -116,7 +114,7 @@ class ResultadoPittsburgView extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
               onPressed: () async {
-                Navigator.pop(context);
+                if (!consultando) Navigator.pop(context);
                 Navigator.pop(
                   context,
                   resultado.mapaDeRespostasEPontuacao,

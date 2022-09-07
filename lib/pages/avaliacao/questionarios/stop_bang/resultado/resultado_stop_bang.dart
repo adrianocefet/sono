@@ -3,7 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 
 class ResultadoStopBang {
   late final List<Pergunta> perguntas;
-  late final int pontuacao;
+  late int pontuacao;
   late final ResultadoStopBangEnum resultado;
 
   ResultadoStopBang(this.perguntas) {
@@ -14,16 +14,11 @@ class ResultadoStopBang {
     perguntas = baseStopBang.map((e) => Pergunta.pelaBase(e)).toList();
 
     for (Pergunta pergunta in perguntas) {
-      if ([int, null].contains(mapa[pergunta.codigo].runtimeType)) {
-        pergunta.respostaNumerica = mapa[pergunta.codigo];
-      }
-      pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
-          ? mapa[pergunta.codigo]
-          : null;
+      pergunta.respostaPadrao = mapa[pergunta.codigo];
     }
 
     pontuacao = mapa["pontuacao"];
-    resultado = mapa["resultado"];
+    resultado = _gerarResultadoDoQuestionario();
   }
 
   String get resultadoEmString {
@@ -45,7 +40,7 @@ class ResultadoStopBang {
     for (Pergunta pergunta in perguntas) {
       int? resposta = pergunta.respostaNumerica?.toInt();
 
-      mapaDeRepostas[pergunta.codigo] = pergunta.respostaNumerica;
+      mapaDeRepostas[pergunta.codigo] = pergunta.respostaPadrao;
 
       if (perguntas.indexOf(pergunta) <= 3) {
         pontuacaoDasPerguntasIniciais += resposta!;
@@ -80,7 +75,7 @@ class ResultadoStopBang {
     Map<String, dynamic> mapa = {};
 
     for (Pergunta pergunta in perguntas) {
-      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.respostaNumerica;
+      mapa[pergunta.codigo] = pergunta.respostaPadrao;
     }
 
     mapa["pontuacao"] = pontuacao;

@@ -3,7 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 List<Map<String, dynamic>> baseManuvacuometria = [
   {
     'enunciado': "PImax",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'PImax',
     'unidade': 'cmH₂O',
     'validador': (value) {
@@ -19,7 +19,7 @@ List<Map<String, dynamic>> baseManuvacuometria = [
   },
   {
     'enunciado': "PEmax",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'PEmax',
     'unidade': 'cmH₂O',
     'validador': (value) {

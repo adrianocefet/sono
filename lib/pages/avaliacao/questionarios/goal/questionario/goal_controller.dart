@@ -4,6 +4,14 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class GOALController {
+  GOALController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
+
   final List<Pergunta> _perguntas =
       baseGOAL.map((e) => Pergunta.pelaBase(e)).toList();
 
@@ -42,7 +50,8 @@ class ResultadoGOAL {
   late final bool resultado;
 
   ResultadoGOAL(this.perguntas) {
-    pontuacao = perguntas.where((element) => element.respostaNumerica == 1).length;
+    pontuacao =
+        perguntas.where((element) => element.respostaNumerica == 1).length;
     resultado = pontuacao >= 2 ? true : false;
   }
 
@@ -72,7 +81,7 @@ class ResultadoGOAL {
     Map<String, dynamic> mapa = {};
 
     for (Pergunta pergunta in perguntas) {
-      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.respostaNumerica;
+      mapa[pergunta.codigo] = pergunta.respostaPadrao;
     }
 
     mapa["pontuacao"] = pontuacao;

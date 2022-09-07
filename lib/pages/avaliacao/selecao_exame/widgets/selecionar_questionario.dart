@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
 import '../../exame.dart';
 import 'acao_exame.dart';
 
@@ -84,6 +85,7 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
                       ],
                     ),
                     AcaoExame(
+                      versaoQuestionarios: true,
                       tipo: 'adicionar',
                       modificarEstadoExame: () async {
                         await showDialog(
@@ -96,12 +98,14 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
                     ),
                   ],
                 ),
-                ...widget.controllerAvaliacao.listaDeExamesRealizados.map(
-                  (e) => _QuestionarioRealizado(
-                    controllerAvaliacao: widget.controllerAvaliacao,
-                    exame: e,
-                  ),
-                ),
+                ...widget.controllerAvaliacao.listaDeExamesRealizados
+                    .where((element) => element.tipo == TipoExame.questionario)
+                    .map(
+                      (e) => _QuestionarioRealizado(
+                        controllerAvaliacao: widget.controllerAvaliacao,
+                        exame: e,
+                      ),
+                    ),
               ],
             ),
           ],
@@ -130,19 +134,18 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           width: double.infinity,
           height: 40,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(17),
-              topRight: Radius.circular(17),
+            border: Border(
+              top: BorderSide(color: Theme.of(context).primaryColor),
             ),
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColorLight,
           ),
           child: Center(
             child: Text(
-              widget.exame.nome,
+              widget.exame.nomeDoQuestionario!,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -156,8 +159,16 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AcaoExame(
+                versaoQuestionarios: true,
                 tipo: 'ver',
                 modificarEstadoExame: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => widget.controllerAvaliacao
+                          .gerarObjetoQuestionario(
+                              widget.exame.tipoQuestionario!),
+                    ),
+                  );
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => widget.controllerAvaliacao
@@ -167,6 +178,7 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
                 },
               ),
               AcaoExame(
+                versaoQuestionarios: true,
                 tipo: 'refazer',
                 modificarEstadoExame: () {
                   Navigator.of(context).push(
@@ -174,15 +186,19 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
                       builder: (context) =>
                           widget.controllerAvaliacao.gerarObjetoQuestionario(
                         widget.exame.tipoQuestionario!,
+                        refazer: true,
                       ),
                     ),
                   );
                 },
               ),
               AcaoExame(
+                versaoQuestionarios: true,
                 tipo: 'excluir',
-                modificarEstadoExame: () {
-                  widget.controllerAvaliacao.removerExame(widget.exame);
+                modificarEstadoExame: () async {
+                  if (await mostrarDialogExclusaoDeExame(context)) {
+                    widget.controllerAvaliacao.removerExame(widget.exame);
+                  }
                 },
               )
             ]),
@@ -202,7 +218,7 @@ class _ListaDeQuestionarios extends StatelessWidget {
         controllerAvaliacao.listarQuestionariosRealizados();
     List<TipoQuestionario> listarQuestionariosNaoRealizados() {
       List<TipoQuestionario> questionariosNaoRealizados =
-          TipoQuestionario.values;
+          List.from(TipoQuestionario.values);
 
       for (TipoQuestionario tipoRealizado in questionariosRealizados) {
         questionariosNaoRealizados.remove(tipoRealizado);
@@ -303,7 +319,7 @@ class _ListaDeQuestionarios extends StatelessWidget {
                             },
                             child: Text(
                               controllerAvaliacao
-                                  .nomeDoQuestionario(tipoQuestionario),
+                                  .nomeDoQuestionarioPorTipo(tipoQuestionario),
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 16),
                               textAlign: TextAlign.center,

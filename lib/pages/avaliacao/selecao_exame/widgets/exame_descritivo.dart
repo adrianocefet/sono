@@ -101,16 +101,20 @@ class ExameDescritivo extends StatelessWidget {
                       ? 'Preenchimento obrigatório'
                       : null,
               onEditingComplete: () {
-                exame.respostas[exame.tipo == TipoExame.conclusao
-                    ? 'conclusao'
-                    : 'dados_complementares'] = _textEditingController.text;
-                controllerAvaliacao.salvarExame(exame);
+                if (_textEditingController.text.isNotEmpty) {
+                  exame.respostas[exame.tipo == TipoExame.conclusao
+                      ? 'conclusao'
+                      : 'dados_complementares'] = _textEditingController.text;
+                  controllerAvaliacao.salvarExame(exame);
+                }
               },
               onSaved: (value) {
-                exame.respostas[exame.tipo == TipoExame.conclusao
-                    ? 'conclusao'
-                    : 'dados_complementares'] = _textEditingController.text;
-                controllerAvaliacao.salvarExame(exame);
+                if (_textEditingController.text.isNotEmpty) {
+                  exame.respostas[exame.tipo == TipoExame.conclusao
+                      ? 'conclusao'
+                      : 'dados_complementares'] = _textEditingController.text;
+                  controllerAvaliacao.salvarExame(exame);
+                }
               },
             ),
           ),

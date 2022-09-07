@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 import '../questionario/goal_controller.dart';
 
 class ResultadoGOALView extends StatelessWidget {
   final ResultadoGOAL resultadoGOAL;
-  final Paciente paciente;
-
+  final bool consultando;
   const ResultadoGOALView({
     required this.resultadoGOAL,
-    required this.paciente,
+    this.consultando = false,
     Key? key,
   }) : super(key: key);
 
@@ -85,7 +83,7 @@ class ResultadoGOALView extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              Navigator.pop(context);
+              if(!consultando) Navigator.pop(context);
               Navigator.pop(
                 context,
                 resultadoGOAL.mapaDeRespostasEPontuacao,

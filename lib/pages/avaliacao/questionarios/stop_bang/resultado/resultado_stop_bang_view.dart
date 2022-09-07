@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'resultado_stop_bang.dart';
 
 class TelaResultadoStopBang extends StatelessWidget {
   final ResultadoStopBang resultadoStopBang;
-  final Paciente paciente;
+  final bool consultando;
   const TelaResultadoStopBang(this.resultadoStopBang,
-      {required this.paciente, Key? key})
+      {Key? key, this.consultando = false})
       : super(key: key);
 
   @override
@@ -68,15 +67,16 @@ class TelaResultadoStopBang extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Constantes.corPrincipalQuestionarios,
-                minimumSize: const Size(0, 140)),
+              primary: Constantes.corPrincipalQuestionarios,
+              minimumSize: const Size(0, 140),
+            ),
             child: const Text(
               "Salvar resultado no perfil do paciente",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              Navigator.pop(context);
+              if (!consultando) Navigator.pop(context);
               Navigator.pop(
                 context,
                 resultadoStopBang.mapaDeRespostasEPontuacao,

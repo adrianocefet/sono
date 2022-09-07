@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/dialogs/error_message.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'resultado_whodas.dart';
 
 class ResultadoWHODASView extends StatefulWidget {
   final ResultadoWHODAS resultado;
-  final Paciente paciente;
-
+  final bool consultando;
   const ResultadoWHODASView(
-      {Key? key, required this.resultado, required this.paciente})
+      {Key? key, required this.resultado, this.consultando = false})
       : super(key: key);
   @override
   ResultadoWHODASViewState createState() => ResultadoWHODASViewState();
@@ -19,36 +16,8 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
   bool isLoading = false;
 
   Future<void> salvarFormulario() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      // await FirebaseService()
-      //     .uploadWhodasData(widget.resultado, widget.resultado['id_paciente']);
-      // await Usuario().updateInfo();
-      // Navigator.popUntil(
-      //   context,
-      //   ModalRoute.withName(Constants.paginaInicialNavigate),
-      // );
-
-      // Navigator.pushNamed(context, Constants.paginaInicialNavigate);
-      // Navigator.pushNamed(context, Constants.buscaPacienteNavigate);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (_) {
-      //     return PerfilPaciente(widget.resultado['id_paciente']);
-      //   }),
-      // );
-      Navigator.pop(context);
-      Navigator.pop(context);
-    } on Exception catch (e) {
-      mostrarMensagemErro(context, e.toString());
-      setState(() {
-        isLoading = false;
-      });
-    }
+    Navigator.pop(context);
+    Navigator.pop(context, widget.resultado.mapaDeRespostasEPontuacao);
   }
 
   @override
@@ -153,7 +122,7 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
                                 primary: Theme.of(context).primaryColor,
                               ),
                               onPressed: () async {
-                                Navigator.pop(context);
+                                if (!widget.consultando) Navigator.pop(context);
                                 Navigator.pop(
                                   context,
                                   widget.resultado.mapaDeRespostasEPontuacao,

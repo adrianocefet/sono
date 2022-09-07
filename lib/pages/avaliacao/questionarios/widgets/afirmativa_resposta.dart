@@ -58,7 +58,7 @@ class _RespostaAfirmativaState extends State<RespostaAfirmativa> {
             children: [
               _Botao(
                 pergunta: widget.pergunta,
-                value: 1,
+                value: true,
                 parentSetState: () => () async {
                   setState(() {});
                   await widget.passarPagina();
@@ -69,7 +69,7 @@ class _RespostaAfirmativaState extends State<RespostaAfirmativa> {
               ),
               _Botao(
                 pergunta: widget.pergunta,
-                value: 0,
+                value: false,
                 parentSetState: () => () async {
                   setState(() {});
                   await widget.passarPagina();
@@ -84,7 +84,7 @@ class _RespostaAfirmativaState extends State<RespostaAfirmativa> {
 }
 
 class _Botao extends StatefulWidget {
-  final int value;
+  final bool value;
   final Pergunta pergunta;
   final Function parentSetState;
   const _Botao({
@@ -101,10 +101,10 @@ class _Botao extends StatefulWidget {
 class _BotaoState extends State<_Botao> {
   @override
   Widget build(BuildContext context) {
-    int value = widget.value;
-    int? groupValue = widget.pergunta.respostaNumerica?.toInt();
+    bool value = widget.value;
+    bool? groupValue = widget.pergunta.respostaPadrao;
     return ElevatedButton(
-      child: widget.value == 1
+      child: widget.value == true
           ? const Text(
               "Sim",
               style: TextStyle(
@@ -120,14 +120,15 @@ class _BotaoState extends State<_Botao> {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(50),
         primary: groupValue == value
-            ? value == 0
+            ? value == false
                 ? Colors.green
                 : Colors.red
             : Constantes.corCinzaPrincipal,
       ),
       onPressed: () {
-        widget.pergunta.setRespostaNumerica(value);
-        widget.pergunta.setRespostaExtenso(value == 1 ? "Sim" : "Não");
+        widget.pergunta.setRespostaBooleana(value);
+        widget.pergunta.setRespostaExtenso(value ? "Sim" : "Não");
+        widget.pergunta.setRespostaNumerica(value ? 1 : 0);
         widget.parentSetState();
       },
     );

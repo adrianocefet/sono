@@ -73,7 +73,6 @@ class _ControleDeNavegacaoPittsburgState
                           maintainState: true,
                           builder: (context) => ResultadoPittsburgView(
                             resultado: resultadoPitts,
-                            paciente: widget.controller.paciente,
                           ),
                         ),
                       );

@@ -5,12 +5,16 @@ import 'package:sono/pages/avaliacao/questionarios/pittsburg/resultado/resultado
 import 'package:sono/pages/avaliacao/questionarios/widgets/enunciado_respostas.dart';
 import 'package:sono/utils/bases_questionarios/base_pittsburg.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class PittsburgController {
-  PittsburgController(this.paciente);
-  final Paciente paciente;
+  PittsburgController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
   final List<Pergunta> _perguntas =

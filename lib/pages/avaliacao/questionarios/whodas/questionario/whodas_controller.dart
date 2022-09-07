@@ -4,14 +4,18 @@ import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/widgets/e
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/widgets/resposta_ativ_trab.dart';
 import 'package:sono/utils/bases_questionarios/base_whodas.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../resultado/resultado_whodas.dart';
 import 'widgets/enunciado_secao.dart';
 
 class WHODASController {
-  Paciente paciente;
-  WHODASController(this.paciente);
+  WHODASController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
   final List<Pergunta> _perguntas =
@@ -101,7 +105,7 @@ class WHODASController {
             : RespostaWidget(
                 pergunta,
                 notifyParent: passarParaProximaPagina,
-                autoPreencher: _autoPreencher(pergunta, paciente),
+                autoPreencher: _autoPreencher(pergunta),
               ),
       );
     }
@@ -109,8 +113,7 @@ class WHODASController {
     listaDePaginas.insert(
       listaDePaginas.indexWhere((resposta) =>
               resposta.runtimeType == RespostaWidget &&
-              (resposta as RespostaWidget).pergunta.codigo == "F1") -
-          1,
+              (resposta as RespostaWidget).pergunta.codigo == "F1"),
       const EnunSecao(indiceSecao: 0),
     );
 
@@ -223,10 +226,8 @@ class WHODASController {
     }
   }
 
-  dynamic _autoPreencher(Pergunta pergunta, Paciente paciente) {
+  dynamic _autoPreencher(Pergunta pergunta) {
     switch (pergunta.codigo) {
-      case "nome":
-        return paciente.nomeCompleto;
       case "F4":
         return DateFormat("dd/MM/yyyy").format(DateTime.now());
       case "A2":

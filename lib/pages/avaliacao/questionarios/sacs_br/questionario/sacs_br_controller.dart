@@ -4,6 +4,14 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class SacsBRController {
+  SacsBRController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
+
   final List<Pergunta> _perguntas =
       baseSacsBR.map((e) => Pergunta.pelaBase(e)).toList();
 
@@ -116,7 +124,7 @@ class ResultadoSACSBR {
     Map<String, dynamic> mapa = {};
 
     for (Pergunta pergunta in perguntas) {
-      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.respostaNumerica;
+      mapa[pergunta.codigo] = pergunta.respostaPadrao;
     }
 
     mapa["pontuacao"] = pontuacao;

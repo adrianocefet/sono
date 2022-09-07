@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/questionarios/epworth/resultado/resultado_epworth.dart';
 import 'package:sono/utils/bases_questionarios/base_epworth.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class EpworthController {
-  EpworthController(this.paciente);
-
-  final Paciente paciente;
+  EpworthController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
+  
   final List<Pergunta> _perguntas =
       baseEpworth.map((e) => Pergunta.pelaBase(e)).toList();
 

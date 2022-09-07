@@ -66,10 +66,10 @@ class _RespostaAtividadeTrabalhoState extends State<RespostaAtividadeTrabalho> {
                   ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 800),
-                  height: widget.pergunta.respostaExtenso ==
-                          "Outros (especifique)"
-                      ? null
-                      : 0,
+                  height:
+                      widget.pergunta.respostaExtenso == "Outros (especifique)"
+                          ? null
+                          : 0,
                   child: Column(
                     children: [
                       TextFormField(
@@ -142,7 +142,9 @@ class _BotaoState extends State<_Botao> {
   Widget build(BuildContext context) {
     int indice = widget.indice;
     int peso =
-        widget.pergunta.pesos == null ? 0 : widget.pergunta.pesos![indice];
+        widget.pergunta.pesos == null || (widget.pergunta.pesos ?? []).isEmpty
+            ? 0
+            : widget.pergunta.pesos![indice];
     String label = widget.pergunta.opcoes![indice];
     bool estaSelecionado = widget.pergunta.respostaExtenso == label;
 

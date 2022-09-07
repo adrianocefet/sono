@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'resultado_epworth.dart';
 
 class ResultadoEpworthView extends StatelessWidget {
   final ResultadoEpworth resultado;
-  final Paciente paciente;
-
+  final bool consultando;
   const ResultadoEpworthView({
     required this.resultado,
-    required this.paciente,
+    this.consultando = false,
     Key? key,
   }) : super(key: key);
 
@@ -92,7 +90,7 @@ class ResultadoEpworthView extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              Navigator.pop(context);
+              if (!consultando) Navigator.pop(context);
               Navigator.pop(context, resultado.mapaDeRespostasEPontuacao);
             },
           ),

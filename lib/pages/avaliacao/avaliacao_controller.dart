@@ -24,9 +24,8 @@ import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_vi
 import 'exame.dart';
 
 class ControllerAvaliacao {
-  final Paciente paciente;
   ControllerAvaliacao(this.paciente);
-
+  final Paciente paciente;
   final GlobalKey<FormState> keyExamesDescritivos = GlobalKey<FormState>();
   final ValueNotifier<List<Exame>> _examesRealizados =
       ValueNotifier<List<Exame>>(List.empty(growable: true));
@@ -57,7 +56,11 @@ class ControllerAvaliacao {
         .toList();
   }
 
-  void salvarExame(Exame exame) => _examesRealizados.value += [exame];
+  void salvarExame(Exame exame) {
+    if (listaDeExamesRealizados.contains(exame) == false) {
+      _examesRealizados.value += [exame];
+    }
+  }
 
   void removerExame(Exame exame) {
     List<Exame> exameRealizados = _examesRealizados.value;
@@ -95,7 +98,7 @@ class ControllerAvaliacao {
             Exame(TipoExame.questionario, tipoQuestionario: tipoQuestionario),
       );
 
-  String nomeDoQuestionario(TipoQuestionario tipoQuestionario) {
+  String nomeDoQuestionarioPorTipo(TipoQuestionario tipoQuestionario) {
     switch (tipoQuestionario) {
       case TipoQuestionario.berlin:
         return "Berlin";
@@ -114,36 +117,26 @@ class ControllerAvaliacao {
     }
   }
 
-  dynamic gerarObjetoQuestionario(TipoQuestionario tipoQuestionario) {
+  dynamic gerarObjetoQuestionario(TipoQuestionario tipoQuestionario,
+      {bool refazer = false}) {
+    Map<String, dynamic>? autoPreencher = refazer
+        ? null
+        : obterExamePorTipoDeQuestionario(tipoQuestionario).respostas;
     switch (tipoQuestionario) {
       case TipoQuestionario.berlin:
-        return Berlin(
-          paciente: paciente,
-        );
+        return Berlin(autoPreencher: autoPreencher);
       case TipoQuestionario.sacsBR:
-        return SacsBR(
-          paciente: paciente,
-        );
+        return SacsBR(autoPreencher: autoPreencher);
       case TipoQuestionario.whodas:
-        return WHODAS(
-          paciente: paciente,
-        );
+        return WHODAS(autoPreencher: autoPreencher);
       case TipoQuestionario.goal:
-        return GOAL(
-          paciente: paciente,
-        );
+        return GOAL(autoPreencher: autoPreencher);
       case TipoQuestionario.epworth:
-        return Epworth(
-          paciente: paciente,
-        );
+        return Epworth(autoPreencher: autoPreencher);
       case TipoQuestionario.pittsburg:
-        return Pittsburg(
-          paciente: paciente,
-        );
+        return Pittsburg(autoPreencher: autoPreencher);
       default:
-        return StopBang(
-          paciente: paciente,
-        );
+        return StopBang(autoPreencher: autoPreencher);
     }
   }
 
@@ -170,49 +163,41 @@ class ControllerAvaliacao {
     switch (exame.tipoQuestionario) {
       case TipoQuestionario.berlin:
         return TelaResultadoBerlin(
-          paciente: paciente,
           resultadoBerlin: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       case TipoQuestionario.sacsBR:
         return ResultadoSACSBRView(
-          paciente: paciente,
           resultadoSACSBR: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       case TipoQuestionario.whodas:
         return ResultadoWHODASView(
-          paciente: paciente,
           resultado: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       case TipoQuestionario.goal:
         return ResultadoGOALView(
-          paciente: paciente,
           resultadoGOAL: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       case TipoQuestionario.epworth:
         return ResultadoEpworthView(
-          paciente: paciente,
           resultado: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       case TipoQuestionario.pittsburg:
         return ResultadoPittsburgView(
-          paciente: paciente,
           resultado: gerarObjetoResultadoDoQuestionario(exame),
+          consultando: true,
         );
       default:
         return TelaResultadoStopBang(
           gerarObjetoResultadoDoQuestionario(exame),
-          paciente: paciente,
+          consultando: true,
         );
     }
   }
 }
 
-enum TipoQuestionario {
-  stopBang,
-  berlin,
-  sacsBR,
-  whodas,
-  goal,
-  epworth,
-  pittsburg,
-}
+

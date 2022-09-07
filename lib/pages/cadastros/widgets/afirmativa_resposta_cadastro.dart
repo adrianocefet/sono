@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaAfirmativaCadastro extends StatefulWidget {
   final Pergunta pergunta;
-  final Paciente? paciente;
   final bool? numerico;
   final Color? corTexto;
   final Color? corDominio;
   final bool? autoPreencher;
   final TextEditingController _extensoController = TextEditingController();
+  final void Function()? notificarParent;
 
   RespostaAfirmativaCadastro({
     required this.pergunta,
-    this.paciente,
     this.numerico,
     this.corTexto = Colors.black,
     this.corDominio = Colors.blue,
     this.autoPreencher,
     Key? key,
+    this.notificarParent,
   }) : super(key: key) {
     _extensoController.text = autoPreencher != null
         ? autoPreencher!
@@ -32,15 +31,10 @@ class RespostaAfirmativaCadastro extends StatefulWidget {
 }
 
 class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
-  Paciente? paciente;
   bool valido = true;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.paciente != null || widget.autoPreencher != null) {
-      paciente = widget.paciente;
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: Column(
@@ -59,7 +53,7 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
                             null
                         ? true
                         : false;
-  
+
                     widget.pergunta.setRespostaBooleana(
                         widget.pergunta.respostaBooleana ??
                             widget.autoPreencher);
@@ -107,7 +101,12 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
                                 ? "Sim"
                                 : "Não"
                             : null,
-                        atualizarMarcacao: () => setState(() {}),
+                        atualizarMarcacao: () {
+                          setState(() {});
+                          if (widget.notificarParent != null) {
+                            widget.notificarParent!();
+                          }
+                        },
                       ),
                       _BotaoBinario(
                         'Não',
@@ -117,7 +116,12 @@ class _RespostaExtensoState extends State<RespostaAfirmativaCadastro> {
                                 ? "Sim"
                                 : "Não"
                             : null,
-                        atualizarMarcacao: () => setState(() {}),
+                        atualizarMarcacao: () {
+                          setState(() {});
+                          if (widget.notificarParent != null) {
+                            widget.notificarParent!();
+                          }
+                        },
                       )
                     ],
                   ),

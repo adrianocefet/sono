@@ -3,7 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 List<Map<String, dynamic>> baseEspirometria = [
   {
     'enunciado': "CVF",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'CVF',
     'unidade': '% do previsto',
     'validador': (value) {
@@ -19,7 +19,7 @@ List<Map<String, dynamic>> baseEspirometria = [
   },
   {
     'enunciado': "VEF₁",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'VEF1',
     'unidade': '% do previsto',
     'validador': (value) {
@@ -35,7 +35,7 @@ List<Map<String, dynamic>> baseEspirometria = [
   },
   {
     'enunciado': "VEF₁/CVF",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'VEF1_CVF',
     'unidade': "%",
     'validador': (value) {
@@ -51,7 +51,7 @@ List<Map<String, dynamic>> baseEspirometria = [
   },
   {
     'enunciado': "FEF₂₅₋₇₅",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'FEF25_75',
     'unidade': '% do previsto',
     'validador': (value) {
@@ -67,7 +67,7 @@ List<Map<String, dynamic>> baseEspirometria = [
   },
   {
     'enunciado': "PFE",
-    'tipo': TipoPergunta.numerica,
+    'tipo': TipoPergunta.numericaCadastros,
     'codigo': 'PFE',
     'unidade': '% do previsto',
     'validador': (value) {

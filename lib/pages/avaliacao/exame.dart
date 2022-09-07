@@ -6,13 +6,14 @@ import 'package:sono/utils/bases_exames/base_sintomas.dart';
 import 'package:sono/utils/bases_exames/base_sintomas_cpap.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
-import 'avaliacao_controller.dart';
 
 class Exame {
-  Exame(this.tipo, {this.tipoQuestionario, this.respostas = const {}});
+  Exame(this.tipo, {this.tipoQuestionario, respostas}) {
+    this.respostas = respostas ?? {};
+  }
 
   TipoExame tipo;
-  Map<String, dynamic> respostas;
+  late Map<String, dynamic> respostas;
   TipoQuestionario? tipoQuestionario;
 
   late final List<Pergunta> perguntas =
@@ -47,6 +48,27 @@ class Exame {
     }
   }
 
+  String? get nomeDoQuestionario {
+    switch (tipoQuestionario) {
+      case TipoQuestionario.berlin:
+        return "Berlin";
+      case TipoQuestionario.stopBang:
+        return "Stop-Bang";
+      case TipoQuestionario.sacsBR:
+        return "SACS-BR";
+      case TipoQuestionario.whodas:
+        return "WHODAS";
+      case TipoQuestionario.goal:
+        return "GOAL";
+      case TipoQuestionario.pittsburg:
+        return "Pittsburg";
+      case TipoQuestionario.epworth:
+        return "Epworth";
+      default:
+        return null;
+    }
+  }
+
   List<dynamic> get _base {
     switch (tipo) {
       case TipoExame.polissonografia:
@@ -77,4 +99,14 @@ enum TipoExame {
   questionario,
   dadosComplementares,
   conclusao
+}
+
+enum TipoQuestionario {
+  stopBang,
+  berlin,
+  sacsBR,
+  whodas,
+  goal,
+  epworth,
+  pittsburg,
 }

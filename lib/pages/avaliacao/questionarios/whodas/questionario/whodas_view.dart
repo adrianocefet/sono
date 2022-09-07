@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_controller.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../widgets/dialogs/sair_questionario.dart';
 import 'widgets/controle_de_nav.dart';
 import 'widgets/resposta_ativ_trab.dart';
 
 class WHODAS extends StatefulWidget {
-  final Paciente paciente;
   late final WHODASController _controller;
-  WHODAS({required this.paciente, Key? key}) : super(key: key) {
-    _controller = WHODASController(paciente);
+  WHODAS({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
+    _controller = WHODASController(autoPreencher: autoPreencher);
   }
 
   @override

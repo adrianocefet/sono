@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 import '../questionario/sacs_br_controller.dart';
 
 class ResultadoSACSBRView extends StatelessWidget {
   final ResultadoSACSBR resultadoSACSBR;
-  final Paciente paciente;
-
+  final bool consultando;
   const ResultadoSACSBRView({
     required this.resultadoSACSBR,
-    required this.paciente,
+    this.consultando = false,
     Key? key,
   }) : super(key: key);
 
@@ -85,7 +83,7 @@ class ResultadoSACSBRView extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              Navigator.pop(context);
+              if (!consultando) Navigator.pop(context);
               Navigator.pop(context, resultadoSACSBR.mapaDeRespostasEPontuacao);
             },
           ),

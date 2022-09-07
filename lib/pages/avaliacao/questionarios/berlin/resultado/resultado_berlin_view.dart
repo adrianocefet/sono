@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/paciente.dart';
 
 import '../questionario/berlin_controller.dart';
 
 class TelaResultadoBerlin extends StatefulWidget {
   final ResultadoBerlin resultadoBerlin;
-  final Paciente paciente;
-
+  final bool consultando;
   const TelaResultadoBerlin({
     Key? key,
-    required this.paciente,
     required this.resultadoBerlin,
+    this.consultando = false,
   }) : super(key: key);
 
   @override
@@ -68,7 +66,7 @@ class _TelaResultadoBerlinState extends State<TelaResultadoBerlin> {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              Navigator.pop(context);
+              if(!widget.consultando) Navigator.pop(context);
               Navigator.pop(
                 context,
                 widget.resultadoBerlin.mapaDeRespostasEPontuacao,

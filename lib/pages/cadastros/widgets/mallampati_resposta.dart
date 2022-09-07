@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaMallampati extends StatefulWidget {
   final Pergunta pergunta;
-  final Paciente? paciente;
   final int? autoPreencher;
 
   const RespostaMallampati({
     required this.pergunta,
-    this.paciente,
     this.autoPreencher,
     Key? key,
   }) : super(key: key);
@@ -19,14 +16,9 @@ class RespostaMallampati extends StatefulWidget {
 }
 
 class _RespostaExtensoState extends State<RespostaMallampati> {
-  Paciente? paciente;
   bool valido = true;
   @override
   Widget build(BuildContext context) {
-    if (widget.paciente != null || widget.autoPreencher != null) {
-      paciente = widget.paciente;
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: Column(
@@ -60,7 +52,8 @@ class _RespostaExtensoState extends State<RespostaMallampati> {
                               ? true
                               : false;
                           widget.pergunta.setRespostaNumerica(
-                              widget.pergunta.respostaNumerica ?? widget.autoPreencher);
+                              widget.pergunta.respostaNumerica ??
+                                  widget.autoPreencher);
                         },
                       );
                     },
@@ -146,7 +139,8 @@ class _SelecionarMallampatiState extends State<_SelecionarMallampati> {
   }
 
   bool get estaSelecionado =>
-      (widget.pergunta.respostaNumerica ?? widget.autoPreencher) == widget.indice;
+      (widget.pergunta.respostaNumerica ?? widget.autoPreencher) ==
+      widget.indice;
 
   @override
   Widget build(BuildContext context) {

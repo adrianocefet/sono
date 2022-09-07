@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/cadastros/widgets/afirmativa_resposta.dart';
+import 'package:sono/pages/cadastros/widgets/afirmativa_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/comorbidades_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/data_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/dropdown_resposta_cadastro.dart';
@@ -8,7 +8,6 @@ import 'package:sono/pages/cadastros/widgets/extenso_resposta_cadastro.dart';
 import 'package:sono/pages/cadastros/widgets/foto_perfil_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/mallampati_resposta.dart';
 import 'package:sono/pages/cadastros/widgets/multipla_cadastros_resposta.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../pages/avaliacao/questionarios/berlin/questionario/widgets/resposta_multipla_berlin.dart';
 import '../../pages/avaliacao/questionarios/widgets/afirmativa_resposta.dart';
@@ -18,7 +17,6 @@ import '../../pages/avaliacao/questionarios/widgets/multipla_resposta.dart';
 
 class RespostaWidget extends StatefulWidget {
   final Pergunta pergunta;
-  final Paciente? paciente;
   final Function()? notifyParent;
   final Color corTexto;
   final dynamic autoPreencher;
@@ -26,7 +24,6 @@ class RespostaWidget extends StatefulWidget {
   const RespostaWidget(
     this.pergunta, {
     this.notifyParent,
-    this.paciente,
     this.corTexto = Colors.black,
     this.autoPreencher,
     Key? key,
@@ -48,7 +45,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaExtensoQuestionario(
             pergunta: pergunta,
-            paciente: widget.paciente,
             corDominio:
                 Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
                     Constantes.corAzulEscuroSecundario,
@@ -59,7 +55,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaExtensoQuestionario(
             pergunta: pergunta,
-            paciente: widget.paciente,
             numerico: true,
             corDominio:
                 Constantes.coresDominiosWHODASMap[widget.pergunta.dominio] ??
@@ -71,7 +66,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
-            paciente: widget.paciente,
             corTexto: widget.corTexto,
             autoPreencher:
                 widget.autoPreencher ?? widget.pergunta.respostaExtenso,
@@ -81,7 +75,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
-            paciente: widget.paciente,
             numerico: true,
             corTexto: widget.corTexto,
             corDominio:
@@ -92,11 +85,16 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
           );
         }
       case TipoPergunta.numerica:
+        return RespostaExtensoQuestionario(
+          pergunta: pergunta,
+          numerico: true,
+          autoPreencher:
+              widget.autoPreencher ?? widget.pergunta.respostaExtenso,
+        );
       case TipoPergunta.multiLinhasCadastros:
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
-            paciente: widget.paciente,
             multilinhas: true,
             corTexto: widget.corTexto,
             corDominio:
@@ -110,7 +108,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
         {
           return RespostaExtensoCadastro(
             pergunta: pergunta,
-            paciente: widget.paciente,
             numerico: true,
             corTexto: widget.corTexto,
             corDominio:
@@ -158,6 +155,7 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
             pergunta: pergunta,
             autoPreencher:
                 widget.autoPreencher ?? widget.pergunta.respostaNumerica,
+            notificarParent: widget.notifyParent,
           );
         }
       case TipoPergunta.multipla:
@@ -186,7 +184,7 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
           pergunta: pergunta,
           passarPagina: widget.notifyParent as Future<void> Function(),
         );
-      case TipoPergunta.multiplaCadastros:
+      case TipoPergunta.multiplaCadastrosComExtensoESeletor:
         return RespostaMultiplaCadastros(
           pergunta: pergunta,
           autoPreencher: widget.autoPreencher ?? widget.pergunta.respostaLista,
@@ -201,7 +199,6 @@ class _RespostaWidgetState<T extends RespostaWidget> extends State<T> {
           pergunta: pergunta,
           autoPreencher:
               widget.autoPreencher ?? widget.pergunta.respostaNumerica,
-          paciente: widget.paciente,
         );
       default:
         {

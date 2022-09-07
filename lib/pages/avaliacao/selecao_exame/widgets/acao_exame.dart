@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 class AcaoExame extends StatelessWidget {
   final String tipo;
+  final bool versaoQuestionarios;
   final Function modificarEstadoExame;
   const AcaoExame(
-      {Key? key, required this.tipo, required this.modificarEstadoExame})
+      {Key? key,
+      required this.tipo,
+      required this.modificarEstadoExame,
+      this.versaoQuestionarios = false})
       : super(key: key);
 
   @override
@@ -16,7 +20,7 @@ class AcaoExame extends StatelessWidget {
     switch (tipo) {
       case 'ver':
         icone = const Icon(Icons.menu, size: 36);
-        nome = 'Ver exame';
+        nome = 'Ver ${versaoQuestionarios ? 'teste' : 'exame'}';
         cor = Theme.of(context).primaryColorLight;
         break;
       case 'adicionar':
@@ -26,12 +30,12 @@ class AcaoExame extends StatelessWidget {
         break;
       case 'refazer':
         icone = const Icon(Icons.redo, size: 36);
-        nome = 'Refazer exame';
+        nome = 'Refazer ${versaoQuestionarios ? 'teste' : 'exame'}';
         cor = Colors.yellow;
         break;
       case 'excluir':
         icone = const Icon(Icons.close, size: 36);
-        nome = 'Excluir exame';
+        nome = 'Excluir ${versaoQuestionarios ? 'teste' : 'exame'}';
         cor = Colors.red;
         break;
 

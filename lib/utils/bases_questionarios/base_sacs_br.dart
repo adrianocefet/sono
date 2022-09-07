@@ -10,10 +10,10 @@ List<Map<String, dynamic>> baseSacsBR = [
   },
   {
     'enunciado':
-        "“Meu parceiro diz que ronco”. Escolha a melhor resposta sobre a frequência do seu ronco:",
+        "“Meu parceiro diz que ronco”.\n Escolha a melhor resposta sobre a frequência do seu ronco:",
     'tipo': TipoPergunta.multipla,
     'dominio': '2',
-    "pesos": [0, 0, 1, 1, 1, 1],
+    "pesos": [0, 0, 1, 1, 1, 1, 1],
     'opcoes': [
       "Não sei dizer",
       "Nunca",
@@ -27,10 +27,10 @@ List<Map<String, dynamic>> baseSacsBR = [
   },
   {
     'enunciado':
-        "“Meu parceiro diz que engasgo ou fico sufocado enquanto durmo”. Escolha a melhor resposta sobre a frequência desses sintomas:",
+        "“Meu parceiro diz que engasgo ou fico sufocado enquanto durmo”.\n Escolha a melhor resposta sobre a frequência desses sintomas:",
     'tipo': TipoPergunta.multipla,
     'dominio': '3',
-    "pesos": [0, 0, 1, 1, 1, 1],
+    "pesos": [0, 0, 1, 1, 1, 1, 1],
     'opcoes': [
       "Não sei dizer",
       "Nunca",
@@ -43,7 +43,7 @@ List<Map<String, dynamic>> baseSacsBR = [
     'codigo': 'freq_engasgo_ou_sufoco',
   },
   {
-    "enunciado": "Insira a circunferência do pescoço do paciente",
+    "enunciado": "Insira a circunferência do pescoço do paciente (cm)",
     "tipo": TipoPergunta.extensoNumerico,
     "dominio": "4",
     "codigo": "circunferencia_pescoco",

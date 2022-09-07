@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
+import 'package:sono/pages/avaliacao/relatorio/relatorio_avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/exame_descritivo.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/selecionar_questionario.dart';
 import 'package:sono/utils/models/paciente.dart';
@@ -62,7 +63,8 @@ class _SelecaoDeExamesState extends State<SelecaoDeExames> {
             Expanded(
               child: SingleChildScrollView(
                 child: ValueListenableBuilder(
-                  valueListenable: widget.controllerAvaliacao.examesRealizadoNotifier,
+                  valueListenable:
+                      widget.controllerAvaliacao.examesRealizadoNotifier,
                   builder: (context, examesRealizados, _) {
                     return Form(
                       key: widget.controllerAvaliacao.keyExamesDescritivos,
@@ -70,28 +72,29 @@ class _SelecaoDeExamesState extends State<SelecaoDeExames> {
                         children: [
                           ...TipoExame.values.map(
                             (tipoExame) {
-                              if ([
-                                TipoExame.conclusao,
-                                TipoExame.dadosComplementares
-                              ].contains(tipoExame)) {
-                                return ExameDescritivo(
-                                  exame: widget.controllerAvaliacao
-                                      .obterExamePorTipoGeral(tipoExame),
-                                  controllerAvaliacao: widget.controllerAvaliacao,
-                                );
-                              } else {
-                                if (tipoExame == TipoExame.questionario) {
+                              switch (tipoExame) {
+                                case TipoExame.conclusao:
+                                case TipoExame.dadosComplementares:
+                                  return ExameDescritivo(
+                                    exame: widget.controllerAvaliacao
+                                        .obterExamePorTipoGeral(tipoExame),
+                                    controllerAvaliacao:
+                                        widget.controllerAvaliacao,
+                                  );
+                                case TipoExame.questionario:
                                   return SelecionarQuestionario(
                                     exame: widget.controllerAvaliacao
                                         .obterExamePorTipoGeral(tipoExame),
-                                    controllerAvaliacao: widget.controllerAvaliacao,
+                                    controllerAvaliacao:
+                                        widget.controllerAvaliacao,
                                   );
-                                }
-                                return SelecionarExame(
-                                  exame: widget.controllerAvaliacao
-                                      .obterExamePorTipoGeral(tipoExame),
-                                  controllerAvaliacao: widget.controllerAvaliacao,
-                                );
+                                default:
+                                  return SelecionarExame(
+                                    exame: widget.controllerAvaliacao
+                                        .obterExamePorTipoGeral(tipoExame),
+                                    controllerAvaliacao:
+                                        widget.controllerAvaliacao,
+                                  );
                               }
                             },
                           ).toList(),
@@ -105,6 +108,19 @@ class _SelecaoDeExamesState extends State<SelecaoDeExames> {
                                   widget.controllerAvaliacao
                                       .keyExamesDescritivos.currentState!
                                       .save();
+
+                                  widget.controllerAvaliacao
+                                      .listaDeExamesRealizados;
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      maintainState: true,
+                                      builder: (context) => RelatorioAvaliacao(
+                                        controllerAvaliacao:
+                                            widget.controllerAvaliacao,
+                                      ),
+                                    ),
+                                  );
                                 }
                               },
                               child: const Text(

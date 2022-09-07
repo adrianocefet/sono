@@ -102,7 +102,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'F1 - Número da identidade do entrevistado (opcional)',
     'tipo': TipoPergunta.extenso,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'F1',
     'validador': (value) {},
@@ -110,7 +109,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'F2 - Número da identidade do entrevistador (opcional)',
     'tipo': TipoPergunta.extenso,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'F2',
     'validador': (value) {},
@@ -118,14 +116,12 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'F3 - Número da Avaliação (opcional)',
     'tipo': TipoPergunta.extenso,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'F3',
   },
   {
     'enunciado': 'F4 - Data da Entrevista',
     'tipo': TipoPergunta.extenso,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'F4',
     'validador': (value) {
@@ -140,7 +136,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'F5 - Condição em que vive no momento da entrevista',
     'tipo': TipoPergunta.multipla,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'F5',
     'opcoes': [
@@ -152,7 +147,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'A1 - Anote o sexo da pessoa conforme observado',
     'tipo': TipoPergunta.multipla,
-    'pesos': <int>[],
     'opcoes': [
       "Feminino",
       "Masculino",
@@ -163,7 +157,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'A2 - Qual a sua idade?',
     'tipo': TipoPergunta.extensoNumerico,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'A2',
     'validador': (value) {
@@ -180,7 +173,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'A3 - Quantos anos no total você passou estudando em escola, faculdade ou universidade?',
     'tipo': TipoPergunta.extensoNumerico,
-    'pesos': <int>[],
     'codigo': 'A3',
     'dominio': '',
     'validador': (value) {
@@ -196,7 +188,6 @@ List<Map<String, dynamic>> baseWHODAS = [
   {
     'enunciado': 'A4 - Qual é o seu estado civil atual?',
     'tipo': TipoPergunta.multipla,
-    'pesos': <int>[],
     'dominio': '',
     'codigo': 'A4',
     'opcoes': [
@@ -212,7 +203,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'A5 - Qual opção descreve melhor a situação da sua principal atividade de trabalho?',
     'tipo': TipoPergunta.multipla,
-    'pesos': <int>[],
     'codigo': 'A5',
     'dominio': '',
     'opcoes': [
@@ -405,7 +395,6 @@ List<Map<String, dynamic>> baseWHODAS = [
         'D5.01 - Nos últimos 30 dias, quantos dias você reduziu ou deixou de fazer as tarefas domésticas por causa da sua condição de saúde?',
     'tipo': TipoPergunta.extensoNumerico,
     'codigo': 'D5.01',
-    'pesos': <int>[],
     'dominio': 'dom_51',
     'validador': (value) {
       var caracteresValidos = RegExp(r'[0-9]');
@@ -449,7 +438,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'D5.9 - Você já teve que reduzir a intensidade do trabalho por causa de uma condição de saúde?',
     'tipo': TipoPergunta.afirmativa,
-    'pesos': <int>[],
     'codigo': 'D5.9',
     'dominio': 'dom_52',
   },
@@ -457,7 +445,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         "D5.10 - Você ja ganhou menos dinheiro como resultado de uma condição de saúde?",
     'tipo': TipoPergunta.afirmativa,
-    'pesos': <int>[],
     'codigo': 'D5.10',
     'dominio': 'dom_52',
   },
@@ -466,7 +453,6 @@ List<Map<String, dynamic>> baseWHODAS = [
         'D5.02 - Nos últimos 30 dias, por quantos dias você deixou de trabalhar por meio dia ou mais por causa da sua condição de saúde?',
     'tipo': TipoPergunta.extensoNumerico,
     'codigo': 'D5.02',
-    'pesos': <int>[],
     'dominio': 'dom_52',
     'validador': (value) {
       var caracteresValidos = RegExp(r'[0-9]');
@@ -545,7 +531,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'H1 - Em geral, nos últimos 30 dias, por quantos dias essas dificuldades estiveram presentes?',
     'tipo': TipoPergunta.extensoNumerico,
-    'pesos': <int>[],
     'codigo': 'H1',
     'dominio': '',
     'validador': (value) {
@@ -561,7 +546,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'H2 - Nos últimos 30 dias, por quantos dias você esteve completamente incapaz de executar suas atividades usuais ou de trabalho por causa da sua condição de saúde?',
     'tipo': TipoPergunta.extensoNumerico,
-    'pesos': <int>[],
     'codigo': 'H2',
     'dominio': '',
     'validador': (value) {
@@ -577,7 +561,6 @@ List<Map<String, dynamic>> baseWHODAS = [
     'enunciado':
         'H3 - Nos últimos 30 dias, sem contar os dias que você esteve totalmente incapaz, por quantos dias você diminuiu ou reduziu suas atividades usuais ou de trabalho por causa da sua condição de saúde?',
     'tipo': TipoPergunta.extensoNumerico,
-    'pesos': <int>[],
     'codigo': 'H3',
     'dominio': '',
     'validador': (value) {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang_controller.dart';
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/resultado/resultado_stop_bang.dart';
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/resultado/resultado_stop_bang_view.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../widgets/dialogs/sair_questionario.dart';
+import 'stop_bang_controller.dart';
 
 class StopBang extends StatefulWidget {
-  final Paciente paciente;
-
-  const StopBang({required this.paciente, Key? key}) : super(key: key);
+  late final StopBangController controller;
+  StopBang({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
+    controller = StopBangController(autoPreencher: autoPreencher);
+  }
 
   @override
   _StopBangState createState() => _StopBangState();
@@ -19,11 +19,10 @@ class StopBang extends StatefulWidget {
 class _StopBangState extends State<StopBang> {
   final _formKey = GlobalKey<FormState>();
   final _pageViewController = PageController();
-  final _controller = StopBangController();
 
   Future<void> _passarPagina() async {
     await _pageViewController.nextPage(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeIn,
     );
 
@@ -32,7 +31,7 @@ class _StopBangState extends State<StopBang> {
 
   @override
   Widget build(BuildContext context) {
-    final listaDeRespostas = _controller.listaDeRespostas(_passarPagina);
+    final listaDeRespostas = widget.controller.listaDeRespostas(_passarPagina);
     ValueNotifier paginaAtual = ValueNotifier(
       _pageViewController.positions.isNotEmpty
           ? _pageViewController.page!.toInt() + 1
@@ -57,7 +56,7 @@ class _StopBangState extends State<StopBang> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text(
-                    "$value/${_controller.listaDePerguntas.length}",
+                    "$value/${widget.controller.listaDePerguntas.length}",
                     style: const TextStyle(fontSize: 22),
                   ),
                 ),
@@ -82,14 +81,14 @@ class _StopBangState extends State<StopBang> {
                 primary: Constantes.corAzulEscuroPrincipal,
               ),
               onPressed: () async {
-                for (Pergunta p in _controller.listaDePerguntas) {
+                for (Pergunta p in widget.controller.listaDePerguntas) {
                   print("${p.codigo} : ${p.respostaNumerica}");
                 }
 
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
                 ResultadoStopBang? resultadoQuestionario =
-                    _controller.validarFormulario(_formKey);
+                    widget.controller.validarFormulario(_formKey);
 
                 if (resultadoQuestionario != null) {
                   Navigator.push(
@@ -99,7 +98,6 @@ class _StopBangState extends State<StopBang> {
                       builder: (_) {
                         return TelaResultadoStopBang(
                           resultadoQuestionario,
-                          paciente: widget.paciente,
                         );
                       },
                     ),
@@ -108,8 +106,8 @@ class _StopBangState extends State<StopBang> {
                   _pageViewController.animateToPage(
                     () {
                       return listaDeRespostas.indexOf(
-                          listaDeRespostas.firstWhere(
-                              (element) => element.pergunta.respostaNumerica == null));
+                          listaDeRespostas.firstWhere((element) =>
+                              element.pergunta.respostaPadrao == null));
                     }(),
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeIn,

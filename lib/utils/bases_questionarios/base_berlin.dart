@@ -3,7 +3,7 @@ import 'package:sono/utils/models/pergunta.dart';
 List<Map<String, dynamic>> baseBerlin = [
   {
     'enunciado': "Altura (em metros):",
-    'tipo': TipoPergunta.extensoNumerico,
+    'tipo': TipoPergunta.numerica,
     'dominio': 'inicial',
     'codigo': 'altura',
     'validador': (value) {
@@ -19,7 +19,7 @@ List<Map<String, dynamic>> baseBerlin = [
   },
   {
     'enunciado': "Idade:",
-    'tipo': TipoPergunta.extensoNumerico,
+    'tipo': TipoPergunta.numerica,
     'dominio': 'inicial',
     'codigo': 'idade',
     'validador': (value) {
@@ -34,7 +34,7 @@ List<Map<String, dynamic>> baseBerlin = [
   },
   {
     'enunciado': "Peso (em quilogramas):",
-    'tipo': TipoPergunta.extensoNumerico,
+    'tipo': TipoPergunta.numerica,
     'dominio': 'inicial',
     'codigo': 'peso',
     'validador': (value) {

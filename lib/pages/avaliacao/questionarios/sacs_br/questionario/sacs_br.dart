@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br_controller.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../widgets/dialogs/sair_questionario.dart';
 import '../resultado/resultado_sacs_br_view.dart';
+import 'sacs_br_controller.dart';
 
 class SacsBR extends StatefulWidget {
-  final Paciente paciente;
-
-  const SacsBR({required this.paciente, Key? key}) : super(key: key);
+  late final SacsBRController controller;
+  SacsBR({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
+    controller = SacsBRController(autoPreencher: autoPreencher);
+  }
 
   @override
   _SacsBRState createState() => _SacsBRState();
@@ -18,31 +18,30 @@ class SacsBR extends StatefulWidget {
 class _SacsBRState extends State<SacsBR> {
   final _formKey = GlobalKey<FormState>();
   final _pageViewController = PageController();
-  final _controller = SacsBRController();
 
   Pergunta? perguntaAtual;
 
   Future<void> _passarParaProximaPagina() async {
     setState(() {});
     await _pageViewController.nextPage(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeIn,
     );
   }
 
   Future<void> _passarParaPaginaAnterior() async {
     await _pageViewController.previousPage(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeIn,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    perguntaAtual = perguntaAtual ?? _controller.listaDePerguntas.first;
+    perguntaAtual = perguntaAtual ?? widget.controller.listaDePerguntas.first;
 
     final listaDeRespostas =
-        _controller.gerarListaDeRespostas(context, _passarParaProximaPagina);
+        widget.controller.gerarListaDeRespostas(context, _passarParaProximaPagina);
 
     ValueNotifier paginaAtual = ValueNotifier(
       _pageViewController.positions.isNotEmpty
@@ -72,7 +71,7 @@ class _SacsBRState extends State<SacsBR> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text(
-                    "$value/${_controller.tamanhoListaDeRespostas}",
+                    "$value/${widget.controller.tamanhoListaDeRespostas}",
                     style: const TextStyle(fontSize: 22),
                   ),
                 ),
@@ -102,7 +101,7 @@ class _SacsBRState extends State<SacsBR> {
             builder: (context, paginaAtual, _) {
               bool estaNaPrimeiraPergunta = paginaAtual == 1;
               bool naoEstaNaUltimaPergunta =
-                  paginaAtual != _controller.tamanhoListaDeRespostas;
+                  paginaAtual != widget.controller.tamanhoListaDeRespostas;
               return Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -138,7 +137,7 @@ class _SacsBRState extends State<SacsBR> {
                                   .removeCurrentSnackBar();
 
                               ResultadoSACSBR? resultadoSACSBR =
-                                  _controller.validarFormulario(_formKey);
+                                  widget.controller.validarFormulario(_formKey);
                               if (resultadoSACSBR != null) {
                                 Navigator.push(
                                   context,
@@ -146,7 +145,6 @@ class _SacsBRState extends State<SacsBR> {
                                     maintainState: true,
                                     builder: (context) => ResultadoSACSBRView(
                                       resultadoSACSBR: resultadoSACSBR,
-                                      paciente: widget.paciente,
                                     ),
                                   ),
                                 );

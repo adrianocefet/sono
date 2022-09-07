@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/avaliacao/questionarios/widgets/enunciado_respostas.dart';
-import 'package:sono/utils/models/paciente.dart';
 import '../../../../../utils/models/pergunta.dart';
 import '../../widgets/dialogs/sair_questionario.dart';
 import 'pittsburg_controller.dart';
 import 'widgets/controle_de_nav_pittsburg.dart';
 
 class Pittsburg extends StatefulWidget {
-  final Paciente paciente;
   late final PittsburgController _controller;
-  Pittsburg({required this.paciente, Key? key}) : super(key: key) {
-    _controller = PittsburgController(paciente);
+  Pittsburg({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
+    _controller = PittsburgController(autoPreencher:autoPreencher);
   }
 
   @override

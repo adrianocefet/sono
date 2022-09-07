@@ -69,7 +69,6 @@ class _ControleDeNavegacaoState extends State<ControleDeNavegacao> {
                           maintainState: true,
                           builder: (context) => ResultadoWHODASView(
                             resultado: resultadoWHODAS,
-                            paciente: widget.controller.paciente,
                           ),
                         ),
                       );

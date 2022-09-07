@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/avaliacao/questionarios/epworth/questionario/widgets/controle_de_nav_epworth.dart';
-import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import '../../widgets/dialogs/sair_questionario.dart';
 import 'epworth_controller.dart';
 
 class Epworth extends StatefulWidget {
-  final Paciente paciente;
   late final EpworthController _controller;
-  Epworth({required this.paciente, Key? key}) : super(key: key) {
-    _controller = EpworthController(paciente);
+  Epworth({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
+    _controller = EpworthController(autoPreencher: autoPreencher);
   }
 
   @override

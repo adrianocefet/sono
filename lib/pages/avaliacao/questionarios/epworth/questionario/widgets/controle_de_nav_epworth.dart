@@ -47,7 +47,6 @@ class _ControleDeNavegacaoEpworthState
                       maintainState: true,
                       builder: (context) => ResultadoEpworthView(
                         resultado: widget.controller.resultado,
-                        paciente: widget.controller.paciente,
                       ),
                     ),
                   );

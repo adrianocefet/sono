@@ -24,6 +24,16 @@ class _RealizarExameState extends State<RealizarExame> {
 
   @override
   Widget build(BuildContext context) {
+    bool _perguntaCondicionalDaPolissonografiaHabilitada = () {
+      return widget.exame.tipo == TipoExame.polissonografia
+          ? widget.exame.perguntas
+                  .firstWhere(
+                      (p) => p.codigo == 'existe_registro_em_posicao_supina')
+                  .respostaPadrao ??
+              false
+          : false;
+    }();
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, false);
@@ -59,14 +69,22 @@ class _RealizarExameState extends State<RealizarExame> {
               child: Column(
                 children: widget.exame.perguntas
                     .map(
-                      (pergunta) => RespostaWidget(
-                        pergunta,
-                        autoPreencher: widget.refazerExame
-                            ? pergunta.tipo == TipoPergunta.multiplaCadastros
-                                ? []
-                                : ''
-                            : pergunta.respostaPadrao,
-                      ),
+                      (pergunta) => pergunta.codigo ==
+                                  'ha_predominio_de_eventos_posicao_supina' &&
+                              _perguntaCondicionalDaPolissonografiaHabilitada ==
+                                  false
+                          ? const SizedBox.shrink()
+                          : RespostaWidget(
+                              pergunta,
+                              autoPreencher: widget.refazerExame
+                                  ? pergunta.tipo ==
+                                          TipoPergunta
+                                              .multiplaCadastrosComExtensoESeletor
+                                      ? []
+                                      : ''
+                                  : pergunta.respostaPadrao,
+                              notifyParent: () => setState(() {}),
+                            ),
                     )
                     .toList(),
               ),

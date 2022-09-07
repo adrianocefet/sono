@@ -4,9 +4,8 @@ import 'package:sono/utils/models/pergunta.dart';
 
 class RespostaExtensoCadastro extends StatefulWidget {
   final Pergunta pergunta;
-  final Paciente? paciente;
   final bool? numerico;
-  final bool? multilinhas;
+  final bool multilinhas;
   final Color? corTexto;
   final Color? corDominio;
   final dynamic autoPreencher;
@@ -15,9 +14,8 @@ class RespostaExtensoCadastro extends StatefulWidget {
 
   RespostaExtensoCadastro({
     required this.pergunta,
-    this.paciente,
     this.numerico,
-    this.multilinhas,
+    this.multilinhas = false,
     this.corTexto = Colors.black,
     this.corDominio = Colors.blue,
     this.autoPreencher,
@@ -37,10 +35,6 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.paciente != null || widget.autoPreencher != null) {
-      paciente = widget.paciente;
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: Column(
@@ -56,11 +50,13 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
               fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
-            minLines: 1,
-            maxLines: widget.multilinhas ?? false ? 5 : 3,
+            minLines: widget.multilinhas ? 5 : 1,
+            maxLines: widget.multilinhas ? 5 : 3,
             keyboardType: widget.numerico ?? false
                 ? TextInputType.number
-                : widget.multilinhas ?? false ? TextInputType.multiline : TextInputType.text,
+                : widget.multilinhas
+                    ? TextInputType.multiline
+                    : TextInputType.text,
             decoration: InputDecoration(
               suffix: widget.pergunta.unidade == null
                   ? null
@@ -97,7 +93,18 @@ class _RespostaExtensoState extends State<RespostaExtensoCadastro> {
               ),
             ),
             onChanged: (value) {
-              print(value);
+              widget.pergunta.setRespostaExtenso(
+                value.isEmpty
+                    ? null
+                    : (value.trim()).replaceAll(
+                        RegExp(' +'),
+                        ' ',
+                      ),
+              );
+              widget.pergunta.setRespostaNumerica(value.isEmpty
+                  ? null
+                  : int.tryParse(value.trim()) ??
+                      double.tryParse(value.replaceAll(',', '.').trim()));
             },
             onSaved: (String? value) {
               setState(

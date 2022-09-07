@@ -5,13 +5,21 @@ import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class BerlinController {
-  final List<Pergunta> _perguntas =
+  BerlinController({Map<String, dynamic>? autoPreencher}) {
+    if (autoPreencher != null && autoPreencher.isNotEmpty) {
+      for (Pergunta pergunta in _perguntas) {
+        pergunta.respostaPadrao = autoPreencher[pergunta.codigo];
+      }
+    }
+  }
+
+  late final List<Pergunta> _perguntas =
       baseBerlin.map((e) => Pergunta.pelaBase(e)).toList();
 
   final List<String> _codigosPerguntasCondicionais = [
     "seu_ronco",
     "frequencia_ronco",
-    "incomodou",
+    "ronco_ja_incomodou",
   ];
 
   int tamanhoListaDeRespostas = 0;
@@ -26,13 +34,14 @@ class BerlinController {
             return (element as Column).children.any(
               (pergunta) {
                 return pergunta.runtimeType == RespostaWidget
-                    ? (pergunta as RespostaWidget).pergunta.respostaNumerica == null
+                    ? (pergunta as RespostaWidget).pergunta.respostaNumerica ==
+                        null
                     : false;
               },
             );
           } else {
             Pergunta pergunta = (element as RespostaWidget).pergunta;
-            return pergunta.tipo == TipoPergunta.extensoNumerico
+            return pergunta.tipo == TipoPergunta.numerica
                 ? pergunta.respostaExtenso == null
                 : pergunta.respostaNumerica == null;
           }
@@ -91,7 +100,7 @@ class BerlinController {
 
     bool respostasNaoEstaoNulas = !_perguntas.any(
       (element) {
-        return element.tipo == TipoPergunta.extensoNumerico
+        return element.tipo == TipoPergunta.numerica
             ? element.respostaExtenso == null
             : element.respostaNumerica == null;
       },
@@ -132,7 +141,9 @@ class ResultadoBerlin {
     perguntas = baseBerlin.map((e) => Pergunta.pelaBase(e)).toList();
 
     for (Pergunta pergunta in perguntas) {
-      pergunta.respostaNumerica = mapa[pergunta.codigo];
+      pergunta.respostaNumerica = mapa[pergunta.codigo].runtimeType == num
+          ? mapa[pergunta.codigo]
+          : null;
       pergunta.respostaExtenso = mapa[pergunta.codigo].runtimeType == String
           ? mapa[pergunta.codigo]
           : null;
@@ -146,7 +157,7 @@ class ResultadoBerlin {
     Map<String, dynamic> mapa = {};
 
     for (Pergunta pergunta in perguntas) {
-      mapa[pergunta.codigo] = pergunta.respostaExtenso ?? pergunta.respostaNumerica;
+      mapa[pergunta.codigo] = pergunta.respostaPadrao;
     }
 
     mapa["pontuacoesPorCategoria"] = pontuacoesPorCategoria;
@@ -185,10 +196,7 @@ class ResultadoBerlin {
     }
 
     for (Pergunta pergunta in perguntas) {
-      respostasPorPergunta[pergunta.codigo] =
-          pergunta.tipo != TipoPergunta.extensoNumerico
-              ? pergunta.respostaNumerica
-              : pergunta.respostaExtenso;
+      respostasPorPergunta[pergunta.codigo] = pergunta.respostaPadrao;
     }
   }
 

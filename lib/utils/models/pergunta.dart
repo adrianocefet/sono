@@ -57,7 +57,7 @@ class Pergunta {
       case TipoPergunta.afirmativaCadastros:
         return respostaBooleana;
 
-      case TipoPergunta.multiplaCadastros:
+      case TipoPergunta.multiplaCadastrosComExtensoESeletor:
       case TipoPergunta.comorbidades:
         return respostaLista;
 
@@ -69,17 +69,63 @@ class Pergunta {
       case TipoPergunta.extenso:
       case TipoPergunta.extensoNumerico:
       case TipoPergunta.extensoNumericoCadastros:
+      case TipoPergunta.multiLinhasCadastros:
+      case TipoPergunta.multiplaWHODAS:
+      case TipoPergunta.multiplaCondicionalBerlin:
         return respostaExtenso;
 
       case TipoPergunta.numericaCadastros:
       case TipoPergunta.numerica:
       case TipoPergunta.mallampati:
-      case TipoPergunta.multiplaWHODAS:
-      case TipoPergunta.multiplaCondicionalBerlin:
         return respostaNumerica;
 
       case TipoPergunta.foto:
         return respostaArquivo;
+    }
+  }
+
+  set respostaPadrao(resposta) {
+    switch (tipo) {
+      case TipoPergunta.afirmativa:
+      case TipoPergunta.afirmativaCadastros:
+        if(resposta == null) break;
+        respostaExtenso = resposta ? 'Sim' : 'Não';
+        respostaNumerica = resposta ? 1 : 0;
+        respostaBooleana = resposta;
+        break;
+
+      case TipoPergunta.multiplaCadastrosComExtensoESeletor:
+      case TipoPergunta.comorbidades:
+        respostaLista = resposta;
+        break;
+
+      case TipoPergunta.data:
+      case TipoPergunta.dropdown:
+      case TipoPergunta.dropdownCadastros:
+      case TipoPergunta.multipla:
+      case TipoPergunta.extensoCadastros:
+      case TipoPergunta.extenso:
+      case TipoPergunta.extensoNumerico:
+      case TipoPergunta.extensoNumericoCadastros:
+      case TipoPergunta.multiLinhasCadastros:
+      case TipoPergunta.multiplaCondicionalBerlin:
+      case TipoPergunta.multiplaWHODAS:
+        if (opcoes != null) respostaNumerica = opcoes!.indexOf(resposta ?? '');
+        respostaExtenso = resposta;
+        break;
+
+      
+      case TipoPergunta.numericaCadastros:
+      case TipoPergunta.numerica:
+      case TipoPergunta.mallampati:
+        if (opcoes != null) respostaExtenso = opcoes![resposta];
+        respostaNumerica = resposta;
+        respostaExtenso = resposta.toString();
+        break;
+
+      case TipoPergunta.foto:
+        respostaArquivo = resposta;
+        break;
     }
   }
 
@@ -112,11 +158,10 @@ enum TipoPergunta {
   extensoCadastros,
   extensoNumericoCadastros,
   multiLinhasCadastros,
-  marcar,
   afirmativa,
   afirmativaCadastros,
   multipla,
-  multiplaCadastros,
+  multiplaCadastrosComExtensoESeletor,
   multiplaWHODAS,
   multiplaCondicionalBerlin,
   data,
