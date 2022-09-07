@@ -53,7 +53,7 @@ class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
                     child: Column(
                       children: [
                         Wrap(
-                          alignment: WrapAlignment.end,
+                          alignment: WrapAlignment.center,
                           direction: Axis.horizontal,
                           spacing: 50,
                           runSpacing: 20,

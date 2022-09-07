@@ -128,6 +128,8 @@ class Equipamento {
         return StatusDoEquipamento.manutencao;
       case "em desinfecção":
         return StatusDoEquipamento.desinfeccao;
+      case "concedido":
+        return StatusDoEquipamento.concedido;
     }
 
     return null;
@@ -168,8 +170,8 @@ class Equipamento {
   Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
       await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
 
-  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario) async =>
-      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario);
+  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario, String justificativa) async =>
+      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario, justificativa);
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
@@ -184,6 +186,10 @@ class Equipamento {
 
   Future<void> disponibilizar() async {
     await FirebaseService().disponibilizarEquipamento(this);
+  }
+
+  Future<void> conceder(Paciente paciente, UserModel usuario) async {
+    await FirebaseService().concederEquipamento(this, paciente, usuario);
   }
 }
 
@@ -287,6 +293,7 @@ enum StatusDoEquipamento {
   disponivel,
   manutencao,
   desinfeccao,
+  concedido
 }
 
 extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
@@ -300,6 +307,8 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "em reparo";
       case StatusDoEquipamento.desinfeccao:
         return "em desinfecção";
+      case StatusDoEquipamento.concedido:
+        return "concedido";
     }
   }
   String get emStringMaiuscula {
@@ -312,6 +321,8 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Manutenção";
       case StatusDoEquipamento.desinfeccao:
         return "Desinfecção";
+      case StatusDoEquipamento.concedido:
+        return "Concedido";
     }
   }
   String get emStringPlural {
@@ -324,6 +335,8 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Reparos";
       case StatusDoEquipamento.desinfeccao:
         return "Desinfecção";
+      case StatusDoEquipamento.concedido:
+        return "Concedidos";
     }
   }
 }

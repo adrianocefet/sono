@@ -151,6 +151,7 @@ class FirebaseService {
     Equipamento equipamento,
     Paciente paciente,
     UserModel usuario,
+    String justificativa
   )async{
     try {
       await _db.collection(_stringSolicitacoes).doc().set(
@@ -161,7 +162,8 @@ class FirebaseService {
           "solicitante": usuario.id,
           "data_da_solicitacao": FieldValue.serverTimestamp(),
           "confirmacao": "pendente",
-          "hospital": equipamento.hospital
+          "hospital": equipamento.hospital,
+          "justificativa_devolucao": justificativa
         },
       );
     } catch (e) {
@@ -214,6 +216,37 @@ class FirebaseService {
     }
   }
 
+  Future<void> concederEquipamento(Equipamento equipamento, Paciente paciente, UserModel usuario) async{
+    try {
+      if(equipamento.status==StatusDoEquipamento.emprestado){
+        await _db
+            .collection(_strPacientes)
+            .doc(equipamento.idPacienteResponsavel)
+            .update(
+          {
+            "equipamentos": FieldValue.arrayRemove([equipamento.id]),
+          },
+        );
+      }
+      await _db.collection(_stringEquipamento).doc(equipamento.id).update(
+        {
+          "status": StatusDoEquipamento.concedido.emString,
+          "paciente_responsavel": paciente.id,
+          "data_de_expedicao": FieldValue.serverTimestamp(),
+          "alterado_por": usuario.id,
+        },
+      );
+
+      await _db.collection(_strPacientes).doc(paciente.id).update(
+        {
+          "equipamentos_concedidos": FieldValue.arrayUnion([equipamento.id])
+        },
+      ); 
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> devolverEquipamento(
     Equipamento equipamento,
   ) async {
@@ -226,7 +259,7 @@ class FirebaseService {
           "data_de_expedicao": FieldValue.delete(),
         },
       );
-
+      equipamento.status==StatusDoEquipamento.emprestado?
       await _db
           .collection(_strPacientes)
           .doc(equipamento.idPacienteResponsavel)
@@ -234,7 +267,14 @@ class FirebaseService {
         {
           "equipamentos": FieldValue.arrayRemove([equipamento.id]),
         },
-      );
+      ): 
+      await _db
+          .collection(_strPacientes)
+          .doc(equipamento.idPacienteResponsavel)
+          .update(
+        {
+          "equipamentos_concedidos": FieldValue.arrayRemove([equipamento.id]),
+        });
     } catch (e) {
       rethrow;
     }

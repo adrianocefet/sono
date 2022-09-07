@@ -8,6 +8,8 @@ import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 import '../../constants/constants.dart';
+import '../../utils/dialogs/carregando.dart';
+import '../../utils/dialogs/confirmar.dart';
 import '../../utils/dialogs/error_message.dart';
 import '../../utils/models/paciente.dart';
 import '../../utils/models/user_model.dart';
@@ -74,13 +76,13 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                               Padding(
                               padding: EdgeInsets.only(top:8.0,left: 15),
                               child: 
-                                Text('Motivo',
+                                Text('Motivo da negação',
                                   style: TextStyle(color: corStatus,fontSize: 15,fontWeight: FontWeight.bold),),
                             ),
                             Divider(color: corStatus,),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
-                              child: Text(solicitacao.motivo??'Sem motivo definido!'),
+                              child: Text(solicitacao.motivoNegacao??'Sem motivo definido!'),
                             ),
                           ],
                         )
@@ -128,6 +130,25 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                         child: Text(solicitacao.dataDaSolicitacaoEmString),
                       ),
+                      Visibility(
+                        visible: solicitacao.justificativaDevolucao!=null,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top:8.0,left: 15),
+                              child: 
+                                Text('Justificativa da devolução',
+                                  style: TextStyle(color: Constantes.corAzulEscuroPrincipal,fontSize: 15,fontWeight: FontWeight.bold),),
+                            ),
+                            const Divider(color: Constantes.corAzulEscuroPrincipal,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                              child: Text(solicitacao.justificativaDevolucao??'Sem justificativa!'),
+                            ),
+                          ],
+                        ),
+                      ),  
                       const Padding(
                         padding: EdgeInsets.only(top:8.0,left: 15),
                         child: 
@@ -207,24 +228,27 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 onPressed: () async {
                                   if(solicitacao.tipo==TipoSolicitacao.emprestimo){
                                         if(equipamentoSolicitado.status==StatusDoEquipamento.disponivel){
-                                          try {
-                                            equipamentoSolicitado.status =
-                                                StatusDoEquipamento
-                                                    .emprestado;
-                                            await equipamentoSolicitado
-                                                .emprestarPara(
-                                                    pacienteSolicitado);
-                                            solicitacao.infoMap['confirmacao']='confirmado';
-                                            FirebaseService.atualizarSolicitacao(solicitacao);
-                                          } catch (erro) {
-                                            equipamentoSolicitado.status =
-                                                StatusDoEquipamento
-                                                    .disponivel;
-                                            mostrarMensagemErro(
-                                                context,
-                                                erro.toString());
-                                          }
-                                        }
+                                          if(await mostrarDialogConfirmacao(context, 'Confirmar empréstimo?', 'O equipamento se tornará emprestado')==true){
+                                            mostrarDialogCarregando(context); 
+                                            try {
+                                              equipamentoSolicitado.status =
+                                                  StatusDoEquipamento
+                                                      .emprestado;
+                                              await equipamentoSolicitado
+                                                  .emprestarPara(
+                                                      pacienteSolicitado);
+                                              solicitacao.infoMap['confirmacao']='confirmado';
+                                              FirebaseService.atualizarSolicitacao(solicitacao);
+                                            } catch (erro) {
+                                              equipamentoSolicitado.status =
+                                                  StatusDoEquipamento
+                                                      .disponivel;
+                                              mostrarMensagemErro(
+                                                  context,
+                                                  erro.toString());
+                                            }
+                                            Navigator.pop(context);
+                                        }}
                                         else{
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             const SnackBar(
@@ -236,22 +260,26 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                           );
                                         }
                                       }else{
-                                        if(equipamentoSolicitado.status==StatusDoEquipamento.emprestado){
-                                          try {
-                                          equipamentoSolicitado.status =
-                                              StatusDoEquipamento
-                                                  .disponivel;
-                                          await equipamentoSolicitado
-                                              .devolver();
-                                          solicitacao.infoMap['confirmacao']='confirmado';
-                                          FirebaseService.atualizarSolicitacao(solicitacao);
-                                        } catch (erro) {
-                                          equipamentoSolicitado.status =
-                                              StatusDoEquipamento
-                                                  .emprestado;
-                                          mostrarMensagemErro(
-                                              context,
-                                              erro.toString());
+                                        if(equipamentoSolicitado.status==StatusDoEquipamento.emprestado || equipamentoSolicitado.status==StatusDoEquipamento.concedido){
+                                          if(await mostrarDialogConfirmacao(context, 'Confirmar devolução?', 'O equipamento se tornará disponível')==true){
+                                            mostrarDialogCarregando(context); 
+                                              try {
+                                              equipamentoSolicitado.status =
+                                                  StatusDoEquipamento
+                                                      .disponivel;
+                                              await equipamentoSolicitado
+                                                  .devolver();
+                                              solicitacao.infoMap['confirmacao']='confirmado';
+                                              FirebaseService.atualizarSolicitacao(solicitacao);
+                                            } catch (erro) {
+                                              equipamentoSolicitado.status =
+                                                  StatusDoEquipamento
+                                                      .emprestado;
+                                              mostrarMensagemErro(
+                                                  context,
+                                                  erro.toString());
+                                            }
+                                            Navigator.pop(context);
                                         }
                                         }else{
                                           ScaffoldMessenger.of(context).showSnackBar(
