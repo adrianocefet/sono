@@ -149,7 +149,7 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
                               ),
                               color: Constantes.corAzulEscuroPrincipal,
                             ),
-                            child: FlatButton(
+                            child: ElevatedButton(
                               onPressed: () async {
                                 //return salvarFormulario();
                                 Navigator.pop(context);
