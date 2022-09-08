@@ -5,14 +5,14 @@ import 'package:sono/pages/avaliacao/relatorio/relatorio_avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/exame_descritivo.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/selecionar_questionario.dart';
 import 'package:sono/utils/models/paciente.dart';
-import '../exame.dart';
 import 'widgets/selecionar_exame.dart';
 
 class SelecaoDeExames extends StatefulWidget {
   final Paciente paciente;
   late final ControllerAvaliacao controllerAvaliacao;
   SelecaoDeExames({Key? key, required this.paciente}) : super(key: key) {
-    controllerAvaliacao = ControllerAvaliacao(paciente);
+    controllerAvaliacao =
+        ControllerAvaliacao(paciente: paciente, idAvaliador: 'IDGENERICO');
   }
 
   @override
@@ -43,16 +43,10 @@ class _SelecaoDeExamesState extends State<SelecaoDeExames> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'xafAFSFxasd5623',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  Text(
-                    '8, ago, 2022  15:40',
+                    widget.controllerAvaliacao.dataDaAvaliacaoFormatada,
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
@@ -131,11 +125,11 @@ class _SelecaoDeExamesState extends State<SelecaoDeExames> {
                               ),
                               style: ElevatedButton.styleFrom(
                                 elevation: 5.0,
+                                backgroundColor: Theme.of(context).focusColor,
                                 fixedSize: Size(
                                   MediaQuery.of(context).size.width,
                                   50,
                                 ),
-                                primary: Theme.of(context).focusColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),

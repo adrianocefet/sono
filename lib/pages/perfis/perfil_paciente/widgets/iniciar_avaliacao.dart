@@ -70,7 +70,7 @@ class IniciarAvaliacao extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).focusColor,
+              backgroundColor: Theme.of(context).focusColor,
               minimumSize: const Size(60, 30),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
@@ -95,7 +95,7 @@ class IniciarAvaliacao extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).focusColor,
+              backgroundColor: Theme.of(context).focusColor,
               minimumSize: const Size(60, 30),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),

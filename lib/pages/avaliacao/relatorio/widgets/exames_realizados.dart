@@ -21,7 +21,7 @@ class ExamesRealizados extends StatelessWidget {
         .toList();
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 275, horizontal: 25),
+      margin: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
       padding: const EdgeInsets.only(bottom: 10),
       width: MediaQuery.of(context).size.width * 0.92,
       height: MediaQuery.of(context).size.height * 0.5,
@@ -62,66 +62,108 @@ class ExamesRealizados extends StatelessWidget {
                   fontSize: 17,
                 ),
               ),
-
             ),
           ),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              for (Exame exame in listaDeExamesASeremListados)
-                ListTile(
-                  leading: Icon(
-                    Icons.radio_button_checked,
-                    color: Theme.of(context).primaryColor,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (Exame exame in listaDeExamesASeremListados)
+                  ListTile(
+                    leading: Icon(
+                      Icons.radio_button_checked,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: Text(
+                      exame.nome,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  title: Text(
-                    exame.nome,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                Visibility(
+                  visible: listaDeQuestionariosRealizados.isNotEmpty,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.radio_button_checked,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: const Text(
+                      'Questionários',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (Exame questionario
+                            in listaDeQuestionariosRealizados)
+                          Text(
+                            questionario.nomeDoQuestionario!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColorLight,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
-              Visibility(
-                visible: listaDeQuestionariosRealizados.isNotEmpty,
-                child: ListTile(
-                  leading: Icon(
-                    Icons.radio_button_checked,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: const Text(
-                    'Questionários',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                Visibility(
+                  visible: listaDeExamesRealizados
+                      .where((element) =>
+                          element.tipo == TipoExame.dadosComplementares)
+                      .isNotEmpty,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.radio_button_checked,
+                      color: Theme.of(context).primaryColor,
                     ),
-                  ),
-                  subtitle: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (Exame questionario in listaDeQuestionariosRealizados)
+                    title: const Text(
+                      'Dados complementares',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          questionario.nomeDoQuestionario!,
+                          listaDeExamesRealizados
+                                  .where((element) =>
+                                      element.tipo ==
+                                      TipoExame.dadosComplementares)
+                                  .isNotEmpty
+                              ? listaDeExamesRealizados
+                                  .firstWhere(
+                                    (element) =>
+                                        element.tipo ==
+                                        TipoExame.dadosComplementares,
+                                  )
+                                  .respostas
+                                  .values
+                                  .first
+                              : '',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColorLight,
                           ),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Visibility(
-                visible: listaDeExamesRealizados
-                    .where((element) =>
-                        element.tipo == TipoExame.dadosComplementares)
-                    .isNotEmpty,
-                child: ListTile(
+                ListTile(
                   leading: Icon(
                     Icons.radio_button_checked,
                     color: Theme.of(context).primaryColor,
                   ),
                   title: const Text(
-                    'Dados complementares',
+                    'Conclusão',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -132,20 +174,11 @@ class ExamesRealizados extends StatelessWidget {
                     children: [
                       Text(
                         listaDeExamesRealizados
-                                .where((element) =>
-                                    element.tipo ==
-                                    TipoExame.dadosComplementares)
-                                .isNotEmpty
-                            ? listaDeExamesRealizados
-                                .firstWhere(
-                                  (element) =>
-                                      element.tipo ==
-                                      TipoExame.dadosComplementares,
-                                )
-                                .respostas
-                                .values
-                                .first
-                            : '',
+                            .firstWhere((element) =>
+                                element.tipo == TipoExame.conclusao)
+                            .respostas
+                            .values
+                            .first,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColorLight,
@@ -154,38 +187,8 @@ class ExamesRealizados extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.radio_button_checked,
-                  color: Theme.of(context).primaryColor,
-                ),
-                title: const Text(
-                  'Conclusão',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      listaDeExamesRealizados
-                          .firstWhere(
-                              (element) => element.tipo == TipoExame.conclusao)
-                          .respostas
-                          .values
-                          .first,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColorLight,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),

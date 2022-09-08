@@ -6,7 +6,6 @@ import 'package:sono/utils/bases_exames/base_sintomas.dart';
 import 'package:sono/utils/bases_exames/base_sintomas_cpap.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
-
 class Exame {
   Exame(this.tipo, {this.tipoQuestionario, respostas}) {
     this.respostas = respostas ?? {};
@@ -38,7 +37,7 @@ class Exame {
       case TipoExame.listagemDeSintomas:
         return 'Listagem de sintomas';
       case TipoExame.listagemDeSintomasDoUsoDoCPAP:
-        return 'Listagem de sintomas do uso do CPAP';
+        return 'Listagem de sintomas do uso do PAP';
       case TipoExame.manuvacuometria:
         return 'Manuvacuometria';
       case TipoExame.questionario:
@@ -46,6 +45,34 @@ class Exame {
       case TipoExame.conclusao:
         return 'Conclusão';
     }
+  }
+
+  String get codigo {
+    const Map codigos = {
+      TipoExame.polissonografia: 'polissonografia',
+      TipoExame.dadosComplementares: 'dados_complementares',
+      TipoExame.espirometria: 'espirometria',
+      TipoExame.actigrafia: 'actigrafia',
+      TipoExame.listagemDeSintomas: 'listagem_de_sintomas',
+      TipoExame.listagemDeSintomasDoUsoDoCPAP: 'listagem_de_sintomas_pap',
+      TipoExame.manuvacuometria: 'manuvacuometria',
+      TipoExame.questionario: 'questionarios',
+      TipoExame.conclusao: 'conclusao',
+    };
+
+    const Map codigosQuestionarios = {
+      TipoQuestionario.berlin: 'berlin',
+      TipoQuestionario.epworth: 'epworth',
+      TipoQuestionario.goal: 'goal',
+      TipoQuestionario.pittsburg: 'pittsburg',
+      TipoQuestionario.sacsBR: 'sacs_br',
+      TipoQuestionario.stopBang: 'stop_bang',
+      TipoQuestionario.whodas: 'whodas',
+    };
+
+    return tipo != TipoExame.questionario
+        ? codigos[tipo]
+        : codigosQuestionarios[tipoQuestionario];
   }
 
   String? get nomeDoQuestionario {

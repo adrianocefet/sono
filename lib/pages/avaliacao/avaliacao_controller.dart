@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:sono/pages/avaliacao/questionarios/berlin/questionario/berlin_controller.dart';
 import 'package:sono/pages/avaliacao/questionarios/berlin/resultado/resultado_berlin_view.dart';
 import 'package:sono/pages/avaliacao/questionarios/epworth/resultado/resultado_epworth.dart';
@@ -21,14 +23,23 @@ import 'package:sono/pages/avaliacao/questionarios/pittsburg/questionario/pittsb
 import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_view.dart';
+import 'package:sono/utils/services/firebase.dart';
 import 'exame.dart';
 
 class ControllerAvaliacao {
-  ControllerAvaliacao(this.paciente);
+  ControllerAvaliacao({
+    required this.idAvaliador,
+    required this.paciente,
+  });
+  final String idAvaliador;
   final Paciente paciente;
+  final Timestamp dataDaAvaliacao = Timestamp.now();
   final GlobalKey<FormState> keyExamesDescritivos = GlobalKey<FormState>();
   final ValueNotifier<List<Exame>> _examesRealizados =
       ValueNotifier<List<Exame>>(List.empty(growable: true));
+
+  String get dataDaAvaliacaoFormatada =>
+      DateFormat('dd, MMM, yyyy hh:mm').format(dataDaAvaliacao.toDate());
 
   ValueNotifier<List<Exame>> get examesRealizadoNotifier => _examesRealizados;
 
@@ -85,6 +96,10 @@ class ControllerAvaliacao {
     _examesRealizados.value = exameRealizados;
   }
 
+  Future<void> salvarAvaliacaoNoBancoDeDados() async {
+    await FirebaseService().salvarAvaliacao(this);
+  }
+
   Exame obterExamePorTipoGeral(TipoExame tipoExame) =>
       _examesRealizados.value.firstWhere(
         (exameRealizado) => exameRealizado.tipo == tipoExame,
@@ -99,22 +114,17 @@ class ControllerAvaliacao {
       );
 
   String nomeDoQuestionarioPorTipo(TipoQuestionario tipoQuestionario) {
-    switch (tipoQuestionario) {
-      case TipoQuestionario.berlin:
-        return "Berlin";
-      case TipoQuestionario.stopBang:
-        return "Stop-Bang";
-      case TipoQuestionario.sacsBR:
-        return "SACS-BR";
-      case TipoQuestionario.whodas:
-        return "WHODAS";
-      case TipoQuestionario.goal:
-        return "GOAL";
-      case TipoQuestionario.pittsburg:
-        return "Pittsburg";
-      case TipoQuestionario.epworth:
-        return "Epworth";
-    }
+    const Map nomeDoQuestionarioPorTipo = {
+      TipoQuestionario.berlin: "Berlin",
+      TipoQuestionario.stopBang: "Stop-Bang",
+      TipoQuestionario.sacsBR: "SACS-BR",
+      TipoQuestionario.whodas: "WHODAS",
+      TipoQuestionario.goal: "GOAL",
+      TipoQuestionario.pittsburg: "Pittsburg",
+      TipoQuestionario.epworth: "Epworth",
+    };
+
+    return nomeDoQuestionarioPorTipo[tipoQuestionario];
   }
 
   dynamic gerarObjetoQuestionario(TipoQuestionario tipoQuestionario,
@@ -122,6 +132,7 @@ class ControllerAvaliacao {
     Map<String, dynamic>? autoPreencher = refazer
         ? null
         : obterExamePorTipoDeQuestionario(tipoQuestionario).respostas;
+
     switch (tipoQuestionario) {
       case TipoQuestionario.berlin:
         return Berlin(autoPreencher: autoPreencher);
@@ -199,5 +210,3 @@ class ControllerAvaliacao {
     }
   }
 }
-
-

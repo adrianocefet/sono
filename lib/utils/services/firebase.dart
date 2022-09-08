@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/solicitacao.dart';
@@ -469,5 +470,49 @@ class FirebaseService {
     });
   }
 
-  Future<void> salvarAvaliacao(List<Exame> listaDeExames) async {}
+  Future<void> salvarAvaliacao(ControllerAvaliacao avaliacao) async {
+    final List<Exame> examesSimples = avaliacao.listaDeExamesRealizados
+        .where((exame) => [
+              TipoExame.dadosComplementares,
+              TipoExame.conclusao,
+              TipoExame.listagemDeSintomas,
+              TipoExame.listagemDeSintomasDoUsoDoCPAP
+            ].contains(exame.tipo))
+        .toList();
+
+    final List<Exame> examesQuestionarios = avaliacao.listaDeExamesRealizados
+        .where((exame) => exame.tipo == TipoExame.questionario)
+        .toList();
+
+    final List<Exame> examesComplexos = avaliacao.listaDeExamesRealizados
+        .where((exame) =>
+            exame.tipo != TipoExame.questionario &&
+            examesSimples.contains(exame) == false)
+        .toList();
+
+    Map<String, dynamic> dadosSimples = {
+      'id_avaliador': avaliacao.idAvaliador,
+      'data_de_realizacao': avaliacao.dataDaAvaliacao,
+    };
+
+    for (Exame exame in examesSimples) {
+      dadosSimples.addAll(exame.respostas);
+    }
+
+    //gerando doc da avaliação
+    DocumentReference<Map<String, dynamic>> ref =
+        await _db.collection(_strPacientes).doc(avaliacao.paciente.id).collection('avaliacoes').add(dadosSimples);
+
+    //adicionando exames
+    for (Exame exame in examesComplexos) {
+      exame.respostas['tipo'] = exame.codigo;
+      await ref.collection('exames').doc().set(exame.respostas);
+    }
+
+    //adicionando questionários
+    for (Exame exame in examesQuestionarios) {
+      exame.respostas['tipo'] = exame.codigo;
+      await ref.collection('questionarios').doc().set(exame.respostas);
+    }
+  }
 }

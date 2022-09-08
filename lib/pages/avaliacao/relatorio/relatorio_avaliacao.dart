@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
 
 class RelatorioAvaliacao extends StatelessWidget {
   final ControllerAvaliacao controllerAvaliacao;
@@ -32,14 +33,8 @@ class RelatorioAvaliacao extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'xafAFSFxasd5623',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
                   Text(
                     '8, ago, 2022  15:40',
                     style: TextStyle(
@@ -56,6 +51,52 @@ class RelatorioAvaliacao extends StatelessWidget {
                     ExamesRealizados(
                       listaDeExamesRealizados:
                           controllerAvaliacao.listaDeExamesRealizados,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          try {
+                          mostrarDialogCarregando(context);
+                            await controllerAvaliacao
+                                .salvarAvaliacaoNoBancoDeDados();
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Avaliação salva com sucesso!'),
+                                backgroundColor: Theme.of(context).focusColor,
+                              ),
+                            );
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } catch (e) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Erro ao salvar avaliação!'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Salvar avaliação',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5.0,
+                          backgroundColor: Theme.of(context).focusColor,
+                          fixedSize: Size(
+                            MediaQuery.of(context).size.width,
+                            50,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
