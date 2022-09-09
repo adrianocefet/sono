@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 
 import '../../exame.dart';
 
 class ExameDescritivo extends StatelessWidget {
   final Exame exame;
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   final TextEditingController _textEditingController = TextEditingController();
   ExameDescritivo(
       {Key? key, required this.exame, required this.controllerAvaliacao})

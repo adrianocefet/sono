@@ -26,8 +26,8 @@ import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_vi
 import 'package:sono/utils/services/firebase.dart';
 import 'exame.dart';
 
-class ControllerAvaliacao {
-  ControllerAvaliacao({
+class Avaliacao {
+  Avaliacao({
     required this.idAvaliador,
     required this.paciente,
   });
@@ -67,6 +67,10 @@ class ControllerAvaliacao {
         .toList();
   }
 
+  Future<void> salvarAvaliacaoNoBancoDeDados() async {
+    await FirebaseService().salvarAvaliacao(this);
+  }
+
   void salvarExame(Exame exame) {
     if (listaDeExamesRealizados.contains(exame) == false) {
       _examesRealizados.value += [exame];
@@ -94,10 +98,6 @@ class ControllerAvaliacao {
 
     exameRealizados.add(exame);
     _examesRealizados.value = exameRealizados;
-  }
-
-  Future<void> salvarAvaliacaoNoBancoDeDados() async {
-    await FirebaseService().salvarAvaliacao(this);
   }
 
   Exame obterExamePorTipoGeral(TipoExame tipoExame) =>

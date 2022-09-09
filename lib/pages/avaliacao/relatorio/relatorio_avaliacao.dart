@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 
 class RelatorioAvaliacao extends StatelessWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   const RelatorioAvaliacao({Key? key, required this.controllerAvaliacao})
       : super(key: key);
 

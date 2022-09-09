@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/solicitacao.dart';
@@ -24,6 +24,7 @@ class FirebaseService {
   static const String _stringEquipamento = "equipamentos";
   static const String _stringQuestionarios = "questionarios";
   static const String _stringSolicitacoes = "solicitacoes";
+  static const String _stringAvaliacoes = 'avaliacoes';
 
   Future<Paciente> obterPacientePorID(String idPaciente) async {
     return await _db.collection(_strPacientes).doc(idPaciente).get().then(
@@ -36,6 +37,11 @@ class FirebaseService {
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoPacientePorID(
       String idPaciente) {
     return _db.collection(_strPacientes).doc(idPaciente).snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamAvaliacoesPorIdDoPaciente(
+      String idPaciente) {
+    return _db.collection(_strPacientes).doc(idPaciente).collection(_stringAvaliacoes).snapshots();
   }
 
   Future<Equipamento?> obterEquipamentoPorID(String idEquipamento) async {
@@ -470,7 +476,7 @@ class FirebaseService {
     });
   }
 
-  Future<void> salvarAvaliacao(ControllerAvaliacao avaliacao) async {
+  Future<void> salvarAvaliacao(Avaliacao avaliacao) async {
     final List<Exame> examesSimples = avaliacao.listaDeExamesRealizados
         .where((exame) => [
               TipoExame.dadosComplementares,
@@ -501,7 +507,7 @@ class FirebaseService {
 
     //gerando doc da avaliação
     DocumentReference<Map<String, dynamic>> ref =
-        await _db.collection(_strPacientes).doc(avaliacao.paciente.id).collection('avaliacoes').add(dadosSimples);
+        await _db.collection(_strPacientes).doc(avaliacao.paciente.id).collection(_stringAvaliacoes).add(dadosSimples);
 
     //adicionando exames
     for (Exame exame in examesComplexos) {

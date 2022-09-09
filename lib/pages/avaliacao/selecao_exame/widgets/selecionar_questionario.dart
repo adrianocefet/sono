@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
 import '../../exame.dart';
 import 'acao_exame.dart';
 
 class SelecionarQuestionario extends StatefulWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   final Exame exame;
   const SelecionarQuestionario(
       {Key? key, required this.exame, required this.controllerAvaliacao})
@@ -116,7 +116,7 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
 }
 
 class _QuestionarioRealizado extends StatefulWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   final Exame exame;
   const _QuestionarioRealizado(
       {Key? key, required this.controllerAvaliacao, required this.exame})
@@ -208,7 +208,7 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
 }
 
 class _ListaDeQuestionarios extends StatelessWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   const _ListaDeQuestionarios({Key? key, required this.controllerAvaliacao})
       : super(key: key);
 
@@ -328,9 +328,8 @@ class _ListaDeQuestionarios extends StatelessWidget {
                               side: BorderSide(
                                 color: Theme.of(context).primaryColor,
                                 width: 1.2,
-                              ),
+                              ), backgroundColor: Theme.of(context).focusColor,
                               minimumSize: const Size.fromHeight(42),
-                              primary: Theme.of(context).focusColor,
                             ),
                           ),
                         );

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/realizar_exame/realizar_exame.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
 import '../../exame.dart';
 import 'acao_exame.dart';
 
 class SelecionarExame extends StatefulWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   final Exame exame;
   const SelecionarExame(
       {Key? key, required this.exame, required this.controllerAvaliacao})

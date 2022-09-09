@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RealizarExame extends StatefulWidget {
-  final ControllerAvaliacao controllerAvaliacao;
+  final Avaliacao controllerAvaliacao;
   final Exame exame;
   final bool refazerExame;
   const RealizarExame({
@@ -115,10 +115,9 @@ class _RealizarExameState extends State<RealizarExame> {
               style: TextStyle(color: Colors.black),
             ),
             style: ElevatedButton.styleFrom(
-              elevation: 5.0,
+              elevation: 5.0, backgroundColor: Theme.of(context).focusColor,
               maximumSize: const Size(350, 50),
               minimumSize: const Size(200, 50),
-              primary: Theme.of(context).focusColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),
