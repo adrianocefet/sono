@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/item_equipamento.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
-
 import '../../../../constants/constants.dart';
+import 'item_equipamento.dart';
 
 class PesquisaEquipamento extends SearchDelegate {
   final TipoEquipamento tipo;
@@ -85,15 +84,15 @@ class PesquisaEquipamento extends SearchDelegate {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.cancel,
                             size: 80.0,
                             color: Constantes.corAzulEscuroPrincipal,
                           ),
-                          SizedBox(height: 16.0,),
+                          const SizedBox(height: 16.0,),
                           Text(
                             '"${query}" não encontrado!',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                               color: Constantes.corAzulEscuroPrincipal,

@@ -4,10 +4,9 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
-
-import '../../../../constants/constants.dart';
-import '../../../../utils/models/user_model.dart';
-import '../../../tabelas/tab_lista_de_equipamentos.dart';
+import '../../../constants/constants.dart';
+import '../../../utils/models/user_model.dart';
+import '../../tabelas/tab_lista_de_equipamentos.dart';
 
 class BotaoTipoEquipamento extends StatefulWidget {
   final String imagem;
