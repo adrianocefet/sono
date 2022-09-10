@@ -1,15 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import '../../utils/models/user_model.dart';
-import '../../widgets/foto_de_perfil.dart';
-import '../../widgets/pesquisa.dart';
-import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
 import '../controle_estoque/widgets/tipo_equipamento.dart';
 
 class TiposDeEquipamentos extends StatefulWidget {

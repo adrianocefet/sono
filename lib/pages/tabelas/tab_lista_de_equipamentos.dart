@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
-import '../controle_estoque/widgets/pesquisaEquipamento.dart';
+import '../controle_estoque/widgets/item_equipamento.dart';
+import '../controle_estoque/widgets/pesquisa_equipamento.dart';
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
 
 class ListaDeEquipamentos extends StatefulWidget {
