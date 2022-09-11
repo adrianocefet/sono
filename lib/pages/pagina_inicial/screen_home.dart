@@ -5,7 +5,7 @@ import 'package:sono/pages/tabelas/tab_home.dart';
 import 'package:sono/pages/tabelas/tab_paciente.dart';
 import 'package:sono/pages/tabelas/tab_solicitacoes.dart';
 import '../../utils/models/user_model.dart';
-import '../tabelas/tab_controleEstoque.dart';
+import '../controle_estoque/controle_estoque.dart';
 
 class HomeScreen extends StatelessWidget {
   final _pageController = PageController();
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             HomeTab(pageController: _pageController),
             TabelaDePacientes(pageController: _pageController),
-            TabelaControleEstoque(pageController: _pageController),
+            ControleEstoque(pageController: _pageController),
             TabelaDeSolicitacoes(pageController: _pageController)
           ],
         );

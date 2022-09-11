@@ -6,18 +6,17 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
+import '../../utils/models/equipamento.dart';
+import '../../utils/models/user_model.dart';
 
-import '../../../../utils/models/equipamento.dart';
-import '../../../../utils/models/user_model.dart';
-
-class relatorioEspecifico extends StatefulWidget {
-  const relatorioEspecifico({Key? key}) : super(key: key);
+class RelatorioEspecifico extends StatefulWidget {
+  const RelatorioEspecifico({Key? key}) : super(key: key);
 
   @override
-  State<relatorioEspecifico> createState() => _relatorioEspecificoState();
+  State<RelatorioEspecifico> createState() => _RelatorioEspecificoState();
 }
 
-class _relatorioEspecificoState extends State<relatorioEspecifico> {
+class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
   List<Equipamento> equipamentos=[];

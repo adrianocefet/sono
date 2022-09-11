@@ -3,7 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
-import 'package:sono/pages/tabelas/tab_tiposelecionado.dart';
+import 'package:sono/pages/tabelas/tab_tipos_equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../constants/constants.dart';
@@ -16,11 +16,11 @@ class TiposEquipamentos extends StatefulWidget {
 
 class _TiposEquipamentosState extends State<TiposEquipamentos> {
     final telas=[
-      TipoSelecionado(),
-      TipoSelecionado(),
-      TipoSelecionado(),
-      TipoSelecionado(),
-      TipoSelecionado(),
+      TiposDeEquipamentos(),
+      TiposDeEquipamentos(),
+      TiposDeEquipamentos(),
+      TiposDeEquipamentos(),
+      TiposDeEquipamentos(),
     ];
     
     bool inicializado=false;

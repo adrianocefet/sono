@@ -4,13 +4,12 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/user_model.dart';
-
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/deletar_equipamento.dart';
 import '../../../../utils/models/equipamento.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/services/firebase.dart';
-import '../tela_equipamento.dart';
+import '../../perfis/perfil_equipamento/tela_equipamento.dart';
 
 class ItemEquipamento extends StatefulWidget {
   final String id;

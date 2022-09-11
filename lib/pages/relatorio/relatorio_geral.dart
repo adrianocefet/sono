@@ -4,17 +4,16 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../constants/constants.dart';
 
-import '../../../../constants/constants.dart';
-
-class relatorioGeral extends StatefulWidget {
-  const relatorioGeral({Key? key}) : super(key: key);
+class RelatorioGeral extends StatefulWidget {
+  const RelatorioGeral({Key? key}) : super(key: key);
 
   @override
-  State<relatorioGeral> createState() => _relatorioGeralState();
+  State<RelatorioGeral> createState() => _RelatorioGeralState();
 }
 
-class _relatorioGeralState extends State<relatorioGeral> {
+class _RelatorioGeralState extends State<RelatorioGeral> {
   
   @override
   Widget build(BuildContext context) {

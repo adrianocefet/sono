@@ -1,26 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/equipamento.dart';
-
 import '../../utils/models/user_model.dart';
-import '../../widgets/foto_de_perfil.dart';
-import '../../widgets/pesquisa.dart';
-import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
-import '../perfis/perfil_equipamento/widgets/tipos_equip.dart';
+import '../controle_estoque/widgets/tipo_equipamento.dart';
 
-class TipoSelecionado extends StatefulWidget {
-  const TipoSelecionado({Key? key}) : super(key: key);
+class TiposDeEquipamentos extends StatefulWidget {
+  const TiposDeEquipamentos({Key? key}) : super(key: key);
 
   @override
-  State<TipoSelecionado> createState() => _TipoSelecionadoState();
+  State<TiposDeEquipamentos> createState() => _TiposDeEquipamentosState();
 }
 
-class _TipoSelecionadoState extends State<TipoSelecionado> {
+class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
   
   @override
   Widget build(BuildContext context) {

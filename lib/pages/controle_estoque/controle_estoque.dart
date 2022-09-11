@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/tabelas/tab_equipamentos.dart';
-import 'package:sono/pages/tabelas/tab_tiposEquipamentos.dart';
+import 'package:sono/pages/controle_estoque/tela_status_selecionado.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
 import '../../utils/models/user_model.dart';
@@ -13,21 +13,21 @@ import '../pagina_inicial/widgets/widgets_drawer.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio.dart';
 import '../perfis/perfil_equipamento/relatorio/relatorio_geral.dart';
 
-class TabelaControleEstoque extends StatefulWidget {
+class ControleEstoque extends StatefulWidget {
   final PageController pageController;
-  const TabelaControleEstoque({required this.pageController,Key? key}) : super(key: key);
+  const ControleEstoque({required this.pageController,Key? key}) : super(key: key);
 
   @override
-  State<TabelaControleEstoque> createState() => _TabelaControleEstoqueState();
+  State<ControleEstoque> createState() => _ControleEstoqueState();
 }
 
-class _TabelaControleEstoqueState extends State<TabelaControleEstoque> {
+class _ControleEstoqueState extends State<ControleEstoque> {
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Controle de Estoque"),
+        title: const Text("Controle de estoque"),
         backgroundColor: Constantes.corAzulEscuroPrincipal,
         centerTitle: true,
       ),
