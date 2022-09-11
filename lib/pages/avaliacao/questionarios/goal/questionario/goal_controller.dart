@@ -85,7 +85,7 @@ class ResultadoGOAL {
     }
 
     mapa["pontuacao"] = pontuacao;
-    mapa["resultado"] = resultado;
+    mapa["resultado"] = resultadoEmString;
 
     return mapa;
   }

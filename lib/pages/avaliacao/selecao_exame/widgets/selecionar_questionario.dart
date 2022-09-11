@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
+import '../../avaliacao_controller.dart';
 import '../../exame.dart';
 import 'acao_exame.dart';
 
 class SelecionarQuestionario extends StatefulWidget {
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   final Exame exame;
   const SelecionarQuestionario(
       {Key? key, required this.exame, required this.controllerAvaliacao})
@@ -18,6 +18,12 @@ class SelecionarQuestionario extends StatefulWidget {
 class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
   @override
   Widget build(BuildContext context) {
+    String dataUltimaAtualizacaoDeQuestionarios =
+        widget.controllerAvaliacao.obterDataDaUltimaAtualizacaoFormatada(
+      widget.controllerAvaliacao
+          .obterDataDaUltimaAtualizacaoDoExame(widget.exame),
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -60,43 +66,45 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
             ),
             Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Últimas atualizações',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Última atualização',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          '02/05/2022 (3 meses e 7 dias atrás)',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                          const SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                    AcaoExame(
-                      versaoQuestionarios: true,
-                      tipo: 'adicionar',
-                      modificarEstadoExame: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => _ListaDeQuestionarios(
-                            controllerAvaliacao: widget.controllerAvaliacao,
+                          Text(
+                            dataUltimaAtualizacaoDeQuestionarios,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ],
+                      ),
+                      AcaoExame(
+                        versaoQuestionarios: true,
+                        tipo: 'adicionar',
+                        modificarEstadoExame: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => _ListaDeQuestionarios(
+                              controllerAvaliacao: widget.controllerAvaliacao,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 ...widget.controllerAvaliacao.listaDeExamesRealizados
                     .where((element) => element.tipo == TipoExame.questionario)
@@ -116,7 +124,7 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
 }
 
 class _QuestionarioRealizado extends StatefulWidget {
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   final Exame exame;
   const _QuestionarioRealizado(
       {Key? key, required this.controllerAvaliacao, required this.exame})
@@ -208,7 +216,7 @@ class _QuestionarioRealizadoState extends State<_QuestionarioRealizado> {
 }
 
 class _ListaDeQuestionarios extends StatelessWidget {
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   const _ListaDeQuestionarios({Key? key, required this.controllerAvaliacao})
       : super(key: key);
 
@@ -289,6 +297,18 @@ class _ListaDeQuestionarios extends StatelessWidget {
                       itemBuilder: (context, i) {
                         TipoQuestionario tipoQuestionario =
                             questionariosNaoRealizados[i];
+
+                        String dataUltimaAtualizacao = controllerAvaliacao
+                            .obterDataDaUltimaAtualizacaoFormatada(
+                          controllerAvaliacao
+                              .obterDataDaUltimaAtualizacaoDoQuestionario(
+                            Exame(
+                              TipoExame.questionario,
+                              tipoQuestionario: tipoQuestionario,
+                            ),
+                          ),
+                        );
+
                         return Padding(
                           padding: const EdgeInsets.only(top: 6.0),
                           child: ElevatedButton(
@@ -317,19 +337,33 @@ class _ListaDeQuestionarios extends StatelessWidget {
                                 Navigator.pop(context, exameRealizado);
                               }
                             },
-                            child: Text(
-                              controllerAvaliacao
-                                  .nomeDoQuestionarioPorTipo(tipoQuestionario),
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 16),
-                              textAlign: TextAlign.center,
+                            child: Column(
+                              children: [
+                                Text(
+                                  controllerAvaliacao.nomeDoQuestionarioPorTipo(
+                                      tipoQuestionario),
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Última atualização: $dataUltimaAtualizacao",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 13),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                             style: ElevatedButton.styleFrom(
                               side: BorderSide(
                                 color: Theme.of(context).primaryColor,
                                 width: 1.2,
-                              ), backgroundColor: Theme.of(context).focusColor,
-                              minimumSize: const Size.fromHeight(42),
+                              ),
+                              backgroundColor: Theme.of(context).focusColor,
+                              minimumSize: const Size.fromHeight(45),
                             ),
                           ),
                         );

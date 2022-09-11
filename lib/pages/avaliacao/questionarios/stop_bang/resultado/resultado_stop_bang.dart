@@ -79,6 +79,7 @@ class ResultadoStopBang {
     }
 
     mapa["pontuacao"] = pontuacao;
+    mapa["resultado"] = resultadoEmString;
 
     return mapa;
   }

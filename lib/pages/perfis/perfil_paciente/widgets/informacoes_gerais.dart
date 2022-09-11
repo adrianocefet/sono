@@ -127,10 +127,7 @@ class _InformacoesGeraisState extends State<InformacoesGerais> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                side: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                ),
-                primary: Theme.of(context).focusColor,
+                backgroundColor: Theme.of(context).focusColor,
                 minimumSize: const Size(60, 30),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
@@ -163,7 +160,7 @@ class _InformacoesGeraisState extends State<InformacoesGerais> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).focusColor,
+                backgroundColor: Theme.of(context).primaryColorLight,
                 minimumSize: const Size(60, 30),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),

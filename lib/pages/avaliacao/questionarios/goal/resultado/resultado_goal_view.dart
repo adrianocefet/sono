@@ -42,9 +42,7 @@ class ResultadoGOALView extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: resultadoGOAL.resultado == true
-                          ? "Alta probabilidade de SAOS!"
-                          : "Baixa probabilidade de SAOS!",
+                      text: resultadoGOAL.resultadoEmString,
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -75,7 +73,7 @@ class ResultadoGOALView extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Constantes.corAzulEscuroPrincipal,
+                backgroundColor: Constantes.corAzulEscuroPrincipal,
                 minimumSize: const Size(0, 140)),
             child: const Text(
               "Salvar resultado no perfil do paciente",

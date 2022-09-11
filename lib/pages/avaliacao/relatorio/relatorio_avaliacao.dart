@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 
 class RelatorioAvaliacao extends StatelessWidget {
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   const RelatorioAvaliacao({Key? key, required this.controllerAvaliacao})
       : super(key: key);
 
@@ -36,7 +36,7 @@ class RelatorioAvaliacao extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '8, ago, 2022  15:40',
+                    controllerAvaliacao.dataDaAvaliacaoFormatada,
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
@@ -45,64 +45,60 @@ class RelatorioAvaliacao extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ExamesRealizados(
-                      listaDeExamesRealizados:
-                          controllerAvaliacao.listaDeExamesRealizados,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                          mostrarDialogCarregando(context);
-                            await controllerAvaliacao
-                                .salvarAvaliacaoNoBancoDeDados();
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text('Avaliação salva com sucesso!'),
-                                backgroundColor: Theme.of(context).focusColor,
-                              ),
-                            );
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          } catch (e) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Erro ao salvar avaliação!'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                        child: const Text(
-                          'Salvar avaliação',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 5.0,
-                          backgroundColor: Theme.of(context).focusColor,
-                          fixedSize: Size(
-                            MediaQuery.of(context).size.width,
-                            50,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+              child: Center(
+                child: ExamesRealizados(
+                  listaDeExamesRealizados:
+                      controllerAvaliacao.listaDeExamesRealizados,
                 ),
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              mostrarDialogCarregando(context);
+              await controllerAvaliacao.salvarAvaliacaoNoBancoDeDados();
+              await controllerAvaliacao.deletarCopiasLocaisPDFsDosExames();
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Avaliação salva com sucesso!'),
+                  backgroundColor: Theme.of(context).focusColor,
+                ),
+              );
+              Navigator.pop(context);
+              Navigator.pop(context);
+            } catch (e) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Erro ao salvar avaliação!'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: const Text(
+            'Salvar avaliação',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            elevation: 5.0,
+            backgroundColor: Theme.of(context).focusColor,
+            fixedSize: Size(
+              MediaQuery.of(context).size.width,
+              50,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
         ),
       ),
     );

@@ -57,7 +57,7 @@ List<Map<String, dynamic>> baseActigrafia = [
     'validador': (value) {
       try {
         double resposta = double.parse(value.replaceAll(",", "."));
-        return value.trim().isEmpty || (resposta < 0)
+        return value.trim().isEmpty || (resposta < 0 || resposta > 100)
             ? "Insira um valor válido"
             : null;
       } catch (e) {

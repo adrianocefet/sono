@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/selecao_exame.dart';
+import 'package:sono/pages/historico_avaliacoes/historico_avaliacoes.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 class IniciarAvaliacao extends StatelessWidget {
@@ -10,7 +10,7 @@ class IniciarAvaliacao extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 30),
       width: MediaQuery.of(context).size.width * 0.92,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -47,31 +47,24 @@ class IniciarAvaliacao extends StatelessWidget {
             ),
           ),
           Text(
-            paciente.dataDaProximaAvaliacaoEmString == null
-                ? 'Não há avaliações agendadas'
-                : 'Próxima avaliação será em ${paciente.dataDaProximaAvaliacaoEmString}',
+            paciente.dataDaUltimaAvaliacaoEmString == null
+                ? 'Paciente nunca avaliado!'
+                : paciente.ultimaAvaliacaoFoiHoje
+                    ? "Paciente foi avaliado hoje às ${paciente.dataDaUltimaAvaliacao!.hour}:${paciente.dataDaUltimaAvaliacao!.minute}"
+                    : 'Última avaliação realizada em ${paciente.dataDaUltimaAvaliacaoEmString}',
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: FaIcon(
-              paciente.proximaAvaliacaoEHoje
-                  ? FontAwesomeIcons.checkCircle
-                  : FontAwesomeIcons.clock,
-              size: 55,
-              color: paciente.proximaAvaliacaoEHoje
-                  ? Theme.of(context).focusColor
-                  : Theme.of(context).primaryColor,
-            ),
+          const SizedBox(
+            height: 30,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).focusColor,
-              minimumSize: const Size(60, 30),
+              minimumSize: const Size(200, 40),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),
@@ -84,24 +77,31 @@ class IniciarAvaliacao extends StatelessWidget {
                 ),
               );
             },
-            child: Text(
-              paciente.dataDaProximaAvaliacaoEmString == null
-                  ? 'Fazer avaliação'
-                  : 'Fazer avaliação antecipada',
-              style: const TextStyle(
+            child: const Text(
+              "Iniciar avaliação",
+              style: TextStyle(
                 color: Colors.black,
               ),
             ),
           ),
+          const SizedBox(height: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).focusColor,
-              minimumSize: const Size(60, 30),
+              backgroundColor: Theme.of(context).primaryColorLight,
+              minimumSize: const Size(200, 40),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      HistoricoDeAvaliacoes(paciente: paciente),
+                ),
+              );
+            },
             child: const Text(
               'Ver histórico de avaliações',
               style: TextStyle(
@@ -109,6 +109,7 @@ class IniciarAvaliacao extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );

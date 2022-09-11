@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/solicitacao.dart';
@@ -25,12 +26,38 @@ class FirebaseService {
   static const String _stringQuestionarios = "questionarios";
   static const String _stringSolicitacoes = "solicitacoes";
   static const String _stringAvaliacoes = 'avaliacoes';
+  static const String _stringExames = 'exames';
 
-  Future<Paciente> obterPacientePorID(String idPaciente) async {
+  static const Map _tipos = {
+    'polissonografia': TipoExame.polissonografia,
+    'dados_complementares': TipoExame.dadosComplementares,
+    'espirometria': TipoExame.espirometria,
+    'actigrafia': TipoExame.actigrafia,
+    'listagem_de_sintomas': TipoExame.listagemDeSintomas,
+    'listagem_de_sintomas_pap': TipoExame.listagemDeSintomasDoUsoDoCPAP,
+    'manuvacuometria': TipoExame.manuvacuometria,
+    'questionarios': TipoExame.questionario,
+    'conclusao': TipoExame.conclusao,
+    'berlin': TipoQuestionario.berlin,
+    'epworth': TipoQuestionario.epworth,
+    'goal': TipoQuestionario.goal,
+    'pittsburg': TipoQuestionario.pittsburg,
+    'sacs_br': TipoQuestionario.sacsBR,
+    'stop_bang': TipoQuestionario.stopBang,
+    'whodas': TipoQuestionario.whodas,
+  };
+
+  Future<Paciente> obterPacientePorID(String idPaciente,
+      {bool comAvaliacoes = false}) async {
+    List<Avaliacao>? avaliacoes;
+
+    if (comAvaliacoes) {
+      avaliacoes = await obterAvaliacoesDoPaciente(idPaciente);
+    }
+
     return await _db.collection(_strPacientes).doc(idPaciente).get().then(
-          (document) => Paciente.porDocumentSnapshot(
-            document,
-          ),
+          (document) =>
+              Paciente.porDocumentSnapshot(document, avaliacoes: avaliacoes),
         );
   }
 
@@ -41,7 +68,71 @@ class FirebaseService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamAvaliacoesPorIdDoPaciente(
       String idPaciente) {
-    return _db.collection(_strPacientes).doc(idPaciente).collection(_stringAvaliacoes).snapshots();
+    return _db
+        .collection(_strPacientes)
+        .doc(idPaciente)
+        .collection(_stringAvaliacoes)
+        .snapshots();
+  }
+
+  Future<Avaliacao> obterAvaliacaoPorID(
+      String idPaciente, String idAvaliacao) async {
+    Map<String, dynamic> dadosBasicos = (await _db
+            .collection(_strPacientes)
+            .doc(idPaciente)
+            .collection(_stringAvaliacoes)
+            .doc(idAvaliacao)
+            .get())
+        .data()!;
+
+    List<Exame> examesComplexos = (await _db
+            .collection(_strPacientes)
+            .doc(idPaciente)
+            .collection(_stringAvaliacoes)
+            .doc(idAvaliacao)
+            .collection(_stringExames)
+            .get())
+        .docs
+        .map((e) {
+      Map<String, dynamic> exame = e.data();
+      return Exame(_tipos[exame['tipo']],
+          respostas: exame, urlPdf: exame['url_pdf']);
+    }).toList();
+
+    List<Exame> questionarios = (await _db
+            .collection(_strPacientes)
+            .doc(idPaciente)
+            .collection(_stringAvaliacoes)
+            .doc(idAvaliacao)
+            .collection(_stringQuestionarios)
+            .get())
+        .docs
+        .map((e) {
+      Map<String, dynamic> exame = e.data();
+      return Exame(
+        TipoExame.questionario,
+        tipoQuestionario: _tipos[exame['tipo']],
+        respostas: exame,
+      );
+    }).toList();
+
+    List<Exame> examesSimples = dadosBasicos.entries
+        .where((element) => [
+              'conclusao',
+              'dados_complementares',
+              'listagem_de_sintomas',
+              'listagem_de_sintomas_pap'
+            ].contains(element.key))
+        .map((exame) {
+      return Exame(_tipos[exame.key], respostas: Map.fromEntries([exame]));
+    }).toList();
+
+    return Avaliacao(
+      examesRealizados: examesSimples + examesComplexos + questionarios,
+      id: idAvaliacao,
+      idAvaliador: dadosBasicos['id_avaliador'],
+      dataDaAvaliacao: dadosBasicos['data_de_realizacao'],
+    );
   }
 
   Future<Equipamento?> obterEquipamentoPorID(String idEquipamento) async {
@@ -476,7 +567,15 @@ class FirebaseService {
     });
   }
 
-  Future<void> salvarAvaliacao(Avaliacao avaliacao) async {
+  Future<String> salvarPDFDoExame(
+      Exame exame, String idAvaliacao, String idPaciente) async {
+    Reference db = FirebaseStorage.instance
+        .ref("$_stringAvaliacoes/$idPaciente/$idAvaliacao/${exame.codigo}.pdf");
+    await db.putFile(File(exame.pdf!.path));
+    return await db.getDownloadURL();
+  }
+
+  Future<void> salvarAvaliacao(ControllerAvaliacao avaliacao) async {
     final List<Exame> examesSimples = avaliacao.listaDeExamesRealizados
         .where((exame) => [
               TipoExame.dadosComplementares,
@@ -506,12 +605,19 @@ class FirebaseService {
     }
 
     //gerando doc da avaliação
-    DocumentReference<Map<String, dynamic>> ref =
-        await _db.collection(_strPacientes).doc(avaliacao.paciente.id).collection(_stringAvaliacoes).add(dadosSimples);
+    DocumentReference<Map<String, dynamic>> ref = await _db
+        .collection(_strPacientes)
+        .doc(avaliacao.paciente.id)
+        .collection(_stringAvaliacoes)
+        .add(dadosSimples);
 
     //adicionando exames
     for (Exame exame in examesComplexos) {
       exame.respostas['tipo'] = exame.codigo;
+      if (exame.pdf != null) {
+        exame.respostas['url_pdf'] =
+            await salvarPDFDoExame(exame, ref.id, avaliacao.paciente.id);
+      }
       await ref.collection('exames').doc().set(exame.respostas);
     }
 
@@ -520,5 +626,27 @@ class FirebaseService {
       exame.respostas['tipo'] = exame.codigo;
       await ref.collection('questionarios').doc().set(exame.respostas);
     }
+
+    //atualizando data da última avaliação
+    await _db
+        .collection(_strPacientes)
+        .doc(avaliacao.paciente.id)
+        .update({'data_da_ultima_avaliacao': avaliacao.dataDaAvaliacao});
+  }
+
+  Future<List<Avaliacao>> obterAvaliacoesDoPaciente(String idPaciente) async {
+    QuerySnapshot<Map<String, dynamic>> docsAvaliacoes = await _db
+        .collection(_strPacientes)
+        .doc(idPaciente)
+        .collection(_stringAvaliacoes)
+        .get();
+
+    List<Avaliacao> avaliacoes = [
+      for (QueryDocumentSnapshot<Map<String, dynamic>> snap
+          in docsAvaliacoes.docs)
+        await obterAvaliacaoPorID(idPaciente, snap.id)
+    ];
+
+    return avaliacoes;
   }
 }

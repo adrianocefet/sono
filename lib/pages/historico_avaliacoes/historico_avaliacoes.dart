@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/historico_avaliacoes/widgets/item_avaliacao_antiga.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/services/firebase.dart';
 
 class HistoricoDeAvaliacoes extends StatelessWidget {
   final Paciente paciente;
@@ -14,7 +12,7 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("Avaliação"),
+        title: const Text("Histórico de Avaliações"),
         centerTitle: true,
       ),
       body: Container(
@@ -26,17 +24,18 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
             stops: [0, 0.2],
           ),
         ),
-        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseService().streamAvaliacoesPorIdDoPaciente(paciente.id),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView(
-                  children: const [],
-                );
-              } else {
-                return Container();
-              }
-            }),
+        child: Scrollbar(
+          scrollbarOrientation: ScrollbarOrientation.left,
+          child: ListView(
+            children: paciente.avaliacoes!
+                .map(
+                  (e) => ItemAvaliacaoAntiga(
+                    avaliacao: e,
+                  ),
+                )
+                .toList(),
+          ),
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:sono/pages/avaliacao/avaliacao.dart';
 
 class Paciente {
   late final Map<String, dynamic> infoMap;
@@ -33,6 +34,7 @@ class Paciente {
   late final String? cpf;
   late final String? escolaridade;
   late final String? profissao;
+  late final List<Avaliacao>? avaliacoes;
 
   int get idade {
     return DateTime.now().difference(dataDeNascimento).inDays ~/ 365;
@@ -58,12 +60,29 @@ class Paciente {
     return trabalhadorDeTurno ? 'Sim' : 'Não';
   }
 
-  String? get dataDaProximaAvaliacaoEmString {
-    return '01/11/2022';
+  String? get dataDaUltimaAvaliacaoEmString {
+    if (avaliacoes == null) return null;
+    List<Avaliacao> avaliacoesEmOrdemCronologica = avaliacoes!;
+    avaliacoesEmOrdemCronologica
+        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
+    return avaliacoesEmOrdemCronologica.last.dataDaAvaliacaoFormatadaReduzida;
   }
 
-  bool get proximaAvaliacaoEHoje {
-    return false;
+  DateTime? get dataDaUltimaAvaliacao {
+    if (avaliacoes == null) return null;
+    List<Avaliacao> avaliacoesEmOrdemCronologica = avaliacoes!;
+    avaliacoesEmOrdemCronologica
+        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
+    return avaliacoesEmOrdemCronologica.last.dataDaAvaliacao.toDate();
+  }
+
+  bool get ultimaAvaliacaoFoiHoje {
+    if (dataDaUltimaAvaliacao == null) return false;
+    DateTime now = DateTime.now();
+    return dataDaUltimaAvaliacao!
+            .difference(DateTime(now.year, now.month, now.day))
+            .inDays ==
+        0;
   }
 
   String get statusFormatado {
@@ -97,10 +116,11 @@ class Paciente {
     _setarAtributos();
   }
 
-  Paciente.porDocumentSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
+  Paciente.porDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> document,
+      {this.avaliacoes}) {
     infoMap = document.data() as Map<String, dynamic>;
     id = document.id;
+
     _setarAtributos();
   }
 

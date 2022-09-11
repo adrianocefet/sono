@@ -116,23 +116,30 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                                             .registrarPaciente();
                                       }
                                       Navigator.pop(context);
+                                      if (widget.pacienteJaCadastrado == null) {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PerfilClinicoPaciente(
+                                              controller.helper.idPaciente!,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
                                     } catch (e) {
                                       Navigator.pop(context);
-                                    }
-
-                                    if (widget.pacienteJaCadastrado == null) {
-                                      Navigator.pop(context);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PerfilClinicoPaciente(
-                                            controller.helper.idPaciente!,
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Erro ao ${widget.pacienteJaCadastrado == null ? "registrar paciente!" : "editar paciente!"}',
                                           ),
                                         ),
                                       );
-                                    } else {
-                                      Navigator.pop(context);
                                     }
                                   } else {
                                     await controller.pageController.nextPage(
@@ -153,11 +160,11 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                               ),
                               style: ElevatedButton.styleFrom(
                                 elevation: 5.0,
+                                backgroundColor: Theme.of(context).focusColor,
                                 fixedSize: Size(
                                   MediaQuery.of(context).size.width,
                                   50,
                                 ),
-                                primary: Theme.of(context).focusColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),

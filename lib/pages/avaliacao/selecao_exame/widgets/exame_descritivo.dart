@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 
 import '../../exame.dart';
 
 class ExameDescritivo extends StatelessWidget {
   final Exame exame;
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   final TextEditingController _textEditingController = TextEditingController();
   ExameDescritivo(
       {Key? key, required this.exame, required this.controllerAvaliacao})
@@ -62,7 +62,7 @@ class ExameDescritivo extends StatelessWidget {
             child: TextFormField(
               controller: _textEditingController,
               minLines: 7,
-              maxLines: 7,
+              maxLines: 10,
               decoration: InputDecoration(
                 labelText: exame.tipo == TipoExame.conclusao
                     ? 'Digite aqui os resultados da avaliação'

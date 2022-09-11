@@ -32,8 +32,7 @@ class RegistroPacienteHelper {
           respostas[p.codigo] = p.respostaBooleana;
           break;
         case TipoPergunta.numericaCadastros:
-          respostas[p.codigo] =
-              double.parse(p.respostaExtenso!.replaceAll(',', '.'));
+          respostas[p.codigo] = p.respostaPadrao;
           break;
 
         default:

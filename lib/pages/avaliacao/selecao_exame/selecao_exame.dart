@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pages/avaliacao/relatorio/relatorio_avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/exame_descritivo.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/selecionar_questionario.dart';
 import 'package:sono/utils/models/paciente.dart';
+import '../avaliacao_controller.dart';
 import 'widgets/selecionar_exame.dart';
 
 class SelecaoDeExames extends StatefulWidget {
   final Paciente paciente;
-  late final Avaliacao controllerAvaliacao;
+  late final ControllerAvaliacao controllerAvaliacao;
   SelecaoDeExames({Key? key, required this.paciente}) : super(key: key) {
     controllerAvaliacao =
-        Avaliacao(paciente: paciente, idAvaliador: 'IDGENERICO');
+        ControllerAvaliacao(paciente: paciente, idAvaliador: 'IDGENERICO');
   }
 
   @override

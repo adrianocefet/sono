@@ -42,6 +42,7 @@ class ResultadoPittsburg {
     }
 
     mapa["pontuacao"] = pontuacao;
+    mapa["resultado"] = resultado;
 
     return mapa;
   }

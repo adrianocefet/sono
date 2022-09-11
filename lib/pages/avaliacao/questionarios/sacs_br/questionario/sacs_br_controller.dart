@@ -69,11 +69,13 @@ class ResultadoSACSBR {
 
     valorFrequenciaDeRonco = perguntas
         .firstWhere((element) => element.codigo == "freq_ronco")
-        .respostaNumerica!.toInt();
+        .respostaNumerica!
+        .toInt();
 
     valorFrequenciaEngasgo = perguntas
         .firstWhere((element) => element.codigo == "freq_engasgo_ou_sufoco")
-        .respostaNumerica!.toInt();
+        .respostaNumerica!
+        .toInt();
 
     circunferenciaDoPescoco = double.parse(
       perguntas.last.respostaExtenso!,
@@ -128,6 +130,7 @@ class ResultadoSACSBR {
     }
 
     mapa["pontuacao"] = pontuacao;
+    mapa["resultado"] = resultadoEmString;
 
     return mapa;
   }

@@ -1,17 +1,32 @@
+import 'dart:io';
+
 import 'package:sono/utils/bases_exames/base_actigrafia.dart';
 import 'package:sono/utils/bases_exames/base_espirometria.dart';
 import 'package:sono/utils/bases_exames/base_manuvacuometria.dart';
 import 'package:sono/utils/bases_exames/base_polissonografia.dart';
 import 'package:sono/utils/bases_exames/base_sintomas.dart';
 import 'package:sono/utils/bases_exames/base_sintomas_cpap.dart';
+import 'package:sono/utils/bases_questionarios/base_berlin.dart';
+import 'package:sono/utils/bases_questionarios/base_epworth.dart';
+import 'package:sono/utils/bases_questionarios/base_goal.dart';
+import 'package:sono/utils/bases_questionarios/base_pittsburg.dart';
+import 'package:sono/utils/bases_questionarios/base_sacs_br.dart';
+import 'package:sono/utils/bases_questionarios/base_stopbang.dart';
+import 'package:sono/utils/bases_questionarios/base_whodas.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class Exame {
-  Exame(this.tipo, {this.tipoQuestionario, respostas}) {
+  Exame(this.tipo,
+      {this.tipoQuestionario,
+      Map<String, dynamic>? respostas,
+      this.pdf,
+      this.urlPdf}) {
     this.respostas = respostas ?? {};
   }
 
   TipoExame tipo;
+  File? pdf;
+  String? urlPdf;
   late Map<String, dynamic> respostas;
   TipoQuestionario? tipoQuestionario;
 
@@ -69,7 +84,6 @@ class Exame {
       TipoQuestionario.stopBang: 'stop_bang',
       TipoQuestionario.whodas: 'whodas',
     };
-
     return tipo != TipoExame.questionario
         ? codigos[tipo]
         : codigosQuestionarios[tipoQuestionario];
@@ -97,22 +111,25 @@ class Exame {
   }
 
   List<dynamic> get _base {
-    switch (tipo) {
-      case TipoExame.polissonografia:
-        return basePolissonografia;
-      case TipoExame.espirometria:
-        return baseEspirometria;
-      case TipoExame.actigrafia:
-        return baseActigrafia;
-      case TipoExame.listagemDeSintomas:
-        return baseSintomas;
-      case TipoExame.listagemDeSintomasDoUsoDoCPAP:
-        return baseSintomasCPAP;
-      case TipoExame.manuvacuometria:
-        return baseManuvacuometria;
-      default:
-        return [];
-    }
+    Map bases = {
+      TipoExame.polissonografia: basePolissonografia,
+      TipoExame.espirometria: baseEspirometria,
+      TipoExame.actigrafia: baseActigrafia,
+      TipoExame.listagemDeSintomas: baseSintomas,
+      TipoExame.listagemDeSintomasDoUsoDoCPAP: baseSintomasCPAP,
+      TipoExame.manuvacuometria: baseManuvacuometria,
+      TipoQuestionario.berlin: baseBerlin,
+      TipoQuestionario.epworth: baseEpworth,
+      TipoQuestionario.goal: baseGOAL,
+      TipoQuestionario.pittsburg: basePittsburg,
+      TipoQuestionario.sacsBR: baseSacsBR,
+      TipoQuestionario.stopBang: baseStopBang,
+      TipoQuestionario.whodas: baseWHODAS,
+    };
+
+    return tipo != TipoExame.questionario
+        ? bases[tipo]
+        : bases[tipoQuestionario];
   }
 }
 

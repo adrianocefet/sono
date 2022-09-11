@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/widgets/iniciar_avaliacao.dart';
@@ -37,66 +36,82 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
             stops: [0, 0.2],
           ),
         ),
-        child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        child: StreamBuilder<Object>(
           stream: FirebaseService().streamInfoPacientePorID(widget.idPaciente),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              widget.controller.paciente =
-                  Paciente.porDocumentSnapshot(snapshot.data!);
-              return PageView(
-                controller: widget.controller.pageController,
-                onPageChanged: (pagina) {
-                  widget.controller.paginaAtual.value = pagina;
-                },
-                children: [
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 200,
-                            color: Colors.red,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          VisaoGeralPaciente(
-                            controller: widget.controller,
-                          ),
-                          IniciarAvaliacao(
-                            paciente: widget.controller.paciente,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 200,
-                            color: Colors.blue,
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else if (snapshot.hasError) {
+            if (snapshot.hasError) {
               return const Center(
-                child: Text('ERRO!'),
+                child: Text('Erro ao obter as informações do paciente!'),
+              );
+            }
+            if (snapshot.hasData) {
+              return FutureBuilder<Paciente>(
+                future: FirebaseService()
+                    .obterPacientePorID(widget.idPaciente, comAvaliacoes: true),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    widget.controller.paciente = snapshot.data!;
+                    return PageView(
+                      controller: widget.controller.pageController,
+                      onPageChanged: (pagina) {
+                        widget.controller.paginaAtual.value = pagina;
+                      },
+                      children: [
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  color: Colors.red,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                VisaoGeralPaciente(
+                                  controller: widget.controller,
+                                ),
+                                IniciarAvaliacao(
+                                  paciente: widget.controller.paciente,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  color: Colors.blue,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Erro ao obter as informações do paciente!'),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               );
             } else {
               return const Center(

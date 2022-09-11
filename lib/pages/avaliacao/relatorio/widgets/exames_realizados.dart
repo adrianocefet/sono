@@ -20,53 +20,54 @@ class ExamesRealizados extends StatelessWidget {
             ].contains(element.tipo))
         .toList();
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
-      padding: const EdgeInsets.only(bottom: 10),
-      width: MediaQuery.of(context).size.width * 0.92,
-      height: MediaQuery.of(context).size.height * 0.5,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        border: Border.all(
-          width: 2,
-          color: Theme.of(context).primaryColor,
-        ),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
-          stops: [0, 0.2],
-        ),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.5,
+        maxWidth: MediaQuery.of(context).size.width * 0.92,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            width: double.infinity,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(17),
-                topRight: Radius.circular(17),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          border: Border.all(
+            width: 2,
+            color: Theme.of(context).primaryColor,
+          ),
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
+            stops: [0, 0.2],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(17),
+                  topRight: Radius.circular(17),
+                ),
+                color: Theme.of(context).primaryColor,
               ),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: const Center(
-              child: Text(
-                'Exames realizados',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
+              child: const Center(
+                child: Text(
+                  'Exames realizados',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: ListView(
+            ListView(
               shrinkWrap: true,
               children: [
                 for (Exame exame in listaDeExamesASeremListados)
@@ -77,8 +78,9 @@ class ExamesRealizados extends StatelessWidget {
                     ),
                     title: Text(
                       exame.nome,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
@@ -89,10 +91,11 @@ class ExamesRealizados extends StatelessWidget {
                       Icons.radio_button_checked,
                       color: Theme.of(context).primaryColor,
                     ),
-                    title: const Text(
+                    title: Text(
                       'Questionários',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     subtitle: Column(
@@ -101,11 +104,13 @@ class ExamesRealizados extends StatelessWidget {
                       children: [
                         for (Exame questionario
                             in listaDeQuestionariosRealizados)
-                          Text(
-                            questionario.nomeDoQuestionario!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColorLight,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              questionario.nomeDoQuestionario!,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
                           ),
                       ],
@@ -122,10 +127,11 @@ class ExamesRealizados extends StatelessWidget {
                       Icons.radio_button_checked,
                       color: Theme.of(context).primaryColor,
                     ),
-                    title: const Text(
+                    title: Text(
                       'Dados complementares',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     subtitle: Column(
@@ -148,9 +154,9 @@ class ExamesRealizados extends StatelessWidget {
                                   .values
                                   .first
                               : '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColorLight,
+                            color: Colors.black,
                           ),
                         ),
                       ],
@@ -159,13 +165,14 @@ class ExamesRealizados extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(
-                    Icons.radio_button_checked,
+                    Icons.star,
                     color: Theme.of(context).primaryColor,
                   ),
-                  title: const Text(
+                  title: Text(
                     'Conclusão',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   subtitle: Column(
@@ -179,18 +186,18 @@ class ExamesRealizados extends StatelessWidget {
                             .respostas
                             .values
                             .first,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColorLight,
+                          color: Colors.black,
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

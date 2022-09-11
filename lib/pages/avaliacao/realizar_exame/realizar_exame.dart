@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/exame.dart';
+import 'package:sono/pages/avaliacao/realizar_exame/dialogs/anexar_arquivo.dart';
+import 'package:sono/pages/avaliacao/realizar_exame/dialogs/visualizar_deletar_arquivo.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RealizarExame extends StatefulWidget {
-  final Avaliacao controllerAvaliacao;
+  final ControllerAvaliacao controllerAvaliacao;
   final Exame exame;
   final bool refazerExame;
   const RealizarExame({
@@ -48,9 +52,36 @@ class _RealizarExameState extends State<RealizarExame> {
           ),
           centerTitle: true,
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.attach_file),
+            Visibility(
+              visible: [
+                    TipoExame.listagemDeSintomas,
+                    TipoExame.listagemDeSintomasDoUsoDoCPAP
+                  ].contains(widget.exame.tipo) ==
+                  false,
+              child: IconButton(
+                onPressed: () async {
+                  if (widget.exame.pdf == null) {
+                    widget.exame.pdf = await mostrarDialogAnexarArquivoAoExame(
+                        context, widget.exame.codigo);
+                    setState(() {});
+                  } else {
+                    bool deletarArquivo =
+                        await mostrarDialogVisualizarOuDeletarArquivo(
+                            context, widget.exame.pdf!);
+                    if (deletarArquivo) {
+                      await File(widget.exame.pdf!.path).delete();
+                      widget.exame.pdf = null;
+                      setState(() {});
+                    }
+                  }
+                },
+                icon: Icon(
+                  Icons.attach_file,
+                  color: widget.exame.pdf == null
+                      ? Colors.white
+                      : Theme.of(context).focusColor,
+                ),
+              ),
             ),
           ],
         ),
@@ -115,7 +146,8 @@ class _RealizarExameState extends State<RealizarExame> {
               style: TextStyle(color: Colors.black),
             ),
             style: ElevatedButton.styleFrom(
-              elevation: 5.0, backgroundColor: Theme.of(context).focusColor,
+              elevation: 5.0,
+              backgroundColor: Theme.of(context).focusColor,
               maximumSize: const Size(350, 50),
               minimumSize: const Size(200, 50),
               shape: RoundedRectangleBorder(

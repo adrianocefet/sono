@@ -162,6 +162,7 @@ class ResultadoBerlin {
 
     mapa["pontuacoesPorCategoria"] = pontuacoesPorCategoria;
     mapa["resultadosPorCategoria"] = resultadosPorCategoria;
+    mapa["resultado"] = resultadoEmString;
 
     return mapa;
   }

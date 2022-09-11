@@ -71,14 +71,34 @@ class _FotoDoPaciente extends StatelessWidget {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: urlImagem == null
-              ? const NetworkImage(
-                  'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
-                )
-              : NetworkImage(urlImagem!),
-        ),
+        urlImagem == null
+            ? Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 2,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+                child: const Center(
+                  child: FaIcon(
+                    FontAwesomeIcons.user,
+                    color: Colors.white,
+                    size: 60,
+                  ),
+                ),
+              )
+            : CircleAvatar(
+                radius: 50,
+                backgroundImage: urlImagem == null
+                    ? const NetworkImage(
+                        'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
+                      )
+                    : NetworkImage(urlImagem!),
+              ),
         Container(
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(

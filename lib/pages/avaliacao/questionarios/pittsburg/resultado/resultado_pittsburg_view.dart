@@ -106,7 +106,7 @@ class ResultadoPittsburgView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  primary: Constantes.corAzulEscuroPrincipal,
+                  backgroundColor: Constantes.corAzulEscuroPrincipal,
                   minimumSize: const Size(0, 140)),
               child: const Text(
                 "Salvar resultado no perfil do paciente",
