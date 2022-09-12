@@ -225,7 +225,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                 const Divider(),
                                 Text(
                                   equipamento.fabricante,
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                   Visibility(
                                     visible: equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow,
@@ -270,7 +270,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                 const Divider(),
                                 Text(
                                   equipamento.descricao??'Sem descrição',
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 Visibility(
                                   visible: equipamento.status==StatusDoEquipamento.disponivel,
@@ -282,7 +282,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           width: MediaQuery.of(context).size.width,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                                primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(18.0),
@@ -343,7 +343,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                               width: MediaQuery.of(context).size.width*0.4,
                                               child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(18.0),
@@ -385,7 +385,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                               width: MediaQuery.of(context).size.width*0.4,
                                               child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(18.0),
@@ -428,7 +428,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             child: SizedBox(
                                               child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(18.0),
@@ -588,7 +588,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     width: MediaQuery.of(context).size.width,
                                                     child: ElevatedButton(
                                                       style: ElevatedButton.styleFrom(
-                                                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                          backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                           shape: RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius.circular(18.0),
@@ -606,20 +606,21 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                             context,
                                                                             e.toString());
                                                                       }
-                                                                  }
-                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                      ScaffoldMessenger.of(context).showSnackBar(
                                                                       const SnackBar(
                                                                         backgroundColor: Constantes.corAzulEscuroPrincipal,
                                                                         content: Text(
                                                                           "Solicitação enviada à dispensação!"
                                                                         ),
                                                                       ),
-                                                                  );
+                                                                      );
+                                                                  }
+                                                                  
                                                                   }},
                                                       child: Text(
                                                         equipamento.status==StatusDoEquipamento.emprestado?"Solicitar devolução":"Voltar ao hospital",
                                                         textAlign: TextAlign.center,
-                                                        style: TextStyle(color: Colors.black),
+                                                        style: const TextStyle(color: Colors.black),
                                                       ),
                                                     ),
                                                   ),
@@ -632,7 +633,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                       width: MediaQuery.of(context).size.width,
                                                       child: ElevatedButton(
                                                         style: ElevatedButton.styleFrom(
-                                                            primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                            backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius:
                                                                   BorderRadius.circular(18.0),
@@ -676,7 +677,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                                  padding: EdgeInsets.symmetric(vertical:8.0),
+                                                  padding: const EdgeInsets.symmetric(vertical:8.0),
                                                   child: Text("${equipamento.status.emStringMaiuscula} alterado por",
                                                     style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
@@ -696,7 +697,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     fit: BoxFit.fill,
                                                   ),
                                                 ),
-                                                SizedBox(width: 20,),
+                                                const SizedBox(width: 20,),
                                                 SizedBox(
                                                   width:
                                                       MediaQuery.of(context).size.width * 0.6,
@@ -749,7 +750,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                               width: MediaQuery.of(context).size.width,
                                               child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(18.0),
@@ -815,7 +816,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                   child: ElevatedButton.icon(
                                     icon: const Icon(Icons.picture_as_pdf,color: Colors.black,),
                                     style: ElevatedButton.styleFrom(
-                                                  primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                  backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(18.0),
@@ -859,7 +860,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Text(
                                           equipamento.informacoesTecnicas==''?'Clique em editar para adicionar informações':equipamento.informacoesTecnicas,
-                                          style: TextStyle(fontSize: 12),
+                                          style: const TextStyle(fontSize: 12),
                                         ),
                                     ),
                                   ],
@@ -954,7 +955,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(width: 1)),
-                              duration: Duration(milliseconds: 240),
+                              duration: const Duration(milliseconds: 240),
                               child: Column(
                                 children: [
                                   Container(
@@ -987,9 +988,9 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           padding: const EdgeInsets.only(bottom:10.0),
                                           child: ElevatedButton(
                                             onPressed: mostrarMais, 
-                                            child: Text(clicado?'Mostrar menos':'Mostrar mais',style: TextStyle(color: Colors.black),),
+                                            child: Text(clicado?'Mostrar menos':'Mostrar mais',style: const TextStyle(color: Colors.black),),
                                             style: ElevatedButton.styleFrom(
-                                                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                                                          backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                                           shape: RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius.circular(18.0),
@@ -1005,7 +1006,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       width: MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              primary: const Color.fromRGBO(97, 253, 125, 1),
+                                              backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(18.0),
