@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sono/pages/historico_avaliacoes/widgets/item_avaliacao_antiga.dart';
+import 'package:sono/utils/models/avaliacao.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 class HistoricoDeAvaliacoes extends StatelessWidget {
   final Paciente paciente;
@@ -24,17 +27,46 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
             stops: [0, 0.2],
           ),
         ),
-        child: Scrollbar(
-          scrollbarOrientation: ScrollbarOrientation.left,
-          child: ListView(
-            children: paciente.avaliacoes!
-                .map(
-                  (e) => ItemAvaliacaoAntiga(
-                    avaliacao: e,
-                  ),
-                )
-                .toList(),
-          ),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream:
+              FirebaseService().streamAvaliacoesPorIdDoPaciente(paciente.id),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Avaliacao> avaliacoesSemExames = snapshot.data!.docs.reversed
+                  .map(
+                    (e) => Avaliacao(
+                      examesRealizados: [],
+                      id: e.id,
+                      idAvaliador: e.data()['id_avaliador'],
+                      dataDaAvaliacao: e.data()['data_de_realizacao'],
+                    ),
+                  )
+                  .toList();
+              return Scrollbar(
+                scrollbarOrientation: ScrollbarOrientation.left,
+                child: ListView(
+                  children: avaliacoesSemExames
+                      .map(
+                        (e) => ItemAvaliacaoAntiga(
+                          avaliacaoSemExames: e,
+                          idPaciente: paciente.id,
+                        ),
+                      )
+                      .toList(),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return const Expanded(
+                child: Center(
+                  child: Text("Erro ao acessar as avaliações do paciente!"),
+                ),
+              );
+            } else {
+              return const Expanded(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );

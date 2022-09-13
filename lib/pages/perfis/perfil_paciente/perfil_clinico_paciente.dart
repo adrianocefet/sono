@@ -46,8 +46,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
             }
             if (snapshot.hasData) {
               return FutureBuilder<Paciente>(
-                future: FirebaseService()
-                    .obterPacientePorID(widget.idPaciente, comAvaliacoes: true),
+                future: FirebaseService().obterPacientePorID(widget.idPaciente),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     widget.controller.paciente = snapshot.data!;

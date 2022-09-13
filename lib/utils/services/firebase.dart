@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
+import 'package:sono/utils/models/avaliacao.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import '../models/equipamento.dart';
@@ -628,10 +628,23 @@ class FirebaseService {
     }
 
     //atualizando data da última avaliação
-    await _db
-        .collection(_strPacientes)
-        .doc(avaliacao.paciente.id)
-        .update({'data_da_ultima_avaliacao': avaliacao.dataDaAvaliacao});
+    List<Exame> todosOsExames =
+        examesSimples + examesComplexos + examesQuestionarios;
+
+    Map<String, Timestamp> datasUltimosExames = {};
+
+    for (Exame exame in todosOsExames) {
+      datasUltimosExames[exame.codigo] = avaliacao.dataDaAvaliacao;
+    }
+
+    if (examesQuestionarios.isNotEmpty) {
+      datasUltimosExames['questionarios'] = avaliacao.dataDaAvaliacao;
+    }
+
+    await _db.collection(_strPacientes).doc(avaliacao.paciente.id).update({
+      'data_da_ultima_avaliacao': avaliacao.dataDaAvaliacao,
+      'datas_ultimos_exames': datasUltimosExames,
+    });
   }
 
   Future<List<Avaliacao>> obterAvaliacoesDoPaciente(String idPaciente) async {

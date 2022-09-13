@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
-
-import '../../exame.dart';
+import 'package:sono/utils/models/exame.dart';
 
 class ExameDescritivo extends StatelessWidget {
   final Exame exame;

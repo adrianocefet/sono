@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/pages/avaliacao/realizar_exame/realizar_exame.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
-import '../../exame.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'acao_exame.dart';
 
 class SelecionarExame extends StatefulWidget {
@@ -21,8 +21,7 @@ class _SelecionarExameState extends State<SelecionarExame> {
   Widget build(BuildContext context) {
     String dataUltimaAtualizacao =
         widget.controllerAvaliacao.obterDataDaUltimaAtualizacaoFormatada(
-      widget.controllerAvaliacao
-          .obterDataDaUltimaAtualizacaoDoExame(widget.exame),
+      widget.exame,
     );
     bool exameRealizado =
         widget.controllerAvaliacao.verificarSeOExameFoiRealizado(widget.exame);
@@ -79,7 +78,8 @@ class _SelecionarExameState extends State<SelecionarExame> {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => RealizarExame(
-                                  controllerAvaliacao: widget.controllerAvaliacao,
+                                  controllerAvaliacao:
+                                      widget.controllerAvaliacao,
                                   exame: widget.exame,
                                 ),
                               ),
@@ -92,7 +92,8 @@ class _SelecionarExameState extends State<SelecionarExame> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => RealizarExame(
-                                  controllerAvaliacao: widget.controllerAvaliacao,
+                                  controllerAvaliacao:
+                                      widget.controllerAvaliacao,
                                   exame: widget.exame,
                                   refazerExame: true,
                                 ),
@@ -137,7 +138,8 @@ class _SelecionarExameState extends State<SelecionarExame> {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => RealizarExame(
-                                  controllerAvaliacao: widget.controllerAvaliacao,
+                                  controllerAvaliacao:
+                                      widget.controllerAvaliacao,
                                   exame: widget.exame,
                                 ),
                               ),

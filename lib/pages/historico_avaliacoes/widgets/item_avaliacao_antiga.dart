@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
 import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/avaliacao_detalhe.dart';
+import 'package:sono/utils/models/avaliacao.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 class ItemAvaliacaoAntiga extends StatefulWidget {
-  final Avaliacao avaliacao;
+  final Avaliacao avaliacaoSemExames;
+  final String idPaciente;
   const ItemAvaliacaoAntiga({
     Key? key,
-    required this.avaliacao,
+    required this.avaliacaoSemExames,
+    required this.idPaciente,
   }) : super(key: key);
 
   @override
@@ -17,6 +20,8 @@ class ItemAvaliacaoAntiga extends StatefulWidget {
 
 class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
   bool expandido = false;
+  Avaliacao? avaliacaoComExames;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,7 +58,7 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                   horizontal: 20,
                 ),
                 child: Text(
-                  widget.avaliacao.dataDaAvaliacaoFormatada,
+                  widget.avaliacaoSemExames.dataDaAvaliacaoFormatada,
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -64,8 +69,6 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              height:
-                  expandido ? null : MediaQuery.of(context).size.height * 0.12,
               child: Column(
                 children: [
                   Column(
@@ -87,75 +90,139 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                           horizontal: 10,
                           vertical: 15,
                         ),
-                        child: FutureBuilder(
-                          future: () async {
-                            return true;
-                          }(),
+                        child: FutureBuilder<Avaliacao>(
+                          future: FirebaseService().obterAvaliacaoPorID(
+                              widget.idPaciente, widget.avaliacaoSemExames.id),
                           builder: (context, snap) {
-                            if (true) {
-                              return Row(
+                            if (snap.hasData) {
+                              Avaliacao avaliacaoComExames = snap.data!;
+                              return Column(
                                 children: [
-                                  Container(
-                                    width: 45,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 1.2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                    child: const Center(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.userMd,
-                                        size: 25,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Text(
-                                    'Dra. Camila',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Theme.of(context).primaryColorLight,
-                                      minimumSize: const Size(60, 30),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                    ),
-                                    onPressed: () => setState(() {
-                                      expandido = !expandido;
-                                    }),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          expandido ? 'Colapsar ' : 'Expandir ',
-                                          style: const TextStyle(
-                                            color: Colors.black,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 45,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1.2,
+                                          ),
+                                          shape: BoxShape.circle,
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                        ),
+                                        child: const Center(
+                                          child: FaIcon(
+                                            FontAwesomeIcons.userMd,
+                                            size: 25,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                        Icon(
-                                          expandido
-                                              ? Icons.arrow_upward
-                                              : Icons.arrow_downward,
-                                          color: Colors.black,
-                                          size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        'Dra. Camila',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(context)
+                                              .primaryColorLight,
+                                          minimumSize: const Size(60, 30),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                          ),
+                                        ),
+                                        onPressed: () => setState(() {
+                                          expandido = !expandido;
+                                        }),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              expandido
+                                                  ? 'Colapsar '
+                                                  : 'Expandir ',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Icon(
+                                              expandido
+                                                  ? Icons.arrow_upward
+                                                  : Icons.arrow_downward,
+                                              color: Colors.black,
+                                              size: 16,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Visibility(
+                                    visible: expandido,
+                                    child: Column(
+                                      children: [
+                                        Divider(
+                                          thickness: 1.5,
+                                          color: Theme.of(context).primaryColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: ExamesRealizados(
+                                            listaDeExamesRealizados:
+                                                avaliacaoComExames
+                                                    .examesRealizados,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Theme.of(context).focusColor,
+                                              minimumSize: const Size(60, 40),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AvaliacaoEmDetalhe(
+                                                    avaliacao:
+                                                        avaliacaoComExames,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: const Text(
+                                              'Ver avaliação em detalhe',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -217,55 +284,6 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                         ),
                       )
                     ],
-                  ),
-                  Visibility(
-                    visible: expandido,
-                    child: Column(
-                      children: [
-                        Divider(
-                          thickness: 1.5,
-                          color: Theme.of(context).primaryColor,
-                          indent: 30,
-                          endIndent: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ExamesRealizados(
-                            listaDeExamesRealizados:
-                                widget.avaliacao.examesRealizados,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).focusColor,
-                              minimumSize: const Size(60, 40),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AvaliacaoEmDetalhe(
-                                    avaliacao: widget.avaliacao,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Ver avaliação em detalhe',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),

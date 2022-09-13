@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pages/historico_avaliacoes/exame_detalhe/exame_detalhe.dart';
+import 'package:sono/utils/models/exame.dart';
 
 class SelecionarExameEmDetalhe extends StatelessWidget {
   final Exame exame;

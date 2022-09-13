@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pdf/tela_pdf.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class ExameEmDetalhe extends StatelessWidget {

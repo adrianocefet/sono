@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pages/avaliacao/realizar_exame/dialogs/anexar_arquivo.dart';
 import 'package:sono/pages/avaliacao/realizar_exame/dialogs/visualizar_deletar_arquivo.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 class RealizarExame extends StatefulWidget {

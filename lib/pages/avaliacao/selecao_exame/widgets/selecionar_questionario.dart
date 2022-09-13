@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/dialogs/excluir_exame.dart';
+import 'package:sono/utils/models/exame.dart';
 import '../../avaliacao_controller.dart';
-import '../../exame.dart';
 import 'acao_exame.dart';
 
 class SelecionarQuestionario extends StatefulWidget {
@@ -20,8 +20,7 @@ class _SelecionarQuestionarioState extends State<SelecionarQuestionario> {
   Widget build(BuildContext context) {
     String dataUltimaAtualizacaoDeQuestionarios =
         widget.controllerAvaliacao.obterDataDaUltimaAtualizacaoFormatada(
-      widget.controllerAvaliacao
-          .obterDataDaUltimaAtualizacaoDoExame(widget.exame),
+      widget.exame,
     );
 
     return Padding(
@@ -300,12 +299,9 @@ class _ListaDeQuestionarios extends StatelessWidget {
 
                         String dataUltimaAtualizacao = controllerAvaliacao
                             .obterDataDaUltimaAtualizacaoFormatada(
-                          controllerAvaliacao
-                              .obterDataDaUltimaAtualizacaoDoQuestionario(
-                            Exame(
-                              TipoExame.questionario,
-                              tipoQuestionario: tipoQuestionario,
-                            ),
+                          Exame(
+                            TipoExame.questionario,
+                            tipoQuestionario: tipoQuestionario,
                           ),
                         );
 

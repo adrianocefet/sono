@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
+import 'package:sono/utils/models/avaliacao.dart';
 
 class Paciente {
   late final Map<String, dynamic> infoMap;
@@ -35,45 +35,34 @@ class Paciente {
   late final String? escolaridade;
   late final String? profissao;
   late final List<Avaliacao>? avaliacoes;
+  late final Map<String, Timestamp>? datasUltimosExames;
 
-  int get idade {
-    return DateTime.now().difference(dataDeNascimento).inDays ~/ 365;
-  }
+  int get idade => DateTime.now().difference(dataDeNascimento).inDays ~/ 365;
 
-  String get dataDeCadastroEmString {
-    return DateFormat('dd/MM/yyyy').format(dataDeCadastro);
-  }
+  String get dataDeCadastroEmString =>
+      DateFormat('dd/MM/yyyy').format(dataDeCadastro);
 
-  String get dataDeNascimentoEmString {
-    return DateFormat('dd/MM/yyyy').format(dataDeNascimento);
-  }
+  String get dataDeNascimentoEmString =>
+      DateFormat('dd/MM/yyyy').format(dataDeNascimento);
 
-  String get sinalTelefonicoEstavelEmString {
-    return sinalTelefonicoEstavel ? 'Sim' : 'Não';
-  }
+  String get sinalTelefonicoEstavelEmString =>
+      sinalTelefonicoEstavel ? 'Sim' : 'Não';
 
-  String get temAcessoAInternetEmString {
-    return temAcessoAInternet ? 'Sim' : 'Não';
-  }
+  String get temAcessoAInternetEmString => temAcessoAInternet ? 'Sim' : 'Não';
 
-  String get trabalhadorDeTurnoEmString {
-    return trabalhadorDeTurno ? 'Sim' : 'Não';
-  }
+  String get trabalhadorDeTurnoEmString => trabalhadorDeTurno ? 'Sim' : 'Não';
 
   String? get dataDaUltimaAvaliacaoEmString {
-    if (avaliacoes == null) return null;
-    List<Avaliacao> avaliacoesEmOrdemCronologica = avaliacoes!;
-    avaliacoesEmOrdemCronologica
-        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
-    return avaliacoesEmOrdemCronologica.last.dataDaAvaliacaoFormatadaReduzida;
+    if (datasUltimosExames == null) return null;
+    return DateFormat('dd/MM/yyyy  HH:mm').format(dataDaUltimaAvaliacao!);
   }
 
   DateTime? get dataDaUltimaAvaliacao {
-    if (avaliacoes == null) return null;
-    List<Avaliacao> avaliacoesEmOrdemCronologica = avaliacoes!;
-    avaliacoesEmOrdemCronologica
-        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
-    return avaliacoesEmOrdemCronologica.last.dataDaAvaliacao.toDate();
+    if (datasUltimosExames == null) return null;
+    List<Timestamp> datasUltimosExamesEmOrdemCronologica =
+        datasUltimosExames!.values.toList();
+    datasUltimosExamesEmOrdemCronologica.sort((a, b) => a.compareTo(b));
+    return datasUltimosExamesEmOrdemCronologica.last.toDate();
   }
 
   bool get ultimaAvaliacaoFoiHoje {
@@ -124,6 +113,19 @@ class Paciente {
     _setarAtributos();
   }
 
+  DateTime? dataDaUltimaRealizacaoDoExamePorCodigo(String codigo) {
+    return datasUltimosExames?[codigo]?.toDate();
+  }
+
+  String dataFormatadaDaUltimaRealizacaoDoExamePorCodigo(String codigo) {
+    if (dataDaUltimaRealizacaoDoExamePorCodigo(codigo) == null) {
+      return "Nunca realizado";
+    }
+
+    return DateFormat('dd/MM/yyyy  HH:mm')
+        .format(dataDaUltimaRealizacaoDoExamePorCodigo(codigo)!);
+  }
+
   void _setarAtributos() {
     nomeDaMae = infoMap['nome_da_mae'];
     sexo = infoMap['sexo'];
@@ -155,5 +157,6 @@ class Paciente {
     mallampati = infoMap["mallampati"];
     usaSmartphone = infoMap["usa_smartphone"];
     trabalhadorDeTurno = infoMap["trabalhador_de_turno"];
+    datasUltimosExames = infoMap['datas_ultimos_exames'];
   }
 }

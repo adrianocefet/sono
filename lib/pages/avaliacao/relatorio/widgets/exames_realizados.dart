@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
+import 'package:sono/utils/models/exame.dart';
 
 class ExamesRealizados extends StatelessWidget {
   final List<Exame> listaDeExamesRealizados;

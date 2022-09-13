@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/avaliacao.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/widgets/exame_descritivo_detalhe.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/widgets/selecionar_exame_detalhe.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/widgets/selecionar_questionario_detalhe.dart';
+import 'package:sono/utils/models/avaliacao.dart';
+import 'package:sono/utils/models/exame.dart';
 
 class AvaliacaoEmDetalhe extends StatelessWidget {
   final Avaliacao avaliacao;

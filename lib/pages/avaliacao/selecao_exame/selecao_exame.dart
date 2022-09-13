@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sono/pages/avaliacao/exame.dart';
 import 'package:sono/pages/avaliacao/relatorio/relatorio_avaliacao.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/exame_descritivo.dart';
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/selecionar_questionario.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import '../avaliacao_controller.dart';
 import 'widgets/selecionar_exame.dart';

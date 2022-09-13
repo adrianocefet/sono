@@ -17,6 +17,7 @@ import 'package:sono/pages/avaliacao/questionarios/stop_bang/resultado/resultado
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/resultado/resultado_stop_bang_view.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/resultado/resultado_whodas.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/resultado/resultado_whodas_view.dart';
+import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/pages/avaliacao/questionarios/berlin/questionario/berlin.dart';
 import 'package:sono/pages/avaliacao/questionarios/epworth/questionario/epworth_view.dart';
@@ -26,8 +27,6 @@ import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br.
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_view.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'avaliacao.dart';
-import 'exame.dart';
 
 class ControllerAvaliacao {
   ControllerAvaliacao({
@@ -123,41 +122,18 @@ class ControllerAvaliacao {
             Exame(TipoExame.questionario, tipoQuestionario: tipoQuestionario),
       );
 
-  Timestamp? obterDataDaUltimaAtualizacaoDoExame(Exame exame) {
-    List<Avaliacao> avaliacoesComOExame = paciente.avaliacoes!
-        .where((avaliacao) => avaliacao.examesRealizados
-            .where((exameAntigo) => exame.tipo == exameAntigo.tipo)
-            .isNotEmpty)
-        .toList();
-
-    avaliacoesComOExame
-        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
-
-    return avaliacoesComOExame.isNotEmpty
-        ? avaliacoesComOExame.last.dataDaAvaliacao
-        : null;
+  DateTime? obterDataDaUltimaAtualizacaoDoExame(Exame exame) {
+    return paciente.dataDaUltimaRealizacaoDoExamePorCodigo(exame.codigo);
   }
 
-  Timestamp? obterDataDaUltimaAtualizacaoDoQuestionario(Exame exame) {
-    List<Avaliacao> avaliacoesComOExame = paciente.avaliacoes!
-        .where((avaliacao) => avaliacao.examesRealizados
-            .where((exameAntigo) =>
-                exame.tipoQuestionario == exameAntigo.tipoQuestionario)
-            .isNotEmpty)
-        .toList();
-
-    avaliacoesComOExame
-        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
-
-    return avaliacoesComOExame.isNotEmpty
-        ? avaliacoesComOExame.last.dataDaAvaliacao
-        : null;
-  }
-
-  String obterDataDaUltimaAtualizacaoFormatada(Timestamp? data) {
-    if (data == null) return "Nunca realizado";
-
-    return DateFormat('dd/MM/yyyy').format(data.toDate());
+  String obterDataDaUltimaAtualizacaoFormatada(Exame exame) {
+    if (exame.tipo == TipoExame.questionario &&
+        exame.tipoQuestionario == null) {
+      return paciente
+          .dataFormatadaDaUltimaRealizacaoDoExamePorCodigo('questionarios');
+    }
+    return paciente
+        .dataFormatadaDaUltimaRealizacaoDoExamePorCodigo(exame.codigo);
   }
 
   String nomeDoQuestionarioPorTipo(TipoQuestionario tipoQuestionario) {
