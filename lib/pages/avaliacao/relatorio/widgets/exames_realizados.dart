@@ -109,8 +109,9 @@ class ExamesRealizados extends StatelessWidget {
                             child: Text(
                               questionario.nomeDoQuestionario!,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                       ],

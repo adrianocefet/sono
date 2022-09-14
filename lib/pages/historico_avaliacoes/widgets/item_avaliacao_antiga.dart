@@ -3,15 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/avaliacao_detalhe.dart';
 import 'package:sono/utils/models/avaliacao.dart';
+import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class ItemAvaliacaoAntiga extends StatefulWidget {
   final Avaliacao avaliacaoSemExames;
-  final String idPaciente;
+  final Paciente paciente;
   const ItemAvaliacaoAntiga({
     Key? key,
     required this.avaliacaoSemExames,
-    required this.idPaciente,
+    required this.paciente,
   }) : super(key: key);
 
   @override
@@ -91,11 +92,25 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                           vertical: 15,
                         ),
                         child: FutureBuilder<Avaliacao>(
-                          future: FirebaseService().obterAvaliacaoPorID(
-                              widget.idPaciente, widget.avaliacaoSemExames.id),
+                          future: () async {
+                            Avaliacao? avaliacaoPreexistente = widget.paciente
+                                .obterAvaliacaoPorID(
+                                    widget.avaliacaoSemExames.id);
+                            if (avaliacaoPreexistente != null) {
+                              return avaliacaoPreexistente;
+                            }
+
+                            return await FirebaseService().obterAvaliacaoPorID(
+                                widget.paciente.id,
+                                widget.avaliacaoSemExames.id);
+                          }(),
                           builder: (context, snap) {
                             if (snap.hasData) {
                               Avaliacao avaliacaoComExames = snap.data!;
+                              if (widget.paciente.avaliacoes == null) {
+                                widget.paciente.avaliacoes!
+                                    .add(avaliacaoComExames);
+                              }
                               return Column(
                                 children: [
                                   Row(

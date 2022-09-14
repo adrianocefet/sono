@@ -74,6 +74,12 @@ class Paciente {
         0;
   }
 
+  Avaliacao? obterAvaliacaoPorID(String id) {
+    if (avaliacoes == null) return null;
+
+    return avaliacoes!.firstWhere((element) => element.id == id);
+  }
+
   String get statusFormatado {
     switch (status) {
       case 'aguardando_cpap':

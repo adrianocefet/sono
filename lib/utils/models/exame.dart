@@ -84,6 +84,7 @@ class Exame {
       TipoQuestionario.stopBang: 'stop_bang',
       TipoQuestionario.whodas: 'whodas',
     };
+
     return tipo != TipoExame.questionario
         ? codigos[tipo]
         : codigosQuestionarios[tipoQuestionario];

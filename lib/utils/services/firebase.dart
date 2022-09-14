@@ -95,7 +95,7 @@ class FirebaseService {
         .docs
         .map((e) {
       Map<String, dynamic> exame = e.data();
-      return Exame(_tipos[exame['tipo']],
+      return Exame(_tipos[exame['codigo'] ?? exame['tipo']],
           respostas: exame, urlPdf: exame['url_pdf']);
     }).toList();
 
@@ -111,7 +111,7 @@ class FirebaseService {
       Map<String, dynamic> exame = e.data();
       return Exame(
         TipoExame.questionario,
-        tipoQuestionario: _tipos[exame['tipo']],
+        tipoQuestionario: _tipos[exame['codigo'] ?? exame['tipo']],
         respostas: exame,
       );
     }).toList();
@@ -613,7 +613,7 @@ class FirebaseService {
 
     //adicionando exames
     for (Exame exame in examesComplexos) {
-      exame.respostas['tipo'] = exame.codigo;
+      exame.respostas['codigo'] = exame.codigo;
       if (exame.pdf != null) {
         exame.respostas['url_pdf'] =
             await salvarPDFDoExame(exame, ref.id, avaliacao.paciente.id);
@@ -623,11 +623,11 @@ class FirebaseService {
 
     //adicionando questionários
     for (Exame exame in examesQuestionarios) {
-      exame.respostas['tipo'] = exame.codigo;
+      exame.respostas['codigo'] = exame.codigo;
       await ref.collection('questionarios').doc().set(exame.respostas);
     }
 
-    //atualizando data da última avaliação
+    //atualizando data da última avaliação e adicionando resumo dos exames realizados
     List<Exame> todosOsExames =
         examesSimples + examesComplexos + examesQuestionarios;
 
@@ -644,6 +644,7 @@ class FirebaseService {
     await _db.collection(_strPacientes).doc(avaliacao.paciente.id).update({
       'data_da_ultima_avaliacao': avaliacao.dataDaAvaliacao,
       'datas_ultimos_exames': datasUltimosExames,
+      'codigos_exames': todosOsExames.map((e) => e.codigo).toList(),
     });
   }
 

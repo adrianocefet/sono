@@ -32,7 +32,7 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
               FirebaseService().streamAvaliacoesPorIdDoPaciente(paciente.id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<Avaliacao> avaliacoesSemExames = snapshot.data!.docs.reversed
+              List<Avaliacao> avaliacoesSemExames = snapshot.data!.docs
                   .map(
                     (e) => Avaliacao(
                       examesRealizados: [],
@@ -42,6 +42,9 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
                     ),
                   )
                   .toList();
+              avaliacoesSemExames.sort(
+                (a, b) => b.dataDaAvaliacao.compareTo(a.dataDaAvaliacao),
+              );
               return Scrollbar(
                 scrollbarOrientation: ScrollbarOrientation.left,
                 child: ListView(
@@ -49,16 +52,19 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
                       .map(
                         (e) => ItemAvaliacaoAntiga(
                           avaliacaoSemExames: e,
-                          idPaciente: paciente.id,
+                          paciente: paciente,
                         ),
                       )
                       .toList(),
                 ),
               );
             } else if (snapshot.hasError) {
-              return const Expanded(
+              return Expanded(
                 child: Center(
-                  child: Text("Erro ao acessar as avaliações do paciente!"),
+                  child: Text(
+                    "Erro ao acessar as avaliações do paciente!",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
               );
             } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
+import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/terapia_com_pap.dart';
 import 'package:sono/pages/perfis/perfil_paciente/widgets/iniciar_avaliacao.dart';
 import 'package:sono/pages/perfis/perfil_paciente/widgets/visao_geral.dart';
 import 'package:sono/utils/models/paciente.dart';
@@ -46,7 +47,8 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
             }
             if (snapshot.hasData) {
               return FutureBuilder<Paciente>(
-                future: FirebaseService().obterPacientePorID(widget.idPaciente),
+                future: FirebaseService()
+                    .obterPacientePorID(widget.idPaciente, comAvaliacoes: true),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     widget.controller.paciente = snapshot.data!;
@@ -56,20 +58,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                         widget.controller.paginaAtual.value = pagina;
                       },
                       children: [
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 200,
-                                  height: 200,
-                                  color: Colors.red,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        TerapiaComPAP(controller: widget.controller),
                         SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -98,7 +87,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                               ],
                             ),
                           ),
-                        )
+                        ),
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -142,7 +131,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
                 ),
-                label: 'Equipamentos',
+                label: 'Terapia com PAP',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
