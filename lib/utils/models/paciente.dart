@@ -61,6 +61,14 @@ class Paciente {
 
   String get trabalhadorDeTurnoEmString => trabalhadorDeTurno ? 'Sim' : 'Não';
 
+  Avaliacao? get ultimaAvaliacao {
+    if (avaliacoes == null) return null;
+    List<Avaliacao> ultimasAvaliacoesEmOrdemCronologica = avaliacoes!;
+    ultimasAvaliacoesEmOrdemCronologica
+        .sort((a, b) => a.dataDaAvaliacao.compareTo(b.dataDaAvaliacao));
+    return ultimasAvaliacoesEmOrdemCronologica.last;
+  }
+
   String? get dataDaUltimaAvaliacaoEmString {
     if (datasUltimosExames == null) return null;
     return DateFormat('dd/MM/yyyy  HH:mm').format(dataDaUltimaAvaliacao!);

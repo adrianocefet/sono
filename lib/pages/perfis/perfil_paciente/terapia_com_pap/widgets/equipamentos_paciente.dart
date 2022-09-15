@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
+import 'package:sono/pages/tabelas/tab_tipos_equipamento.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/paciente.dart';
 
@@ -73,7 +74,14 @@ class EquipamentosDoPaciente extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TiposDeEquipamentos(),
+                  ),
+                );
+              },
               child: const Text(
                 "Emprestar novo equipamento ao paciente",
                 textAlign: TextAlign.center,

@@ -193,6 +193,9 @@ class _FotoDoEquipamento extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             child: Image(
               image: NetworkImage(urlImagem!, scale: 1),
+              loadingBuilder: ((context, child, loadingProgress) {
+                return child;
+              }),
               fit: BoxFit.fill,
             ),
           );

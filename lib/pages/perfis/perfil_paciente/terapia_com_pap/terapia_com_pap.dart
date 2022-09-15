@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/equipamentos_paciente.dart';
+import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/sintomas_pap_ultima_avaliacao.dart';
 
 class TerapiaComPAP extends StatelessWidget {
   final ControllerPerfilClinicoPaciente controller;
@@ -15,6 +16,9 @@ class TerapiaComPAP extends StatelessWidget {
           children: [
             EquipamentosDoPaciente(
               paciente: controller.paciente,
+            ),
+            SintomasPAPUltimaAvaliacao(
+              ultimaAvaliacao: controller.paciente.ultimaAvaliacao,
             ),
           ],
         ),
