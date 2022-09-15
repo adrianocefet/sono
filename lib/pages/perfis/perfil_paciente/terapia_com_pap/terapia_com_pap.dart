@@ -12,8 +12,10 @@ class TerapiaComPAP extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
-          children: const [
-            EquipamentosDoPaciente(),
+          children: [
+            EquipamentosDoPaciente(
+              paciente: controller.paciente,
+            ),
           ],
         ),
       ),

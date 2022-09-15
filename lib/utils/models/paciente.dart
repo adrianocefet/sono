@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/utils/models/avaliacao.dart';
+import 'package:sono/utils/models/equipamento.dart';
 
 class Paciente {
   late final Map<String, dynamic> infoMap;
@@ -21,7 +22,7 @@ class Paciente {
   late final double imc;
   late final int mallampati;
   late final double circunferenciaDoPescoco;
-  late final List<String>? equipamentosEmprestados;
+  late final List<Equipamento>? equipamentos;
   late final List<String>? comorbidades;
   late final List<String> hospitaisVinculados;
   late final bool temAcessoAInternet;
@@ -36,6 +37,14 @@ class Paciente {
   late final String? profissao;
   late final List<Avaliacao>? avaliacoes;
   late final Map<String, Timestamp>? datasUltimosExames;
+
+  Paciente.porDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> document,
+      {this.avaliacoes, this.equipamentos}) {
+    infoMap = Map<String, dynamic>.from(document.data()!);
+    id = document.id;
+
+    _setarAtributos();
+  }
 
   int get idade => DateTime.now().difference(dataDeNascimento).inDays ~/ 365;
 
@@ -68,16 +77,19 @@ class Paciente {
   bool get ultimaAvaliacaoFoiHoje {
     if (dataDaUltimaAvaliacao == null) return false;
     DateTime now = DateTime.now();
-    return dataDaUltimaAvaliacao!
-            .difference(DateTime(now.year, now.month, now.day))
-            .inDays ==
-        0;
+    int comparacao = dataDaUltimaAvaliacao!
+        .compareTo(DateTime(now.year, now.month, now.day));
+
+    return comparacao > 0;
   }
 
   Avaliacao? obterAvaliacaoPorID(String id) {
     if (avaliacoes == null) return null;
-
-    return avaliacoes!.firstWhere((element) => element.id == id);
+    if (avaliacoes!.where((element) => element.id == id).isNotEmpty) {
+      return avaliacoes!.firstWhere((element) => element.id == id);
+    } else {
+      return null;
+    }
   }
 
   String get statusFormatado {
@@ -108,14 +120,6 @@ class Paciente {
 
   Paciente(this.infoMap) {
     id = infoMap["id"];
-    _setarAtributos();
-  }
-
-  Paciente.porDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> document,
-      {this.avaliacoes}) {
-    infoMap = document.data() as Map<String, dynamic>;
-    id = document.id;
-
     _setarAtributos();
   }
 
@@ -163,6 +167,8 @@ class Paciente {
     mallampati = infoMap["mallampati"];
     usaSmartphone = infoMap["usa_smartphone"];
     trabalhadorDeTurno = infoMap["trabalhador_de_turno"];
-    datasUltimosExames = infoMap['datas_ultimos_exames'];
+    datasUltimosExames = infoMap['datas_ultimos_exames'] != null
+        ? Map<String, Timestamp>.from(infoMap['datas_ultimos_exames'])
+        : null;
   }
 }

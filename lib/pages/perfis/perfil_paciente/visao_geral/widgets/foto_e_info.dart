@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
-import 'package:sono/pages/perfis/perfil_paciente/widgets/informacoes_gerais.dart';
+import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/informacoes_gerais.dart';
 import 'package:sono/utils/models/paciente.dart';
 
-class VisaoGeralPaciente extends StatefulWidget {
+class FotoEInformacoesPaciente extends StatefulWidget {
   final ControllerPerfilClinicoPaciente controller;
-  const VisaoGeralPaciente({Key? key, required this.controller})
+  const FotoEInformacoesPaciente({Key? key, required this.controller})
       : super(key: key);
 
   @override
-  State<VisaoGeralPaciente> createState() => _VisaoGeralPacienteState();
+  State<FotoEInformacoesPaciente> createState() =>
+      _FotoEInformacoesPacienteState();
 }
 
-class _VisaoGeralPacienteState extends State<VisaoGeralPaciente> {
+class _FotoEInformacoesPacienteState extends State<FotoEInformacoesPaciente> {
   @override
   Widget build(BuildContext context) {
     final Paciente paciente = widget.controller.paciente;

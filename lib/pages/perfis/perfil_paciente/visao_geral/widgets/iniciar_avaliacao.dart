@@ -54,7 +54,7 @@ class IniciarAvaliacao extends StatelessWidget {
                     : 'Última avaliação realizada em ${paciente.dataDaUltimaAvaliacaoEmString}',
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),

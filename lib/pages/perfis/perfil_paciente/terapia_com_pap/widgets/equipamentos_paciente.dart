@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
+import 'package:sono/utils/models/equipamento.dart';
+import 'package:sono/utils/models/paciente.dart';
 
 class EquipamentosDoPaciente extends StatelessWidget {
-  const EquipamentosDoPaciente({Key? key}) : super(key: key);
+  final Paciente paciente;
+  const EquipamentosDoPaciente({Key? key, required this.paciente})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Equipamento> equipamentosEmOrdem = [
+      ...paciente.equipamentos!
+          .where((equip) => equip.tipo == TipoEquipamento.cpap),
+      ...paciente.equipamentos!.where(
+        (equip) => equip.tipo.emStringSnakeCase.contains('mascara'),
+      ),
+      ...paciente.equipamentos!.where(
+        (equip) =>
+            equip.tipo != TipoEquipamento.cpap &&
+            !equip.tipo.emStringSnakeCase.contains('mascara'),
+      ),
+    ];
+
     return Container(
       margin: const EdgeInsets.only(top: 30),
       width: MediaQuery.of(context).size.width * 0.92,
@@ -14,14 +32,12 @@ class EquipamentosDoPaciente extends StatelessWidget {
           width: 2,
           color: Theme.of(context).primaryColor,
         ),
-        color: Colors.white,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 10),
             width: double.infinity,
             height: 40,
             decoration: BoxDecoration(
@@ -38,6 +54,38 @@ class EquipamentosDoPaciente extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.45,
+            child: Scrollbar(
+              child: ListView(
+                shrinkWrap: true,
+                children: equipamentosEmOrdem
+                    .map((e) => ItemEquipamentoEmprestado(equipamento: e))
+                    .toList(),
+              ),
+            ),
+          ),
+          Divider(color: Theme.of(context).primaryColor, thickness: 2),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: ElevatedButton(
+              onPressed: () {},
+              child: const Text(
+                "Emprestar novo equipamento ao paciente",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).focusColor,
+                maximumSize: const Size(300, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
                 ),
               ),
             ),

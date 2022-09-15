@@ -48,17 +48,36 @@ class FirebaseService {
   };
 
   Future<Paciente> obterPacientePorID(String idPaciente,
-      {bool comAvaliacoes = false}) async {
+      {bool comAvaliacoes = false,
+      bool comUltimaAvaliacao = false,
+      bool comEquipamentos = false}) async {
     List<Avaliacao>? avaliacoes;
+    List<Equipamento>? equipamentos = [];
+    Equipamento? equipamentoObtido;
 
     if (comAvaliacoes) {
       avaliacoes = await obterAvaliacoesDoPaciente(idPaciente);
     }
+    if (comUltimaAvaliacao && !comAvaliacoes) {
+      avaliacoes = [await obterUltimaAvaliacaoDoPaciente(idPaciente)];
+    }
 
     return await _db.collection(_strPacientes).doc(idPaciente).get().then(
-          (document) =>
-              Paciente.porDocumentSnapshot(document, avaliacoes: avaliacoes),
+      (document) async {
+        for (String idEquipamento in document.data()![_stringEquipamento]) {
+          equipamentoObtido = await obterEquipamentoPorID(idEquipamento);
+          if (equipamentoObtido != null) {
+            equipamentos.add(equipamentoObtido!);
+          }
+        }
+
+        return Paciente.porDocumentSnapshot(
+          document,
+          avaliacoes: avaliacoes,
+          equipamentos: equipamentos,
         );
+      },
+    );
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoPacientePorID(
@@ -653,6 +672,7 @@ class FirebaseService {
         .collection(_strPacientes)
         .doc(idPaciente)
         .collection(_stringAvaliacoes)
+        .orderBy('data_de_realizacao')
         .get();
 
     List<Avaliacao> avaliacoes = [
@@ -662,5 +682,19 @@ class FirebaseService {
     ];
 
     return avaliacoes;
+  }
+
+  Future<Avaliacao> obterUltimaAvaliacaoDoPaciente(String idPaciente) async {
+    QuerySnapshot<Map<String, dynamic>> docsAvaliacoes = await _db
+        .collection(_strPacientes)
+        .doc(idPaciente)
+        .collection(_stringAvaliacoes)
+        .orderBy('data_de_realizacao')
+        .get();
+
+    Avaliacao ultimaAvaliacao =
+        await obterAvaliacaoPorID(idPaciente, docsAvaliacoes.docs.first.id);
+
+    return ultimaAvaliacao;
   }
 }

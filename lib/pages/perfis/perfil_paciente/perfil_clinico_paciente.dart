@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/terapia_com_pap.dart';
-import 'package:sono/pages/perfis/perfil_paciente/widgets/iniciar_avaliacao.dart';
-import 'package:sono/pages/perfis/perfil_paciente/widgets/visao_geral.dart';
+import 'package:sono/pages/perfis/perfil_paciente/visao_geral/visao_geral.dart';
+import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/iniciar_avaliacao.dart';
+import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/foto_e_info.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -47,8 +48,10 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
             }
             if (snapshot.hasData) {
               return FutureBuilder<Paciente>(
-                future: FirebaseService()
-                    .obterPacientePorID(widget.idPaciente, comAvaliacoes: true),
+                future: FirebaseService().obterPacientePorID(
+                  widget.idPaciente,
+                  comUltimaAvaliacao: true,
+                ),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     widget.controller.paciente = snapshot.data!;
@@ -59,21 +62,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                       },
                       children: [
                         TerapiaComPAP(controller: widget.controller),
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                VisaoGeralPaciente(
-                                  controller: widget.controller,
-                                ),
-                                IniciarAvaliacao(
-                                  paciente: widget.controller.paciente,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        VisaoGeralDoPaciente(controller: widget.controller),
                         SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
