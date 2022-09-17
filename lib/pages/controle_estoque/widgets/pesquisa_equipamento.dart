@@ -9,7 +9,7 @@ import 'item_equipamento.dart';
 
 class PesquisaEquipamento extends SearchDelegate {
   final TipoEquipamento tipo;
-  final int status;
+  final StatusDoEquipamento status;
   PesquisaEquipamento({required this.tipo, required this.status});
 
   @override
@@ -46,7 +46,7 @@ class PesquisaEquipamento extends SearchDelegate {
        StreamBuilder<QuerySnapshot>(
          stream: FirebaseFirestore.instance.collection('equipamentos')
             .where('hospital',isEqualTo: model.hospital)
-            .where('status',isEqualTo: Constantes.status3[model.status])
+            .where('status',isEqualTo: model.status.emString)
             .where('tipo',isEqualTo: model.tipo.emStringSnakeCase)
             .snapshots(),
          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

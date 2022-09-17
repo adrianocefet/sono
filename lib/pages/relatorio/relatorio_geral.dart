@@ -136,18 +136,18 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
   final IconData icone;
   switch(celula){
     case 'Disponível':
-      icone=Constantes.icone[0];
+      icone=StatusDoEquipamento.disponivel.icone2;
       break;
     case 'Emprestado':
-      icone=Constantes.icone[1];
+      icone=StatusDoEquipamento.emprestado.icone2;
       break;
     
     case 'Manutenção':
-      icone=Constantes.icone[2];
+      icone=StatusDoEquipamento.manutencao.icone2;
       break;
     
     case 'Desinfecção':
-      icone=Constantes.icone[3];
+      icone=StatusDoEquipamento.desinfeccao.icone2;
       break;
     default:
       icone=Icons.add;

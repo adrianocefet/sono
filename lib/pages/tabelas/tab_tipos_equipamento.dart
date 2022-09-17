@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/equipamento.dart';
+import '../../utils/models/paciente.dart';
 import '../../utils/models/user_model.dart';
 import '../controle_estoque/widgets/tipo_equipamento.dart';
 
 class TiposDeEquipamentos extends StatefulWidget {
-  const TiposDeEquipamentos({Key? key}) : super(key: key);
+  final Paciente? pacientePreEscolhido;
+  const TiposDeEquipamentos({Key? key,this.pacientePreEscolhido}) : super(key: key);
 
   @override
   State<TiposDeEquipamentos> createState() => _TiposDeEquipamentosState();
@@ -19,10 +21,11 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
         builder:(context, child, model) {
+        widget.pacientePreEscolhido != null ? model.status = StatusDoEquipamento.disponivel : null;
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('equipamentos')
         .where('hospital',isEqualTo: model.hospital)
-        .where('status',isEqualTo: Constantes.status3[model.status]).snapshots(),
+        .where('status',isEqualTo: model.status.emString).snapshots(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -30,7 +33,7 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
                   return Scaffold(
                     appBar: AppBar(
                       backgroundColor: Theme.of(context).primaryColor,
-                      title: Text(model.tipo.emString),
+                      title: Text(model.status.emStringPlural),
                       centerTitle: true,
                     ),
                     body: const Center(
@@ -40,7 +43,7 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
                 default:
         return Scaffold(
           appBar: AppBar(
-            title: Text('${Constantes.status[model.status]} (${snapshot.data!.docs.length})'),
+            title: Text('${model.status.emStringPlural} (${snapshot.data!.docs.length})'),
             centerTitle: true,
             backgroundColor: Constantes.corAzulEscuroPrincipal,
           ),
@@ -65,7 +68,7 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
                     ),
                   children: [
                     for(var tipo in TipoEquipamento.values)
-                    BotaoTipoEquipamento(titulo: tipo, imagem: tipo.imagens),
+                    BotaoTipoEquipamento(titulo: tipo, imagem: tipo.imagens, pacientePreEscolhido: widget.pacientePreEscolhido),
                   ],
                     ),
               ),

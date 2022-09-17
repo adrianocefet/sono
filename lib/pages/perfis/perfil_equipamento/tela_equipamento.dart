@@ -1,13 +1,13 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/adicionar_equipamento.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/widgets/Informacoes_adicionais.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/adicionarObservacao.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributos_equipamento.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/widgets/titulo_e_foto.dart';
 import 'package:sono/utils/dialogs/confirmar.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/dialogs/justificativa.dart';
@@ -24,8 +24,10 @@ import '../../../utils/services/firebase.dart';
 
 class TelaEquipamento extends StatefulWidget {
   final String id;
+  final Paciente? pacientePreEscolhido;
   const TelaEquipamento(
       {required this.id,
+      this.pacientePreEscolhido,
       Key? key})
       : super(key: key);
 
@@ -126,152 +128,11 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(15),
-                                          child: Image.network(
-                                            equipamento.urlFotoDePerfil??model.semimagem,
-                                            width: MediaQuery.of(context).size.width *
-                                                0.26,
-                                            height: MediaQuery.of(context).size.height *
-                                                0.14,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned(
-                                            right: 0,
-                                            bottom: 0,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 30,
-                                              width: 30,
-                                              decoration: const BoxDecoration(
-                                                color:
-                                                    Constantes.corAzulEscuroPrincipal,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Container(
-                                                height: 25,
-                                                width: 25,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
-                                                  color: Constantes.cor[Constantes.status3.indexOf(equipamento.status.emString)],
-                                                ),
-                                                child: Icon(
-                                                  Constantes.icone[Constantes.status3.indexOf(equipamento.status.emString)],
-                                                  size: 20,
-                                                  color:
-                                                      Constantes.corAzulEscuroPrincipal,
-                                                ),
-                                              ),
-                                            ))
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width * 0.4,
-                                          child: Text(
-                                            equipamento.nome,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 3,
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Text("Status: " +
-                                            equipamento.status.emStringMaiuscula)
-                                      ],
-                                    ),
-                                    Material(
-                                        child: IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              qrCodeGerado(
-                                                                idEquipamento:equipamento.id,
-                                                              )));
-                                      },
-                                      icon: const Icon(
-                                        Icons.qr_code,
-                                        color: Constantes.corAzulEscuroPrincipal,
-                                        size: 30,
-                                      ),
-                                      splashColor: Constantes.corAzulEscuroPrincipal,
-                                    ))
-                                  ],
-                                ),
+                                TituloEFoto(equipamento:equipamento,semfoto:model.semimagem),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Text(
-                                  "Fabricante",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(221, 171, 171, 171)),
-                                ),
-                                const Divider(),
-                                Text(
-                                  equipamento.fabricante,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                  Visibility(
-                                    visible: equipamento.tipo==TipoEquipamento.nasal||equipamento.tipo==TipoEquipamento.oronasal||equipamento.tipo==TipoEquipamento.facial||equipamento.tipo==TipoEquipamento.pillow,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                      const Text(
-                                      "Tamanho",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(221, 171, 171, 171)),
-                                                            ),
-                                      const Divider(),
-                                      Text(
-                                        equipamento.tamanho??'N/A',
-                                        softWrap: true,
-                                        overflow: TextOverflow.visible,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
-                                            fontSize: 12),
-                                      ),
-                                    ],
-                                                          ),
-                                  ),
-                                
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                const Text(
-                                  "Descrição",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(221, 171, 171, 171)),
-                                ),
-                                const Divider(),
-                                Text(
-                                  equipamento.descricao??'Sem descrição',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
+                                AtributosEquipamento(equipamento:equipamento),
                                 Visibility(
                                   visible: equipamento.status==StatusDoEquipamento.disponivel,
                                   child: Column(
@@ -288,6 +149,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                       BorderRadius.circular(18.0),
                                                 )),
                                             onPressed: () async {
+                                                      if(widget.pacientePreEscolhido==null){
                                                       Paciente?
                                                           pacienteEscolhido =
                                                           await mostrarDialogEscolherPaciente(
@@ -316,7 +178,29 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                               ),
                                                             ),
                                                         );
+                                                        }}else{
+                                                         if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Emprestado')==true){ 
+                                                          try {
+                                                          await equipamento
+                                                              .solicitarEmprestimo(
+                                                                  widget.pacientePreEscolhido!,model);
+                                                        } catch (erro) {
+                                                          equipamento.status =
+                                                              StatusDoEquipamento
+                                                                  .disponivel;
+                                                          mostrarMensagemErro(
+                                                              context,
+                                                              erro.toString());
                                                         }
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                "Solicitação enviada à dispensação!"
+                                                              ),
+                                                            ),
+                                                        );
+                                                        }}
                                                         
                                                     },
                                             child: Row(
@@ -334,94 +218,97 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                           ),
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 10.0),
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context).size.width*0.4,
-                                              child: ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(18.0),
-                                                    )),
-                                                onPressed: () async {
-                                                      if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Manutenção')==true){
-                                                        mostrarDialogCarregando(context);
-                                                        try {
-                                                          await equipamento
-                                                              .manutencao(model);
-                                                          equipamento.status =
-                                                              StatusDoEquipamento
-                                                                  .manutencao;
-                                                        } catch (e) {
-                                                          mostrarMensagemErro(
-                                                              context,
-                                                              e.toString());
-                                                        }
-                                                        Navigator.pop(context);
-                                                      }     
-                                                        },
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: const [
-                                                    Text(
-                                                      "Reparar ",
-                                                      style: TextStyle(color: Colors.black),
-                                                    ),
-                                                    Icon(Icons.build_rounded,color: Colors.black,size: 16,)
-                                                  ],
+                                      Visibility(
+                                        visible: widget.pacientePreEscolhido==null,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 10.0),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width*0.4,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(18.0),
+                                                      )),
+                                                  onPressed: () async {
+                                                        if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Manutenção')==true){
+                                                          mostrarDialogCarregando(context);
+                                                          try {
+                                                            await equipamento
+                                                                .manutencao(model);
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .manutencao;
+                                                          } catch (e) {
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                e.toString());
+                                                          }
+                                                          Navigator.pop(context);
+                                                        }     
+                                                          },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: const [
+                                                      Text(
+                                                        "Reparar ",
+                                                        style: TextStyle(color: Colors.black),
+                                                      ),
+                                                      Icon(Icons.build_rounded,color: Colors.black,size: 16,)
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 10.0),
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context).size.width*0.4,
-                                              child: ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(18.0),
-                                                    )),
-                                                onPressed: () async {
-                                                  if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Desinfecção')==true){
-                                                    mostrarDialogCarregando(context);
-                                                    try {
-                                                      await equipamento
-                                                          .desinfectar(model);
-                                                      equipamento.status =
-                                                          StatusDoEquipamento
-                                                              .desinfeccao;
-                                                    } catch (e) {
-                                                      mostrarMensagemErro(
-                                                          context,
-                                                          e.toString());
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 10.0),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width*0.4,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(18.0),
+                                                      )),
+                                                  onPressed: () async {
+                                                    if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Desinfecção')==true){
+                                                      mostrarDialogCarregando(context);
+                                                      try {
+                                                        await equipamento
+                                                            .desinfectar(model);
+                                                        equipamento.status =
+                                                            StatusDoEquipamento
+                                                                .desinfeccao;
+                                                      } catch (e) {
+                                                        mostrarMensagemErro(
+                                                            context,
+                                                            e.toString());
+                                                      }
+                                                      Navigator.pop(context);
                                                     }
-                                                    Navigator.pop(context);
-                                                  }
-                                                        },
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: const [
-                                                    Text(
-                                                      "Desinfectar ",
-                                                      style: TextStyle(color: Colors.black),
-                                                    ),
-                                                    Icon(Icons.clean_hands_sharp,color: Colors.black,size: 16,)
-                                                  ],
+                                                          },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: const [
+                                                      Text(
+                                                        "Desinfectar ",
+                                                        style: TextStyle(color: Colors.black),
+                                                      ),
+                                                      Icon(Icons.clean_hands_sharp,color: Colors.black,size: 16,)
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                       Padding(
                                             padding: const EdgeInsets.only(top: 10.0),
@@ -434,7 +321,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           BorderRadius.circular(18.0),
                                                     )),
                                                 onPressed: () async {
-                                                  Paciente?
+                                                  if(widget.pacientePreEscolhido==null){
+                                                      Paciente?
                                                           pacienteEscolhido =
                                                           await mostrarDialogEscolherPaciente(
                                                               context);
@@ -463,6 +351,29 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             ),
                                                         );
                                                         }
+                                                  }else{
+                                                    if(await mostrarDialogConfirmacao(context, 'Deseja conceder esse equipamento?', 'Ele será concedido ao paciente selecionado')==true){
+                                                    try {
+                                                      await equipamento
+                                                          .conceder(
+                                                              widget.pacientePreEscolhido!,model);
+                                                      } catch (erro) {
+                                                      equipamento.status =
+                                                          StatusDoEquipamento
+                                                              .disponivel;
+                                                      mostrarMensagemErro(
+                                                          context,
+                                                          erro.toString());
+                                                      }
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        const SnackBar(
+                                                          backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                          content: Text(
+                                                            "Equipamento concedido"
+                                                          ),
+                                                        ),
+                                                    );
+                                                  }}
 
                                                 },
                                                 child: Row(
@@ -834,75 +745,11 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                         ),
                         Visibility(
                           visible: equipamento.informacoesTecnicas!=null,
-                          child: Padding(
-                              padding: const EdgeInsets.only(top:8.0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(width: 1)),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      decoration: const 
-                                        BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          topRight: Radius.circular(8),
-                                        ),
-                                        color: Constantes.corAzulEscuroSecundario,),
-                                        height: 30,
-                                        child: const Text("Informações técnicas",style: TextStyle(fontWeight: FontWeight.bold),),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                          equipamento.informacoesTecnicas==''?'Clique em editar para adicionar informações':equipamento.informacoesTecnicas,
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          child: InformacoesAdicionais(equipamento,"Informações técnicas",equipamento.informacoesTecnicas==''?'Clique em editar para adicionar informações':equipamento.informacoesTecnicas)
                         ),
                         Visibility(
                           visible: equipamento.higieneECuidadosPaciente!=null&&equipamento.higieneECuidadosPaciente!='',
-                          child: Padding(
-                              padding: const EdgeInsets.only(top:8.0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(width: 1)),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      decoration: const 
-                                        BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          topRight: Radius.circular(8),
-                                        ),
-                                        color: Constantes.corAzulEscuroSecundario,),
-                                        height: 30,
-                                        child: const Text("Higiene e informações ao paciente",style: TextStyle(fontWeight: FontWeight.bold),),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                          equipamento.higieneECuidadosPaciente??'Clique em editar para adicionar informações',
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          child:InformacoesAdicionais(equipamento,"Higiene e informações ao paciente",equipamento.higieneECuidadosPaciente??'Clique em editar para adicionar informações',)
                         ),
                         Visibility(
                           // ignore: unrelated_type_equality_checks

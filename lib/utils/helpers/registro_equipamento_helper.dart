@@ -81,6 +81,14 @@ class RegistroEquipamentoHelper {
         textoAjuda: 'Informações adicionais.'
       ),
       Pergunta(
+        'Número de série*',
+        TipoPergunta.extensoCadastros,
+        [],
+        '',
+        "numero_serie",
+        validador: (value) => value != '' ? null : 'Dado obrigatório.',
+      ),
+      Pergunta(
         'Tamanho*',
         TipoPergunta.extensoCadastros,
         [],

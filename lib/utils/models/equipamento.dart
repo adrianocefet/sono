@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
@@ -23,6 +25,7 @@ class Equipamento {
   late final String? urlFotoDePerfil;
   late final String? idStatus;
   late final String? tamanho;
+  late final String? numeroSerie;
   late final DateTime? dataDeExpedicao;
   late final DateTime? dataDeDevolucao;
 
@@ -66,6 +69,7 @@ class Equipamento {
         "manual": manualPdf,
         "descrição": descricao,
         "tamanho": tamanho,
+        "numero_serie": numeroSerie,
         "observação": observacao,
         "data_de_expedicao": dataDeExpedicaoEmString,
         "data_de_devolucao": dataDeDevolucaoEmStringFormatada 
@@ -105,7 +109,8 @@ class Equipamento {
           "disponível",
     )!;
      
-     tamanho= equipamentoInfoMap["tamanho"] ?? equipamentoInfoMap["Tamanho"];
+     tamanho= equipamentoInfoMap["tamanho"];
+     numeroSerie = equipamentoInfoMap["numero_serie"];
      equipamentoInfoMap["data_de_expedicao"]!=null?
      dataDeExpedicao = (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate():dataDeExpedicao=null;
      dataDeDevolucao = equipamentoInfoMap["data_de_devolucao"];
@@ -263,34 +268,34 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
   String get imagens{
   switch(this){
     case TipoEquipamento.nasal:
-      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTgvMTVfMDZfMjhfOTk2X1RydWVCbHVlXzEuanBnIl1d/TrueBlue-1.jpg';
+      return 'assets/imagens/mascara_nasal.jpg';
     case TipoEquipamento.oronasal:
-      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTQvMDYvMTcvMTNfNDNfMDZfODUwX0FtYXJhXzEuanBnIl0sWyJwIiwidGh1bWIiLCI0MDB4NDAwPiJdXQ/Amara-1.jpg';
+      return 'assets/imagens/mascara_oronasal.jpg';
     case TipoEquipamento.pillow:
-      return 'https://a3.vnda.com.br/650x/espacoquallys/2019/09/13/10252-mascara-cpap-pillow-breeze-sefam-5146.jpg?v=1568415183';
+      return 'assets/imagens/mascara_pillow.jpg';
     case TipoEquipamento.facial:
-      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMTMvMDUvMjEvMjFfNDVfMjBfNDk5X0ZpdExpZmUuanBnIl1d/FitLife.jpg';
+      return 'assets/imagens/mascara_facial.jpg';
     case TipoEquipamento.traqueia:
-      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/mini-traqueia-para-mascara-swift-fx-resmed-720.jpg';
+      return 'assets/imagens/traqueia.jpg';
     case TipoEquipamento.fixador:
-      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/fixador-para-mascara-facial-fitlife-e-performax-philips-respironics-1042.jpg';
+      return 'assets/imagens/fixador.jpg';
     case TipoEquipamento.almofada:
-      return 'https://www.cpapbiancoazure.com.br/upload/produto/imagem/almofada-em-gel-e-aba-em-silicone-p-m-scara-nasal-comfortegel-blue-original-philips-respironics-1.jpg';
+      return 'assets/imagens/almofada.jpg';
     case TipoEquipamento.cpap:
-      return 'https://static.cpapfit.com.br/public/cpapfit/imagens/produtos/cpap-basico-airsense-s10-com-umidificador-integrado-resmed-916.png';
+      return 'assets/imagens/cpap.png';
     case TipoEquipamento.autocpap:
-      return 'https://cdn.awsli.com.br/600x450/49/49309/produto/41467334/7a540efde2.jpg';
+      return 'assets/imagens/autocpap.jpg';
     case TipoEquipamento.bilevel:
-      return 'https://www.cpapmed.com.br/media/W1siZiIsIjIwMjEvMDMvMDkvMDlfMjBfMzNfODE0X2JpcGFwX3loXzczMF9nYXNsaXZlX3l1d2VsbC5qcGciXSxbInAiLCJ0aHVtYiIsIjQwMHg0MDA%2BIl1d/bipap-yh-730-gaslive-yuwell.jpg';
+      return 'assets/imagens/bilevel.jpg';
     case TipoEquipamento.avap:
-      return 'https://cdn.awsli.com.br/600x450/437/437629/produto/21439696/6beb7653fe.jpg';
+      return 'assets/imagens/avap.jpg';
   }  
   }
 }
 
 enum StatusDoEquipamento {
-  emprestado,
   disponivel,
+  emprestado,
   manutencao,
   desinfeccao,
   concedido
@@ -337,6 +342,48 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Desinfecção";
       case StatusDoEquipamento.concedido:
         return "Concedidos";
+    }
+  }
+  IconData get icone{
+    switch(this){
+      case StatusDoEquipamento.disponivel:
+        return Icons.check_circle;
+      case StatusDoEquipamento.emprestado:
+        return Icons.people_sharp;
+      case StatusDoEquipamento.manutencao:
+        return Icons.build_circle_rounded;
+      case StatusDoEquipamento.desinfeccao:
+        return Icons.clean_hands_sharp;
+      case StatusDoEquipamento.concedido:
+        return Icons.assignment_ind;
+    }
+  }
+  IconData get icone2{
+    switch(this){
+      case StatusDoEquipamento.disponivel:
+        return Icons.check;
+      case StatusDoEquipamento.emprestado:
+        return Icons.people_sharp;
+      case StatusDoEquipamento.manutencao:
+        return Icons.build_rounded;
+      case StatusDoEquipamento.desinfeccao:
+        return Icons.clean_hands_sharp;
+      case StatusDoEquipamento.concedido:
+        return Icons.assignment_ind;
+    }
+  }
+  Color get cor{
+    switch(this){
+      case StatusDoEquipamento.disponivel:
+        return const Color.fromARGB(255, 51, 255, 58);
+      case StatusDoEquipamento.emprestado:
+        return Colors.yellow;
+      case StatusDoEquipamento.manutencao:
+        return Colors.red;
+      case StatusDoEquipamento.desinfeccao:
+        return const Color.fromARGB(255, 0, 225, 255);
+      case StatusDoEquipamento.concedido:
+        return const Color.fromARGB(255, 236, 98, 0);
     }
   }
 }

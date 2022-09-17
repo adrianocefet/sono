@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
+import '../../../utils/models/paciente.dart';
 import '../../../utils/models/user_model.dart';
 import '../../tabelas/tab_lista_de_equipamentos.dart';
 
 class BotaoTipoEquipamento extends StatefulWidget {
   final String imagem;
   final TipoEquipamento titulo;
-  const BotaoTipoEquipamento({required this.imagem,required this.titulo,Key? key}) : super(key: key);
+  final Paciente? pacientePreEscolhido;
+  const BotaoTipoEquipamento({required this.imagem,required this.titulo,this.pacientePreEscolhido,Key? key}) : super(key: key);
 
   @override
   State<BotaoTipoEquipamento> createState() => _BotaoTipoEquipamentoState();
@@ -36,7 +38,7 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
+                        child: Image.asset(
                           widget.imagem,
                           width: MediaQuery.of(context).size.width * 0.25,
                           height: MediaQuery.of(context).size.height * 0.1,

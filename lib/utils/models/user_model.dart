@@ -10,7 +10,7 @@ class UserModel extends Model {
       'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
   bool editar = false;
   TipoEquipamento tipo=TipoEquipamento.nasal;
-  int status=0;
+  StatusDoEquipamento status=StatusDoEquipamento.disponivel;
 
   void fazHome() async {
     equipamento = 'Equipamento';

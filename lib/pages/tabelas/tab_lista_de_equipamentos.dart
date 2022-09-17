@@ -4,12 +4,14 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
+import '../../utils/models/paciente.dart';
 import '../controle_estoque/widgets/item_equipamento.dart';
 import '../controle_estoque/widgets/pesquisa_equipamento.dart';
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
 
 class ListaDeEquipamentos extends StatefulWidget {
-  const ListaDeEquipamentos({Key? key}) : super(key: key);
+  final Paciente? pacientePreEscolhido;
+  const ListaDeEquipamentos({Key? key,this.pacientePreEscolhido}) : super(key: key);
 
   @override
   State<ListaDeEquipamentos> createState() => _ListaDeEquipamentosState();
@@ -24,7 +26,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
         return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('equipamentos')
             .where('hospital',isEqualTo: model.hospital)
-            .where('status',isEqualTo: Constantes.status3[model.status])
+            .where('status',isEqualTo: model.status.emString)
             .where('tipo',isEqualTo: model.tipo.emStringSnakeCase)
             .snapshots(),
           builder: (context, snapshot) {
@@ -73,7 +75,8 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(horizontal:8.0),
                               child: ItemEquipamento(
-                                id:document.id
+                                id:document.id,
+                                pacientePreEscolhido:widget.pacientePreEscolhido
                               ),
                             );
                           },
@@ -92,7 +95,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                           ),
                           const SizedBox(height: 16.0,),
                           Text(
-                            'Nenhum(a) ${model.tipo.emString.toLowerCase()} ${Constantes.status3[model.status].toLowerCase()}!',
+                            'Nenhum(a) ${model.tipo.emString.toLowerCase()} ${model.status.emString.toLowerCase()}!',
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -105,16 +108,16 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                     ),
                   ),
                 ),
-              floatingActionButton: FloatingActionButton(
+              floatingActionButton: widget.pacientePreEscolhido!=null?FloatingActionButton(
                 onPressed: (){
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AdicionarEquipamento(tipo:model.tipo)),
                     );
                 },
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
                 backgroundColor: Constantes.corAzulEscuroPrincipal,
-                ),
+                ):null
             );
           }}
         );

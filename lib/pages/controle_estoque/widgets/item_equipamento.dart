@@ -13,7 +13,8 @@ import '../../perfis/perfil_equipamento/tela_equipamento.dart';
 
 class ItemEquipamento extends StatefulWidget {
   final String id;
-  const ItemEquipamento({required this.id, Key? key}) : super(key: key);
+  final Paciente? pacientePreEscolhido;
+  const ItemEquipamento({required this.id, this.pacientePreEscolhido, Key? key}) : super(key: key);
 
   @override
   State<ItemEquipamento> createState() => _ItemEquipamentoState();
@@ -56,7 +57,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      TelaEquipamento(id: widget.id)));
+                                      TelaEquipamento(id: widget.id, pacientePreEscolhido: widget.pacientePreEscolhido)));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -133,17 +134,10 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(25),
-                                                  color: Constantes.cor[
-                                                      Constantes.status3
-                                                          .indexOf(equipamento
-                                                              .status
-                                                              .emString)],
+                                                  color: equipamento.status.cor,
                                                 ),
                                                 child: Icon(
-                                                  Constantes.icone[Constantes
-                                                      .status3
-                                                      .indexOf(equipamento
-                                                          .status.emString)],
+                                                  equipamento.status.icone2,
                                                   size: 20,
                                                   color: Constantes
                                                       .corAzulEscuroPrincipal,

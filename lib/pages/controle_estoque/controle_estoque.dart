@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/relatorio/relatorio.dart';
-import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/controle_estoque/tela_status_selecionado.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
@@ -52,9 +51,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                       spacing: 50,
                       runSpacing: 20,
                       children: [
-                        for (int status = 0;
-                            status < Constantes.status.length;
-                            status++)
+                        for (StatusDoEquipamento status in StatusDoEquipamento.values)
                           OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -77,12 +74,12 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
                                     Icon(
-                                      Constantes.icone2[status],
+                                      status.icone,
                                       size: 34,
                                       color: const Color.fromRGBO(97, 253, 125, 1),
                                     ),
                                     Text(
-                                      Constantes.status[status],
+                                      status.emStringPlural,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w300,
                                           color: Colors.black),
@@ -156,8 +153,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(Constantes
-                                                            .status3[0]) &&
+                                                        .contains(StatusDoEquipamento.disponivel.emString) &&
                                                     element['hospital']
                                                         .toString()
                                                         .contains(
@@ -171,8 +167,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(Constantes
-                                                            .status3[1]) &&
+                                                        .contains(StatusDoEquipamento.emprestado.emString) &&
                                                     element['hospital']
                                                         .toString()
                                                         .contains(
@@ -186,8 +181,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(Constantes
-                                                            .status3[2]) &&
+                                                        .contains(StatusDoEquipamento.manutencao.emString) &&
                                                     element['hospital']
                                                         .toString()
                                                         .contains(
@@ -201,8 +195,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(Constantes
-                                                            .status3[3]) &&
+                                                        .contains(StatusDoEquipamento.desinfeccao.emString) &&
                                                     element['hospital']
                                                         .toString()
                                                         .contains(

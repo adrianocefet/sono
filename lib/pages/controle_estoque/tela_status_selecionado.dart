@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_tipos_equipamento.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/user_model.dart';
 
 import '../../constants/constants.dart';
@@ -15,7 +13,15 @@ class TiposEquipamentos extends StatefulWidget {
 }
 
 class _TiposEquipamentosState extends State<TiposEquipamentos> {
-    final telas=[
+    // ignore: non_constant_identifier_names
+    Map<int, StatusDoEquipamento> Status = {
+      0:StatusDoEquipamento.disponivel,
+      1:StatusDoEquipamento.emprestado,
+      2:StatusDoEquipamento.manutencao,
+      3:StatusDoEquipamento.desinfeccao,
+      4:StatusDoEquipamento.concedido
+      };
+    final telas= const [
       TiposDeEquipamentos(),
       TiposDeEquipamentos(),
       TiposDeEquipamentos(),
@@ -25,11 +31,11 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
     
     bool inicializado=false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {        
     return ScopedModelDescendant<UserModel>(
       builder:(context, child, model) {
     if (inicializado==false){
-      currentIndex=model.status;
+      currentIndex = Status.keys.firstWhere((i) => Status[i]==model.status); 
       inicializado=true;
     }
     
@@ -46,7 +52,7 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
         unselectedItemColor: Color.fromARGB(255, 33, 35, 87),
         onTap: (index)=>setState((){
           currentIndex=index;
-          model.status=index;
+          model.status=Status[index]!;
         }),
         // ignore: prefer_const_literals_to_create_immutables
         items: [
