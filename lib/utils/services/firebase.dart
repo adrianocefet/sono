@@ -293,7 +293,7 @@ class FirebaseService {
   ) async {
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
-        "status": equipamento.status.emString,
+        "status": StatusDoEquipamento.emprestado,
         "paciente_responsavel": paciente.id,
         "data_de_expedicao": FieldValue.serverTimestamp(),
       },

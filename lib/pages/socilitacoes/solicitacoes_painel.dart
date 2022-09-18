@@ -231,9 +231,6 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                           if(await mostrarDialogConfirmacao(context, 'Confirmar empréstimo?', 'O equipamento se tornará emprestado')==true){
                                             mostrarDialogCarregando(context); 
                                             try {
-                                              equipamentoSolicitado.status =
-                                                  StatusDoEquipamento
-                                                      .emprestado;
                                               await equipamentoSolicitado
                                                   .emprestarPara(
                                                       pacienteSolicitado);
@@ -264,9 +261,6 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                           if(await mostrarDialogConfirmacao(context, 'Confirmar devolução?', 'O equipamento se tornará disponível')==true){
                                             mostrarDialogCarregando(context); 
                                               try {
-                                              equipamentoSolicitado.status =
-                                                  StatusDoEquipamento
-                                                      .disponivel;
                                               await equipamentoSolicitado
                                                   .devolver();
                                               solicitacao.infoMap['confirmacao']='confirmado';
