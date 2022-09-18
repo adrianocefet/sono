@@ -178,7 +178,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             ),
                                                         );
                                                         }}else{
-                                                         if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será alterado para Emprestado')==true){ 
+                                                         if(await mostrarDialogConfirmacao(context, 'Deseja mesmo alterar o status?', 'Ele será emprestado ao paciente selecionado')==true){ 
                                                           try {
                                                           await equipamento
                                                               .solicitarEmprestimo(
@@ -199,6 +199,9 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                               ),
                                                             ),
                                                         );
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
                                                         }}
                                                         
                                                     },
@@ -351,7 +354,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                         );
                                                         }
                                                   }else{
-                                                    if(await mostrarDialogConfirmacao(context, 'Deseja conceder esse equipamento?', 'Ele será concedido ao paciente selecionado')==true){
+                                                    if(await mostrarDialogConfirmacao(context, 'Deseja conceder?', 'Ele será concedido ao paciente selecionado')==true){
                                                     try {
                                                       await equipamento
                                                           .conceder(
@@ -372,12 +375,15 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           ),
                                                         ),
                                                     );
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   }}
 
                                                 },
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: widget.pacientePreEscolhido==null?MainAxisAlignment.spaceAround: MainAxisAlignment.center,
+                                                  mainAxisSize: widget.pacientePreEscolhido==null? MainAxisSize.min: MainAxisSize.max,
                                                   children: const [
                                                     Text(
                                                       "Conceder ",

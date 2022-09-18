@@ -75,10 +75,11 @@ class EquipamentosDoPaciente extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 5.0),
             child: ElevatedButton(
               onPressed: () {
+                print(paciente.nomeCompleto);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const TiposDeEquipamentos(),
+                    builder: (context) => TiposDeEquipamentos(pacientePreEscolhido: paciente,),
                   ),
                 );
               },

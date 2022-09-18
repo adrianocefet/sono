@@ -24,7 +24,7 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
               style: OutlinedButton.styleFrom(backgroundColor: Colors.white),
               onPressed: () async{
                 model.tipo=widget.titulo;                
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ListaDeEquipamentos()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ListaDeEquipamentos(pacientePreEscolhido: widget.pacientePreEscolhido,)));
               }, 
               child: Column(
                 children: [
