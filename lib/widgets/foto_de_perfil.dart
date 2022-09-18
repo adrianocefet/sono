@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/screen_equipamentos.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:sono/utils/dialogs/deletar_equipamento.dart';
@@ -65,26 +64,12 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
             }
           },
           onTap: () {
-            if (widget._tipo == TipoElemento.equipamento) {
-              model.equipamento == 'Equipamento'
-                  ? () {
-                      model.equipamento = widget.nome;
-                      widget.recarregarParent!();
-                    }()
-                  : Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ScreenEquipamento(widget.id),
-                      ),
-                    );
-            } else {
-              Navigator.push(
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PerfilClinicoPaciente(widget.id),
                 ),
               );
-            }
           },
           child: Column(
             mainAxisSize: MainAxisSize.max,

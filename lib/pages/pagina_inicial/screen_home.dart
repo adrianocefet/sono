@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/tabelas/tab_equipamentos.dart';
 import 'package:sono/pages/tabelas/tab_home.dart';
 import 'package:sono/pages/tabelas/tab_paciente.dart';
 import 'package:sono/pages/tabelas/tab_solicitacoes.dart';
@@ -16,12 +15,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        inicializa
-            ? {
-                model.equipamento = 'Equipamento',
-                inicializa = false,
-              }
-            : null;
         return PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
