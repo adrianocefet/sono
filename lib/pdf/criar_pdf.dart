@@ -55,6 +55,12 @@ Widget equipamento(Equipamento equipamentoEmprestado) {
           fontSize: 18, fontWeight: FontWeight.bold
         )
       ),
+      Text('Tipo: ${equipamentoEmprestado.tipo.emString}',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.normal
+        )
+      ,),
       Text('Nome: ${equipamentoEmprestado.nome}',
         textAlign: TextAlign.left,
         style: TextStyle(
@@ -67,6 +73,14 @@ Widget equipamento(Equipamento equipamentoEmprestado) {
           fontSize: 15, fontWeight: FontWeight.normal
         )
       ),
+      if(equipamentoEmprestado.tipo.emStringSnakeCase.contains('mascara'))
+      Text('Tamanho: ${equipamentoEmprestado.tamanho}',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.normal
+        )
+      ),
+      if(equipamentoEmprestado.tipo.emStringSnakeCase.contains('ap')||equipamentoEmprestado.tipo.emStringSnakeCase.contains('bilevel'))
       Text('Número de série: ${equipamentoEmprestado.numeroSerie??'Sem número de série'}',
         textAlign: TextAlign.left,
         style: TextStyle(
