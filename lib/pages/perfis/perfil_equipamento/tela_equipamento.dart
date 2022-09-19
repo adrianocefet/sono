@@ -16,6 +16,7 @@ import '../../../../utils/models/equipamento.dart';
 import 'package:sono/pdf/pdf_api.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../../../pdf/criar_pdf.dart';
 import '../../../pdf/tela_pdf.dart';
 import '../../../utils/dialogs/carregando.dart';
 import '../../../utils/dialogs/escolher_paciente_dialog.dart';
@@ -486,18 +487,38 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     ),
                                                   ],
                                                 ),
-                                                const Divider(),
-                                              const Padding(
-                                                padding: EdgeInsets.only(top:8.0),
-                                                child: Text("Data de expedição",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Constantes.corAzulEscuroSecundario,
-                                                    decoration: TextDecoration.underline
-                                                ),
-                                                ),
+                                              const Divider(),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Padding(
+                                                        padding: EdgeInsets.only(top:8.0),
+                                                        child: Text("Data de expedição",
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Constantes.corAzulEscuroSecundario,
+                                                            decoration: TextDecoration.underline
+                                                        ),
+                                                        ),
+                                                      ),
+                                                      Text(equipamento.dataDeExpedicaoEmString),
+                                                    ],
+                                                  ),
+                                                  Material(
+                                                    child: IconButton(
+                                                        color: Constantes.corAzulEscuroPrincipal,
+                                                        onPressed: () async{
+                                                          final pdfArquivo = await PdfInvoiceApi.generate(pacienteEmprestado,equipamento);
+                                                          abrirPDF(context, pdfArquivo);
+                                                        }, 
+                                                        icon: const Icon(Icons.picture_as_pdf)
+                                                      ),
+                                                    ),
+                                                ],
                                               ),
-                                              Text(equipamento.dataDeExpedicaoEmString),
                                               Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: SizedBox(
