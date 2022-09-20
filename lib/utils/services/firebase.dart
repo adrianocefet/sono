@@ -80,6 +80,14 @@ class FirebaseService {
     );
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamPacientesPorHospital(
+      String hospital) {
+    return _db
+        .collection(_strPacientes)
+        .where("hospitais_vinculados", arrayContains: hospital)
+        .snapshots();
+  }
+
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoPacientePorID(
       String idPaciente) {
     return _db.collection(_strPacientes).doc(idPaciente).snapshots();
