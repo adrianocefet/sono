@@ -145,6 +145,41 @@ enum TipoExame {
   conclusao
 }
 
+extension ExtensaoTipoExame on TipoExame {
+  String get emString {
+    const Map<TipoExame, String> nomes = {
+      TipoExame.polissonografia: "polissonografia",
+      TipoExame.espirometria: "espirometria",
+      TipoExame.manuvacuometria: "manuvacuometria",
+      TipoExame.actigrafia: "actigrafia",
+      TipoExame.listagemDeSintomas: "listagemDeSintomas",
+      TipoExame.listagemDeSintomasDoUsoDoCPAP: "listagemDeSintomasDoUsoDoCPAP",
+      TipoExame.questionario: "questionario",
+      TipoExame.dadosComplementares: "dadosComplementares",
+      TipoExame.conclusao: "conclusao",
+    };
+
+    return nomes[this]!;
+  }
+
+  String get emStringFormatada {
+    const Map<TipoExame, String> nomes = {
+      TipoExame.polissonografia: "Polissonografia",
+      TipoExame.espirometria: "Espirometria",
+      TipoExame.manuvacuometria: "Manuvacuometria",
+      TipoExame.actigrafia: "Actigrafia",
+      TipoExame.listagemDeSintomas: "Listagem De Sintomas",
+      TipoExame.listagemDeSintomasDoUsoDoCPAP:
+          "Listagem De Sintomas Do Uso Do CPAP",
+      TipoExame.questionario: "Questionário",
+      TipoExame.dadosComplementares: "Dados Complementares",
+      TipoExame.conclusao: "Conclusão",
+    };
+
+    return nomes[this]!;
+  }
+}
+
 enum TipoQuestionario {
   stopBang,
   berlin,

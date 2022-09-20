@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/terapia_com_pap.dart';
 import 'package:sono/pages/perfis/perfil_paciente/visao_geral/visao_geral.dart';
-import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/iniciar_avaliacao.dart';
-import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/foto_e_info.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -133,12 +131,12 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.history,
+                  Icons.chat_bubble_outlined,
                   color: paginaAtual == 2
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
                 ),
-                label: 'Histórico',
+                label: 'Conversa',
               ),
             ],
           );
