@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
+import 'package:sono/pages/tabelas/widgets/item_paciente.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/services/firebase.dart';
-import 'package:sono/widgets/foto_de_perfil.dart';
 
 import '../../widgets/pesquisa.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
@@ -32,7 +33,7 @@ class ListaDePacientes extends StatelessWidget {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate: BarraDePesquisa('Paciente', usuario.hospital),
+                    delegate: PesquisaDePacientes('Paciente', usuario.hospital),
                   );
                 },
                 icon: const Icon(Icons.search),
@@ -67,23 +68,16 @@ class ListaDePacientes extends StatelessWidget {
                     if (snapshot.hasData) {
                       List<DocumentSnapshot<Map<String, dynamic>>>
                           docsPacientes = snapshot.data!.docs;
-                      return ListView.separated(
-                        itemBuilder: (context, index) {
-                          Paciente paciente = Paciente.porDocumentSnapshot(
-                              docsPacientes[index]);
-                          return ListTile(
-                            title: Text(paciente.nomeCompleto),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PerfilClinicoPaciente(paciente.id),
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) => Divider(),
-                        itemCount: snapshot.data!.docs.length,
+                      return Scrollbar(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            Paciente paciente = Paciente.porDocumentSnapshot(
+                              docsPacientes[index],
+                            );
+                            return ItemPaciente(paciente: paciente);
+                          },
+                          itemCount: snapshot.data!.docs.length,
+                        ),
                       );
                     } else {
                       return const Center(
