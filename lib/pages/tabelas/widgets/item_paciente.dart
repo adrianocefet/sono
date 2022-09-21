@@ -24,16 +24,37 @@ class ItemPaciente extends StatelessWidget {
         child: ListTile(
           leading: _FotoDoPacienteThumbnail(
             paciente.urlFotoDePerfil,
+            statusPaciente: paciente.status,
           ),
           title: Text(
             paciente.nomeCompleto,
           ),
           subtitle: Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 8.0,
+              vertical: 2,
             ),
-            child: Text(
-              'Última avaliação: ${paciente.dataDaUltimaAvaliacaoEmString ?? "Nunca"}',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      const Text("Status:"),
+                      Text(
+                        paciente.statusFormatado,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Text(
+                  'Última avaliação: ${paciente.dataDaUltimaAvaliacaoEmString ?? "Nunca"}',
+                ),
+              ],
             ),
           ),
           onTap: () => Navigator.push(
@@ -50,9 +71,11 @@ class ItemPaciente extends StatelessWidget {
 
 class _FotoDoPacienteThumbnail extends StatelessWidget {
   final String? urlImagem;
+  final String statusPaciente;
   const _FotoDoPacienteThumbnail(
     this.urlImagem, {
     Key? key,
+    required this.statusPaciente,
   }) : super(key: key);
 
   @override
