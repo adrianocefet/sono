@@ -53,7 +53,7 @@ class _TelaPDFState extends State<TelaPDF> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.nomeArquivo),
+        title: Text(widget.nomeArquivo,overflow: TextOverflow.clip,),
         backgroundColor: Constantes.corAzulEscuroPrincipal,
         centerTitle: true,
       ),
@@ -62,7 +62,11 @@ class _TelaPDFState extends State<TelaPDF> {
               future: createFileOfPdfUrl(),
               builder: (context, snap) {
                 if (snap.hasData) {
-                  return PDFView(filePath: snap.data!.path);
+                  return PDFView(
+                    filePath: snap.data!.path,
+                    autoSpacing: false,
+                    pageSnap: false,
+                    );
                 } else if (snap.hasError) {
                   return Center(
                     child: Text(
@@ -78,6 +82,8 @@ class _TelaPDFState extends State<TelaPDF> {
               })
           : PDFView(
               filePath: widget.arquivo!.path,
+              autoSpacing: false,
+              pageSnap: false,
             ),
     );
   }

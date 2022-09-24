@@ -1,5 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:sono/pdf/criar_pdf.dart';
+import 'package:sono/utils/models/user_model.dart';
+import '../services/firebase.dart';
+import 'equipamento.dart';
+import 'paciente.dart';
 
 class Solicitacao{
   late final Map<String, dynamic> infoMap;
@@ -11,6 +16,7 @@ class Solicitacao{
   late final String idSolicitante;
   late final DateTime dataDaSolicitacao;
   late final String hospital;
+  late final String? urlPdf;
   late final String? motivoNegacao;
   late final String? justificativaDevolucao;
   late final DateTime? dataDeResposta;
@@ -42,11 +48,22 @@ class Solicitacao{
     confirmacao = _lerConfirmacao(infoMap['confirmacao']??'pendente')!;
     motivoNegacao = infoMap['motivo_negacao'];
     justificativaDevolucao = infoMap['justificativa_devolucao'];
+    urlPdf = infoMap['url_pdf'];
     infoMap["data_da_solicitacao"]!=null?
     dataDaSolicitacao=(infoMap["data_da_solicitacao"] as Timestamp).toDate():dataDeResposta=null;
     tipo = _lerTipo(infoMap['tipo']??'emprestimo')!;
     infoMap["data_de_resposta"]!=null?
     dataDeResposta = (infoMap["data_de_resposta"] as Timestamp).toDate():dataDeResposta=null;
+  }
+
+  Future<void> gerarTermoEmprestimo(Paciente paciente, Equipamento equipamento, UserModel usuario) async {
+      final pdfArquivo = await PdfInvoiceApi.gerarTermoDeResponsabilidade(this, paciente, equipamento, usuario);
+      await FirebaseService().salvarTermoDaSolicitacao(this, paciente, equipamento, pdfArquivo);
+  }
+
+  Future<void> gerarTermoDevolucao(Paciente paciente, Equipamento equipamento, UserModel usuario) async {
+      final pdfArquivo = await PdfInvoiceApi.gerarTermoDeDevolucao(this, paciente, equipamento, usuario);
+      await FirebaseService().salvarTermoDaSolicitacao(this, paciente, equipamento, pdfArquivo);
   }
 
   Confirmacao? _lerConfirmacao(String confirmacao){

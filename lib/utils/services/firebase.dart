@@ -27,6 +27,7 @@ class FirebaseService {
   static const String _stringSolicitacoes = "solicitacoes";
   static const String _stringAvaliacoes = 'avaliacoes';
   static const String _stringExames = 'exames';
+  static const String _stringTermos = 'termos';
 
   static const Map _tipos = {
     'polissonografia': TipoExame.polissonografia,
@@ -200,6 +201,19 @@ class FirebaseService {
         .update(
           solicitacaoAtualizada.infoMap,
         );
+  }
+
+  Future<void> salvarTermoDaSolicitacao(Solicitacao solicitacao, Paciente paciente, Equipamento equipamento,File pdf) async{
+    solicitacao.infoMap['url_pdf'] = await salvarPDFDaSolicitacao(solicitacao, equipamento.id, paciente.id, pdf);
+    await atualizarSolicitacao(solicitacao);
+  }
+
+  Future<String> salvarPDFDaSolicitacao(
+      Solicitacao solicitacao, String idEquipamento, String idPaciente,File pdf) async {
+    Reference db = FirebaseStorage.instance
+        .ref("$_stringTermos/$idEquipamento/$idPaciente/${solicitacao.id}.pdf");
+    await db.putFile(File(pdf.path));
+    return await db.getDownloadURL();
   }
 
   Future<void> updateDadosDoEquipamento(

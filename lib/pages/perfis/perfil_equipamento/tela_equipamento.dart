@@ -8,6 +8,7 @@ import 'package:sono/pages/perfis/perfil_equipamento/widgets/informacoes_adicion
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/adicionarObservacao.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributos_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/titulo_e_foto.dart';
+import 'package:sono/pages/tabelas/tab_historico_emprestimos.dart';
 import 'package:sono/utils/dialogs/confirmar.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/dialogs/justificativa.dart';
@@ -488,10 +489,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                   ],
                                                 ),
                                               const Divider(),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Column(
+                                              Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       const Padding(
@@ -507,18 +505,6 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                       Text(equipamento.dataDeExpedicaoEmString),
                                                     ],
                                                   ),
-                                                  Material(
-                                                    child: IconButton(
-                                                        color: Constantes.corAzulEscuroPrincipal,
-                                                        onPressed: () async{
-                                                          final pdfArquivo = await PdfInvoiceApi.generate(pacienteEmprestado,equipamento);
-                                                          abrirPDF(context, pdfArquivo);
-                                                        }, 
-                                                        icon: const Icon(Icons.picture_as_pdf)
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
                                               Padding(
                                                 padding: const EdgeInsets.only(top:8.0),
                                                 child: SizedBox(
@@ -723,6 +709,47 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     ),
                                   ),
                               ]),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top:8.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(width: 1)),
+                            child: Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: const 
+                                    BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      topRight: Radius.circular(8),
+                                    ),
+                                    color: Constantes.corAzulEscuroSecundario,),
+                                    height: 30,
+                                    child: const Text("Histórico de empréstimos e devoluções",style: TextStyle(fontWeight: FontWeight.bold),),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical:4.0),
+                                  child: ElevatedButton.icon(
+                                    icon: const Icon(Icons.list_alt,color: Colors.black,),
+                                    style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(18.0),
+                                                  )),
+                                    onPressed:(){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HistoricoEmprestimos(equipamento: equipamento.id)));
+                                    },
+                                    label: const Text("Ver lista",style: TextStyle(color: Colors.black),)),
+                                ),
+                              ],
                             ),
                           ),
                         ),

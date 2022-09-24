@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
-
 import '../../constants/constants.dart';
 import '../../utils/dialogs/carregando.dart';
 import '../../utils/dialogs/confirmar.dart';
@@ -218,7 +215,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 }, 
                                 child: const Text('Negar',style: TextStyle(color: Colors.black),),
                                 style: ElevatedButton.styleFrom(
-                                  primary: const Color.fromRGBO(97, 253, 125, 1),
+                                  backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.circular(18.0),
@@ -245,6 +242,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                   erro.toString());
                                             }
                                             Navigator.pop(context);
+                                            await solicitacao.gerarTermoEmprestimo(pacienteSolicitado, equipamentoSolicitado, model);
                                         }}
                                         else{
                                           ScaffoldMessenger.of(context).showSnackBar(
@@ -274,6 +272,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                   erro.toString());
                                             }
                                             Navigator.pop(context);
+                                            await solicitacao.gerarTermoDevolucao(pacienteSolicitado, equipamentoSolicitado, model);
                                         }
                                         }else{
                                           ScaffoldMessenger.of(context).showSnackBar(
@@ -289,7 +288,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 }, 
                                 child: Text(solicitacao.tipo==TipoSolicitacao.emprestimo?'Emprestar':'Devolver',style: TextStyle(color: Colors.black),),
                                 style: ElevatedButton.styleFrom(
-                                  primary: const Color.fromRGBO(97, 253, 125, 1),
+                                  backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.circular(18.0),
@@ -298,7 +297,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                             ],
                           ),
                         ),
-                      )
+                      ),
                 ],
                 ),
             ),
