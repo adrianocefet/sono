@@ -144,8 +144,8 @@ class Equipamento {
     switch (tipo) {
       case "cpap":
         return TipoEquipamento.cpap;
-      case 'bilevel':  
-        return TipoEquipamento.bilevel;
+      case 'bipap':  
+        return TipoEquipamento.bipap;
       case 'autocpap': 
         return TipoEquipamento.autocpap;
       case 'avaps':  
@@ -164,6 +164,8 @@ class Equipamento {
         return TipoEquipamento.pillow;
       case "mascara_facial":
         return TipoEquipamento.facial;
+      case "filtro":
+        return TipoEquipamento.filtro;
     }
 
     return null;
@@ -207,9 +209,10 @@ enum TipoEquipamento {
   fixador,
   almofada,
   cpap,
-  bilevel,
+  bipap,
   avap,
-  autocpap
+  autocpap,
+  filtro
 }
 
 extension ExtensaoTipoEquipamento on TipoEquipamento {
@@ -231,12 +234,14 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "Máscara Oronasal";
       case TipoEquipamento.cpap:
         return "CPAP";
-      case TipoEquipamento.bilevel:
-        return 'BiLevel';
+      case TipoEquipamento.bipap:
+        return 'BiPAP';
       case TipoEquipamento.autocpap:
         return 'AutoCPAP';
       case TipoEquipamento.avap:
         return 'AVAPS';
+      case TipoEquipamento.filtro:
+        return 'Filtro';
     }
   }
   String get emStringSnakeCase {
@@ -257,12 +262,14 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return "mascara_oronasal";
       case TipoEquipamento.cpap:
         return "cpap";
-      case TipoEquipamento.bilevel:
-        return 'bilevel';
+      case TipoEquipamento.bipap:
+        return 'bipap';
       case TipoEquipamento.autocpap:
         return 'autocpap';
       case TipoEquipamento.avap:
         return 'avaps';
+      case TipoEquipamento.filtro:
+        return 'filtro';
     }
   }
   String get imagens{
@@ -285,10 +292,12 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
       return 'assets/imagens/cpap.png';
     case TipoEquipamento.autocpap:
       return 'assets/imagens/autocpap.jpg';
-    case TipoEquipamento.bilevel:
-      return 'assets/imagens/bilevel.jpg';
+    case TipoEquipamento.bipap:
+      return 'assets/imagens/bipap.jpg';
     case TipoEquipamento.avap:
       return 'assets/imagens/avap.jpg';
+    case TipoEquipamento.filtro:
+      return 'assets/imagens/filtro.jpg';
   }  
   }
 }

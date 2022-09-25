@@ -108,7 +108,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                     ),
                   ),
                 ),
-              floatingActionButton: widget.pacientePreEscolhido!=null?FloatingActionButton(
+              floatingActionButton: widget.pacientePreEscolhido==null?FloatingActionButton(
                 onPressed: (){
                   Navigator.push(
                       context,

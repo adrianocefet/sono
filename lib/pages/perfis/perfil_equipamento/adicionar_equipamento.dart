@@ -48,9 +48,9 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                     children: [
                       for(Pergunta pergunta in helper.perguntas.getRange(0, 9))
                         RespostaWidget(pergunta,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[pergunta.codigo]:null),
-                      if(tipo==TipoEquipamento.cpap || tipo==TipoEquipamento.autocpap || tipo==TipoEquipamento.avap || tipo==TipoEquipamento.bilevel)
+                      if(tipo.emStringSnakeCase.contains('ap'))
                         RespostaWidget(helper.perguntas[9],autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[helper.perguntas[9].codigo]:null),
-                      if(tipo==TipoEquipamento.nasal || tipo==TipoEquipamento.oronasal || tipo==TipoEquipamento.pillow || tipo==TipoEquipamento.facial)
+                      if(tipo.emStringSnakeCase.contains('mascara'))
                         RespostaWidget(helper.perguntas.last,autoPreencher: widget.equipamentoJaCadastrado!=null?widget.equipamentoJaCadastrado!.infoMap[helper.perguntas.last.codigo]:null),
                     ],
                   ),

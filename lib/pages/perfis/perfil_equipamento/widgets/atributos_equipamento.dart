@@ -61,7 +61,7 @@ class _AtributosEquipamentoState extends State<AtributosEquipamento> {
                                           ),
                   ),
                 Visibility(
-                    visible: equipamento.tipo==TipoEquipamento.cpap||equipamento.tipo==TipoEquipamento.autocpap||equipamento.tipo==TipoEquipamento.avap||equipamento.tipo==TipoEquipamento.bilevel,
+                    visible: equipamento.tipo==TipoEquipamento.cpap||equipamento.tipo==TipoEquipamento.autocpap||equipamento.tipo==TipoEquipamento.avap||equipamento.tipo==TipoEquipamento.bipap,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

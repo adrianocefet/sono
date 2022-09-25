@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sono/constants/constants.dart';
 
 class TelaPDF extends StatefulWidget {
@@ -53,7 +53,19 @@ class _TelaPDFState extends State<TelaPDF> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.nomeArquivo,overflow: TextOverflow.clip,),
+        actions: [
+          if (widget.arquivo != null)
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () {
+                compartilharPDF(widget.arquivo!);
+              },
+            )
+        ],
+        title: Text(
+          widget.nomeArquivo,
+          overflow: TextOverflow.clip,
+        ),
         backgroundColor: Constantes.corAzulEscuroPrincipal,
         centerTitle: true,
       ),
@@ -66,7 +78,7 @@ class _TelaPDFState extends State<TelaPDF> {
                     filePath: snap.data!.path,
                     autoSpacing: false,
                     pageSnap: false,
-                    );
+                  );
                 } else if (snap.hasError) {
                   return Center(
                     child: Text(
@@ -86,5 +98,9 @@ class _TelaPDFState extends State<TelaPDF> {
               pageSnap: false,
             ),
     );
+  }
+
+  Future<void> compartilharPDF(File pdf) async {
+    Share.shareFiles([pdf.path], text: "Enviar PDF");
   }
 }
