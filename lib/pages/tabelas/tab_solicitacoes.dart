@@ -47,7 +47,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                       ),
                     );
                   default:
-                    filtradas = solicitacoesFiltradas(snapshot.data!.docs);
+                    filtradas = solicitacoesFiltradas(snapshot.data!.docs)..sort(((Solicitacao a, Solicitacao b) => a.dataDaSolicitacao.compareTo(b.dataDaSolicitacao)));
                     return Scaffold(
                       drawer: CustomDrawer(widget.pageController),
                       appBar: AppBar(
@@ -72,7 +72,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                                     child:
                                       Column(
                                         children:
-                                        filtradas.map(
+                                        filtradas.reversed.map(
                                           (Solicitacao solicitacao){
                                             return SolicitacoesPainel(idSolicitacao: solicitacao.id);
                                           }

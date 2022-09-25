@@ -745,7 +745,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                         BorderRadius.circular(18.0),
                                                   )),
                                     onPressed:(){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HistoricoEmprestimos(equipamento: equipamento.id)));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HistoricoEmprestimos(equipamento: equipamento.id, pacientePreEscolhido: widget.pacientePreEscolhido,)));
                                     },
                                     label: const Text("Ver lista",style: TextStyle(color: Colors.black),)),
                                 ),
