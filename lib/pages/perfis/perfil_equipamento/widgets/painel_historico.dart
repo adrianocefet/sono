@@ -125,6 +125,48 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                           const Padding(
                             padding: EdgeInsets.only(top: 8.0, left: 15),
                             child: Text(
+                              'Paciente',
+                              style: TextStyle(
+                                  color: Constantes.corAzulEscuroPrincipal,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const Divider(
+                            color: Constantes.corAzulEscuroPrincipal,
+                          ),
+                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                              stream: FirebaseService().streamInfoPacientePorID(
+                                  solicitacao.idPaciente),
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                  case ConnectionState.waiting:
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  default:
+                                    pacienteSolicitado =
+                                        Paciente.porDocumentSnapshot(
+                                            snapshot.data!);
+                                    return ListTile(
+                                      title:
+                                          Text(pacienteSolicitado.nomeCompleto),
+                                      subtitle: Text(
+                                          "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
+                                      leading: Image.network(
+                                        pacienteSolicitado.urlFotoDePerfil ??
+                                            model.semimagem,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                }
+                              }),
+                              const Padding(
+                            padding: EdgeInsets.only(top: 8.0, left: 15),
+                            child: Text(
                               'Equipamento',
                               style: TextStyle(
                                   color: Constantes.corAzulEscuroPrincipal,
@@ -171,86 +213,45 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                          child: ElevatedButton.icon(
+                                              icon: const Icon(
+                                                Icons.list_alt,
+                                                color: Colors.black,
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromRGBO(97, 253, 125, 1),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(18.0),
+                                                  )),
+                                              onPressed: solicitacao.urlPdf != null
+                                                  ? () async {
+                                                      final url = solicitacao.urlPdf;
+                                                      final arquivo =
+                                                          await PDFapi.gerarPdfSolicitacao(
+                                                              url!, solicitacao.tipo, equipamentoSolicitado);
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  TelaPDF(arquivo: arquivo)));
+                                                    }
+                                                  : null,
+                                              label: Text(
+                                                solicitacao.tipo == TipoSolicitacao.emprestimo
+                                                    ? equipamentoSolicitado.tipo.emStringSnakeCase.contains('mascara')||equipamentoSolicitado.tipo.emStringSnakeCase.contains('ap')?
+                                                    "Ver termo de responsabilidade":"Ver recibo"
+                                                    : "Ver documento de devolução",
+                                                style: TextStyle(color: Colors.black),
+                                              )),
+                                        ),
                                       ],
                                     );
                                 }
                               }),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8.0, left: 15),
-                            child: Text(
-                              'Paciente',
-                              style: TextStyle(
-                                  color: Constantes.corAzulEscuroPrincipal,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          const Divider(
-                            color: Constantes.corAzulEscuroPrincipal,
-                          ),
-                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                              stream: FirebaseService().streamInfoPacientePorID(
-                                  solicitacao.idPaciente),
-                              builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                  case ConnectionState.waiting:
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  default:
-                                    pacienteSolicitado =
-                                        Paciente.porDocumentSnapshot(
-                                            snapshot.data!);
-                                    return ListTile(
-                                      title:
-                                          Text(pacienteSolicitado.nomeCompleto),
-                                      subtitle: Text(
-                                          "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
-                                      leading: Image.network(
-                                        pacienteSolicitado.urlFotoDePerfil ??
-                                            model.semimagem,
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                }
-                              }),
                         ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.list_alt,
-                              color: Colors.black,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromRGBO(97, 253, 125, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                )),
-                            onPressed: solicitacao.urlPdf != null
-                                ? () async {
-                                    final url = solicitacao.urlPdf;
-                                    final arquivo =
-                                        await PDFapi.gerarPdfSolicitacao(
-                                            url!, solicitacao.tipo);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TelaPDF(arquivo: arquivo)));
-                                  }
-                                : null,
-                            label: Text(
-                              solicitacao.tipo == TipoSolicitacao.emprestimo
-                                  ? "Ver termo de responsabilidade"
-                                  : "Ver documento de devolução",
-                              style: TextStyle(color: Colors.black),
-                            )),
                       ),
                     ],
                   ),

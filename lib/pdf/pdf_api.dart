@@ -3,24 +3,25 @@ import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 
 
 class PDFapi{
 
-  static Future<File> gerarPdfSolicitacao(String url,TipoSolicitacao tipo)async{
+  static Future<File> gerarPdfSolicitacao(String url,TipoSolicitacao tipo, Equipamento equipamento)async{
     final resposta = await http.get(Uri.parse(url));
     final bytes = resposta.bodyBytes;
 
-    return _armazenarPdf(url,bytes,tipo);
+    return _armazenarPdf(url,bytes,tipo,equipamento);
   }
 
-  static Future<File> _armazenarPdf(String url, List<int> bytes, TipoSolicitacao tipo) async{
+  static Future<File> _armazenarPdf(String url, List<int> bytes, TipoSolicitacao tipo,Equipamento equipamento) async{
     final dir = await getApplicationDocumentsDirectory();
     final File arquivo;
     switch(tipo){
       case TipoSolicitacao.emprestimo:
-        arquivo = File('${dir.path}/TermoDeResponsabilidade.pdf');
+        arquivo = File('${dir.path}/${equipamento.tipo.emStringSnakeCase.contains('mascara')||equipamento.tipo.emStringSnakeCase.contains('ap')?"TermoDeResponsabilidade.pdf":"ReciboDeItens.pdf"}');
         break;
       case TipoSolicitacao.devolucao:
         arquivo = File('${dir.path}/TermoDeDevolução.pdf');
