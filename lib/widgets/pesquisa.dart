@@ -45,7 +45,8 @@ class PesquisaDePacientes extends SearchDelegate {
     return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) =>
           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseService().streamPacientesPorHospital(model.instituicao),
+        stream: FirebaseService()
+            .streamPacientesPorHospital(model.instituicao.emString),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
