@@ -5,7 +5,7 @@ import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 import '../../perfis/perfil_paciente/perfil_clinico_paciente.dart';
 
@@ -30,7 +30,7 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
   Widget build(BuildContext context) {
     controller.helper.paciente = widget.pacienteJaCadastrado;
 
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, _, model) {
         controller.helper.usuario = model;
         return WillPopScope(

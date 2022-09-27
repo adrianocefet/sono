@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/perfis/perfil_paciente/dialogo/dialogo.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/terapia_com_pap.dart';
 import 'package:sono/pages/perfis/perfil_paciente/visao_geral/visao_geral.dart';
@@ -61,20 +62,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                       children: [
                         TerapiaComPAP(controller: widget.controller),
                         VisaoGeralDoPaciente(controller: widget.controller),
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 200,
-                                  height: 200,
-                                  color: Colors.blue,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        DialogoComOPaciente(controller: widget.controller),
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -136,7 +124,7 @@ class _PerfilClinicoPacienteState extends State<PerfilClinicoPaciente> {
                       ? Colors.white
                       : Theme.of(context).primaryColorLight,
                 ),
-                label: 'Conversa',
+                label: 'Diálogo',
               ),
             ],
           );

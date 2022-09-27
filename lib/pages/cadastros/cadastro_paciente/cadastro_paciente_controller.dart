@@ -5,7 +5,7 @@ import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/helpers/registro_paciente_helper.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 class CadastroPacienteController {
   final List<GlobalKey<FormState>> formKeys = [
@@ -21,7 +21,7 @@ class CadastroPacienteController {
 
   CadastroPacienteController();
 
-  Future<void> registrarPaciente(BuildContext context, UserModel model) async {
+  Future<void> registrarPaciente(BuildContext context, Usuario model) async {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
     if (_validarKeysDoFormulario()) {

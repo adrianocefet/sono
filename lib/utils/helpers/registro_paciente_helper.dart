@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/bases_cadastros/base_cadastro_paciente.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/pergunta.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class RegistroPacienteHelper {
   final List<Pergunta> perguntas =
       baseCadastroPaciente.map((e) => Pergunta.pelaBase(e)).toList();
-  UserModel usuario = UserModel();
+  Usuario? usuario;
   Map<String, dynamic> respostas = {};
   File? _fotoDePerfil;
   String? idPacientePreexistente;
@@ -41,8 +41,8 @@ class RegistroPacienteHelper {
     }
 
     respostas['status'] = 'aguardando_cpap';
-    respostas['id_cadastrador'] = usuario.id;
-    respostas['hospitais_vinculados'] = [usuario.hospital];
+    respostas['id_cadastrador'] = usuario!.id;
+    respostas['hospitais_vinculados'] = [usuario!.instituicao];
     respostas["imc"] = _gerarIMC(respostas['altura'], respostas['peso']);
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
 

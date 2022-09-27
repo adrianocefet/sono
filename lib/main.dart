@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/pagina_inicial/screen_home.dart';
 
@@ -24,8 +24,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<UserModel>(
-      model: UserModel(),
+    return ScopedModel<Usuario>(
+      model: Usuario(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Projeto Sono - UFC',

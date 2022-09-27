@@ -6,7 +6,7 @@ import 'package:sono/pages/relatorio/relatorio.dart';
 import 'package:sono/pages/controle_estoque/tela_status_selecionado.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
-import '../../utils/models/user_model.dart';
+import '../../utils/models/usuario.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 
 class ControleEstoque extends StatefulWidget {
@@ -29,7 +29,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
       ),
       drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
-      body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+      body: ScopedModelDescendant<Usuario>(builder: (context, child, model) {
         return Container(
           // ignore: prefer_const_constructors
           decoration: BoxDecoration(
@@ -51,7 +51,8 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                       spacing: 50,
                       runSpacing: 20,
                       children: [
-                        for (StatusDoEquipamento status in StatusDoEquipamento.values)
+                        for (StatusDoEquipamento status
+                            in StatusDoEquipamento.values)
                           OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -60,7 +61,6 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                       borderRadius: BorderRadius.circular(10)),
                                   backgroundColor: Colors.white),
                               onPressed: () {
-                                model.status = status;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -76,7 +76,8 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                     Icon(
                                       status.icone,
                                       size: 34,
-                                      color: const Color.fromRGBO(97, 253, 125, 1),
+                                      color:
+                                          const Color.fromRGBO(97, 253, 125, 1),
                                     ),
                                     Text(
                                       status.emStringPlural,
@@ -119,7 +120,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                   color: Colors.white),
                             ),
                           ),
-                          ScopedModelDescendant<UserModel>(
+                          ScopedModelDescendant<Usuario>(
                             builder: (context, child, model) => StreamBuilder<
                                     QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
@@ -153,11 +154,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(StatusDoEquipamento.disponivel.emString) &&
+                                                        .contains(
+                                                            StatusDoEquipamento
+                                                                .disponivel
+                                                                .emString) &&
                                                     element['hospital']
                                                         .toString()
-                                                        .contains(
-                                                            model.hospital))
+                                                        .contains(model
+                                                            .instituicao
+                                                            .emString))
                                                 .length,
                                             documentos
                                                 .where((element) =>
@@ -167,11 +172,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(StatusDoEquipamento.emprestado.emString) &&
+                                                        .contains(
+                                                            StatusDoEquipamento
+                                                                .emprestado
+                                                                .emString) &&
                                                     element['hospital']
                                                         .toString()
-                                                        .contains(
-                                                            model.hospital))
+                                                        .contains(model
+                                                            .instituicao
+                                                            .emString))
                                                 .length,
                                             documentos
                                                 .where((element) =>
@@ -181,11 +190,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(StatusDoEquipamento.manutencao.emString) &&
+                                                        .contains(
+                                                            StatusDoEquipamento
+                                                                .manutencao
+                                                                .emString) &&
                                                     element['hospital']
                                                         .toString()
-                                                        .contains(
-                                                            model.hospital))
+                                                        .contains(model
+                                                            .instituicao
+                                                            .emString))
                                                 .length,
                                             documentos
                                                 .where((element) =>
@@ -195,11 +208,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                                             .emStringSnakeCase) &&
                                                     element['status']
                                                         .toString()
-                                                        .contains(StatusDoEquipamento.desinfeccao.emString) &&
+                                                        .contains(
+                                                            StatusDoEquipamento
+                                                                .desinfeccao
+                                                                .emString) &&
                                                     element['hospital']
                                                         .toString()
-                                                        .contains(
-                                                            model.hospital))
+                                                        .contains(model
+                                                            .instituicao
+                                                            .emString))
                                                 .length,
                                           ),
                                       ];
@@ -208,10 +225,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                             enablePinching: true,
                                             enablePanning: true),
                                         legend: Legend(
-                                            width: MediaQuery.of(context).size.width.toString(),
-                                            isVisible: true,
-                                            overflowMode: LegendItemOverflowMode.wrap,
-                                            position: LegendPosition.bottom,),
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width
+                                              .toString(),
+                                          isVisible: true,
+                                          overflowMode:
+                                              LegendItemOverflowMode.wrap,
+                                          position: LegendPosition.bottom,
+                                        ),
                                         enableAxisAnimation: true,
                                         primaryXAxis: CategoryAxis(
                                             labelStyle:
@@ -271,7 +293,8 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                               width: MediaQuery.of(context).size.width,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromRGBO(97, 253, 125, 1),
+                                  backgroundColor:
+                                      Color.fromRGBO(97, 253, 125, 1),
                                 ),
                                 onPressed: () {
                                   Navigator.push(

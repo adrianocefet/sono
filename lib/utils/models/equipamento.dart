@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class Equipamento {
@@ -44,13 +44,15 @@ class Equipamento {
   }
 
   String get dataDeExpedicaoEmString {
-    return dataDeExpedicao!=null?
-    DateFormat('dd/MM/yyyy kk:mm:ss').format(dataDeExpedicao!):'-';
-    
+    return dataDeExpedicao != null
+        ? DateFormat('dd/MM/yyyy kk:mm:ss').format(dataDeExpedicao!)
+        : '-';
   }
 
   String? get dataDeDevolucaoEmStringFormatada {
-    return dataDeExpedicao != null ? _formatarData(calcularDataDeDevolucao) : null;
+    return dataDeExpedicao != null
+        ? _formatarData(calcularDataDeDevolucao)
+        : null;
   }
 
   Map<String, dynamic> _setInfoMap() => {
@@ -59,9 +61,9 @@ class Equipamento {
         "status": status,
         "tipo": tipo,
         "hospital": hospital,
-        "fabricante":fabricante,
+        "fabricante": fabricante,
         "url_foto": urlFotoDePerfil,
-        "informacoes_tecnicas":informacoesTecnicas,
+        "informacoes_tecnicas": informacoesTecnicas,
         "higiene_e_cuidados_paciente": higieneECuidadosPaciente,
         "paciente_responsavel": idPacienteResponsavel,
         "alterado_por": alteradoPor,
@@ -72,13 +74,13 @@ class Equipamento {
         "numero_serie": numeroSerie,
         "observação": observacao,
         "data_de_expedicao": dataDeExpedicaoEmString,
-        "data_de_devolucao": dataDeDevolucaoEmStringFormatada 
+        "data_de_devolucao": dataDeDevolucaoEmStringFormatada
       };
 
   Equipamento(
     this.nome,
     this.id,
-    this.status,{
+    this.status, {
     this.urlFotoDePerfil,
   });
 
@@ -86,35 +88,33 @@ class Equipamento {
     nome = equipamentoInfoMap["nome"];
     id = equipamentoInfoMap["id"];
     idPacienteResponsavel = equipamentoInfoMap["paciente_responsavel"];
-    urlFotoDePerfil =
-        equipamentoInfoMap["url_foto"];
-    descricao =
-        equipamentoInfoMap["descrição"];
+    urlFotoDePerfil = equipamentoInfoMap["url_foto"];
+    descricao = equipamentoInfoMap["descrição"];
     tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"])!;
-    hospital=equipamentoInfoMap["hospital"];
-    equipamentoInfoMap["informacoes_tecnicas"]!=null?
-    informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"]:informacoesTecnicas='';
-    equipamentoInfoMap["higiene_e_cuidados_paciente"]!=null?
-    higieneECuidadosPaciente = equipamentoInfoMap["higiene_e_cuidados_paciente"]:higieneECuidadosPaciente=null;
-    fabricante =
-        equipamentoInfoMap["fabricante"];
-    alteradoPor =
-        equipamentoInfoMap["alterado_por"];
-    manualPdf =
-        equipamentoInfoMap["manual"];
-    videoInstrucional =
-        equipamentoInfoMap["video_instrucional"];
-     status = _lerStatusDoEquipamentoDoBancoDeDados(
-      equipamentoInfoMap["status"] ??
-          "disponível",
+    hospital = equipamentoInfoMap["hospital"];
+    equipamentoInfoMap["informacoes_tecnicas"] != null
+        ? informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"]
+        : informacoesTecnicas = '';
+    equipamentoInfoMap["higiene_e_cuidados_paciente"] != null
+        ? higieneECuidadosPaciente =
+            equipamentoInfoMap["higiene_e_cuidados_paciente"]
+        : higieneECuidadosPaciente = null;
+    fabricante = equipamentoInfoMap["fabricante"];
+    alteradoPor = equipamentoInfoMap["alterado_por"];
+    manualPdf = equipamentoInfoMap["manual"];
+    videoInstrucional = equipamentoInfoMap["video_instrucional"];
+    status = _lerStatusDoEquipamentoDoBancoDeDados(
+      equipamentoInfoMap["status"] ?? "disponível",
     )!;
-     
-     tamanho= equipamentoInfoMap["tamanho"];
-     numeroSerie = equipamentoInfoMap["numero_serie"];
-     equipamentoInfoMap["data_de_expedicao"]!=null?
-     dataDeExpedicao = (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate():dataDeExpedicao=null;
-     dataDeDevolucao = equipamentoInfoMap["data_de_devolucao"];
-     observacao = equipamentoInfoMap["observacao"];
+
+    tamanho = equipamentoInfoMap["tamanho"];
+    numeroSerie = equipamentoInfoMap["numero_serie"];
+    equipamentoInfoMap["data_de_expedicao"] != null
+        ? dataDeExpedicao =
+            (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate()
+        : dataDeExpedicao = null;
+    dataDeDevolucao = equipamentoInfoMap["data_de_devolucao"];
+    observacao = equipamentoInfoMap["observacao"];
 
     infoMap = equipamentoInfoMap;
   }
@@ -144,12 +144,12 @@ class Equipamento {
     switch (tipo) {
       case "cpap":
         return TipoEquipamento.cpap;
-      case 'bipap':  
+      case 'bipap':
         return TipoEquipamento.bipap;
-      case 'autocpap': 
+      case 'autocpap':
         return TipoEquipamento.autocpap;
-      case 'avaps':  
-        return TipoEquipamento.avap; 
+      case 'avaps':
+        return TipoEquipamento.avap;
       case "almofada":
         return TipoEquipamento.almofada;
       case "traqueia":
@@ -174,28 +174,31 @@ class Equipamento {
   Future<void> emprestarPara(Paciente paciente) async =>
       await FirebaseService().emprestarEquipamento(this, paciente);
 
-  Future<void> solicitarEmprestimo(Paciente paciente, UserModel usuario) async =>
-      await FirebaseService().solicitarEmprestimoEquipamento(this, paciente, usuario);
+  Future<void> solicitarEmprestimo(Paciente paciente, Usuario usuario) async =>
+      await FirebaseService()
+          .solicitarEmprestimoEquipamento(this, paciente, usuario);
 
-  Future<void> solicitarDevolucao(Paciente paciente, UserModel usuario, String justificativa) async =>
-      await FirebaseService().solicitarDevolucaoEquipamento(this, paciente, usuario, justificativa);
+  Future<void> solicitarDevolucao(
+          Paciente paciente, Usuario usuario, String justificativa) async =>
+      await FirebaseService().solicitarDevolucaoEquipamento(
+          this, paciente, usuario, justificativa);
 
   Future<void> devolver() async =>
       await FirebaseService().devolverEquipamento(this);
 
-  Future<void> desinfectar(UserModel usuario) async {
+  Future<void> desinfectar(Usuario usuario) async {
     await FirebaseService().desinfectarEquipamento(this, usuario);
   }
 
-  Future<void> manutencao(UserModel usuario) async {
-    await FirebaseService().repararEquipamento(this,usuario);
+  Future<void> manutencao(Usuario usuario) async {
+    await FirebaseService().repararEquipamento(this, usuario);
   }
 
   Future<void> disponibilizar() async {
     await FirebaseService().disponibilizarEquipamento(this);
   }
 
-  Future<void> conceder(Paciente paciente, UserModel usuario) async {
+  Future<void> conceder(Paciente paciente, Usuario usuario) async {
     await FirebaseService().concederEquipamento(this, paciente, usuario);
   }
 }
@@ -244,6 +247,7 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return 'Filtro';
     }
   }
+
   String get emStringSnakeCase {
     switch (this) {
       case TipoEquipamento.almofada:
@@ -272,33 +276,34 @@ extension ExtensaoTipoEquipamento on TipoEquipamento {
         return 'filtro';
     }
   }
-  String get imagens{
-  switch(this){
-    case TipoEquipamento.nasal:
-      return 'assets/imagens/mascara_nasal.jpg';
-    case TipoEquipamento.oronasal:
-      return 'assets/imagens/mascara_oronasal.jpg';
-    case TipoEquipamento.pillow:
-      return 'assets/imagens/mascara_pillow.jpg';
-    case TipoEquipamento.facial:
-      return 'assets/imagens/mascara_facial.jpg';
-    case TipoEquipamento.traqueia:
-      return 'assets/imagens/traqueia.jpg';
-    case TipoEquipamento.fixador:
-      return 'assets/imagens/fixador.jpg';
-    case TipoEquipamento.almofada:
-      return 'assets/imagens/almofada.jpg';
-    case TipoEquipamento.cpap:
-      return 'assets/imagens/cpap.png';
-    case TipoEquipamento.autocpap:
-      return 'assets/imagens/autocpap.jpg';
-    case TipoEquipamento.bipap:
-      return 'assets/imagens/bipap.jpg';
-    case TipoEquipamento.avap:
-      return 'assets/imagens/avap.jpg';
-    case TipoEquipamento.filtro:
-      return 'assets/imagens/filtro.jpg';
-  }  
+
+  String get imagens {
+    switch (this) {
+      case TipoEquipamento.nasal:
+        return 'assets/imagens/mascara_nasal.jpg';
+      case TipoEquipamento.oronasal:
+        return 'assets/imagens/mascara_oronasal.jpg';
+      case TipoEquipamento.pillow:
+        return 'assets/imagens/mascara_pillow.jpg';
+      case TipoEquipamento.facial:
+        return 'assets/imagens/mascara_facial.jpg';
+      case TipoEquipamento.traqueia:
+        return 'assets/imagens/traqueia.jpg';
+      case TipoEquipamento.fixador:
+        return 'assets/imagens/fixador.jpg';
+      case TipoEquipamento.almofada:
+        return 'assets/imagens/almofada.jpg';
+      case TipoEquipamento.cpap:
+        return 'assets/imagens/cpap.png';
+      case TipoEquipamento.autocpap:
+        return 'assets/imagens/autocpap.jpg';
+      case TipoEquipamento.bipap:
+        return 'assets/imagens/bipap.jpg';
+      case TipoEquipamento.avap:
+        return 'assets/imagens/avap.jpg';
+      case TipoEquipamento.filtro:
+        return 'assets/imagens/filtro.jpg';
+    }
   }
 }
 
@@ -325,6 +330,7 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "concedido";
     }
   }
+
   String get emStringMaiuscula {
     switch (this) {
       case StatusDoEquipamento.emprestado:
@@ -339,6 +345,7 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Concedido";
     }
   }
+
   String get emStringPlural {
     switch (this) {
       case StatusDoEquipamento.emprestado:
@@ -353,8 +360,9 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return "Concedidos";
     }
   }
-  IconData get icone{
-    switch(this){
+
+  IconData get icone {
+    switch (this) {
       case StatusDoEquipamento.disponivel:
         return Icons.check_circle;
       case StatusDoEquipamento.emprestado:
@@ -367,8 +375,9 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return Icons.assignment_ind;
     }
   }
-  IconData get icone2{
-    switch(this){
+
+  IconData get icone2 {
+    switch (this) {
       case StatusDoEquipamento.disponivel:
         return Icons.check;
       case StatusDoEquipamento.emprestado:
@@ -381,8 +390,9 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
         return Icons.assignment_ind;
     }
   }
-  Color get cor{
-    switch(this){
+
+  Color get cor {
+    switch (this) {
       case StatusDoEquipamento.disponivel:
         return const Color.fromARGB(255, 51, 255, 58);
       case StatusDoEquipamento.emprestado:
@@ -396,4 +406,3 @@ extension ExtensaoStatusDoEquipamento on StatusDoEquipamento {
     }
   }
 }
-

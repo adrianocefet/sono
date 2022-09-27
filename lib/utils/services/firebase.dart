@@ -8,7 +8,7 @@ import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import '../models/equipamento.dart';
-import '../models/user_model.dart';
+import '../models/usuario.dart';
 
 class FirebaseService {
   static final FirebaseService _firebaseService = FirebaseService._internal();
@@ -203,13 +203,15 @@ class FirebaseService {
         );
   }
 
-  Future<void> salvarTermoDaSolicitacao(Solicitacao solicitacao, Paciente paciente, Equipamento equipamento,File pdf) async{
-    solicitacao.infoMap['url_pdf'] = await salvarPDFDaSolicitacao(solicitacao, equipamento.id, paciente.id, pdf);
+  Future<void> salvarTermoDaSolicitacao(Solicitacao solicitacao,
+      Paciente paciente, Equipamento equipamento, File pdf) async {
+    solicitacao.infoMap['url_pdf'] = await salvarPDFDaSolicitacao(
+        solicitacao, equipamento.id, paciente.id, pdf);
     await atualizarSolicitacao(solicitacao);
   }
 
-  Future<String> salvarPDFDaSolicitacao(
-      Solicitacao solicitacao, String idEquipamento, String idPaciente,File pdf) async {
+  Future<String> salvarPDFDaSolicitacao(Solicitacao solicitacao,
+      String idEquipamento, String idPaciente, File pdf) async {
     Reference db = FirebaseStorage.instance
         .ref("$_stringTermos/$idEquipamento/$idPaciente/${solicitacao.id}.pdf");
     await db.putFile(File(pdf.path));
@@ -276,7 +278,7 @@ class FirebaseService {
   }
 
   Future<void> solicitarDevolucaoEquipamento(Equipamento equipamento,
-      Paciente paciente, UserModel usuario, String justificativa) async {
+      Paciente paciente, Usuario usuario, String justificativa) async {
     await _db.collection(_stringSolicitacoes).doc().set(
       {
         "tipo": "devolucao",
@@ -294,7 +296,7 @@ class FirebaseService {
   Future<void> solicitarEmprestimoEquipamento(
     Equipamento equipamento,
     Paciente paciente,
-    UserModel usuario,
+    Usuario usuario,
   ) async {
     await _db.collection(_stringSolicitacoes).doc().set(
       {
@@ -329,7 +331,7 @@ class FirebaseService {
   }
 
   Future<void> concederEquipamento(
-      Equipamento equipamento, Paciente paciente, UserModel usuario) async {
+      Equipamento equipamento, Paciente paciente, Usuario usuario) async {
     if (equipamento.status == StatusDoEquipamento.emprestado) {
       await _db
           .collection(_strPacientes)
@@ -385,7 +387,7 @@ class FirebaseService {
   }
 
   Future<void> desinfectarEquipamento(
-      Equipamento equipamento, UserModel usuario) async {
+      Equipamento equipamento, Usuario usuario) async {
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.desinfeccao.emString,
@@ -396,7 +398,7 @@ class FirebaseService {
   }
 
   Future<void> repararEquipamento(
-      Equipamento equipamento, UserModel usuario) async {
+      Equipamento equipamento, Usuario usuario) async {
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.manutencao.emString,

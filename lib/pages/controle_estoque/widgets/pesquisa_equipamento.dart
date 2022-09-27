@@ -3,7 +3,7 @@ import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import '../../../../constants/constants.dart';
 import 'item_equipamento.dart';
 
@@ -41,71 +41,90 @@ class PesquisaEquipamento extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model) =>
-       StreamBuilder<QuerySnapshot>(
-         stream: FirebaseFirestore.instance.collection('equipamentos')
-            .where('hospital',isEqualTo: model.hospital)
-            .where('status',isEqualTo: model.status.emString)
-            .where('tipo',isEqualTo: model.tipo.emStringSnakeCase)
-            .snapshots(),
-         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-            default:
-           return Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color.fromARGB(255, 194, 195, 255),Colors.white],
-                  stops: [0,0.4]
-                  )
-              ),
-              child:snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => removeDiacritics(element['nome']).toString().toLowerCase().contains(removeDiacritics(query).toLowerCase())).isNotEmpty?
-              ListView(
-                  children:snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) => removeDiacritics(element['nome']).toString().toLowerCase().contains(removeDiacritics(query).toLowerCase())).map(
-                          (QueryDocumentSnapshot<Object?> document) {
-                            Map<String, dynamic> data =
-                                document.data()! as Map<String, dynamic>;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal:8.0),
-                              child: ItemEquipamento(
-                                id:document.id
-                              ),
-                            );
-                          },
-                        ).toList(), 
-                ):
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.cancel,
-                            size: 80.0,
-                            color: Constantes.corAzulEscuroPrincipal,
-                          ),
-                          const SizedBox(height: 16.0,),
-                          Text(
-                            '"${query}" não encontrado!',
-                            style: const TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Constantes.corAzulEscuroPrincipal,
+    return ScopedModelDescendant<Usuario>(
+      builder: (context, child, model) => StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('equipamentos')
+              .where('hospital', isEqualTo: model.instituicao)
+              .where('status', isEqualTo: model.status.emString)
+              .where('tipo', isEqualTo: model.tipo.emStringSnakeCase)
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return const Center(child: CircularProgressIndicator());
+              default:
+                return Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                        Color.fromARGB(255, 194, 195, 255),
+                        Colors.white
+                      ],
+                          stops: [
+                        0,
+                        0.4
+                      ])),
+                  child: snapshot.data!.docs
+                          .where((QueryDocumentSnapshot<Object?> element) =>
+                              removeDiacritics(element['nome'])
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(
+                                      removeDiacritics(query).toLowerCase()))
+                          .isNotEmpty
+                      ? ListView(
+                          children: snapshot.data!.docs
+                              .where((QueryDocumentSnapshot<Object?> element) =>
+                                  removeDiacritics(element['nome'])
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(removeDiacritics(query)
+                                          .toLowerCase()))
+                              .map(
+                            (QueryDocumentSnapshot<Object?> document) {
+                              Map<String, dynamic> data =
+                                  document.data()! as Map<String, dynamic>;
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: ItemEquipamento(id: document.id),
+                              );
+                            },
+                          ).toList(),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.cancel,
+                                  size: 80.0,
+                                  color: Constantes.corAzulEscuroPrincipal,
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                Text(
+                                  '"${query}" não encontrado!',
+                                  style: const TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Constantes.corAzulEscuroPrincipal,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-              );}
-         }
-       ),
+                        ),
+                );
+            }
+          }),
     );
   }
 
@@ -144,5 +163,5 @@ class PesquisaEquipamento extends SearchDelegate {
             ),
       
       ]; */
-    
+
 }

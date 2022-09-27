@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/tabelas/tab_home.dart';
 import 'package:sono/pages/tabelas/lista_de_pacientes.dart';
 import 'package:sono/pages/tabelas/tab_solicitacoes.dart';
-import '../../utils/models/user_model.dart';
+import '../../utils/models/usuario.dart';
 import '../controle_estoque/controle_estoque.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) {
         return PageView(
           controller: _pageController,

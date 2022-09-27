@@ -28,6 +28,10 @@ class ItemPaciente extends StatelessWidget {
           ),
           title: Text(
             paciente.nomeCompleto,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.symmetric(
@@ -40,12 +44,12 @@ class ItemPaciente extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Row(
                     children: [
-                      const Text("Status:"),
+                      const Text("Status: "),
                       Text(
                         paciente.statusFormatado,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).primaryColorLight,
                         ),
                       )
                     ],

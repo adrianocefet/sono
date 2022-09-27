@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/tabelas/widgets/item_paciente.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class PesquisaDePacientes extends SearchDelegate {
@@ -42,10 +42,10 @@ class PesquisaDePacientes extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) =>
           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseService().streamPacientesPorHospital(model.hospital),
+        stream: FirebaseService().streamPacientesPorHospital(model.instituicao),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:

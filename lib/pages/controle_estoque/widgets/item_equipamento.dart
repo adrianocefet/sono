@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/deletar_equipamento.dart';
 import '../../../../utils/models/equipamento.dart';
@@ -14,7 +14,8 @@ import '../../perfis/perfil_equipamento/tela_equipamento.dart';
 class ItemEquipamento extends StatefulWidget {
   final String id;
   final Paciente? pacientePreEscolhido;
-  const ItemEquipamento({required this.id, this.pacientePreEscolhido, Key? key}) : super(key: key);
+  const ItemEquipamento({required this.id, this.pacientePreEscolhido, Key? key})
+      : super(key: key);
 
   @override
   State<ItemEquipamento> createState() => _ItemEquipamentoState();
@@ -23,7 +24,7 @@ class ItemEquipamento extends StatefulWidget {
 class _ItemEquipamentoState extends State<ItemEquipamento> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) {
         return StreamBuilder(
             stream: FirebaseService.streamEquipamento(widget.id),
@@ -56,16 +57,20 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      TelaEquipamento(id: widget.id, pacientePreEscolhido: widget.pacientePreEscolhido)));
+                                  builder: (context) => TelaEquipamento(
+                                      id: widget.id,
+                                      pacientePreEscolhido:
+                                          widget.pacientePreEscolhido)));
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  width: 2,
-                                  color: Constantes.corAzulEscuroPrincipal),
-                              color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 2,
+                              color: Constantes.corAzulEscuroPrincipal,
+                            ),
+                            color: Colors.white,
+                          ),
                           //height: MediaQuery.of(context).size.height * 0.2,
                           child: Column(
                             children: [

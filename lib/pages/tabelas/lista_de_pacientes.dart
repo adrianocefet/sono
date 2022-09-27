@@ -5,7 +5,7 @@ import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/pages/tabelas/widgets/item_paciente.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/services/firebase.dart';
 
@@ -21,7 +21,7 @@ class ListaDePacientes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, usuario) {
         return Scaffold(
           appBar: AppBar(
@@ -33,7 +33,8 @@ class ListaDePacientes extends StatelessWidget {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate: PesquisaDePacientes('Paciente', usuario.hospital),
+                    delegate: PesquisaDePacientes(
+                        'Paciente', usuario.instituicao.emString),
                   );
                 },
                 icon: const Icon(Icons.search),
@@ -53,7 +54,7 @@ class ListaDePacientes extends StatelessWidget {
             ),
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseService()
-                  .streamPacientesPorHospital(usuario.hospital),
+                  .streamPacientesPorHospital(usuario.instituicao.emString),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -74,7 +75,14 @@ class ListaDePacientes extends StatelessWidget {
                             Paciente paciente = Paciente.porDocumentSnapshot(
                               docsPacientes[index],
                             );
-                            return ItemPaciente(paciente: paciente);
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: index == 0 ? 10 : 0,
+                                ),
+                                ItemPaciente(paciente: paciente),
+                              ],
+                            );
                           },
                           itemCount: snapshot.data!.docs.length,
                         ),

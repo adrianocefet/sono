@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/paciente.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
   return await showDialog<Paciente>(
-    context: context,
-    builder: (BuildContext context){ 
-      return Center(
-        child: Container(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Container(
             margin: const EdgeInsets.all(30),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -21,9 +21,11 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                 Radius.circular(20),
               ),
             ),
-          child: Material(
-            borderRadius: const BorderRadius.all(Radius.circular(20),),
-            child: Column(
+            child: Material(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(20),
+              ),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
@@ -48,101 +50,128 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                     ),
                   ),
                   SizedBox(
-                          width: 400,
-                          height: 200,
-                          child: ScopedModelDescendant<UserModel>(
-                            builder: (context, child, model) {
-                              return StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('pacientes')
-                                    .where('hospitais_vinculados', arrayContains: model.hospital)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  switch (snapshot.connectionState) {
-                                    case ConnectionState.none:
-                                    case ConnectionState.waiting: 
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    default:
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: GridView(
-                                            padding: EdgeInsets.zero,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                              crossAxisSpacing: 10,
-                                              mainAxisSpacing: 10,
-                                              childAspectRatio: 1,
-                                            ),
-                                            scrollDirection: Axis.vertical,
-                                            children: snapshot.data!.docs.reversed.map(
-                                              (DocumentSnapshot document) {
-                                                Paciente paciente = Paciente.porDocumentSnapshot(
-                                                    document
-                                                        as DocumentSnapshot<Map<String, dynamic>>);
-                                                return FittedBox(
-                                                  fit: BoxFit.fitHeight,
-                                                  child: OutlinedButton(
-                                                    style: OutlinedButton.styleFrom(backgroundColor: Colors.white),
-                                                    onPressed: () {
-                                                      // map_equipamento['ID do Status'] = id;
-                                                      // print(map_equipamento.toString());
-                                                      Navigator.pop(context, paciente);
-                                                    },
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Center(
-                                                        child: Column(
-                                                          children: [
-                                                            SizedBox(
-                                                              child: CircleAvatar(
-                                                                radius: 25,
-                                                                backgroundImage: NetworkImage(
-                                                                  paciente.urlFotoDePerfil?? model.semimagem,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.symmetric(vertical:8.0),
-                                                              child: ConstrainedBox(constraints: 
-                                                                        BoxConstraints(
-                                                                          minWidth: MediaQuery.of(context).size.width * 0.15,
-                                                                          maxWidth: MediaQuery.of(context).size.width * 0.15),
-                                                                          child: Text(
-                                                                            paciente.nomeCompleto,
-                                                                            style: TextStyle(
-                                                                              fontSize: MediaQuery.of(context).size.width * 0.03,
-                                                                              fontWeight: FontWeight.w300,
-                                                                              color: Colors.black
-                                                                            ),
-                                                                            textAlign: TextAlign.center,
-                                                                            softWrap: true,
-                                                                            overflow: TextOverflow.visible,)),
-                                                            ),
-                                                          ],
+                    width: 400,
+                    height: 200,
+                    child: ScopedModelDescendant<Usuario>(
+                      builder: (context, child, model) {
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('pacientes')
+                              .where('hospitais_vinculados',
+                                  arrayContains: model.instituicao)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.none:
+                              case ConnectionState.waiting:
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              default:
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GridView(
+                                    padding: EdgeInsets.zero,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 1,
+                                    ),
+                                    scrollDirection: Axis.vertical,
+                                    children: snapshot.data!.docs.reversed.map(
+                                      (DocumentSnapshot document) {
+                                        Paciente paciente =
+                                            Paciente.porDocumentSnapshot(
+                                                document as DocumentSnapshot<
+                                                    Map<String, dynamic>>);
+                                        return FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                                backgroundColor: Colors.white),
+                                            onPressed: () {
+                                              // map_equipamento['ID do Status'] = id;
+                                              // print(map_equipamento.toString());
+                                              Navigator.pop(context, paciente);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      child: CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                          paciente.urlFotoDePerfil ??
+                                                              model.semimagem,
                                                         ),
                                                       ),
-                                                            ),
-                                                      ),
-                                                );
-                                              },
-                                            ).toList(),
-                                        ),
-                                      );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 8.0),
+                                                      child: ConstrainedBox(
+                                                          constraints: BoxConstraints(
+                                                              minWidth: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.15,
+                                                              maxWidth: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.15),
+                                                          child: Text(
+                                                            paciente
+                                                                .nomeCompleto,
+                                                            style: TextStyle(
+                                                                fontSize: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                color: Colors
+                                                                    .black),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            softWrap: true,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .visible,
+                                                          )),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                );
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
+            ),
           ),
-          ),
-      );}
-  );
+        );
+      });
 }
 
 Widget _fazGrid(BuildContext context, String imagem, String texto, String id) {

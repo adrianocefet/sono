@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/pages/pagina_inicial/widgets/tile_drawer.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -45,13 +45,13 @@ class CustomDrawer extends StatelessWidget {
                     Positioned(
                         left: 0.0,
                         bottom: 0.0,
-                        child: ScopedModelDescendant<UserModel>(
+                        child: ScopedModelDescendant<Usuario>(
                           builder: (context, child, model) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  model.hospital,
+                                  model.instituicao.emString,
                                   style: const TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                 2,
               ),
               DrawerTile(
-                Icons.assignment_rounded ,
+                Icons.assignment_rounded,
                 "Solicitações",
                 pageController,
                 3,

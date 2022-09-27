@@ -8,7 +8,7 @@ import 'package:pdf/widgets.dart';
 import 'package:sono/pdf/salvar_pdf.dart';
 import 'package:sono/utils/models/equipamento.dart';
 
-import '../utils/models/user_model.dart';
+import '../utils/models/usuario.dart';
 
 class PdfInvoiceApi {
   final Timestamp dataAtual = Timestamp.now();
@@ -20,33 +20,36 @@ class PdfInvoiceApi {
       Solicitacao solicitacao,
       Paciente pacienteEmprestado,
       Equipamento equipamentoEmprestado,
-      UserModel usuario) async {
+      Usuario usuario) async {
     final pdf = Document();
     pdf.addPage(MultiPage(
         build: (context) => [
-              titulo(TipoSolicitacao.emprestimo,equipamentoEmprestado),
+              titulo(TipoSolicitacao.emprestimo, equipamentoEmprestado),
               solicitante(pacienteEmprestado, equipamentoEmprestado,
                   TipoSolicitacao.emprestimo),
               equipamento(equipamentoEmprestado, solicitacao, usuario),
               paciente(pacienteEmprestado),
             ]));
 
-    return PdfApii.saveDocument(name: 
-    equipamentoEmprestado.tipo.emStringSnakeCase.contains('mascara')||equipamentoEmprestado.tipo.emStringSnakeCase.contains('ap')?
-    'TermoDeResponsabilidade.pdf':'ReciboDeItens.pdf', 
-    pdf: pdf);
+    return PdfApii.saveDocument(
+        name:
+            equipamentoEmprestado.tipo.emStringSnakeCase.contains('mascara') ||
+                    equipamentoEmprestado.tipo.emStringSnakeCase.contains('ap')
+                ? 'TermoDeResponsabilidade.pdf'
+                : 'ReciboDeItens.pdf',
+        pdf: pdf);
   }
 
   static Future<File> gerarTermoDeDevolucao(
       Solicitacao solicitacao,
       Paciente pacienteEmprestado,
       Equipamento equipamentoEmprestado,
-      UserModel usuario) async {
+      Usuario usuario) async {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
         build: (context) => [
-              titulo(TipoSolicitacao.devolucao,equipamentoEmprestado),
+              titulo(TipoSolicitacao.devolucao, equipamentoEmprestado),
               solicitante(pacienteEmprestado, equipamentoEmprestado,
                   TipoSolicitacao.devolucao),
               equipamento(equipamentoEmprestado, solicitacao, usuario),
@@ -71,7 +74,7 @@ paciente(Paciente pacienteEmprestado) {
 }
 
 Widget equipamento(Equipamento equipamentoEmprestado, Solicitacao solicitacao,
-    UserModel dispensacao) {
+    Usuario dispensacao) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text('Descrição do item',
         textAlign: TextAlign.left,
@@ -145,11 +148,13 @@ Widget solicitante(Paciente pacienteEmprestado, Equipamento equipamento,
   ]);
 }
 
-Widget titulo(TipoSolicitacao tipoSolicitacao,Equipamento equipamento) {
+Widget titulo(TipoSolicitacao tipoSolicitacao, Equipamento equipamento) {
   return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
     Text(
-        equipamento.tipo.emStringSnakeCase.contains('mascara')||equipamento.tipo.emStringSnakeCase.contains('ap')?
-        'Termo de Responsabilidade Pela Guarda e Uso de Materiais e Equipamentos':'RECIBO DE ITENS PARA TRATAMENTO DA TERAPIA PRESSÓRICA',
+        equipamento.tipo.emStringSnakeCase.contains('mascara') ||
+                equipamento.tipo.emStringSnakeCase.contains('ap')
+            ? 'Termo de Responsabilidade Pela Guarda e Uso de Materiais e Equipamentos'
+            : 'RECIBO DE ITENS PARA TRATAMENTO DA TERAPIA PRESSÓRICA',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
     SizedBox(height: 0.5 * PdfPageFormat.cm),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../pagina_inicial/widgets/widgets_drawer.dart';
@@ -18,7 +18,7 @@ class _FaleState extends State<Fale> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+    return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Fale conosco"),

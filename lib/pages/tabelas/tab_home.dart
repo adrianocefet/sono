@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
-import 'package:sono/utils/models/user_model.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 
@@ -18,16 +18,16 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _listaImagens = [
-      imagemHospital('HGCC'),
-      imagemHospital('HGF'),
-      imagemHospital('HM'),
-      imagemHospital('HUWC'),
+      imagemHospital(Instituicao.hgcc),
+      imagemHospital(Instituicao.hgf),
+      imagemHospital(Instituicao.huwc),
+      imagemHospital(Instituicao.hospitalDeMessejana),
     ];
 
     return Scaffold(
       drawer: CustomDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
-      body: ScopedModelDescendant<UserModel>(
+      body: ScopedModelDescendant<Usuario>(
         builder: (context, child, model) {
           return Stack(
             alignment: AlignmentDirectional.bottomCenter,
@@ -78,11 +78,11 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget imagemHospital(String hospital) {
-    return ScopedModelDescendant<UserModel>(
+  Widget imagemHospital(Instituicao hospital) {
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) {
         bool clicado = false;
-        if (hospital == model.hospital) {
+        if (hospital == model.instituicao) {
           clicado = true;
         }
         return Material(
@@ -93,8 +93,7 @@ class _HomeTabState extends State<HomeTab> {
             splashColor: Constantes.corAzulEscuroSecundario,
             highlightColor: const Color.fromARGB(255, 35, 39, 104),
             onTap: () {
-              model.hospital = hospital;
-              model.equipamento = 'Equipamento';
+              model.instituicao = hospital;
               Scaffold.of(context).openDrawer();
               setState(() {});
             },
@@ -102,7 +101,7 @@ class _HomeTabState extends State<HomeTab> {
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8),
               child: Image.asset(
-                'assets/imagens/$hospital.png',
+                'assets/imagens/${hospital.emString}.png',
                 width: MediaQuery.of(context).size.width * 0.2,
                 height: MediaQuery.of(context).size.height * 0.15,
               ),

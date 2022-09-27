@@ -8,7 +8,7 @@ import '../../../../constants/constants.dart';
 import '../../../../pdf/pdf_api.dart';
 import '../../../../pdf/tela_pdf.dart';
 import '../../../../utils/models/paciente.dart';
-import '../../../../utils/models/user_model.dart';
+import '../../../../utils/models/usuario.dart';
 
 class PainelHistorico extends StatefulWidget {
   final String idSolicitacao;
@@ -24,7 +24,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
     late Equipamento equipamentoSolicitado;
-    return ScopedModelDescendant<UserModel>(
+    return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) => StreamBuilder<
               DocumentSnapshot<Map<String, dynamic>>>(
           stream: FirebaseService.streamSolicitacao(widget.idSolicitacao),
@@ -164,7 +164,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                     );
                                 }
                               }),
-                              const Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 8.0, left: 15),
                             child: Text(
                               'Equipamento',
@@ -214,7 +214,8 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4.0),
                                           child: ElevatedButton.icon(
                                               icon: const Icon(
                                                 Icons.list_alt,
@@ -222,29 +223,49 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                               ),
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                      const Color.fromRGBO(97, 253, 125, 1),
+                                                      const Color.fromRGBO(
+                                                          97, 253, 125, 1),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(18.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            18.0),
                                                   )),
-                                              onPressed: solicitacao.urlPdf != null
+                                              onPressed: solicitacao.urlPdf !=
+                                                      null
                                                   ? () async {
-                                                      final url = solicitacao.urlPdf;
-                                                      final arquivo =
-                                                          await PDFapi.gerarPdfSolicitacao(
-                                                              url!, solicitacao.tipo, equipamentoSolicitado);
+                                                      final url =
+                                                          solicitacao.urlPdf;
+                                                      final arquivo = await PDFapi
+                                                          .gerarPdfSolicitacao(
+                                                              url!,
+                                                              solicitacao.tipo,
+                                                              equipamentoSolicitado);
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  TelaPDF(arquivo: arquivo)));
+                                                                  TelaPDF(
+                                                                      arquivo:
+                                                                          arquivo)));
                                                     }
                                                   : null,
                                               label: Text(
-                                                solicitacao.tipo == TipoSolicitacao.emprestimo
-                                                    ? equipamentoSolicitado.tipo.emStringSnakeCase.contains('mascara')||equipamentoSolicitado.tipo.emStringSnakeCase.contains('ap')?
-                                                    "Ver termo de responsabilidade":"Ver recibo"
+                                                solicitacao.tipo ==
+                                                        TipoSolicitacao
+                                                            .emprestimo
+                                                    ? equipamentoSolicitado.tipo
+                                                                .emStringSnakeCase
+                                                                .contains(
+                                                                    'mascara') ||
+                                                            equipamentoSolicitado
+                                                                .tipo
+                                                                .emStringSnakeCase
+                                                                .contains('ap')
+                                                        ? "Ver termo de responsabilidade"
+                                                        : "Ver recibo"
                                                     : "Ver documento de devolução",
-                                                style: TextStyle(color: Colors.black),
+                                                style: TextStyle(
+                                                    color: Colors.black),
                                               )),
                                         ),
                                       ],
