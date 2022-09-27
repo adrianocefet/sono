@@ -213,9 +213,14 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 onPressed: () async{
                                   negarSolicitacao(context,solicitacao);
                                 }, 
-                                child: const Text('Negar',style: TextStyle(color: Colors.black),),
+                                child: Row(
+                                  children: const [
+                                    Text('Negar ',style: TextStyle(color: Colors.black),),
+                                    Icon(Icons.close, color: Colors.black,),
+                                  ],
+                                ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                                  backgroundColor: Color.fromARGB(255, 254, 102, 112),
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.circular(18.0),
@@ -286,7 +291,12 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                         }
                                       }
                                 }, 
-                                child: Text(solicitacao.tipo==TipoSolicitacao.emprestimo?'Emprestar':'Devolver',style: TextStyle(color: Colors.black),),
+                                child: Row(
+                                  children: [
+                                    Text(solicitacao.tipo==TipoSolicitacao.emprestimo?'Emprestar ':'Devolver ',style: TextStyle(color: Colors.black),),
+                                    const Icon(Icons.check, color: Colors.black,),
+                                  ],
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                                   shape: RoundedRectangleBorder(

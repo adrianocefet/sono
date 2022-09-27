@@ -786,8 +786,10 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                         BorderRadius.circular(18.0),
                                                   )),
                                     onPressed:_testarUrl(equipamento.manualPdf??'')?()async{
+                                      mostrarDialogCarregando(context);
                                       final url = equipamento.manualPdf!;
                                       final arquivo = await PDFapi.carregarLink(url);
+                                      Navigator.pop(context);
                                       abrirPDF(context, arquivo);
                                     }:null, 
                                     label: Text(_testarUrl(equipamento.manualPdf??'')?"Visualizar PDF":"PDF indisponível",style: const TextStyle(color: Colors.black),)),

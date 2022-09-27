@@ -208,8 +208,10 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                             enablePinching: true,
                                             enablePanning: true),
                                         legend: Legend(
+                                            width: MediaQuery.of(context).size.width.toString(),
                                             isVisible: true,
-                                            position: LegendPosition.bottom),
+                                            overflowMode: LegendItemOverflowMode.wrap,
+                                            position: LegendPosition.bottom,),
                                         enableAxisAnimation: true,
                                         primaryXAxis: CategoryAxis(
                                             labelStyle:
