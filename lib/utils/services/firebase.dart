@@ -22,6 +22,7 @@ class FirebaseService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   static const String _strPacientes = 'pacientes';
+  static const String _strUsuarios = 'usuarios';
   static const String _stringEquipamento = "equipamentos";
   static const String _stringQuestionarios = "questionarios";
   static const String _stringSolicitacoes = "solicitacoes";
@@ -79,6 +80,13 @@ class FirebaseService {
         );
       },
     );
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamUsuarios() {
+    return _db
+        .collection(_strUsuarios)
+        .where('instituicao', isNull: false)
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamPacientesPorHospital(
@@ -227,7 +235,7 @@ class FirebaseService {
       await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento);
 
       urlImagem =
-          await FirebaseService().adicionarImageDoEquipamentoAoFirebaseStorage(
+          await FirebaseService().adicionarImagemDoEquipamentoAoFirebaseStorage(
         idEquipamento: idEquipamento,
         imageFile: fotoDePerfil,
       );
@@ -249,7 +257,7 @@ class FirebaseService {
 
     if (fotoDePerfil != null) {
       urlImagem =
-          await FirebaseService().adicionarImageDoEquipamentoAoFirebaseStorage(
+          await FirebaseService().adicionarImagemDoEquipamentoAoFirebaseStorage(
         imageFile: fotoDePerfil,
         idEquipamento: idEquipamento,
       );
@@ -463,6 +471,20 @@ class FirebaseService {
     } on Exception {}
   }
 
+  Future<String?> procurarUsuarioNoBancoDeDados(
+      Map<String, dynamic> data) async {
+    String? idUsuario;
+
+    QuerySnapshot query = await _db
+        .collection(_strUsuarios)
+        .where("cpf", isEqualTo: data["cpf"])
+        .get();
+
+    if (query.docs.isNotEmpty) idUsuario = query.docs[0].id;
+
+    return idUsuario;
+  }
+
   Future<String?> procurarPacienteNoBancoDeDados(
       Map<String, dynamic> data) async {
     String? idPaciente;
@@ -477,6 +499,25 @@ class FirebaseService {
     return idPaciente;
   }
 
+  Future<String> uploadDadosDoUsuario(Map<String, dynamic> data,
+      {File? fotoDePerfil}) async {
+    String idUsuario = _db.collection(_strUsuarios).doc().id;
+    String urlImagem = '';
+
+    if (fotoDePerfil != null) {
+      urlImagem =
+          await FirebaseService().adicionarImagemDoUsuarioAoFirebaseStorage(
+        imageFile: fotoDePerfil,
+        idUsuario: idUsuario,
+      );
+    }
+    if (urlImagem.isNotEmpty) data['url_foto_de_perfil'] = urlImagem;
+
+    await _db.collection(_strUsuarios).doc(idUsuario).set(data);
+
+    return idUsuario;
+  }
+
   Future<String> uploadDadosDoPaciente(Map<String, dynamic> data,
       {File? fotoDePerfil}) async {
     String idPaciente = _db.collection(_strPacientes).doc().id;
@@ -484,7 +525,7 @@ class FirebaseService {
 
     if (fotoDePerfil != null) {
       urlImagem =
-          await FirebaseService().adicionarImageDoPacienteAoFirebaseStorage(
+          await FirebaseService().adicionarImagemDoPacienteAoFirebaseStorage(
         imageFile: fotoDePerfil,
         idPaciente: idPaciente,
       );
@@ -505,7 +546,7 @@ class FirebaseService {
       await deletarImagemDoFirebaseStorage(idPaciente);
 
       urlImagem =
-          await FirebaseService().adicionarImageDoPacienteAoFirebaseStorage(
+          await FirebaseService().adicionarImagemDoPacienteAoFirebaseStorage(
         idPaciente: idPaciente,
         imageFile: fotoDePerfil,
       );
@@ -528,7 +569,7 @@ class FirebaseService {
         .snapshots();
   }
 
-  Future<String> adicionarImageDoPacienteAoFirebaseStorage({
+  Future<String> adicionarImagemDoPacienteAoFirebaseStorage({
     required File imageFile,
     String? idPaciente,
   }) async {
@@ -539,7 +580,18 @@ class FirebaseService {
     return await ref.getDownloadURL();
   }
 
-  Future<String> adicionarImageDoEquipamentoAoFirebaseStorage({
+  Future<String> adicionarImagemDoUsuarioAoFirebaseStorage({
+    required File imageFile,
+    String? idUsuario,
+  }) async {
+    Reference ref = _storage.ref(
+      '$_strUsuarios/perfil_$idUsuario',
+    );
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL();
+  }
+
+  Future<String> adicionarImagemDoEquipamentoAoFirebaseStorage({
     required File imageFile,
     String? idEquipamento,
   }) async {

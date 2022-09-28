@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
-import 'package:sono/pages/tabelas/widgets/item_paciente.dart';
-import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/pages/cadastros/cadastro_usuario/cadastro_usuario.dart';
+import 'package:sono/pages/tabelas/widgets/item_usuario.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/services/firebase.dart';
@@ -10,9 +10,9 @@ import 'package:sono/utils/services/firebase.dart';
 import '../../widgets/pesquisa_de_pacientes.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 
-class ListaDePacientes extends StatelessWidget {
+class ListaDeUsuarios extends StatelessWidget {
   final PageController pageController;
-  const ListaDePacientes({
+  const ListaDeUsuarios({
     Key? key,
     required this.pageController,
   }) : super(key: key);
@@ -23,7 +23,7 @@ class ListaDePacientes extends StatelessWidget {
       builder: (context, child, usuario) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Pacientes"),
+            title: const Text("Usuários"),
             centerTitle: true,
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
@@ -32,7 +32,9 @@ class ListaDePacientes extends StatelessWidget {
                   showSearch(
                     context: context,
                     delegate: PesquisaDePacientes(
-                        'Paciente', usuario.instituicao.emString),
+                      'Paciente',
+                      usuario.instituicao.emString,
+                    ),
                   );
                 },
                 icon: const Icon(Icons.search),
@@ -51,8 +53,7 @@ class ListaDePacientes extends StatelessWidget {
               ),
             ),
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseService()
-                  .streamPacientesPorHospital(usuario.instituicao.emString),
+              stream: FirebaseService().streamUsuarios(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -66,19 +67,19 @@ class ListaDePacientes extends StatelessWidget {
                   default:
                     if (snapshot.hasData) {
                       List<DocumentSnapshot<Map<String, dynamic>>>
-                          docsPacientes = snapshot.data!.docs;
+                          docsUsuarios = snapshot.data!.docs;
                       return Scrollbar(
                         child: ListView.builder(
                           itemBuilder: (context, index) {
-                            Paciente paciente = Paciente.porDocumentSnapshot(
-                              docsPacientes[index],
+                            Usuario usuario = Usuario.porDocumentSnapshot(
+                              docsUsuarios[index],
                             );
                             return Column(
                               children: [
                                 SizedBox(
                                   height: index == 0 ? 10 : 0,
                                 ),
-                                ItemPaciente(paciente: paciente),
+                                ItemUsuario(usuario: usuario),
                               ],
                             );
                           },
@@ -103,7 +104,7 @@ class ListaDePacientes extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CadastroPaciente(),
+                  builder: (context) => const CadastroDeUsuario(),
                 ),
               );
             },

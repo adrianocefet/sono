@@ -20,29 +20,30 @@ class CustomDrawer extends StatelessWidget {
           ),
         );
 
-    return Drawer(
-      child: Stack(
-        children: <Widget>[
-          _buildDrawerBack(),
-          ListView(
-            padding: const EdgeInsets.only(left: 32.0, top: 16.0),
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(bottom: 8.0),
-                padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 8.0),
-                height: 170.0,
-                child: Stack(
-                  children: <Widget>[
-                    const Positioned(
-                      top: 8.0,
-                      left: 0.0,
-                      child: Text(
-                        "Projeto\nSono-UFC",
-                        style: TextStyle(
-                            fontSize: 34.0, fontWeight: FontWeight.bold),
+    return ScopedModelDescendant<Usuario>(builder: (context, child, usuario) {
+      return Drawer(
+        child: Stack(
+          children: <Widget>[
+            _buildDrawerBack(),
+            ListView(
+              padding: const EdgeInsets.only(left: 32.0, top: 16.0),
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 8.0),
+                  height: 170.0,
+                  child: Stack(
+                    children: <Widget>[
+                      const Positioned(
+                        top: 8.0,
+                        left: 0.0,
+                        child: Text(
+                          "Projeto\nSono-UFC",
+                          style: TextStyle(
+                              fontSize: 34.0, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    Positioned(
+                      Positioned(
                         left: 0.0,
                         bottom: 0.0,
                         child: ScopedModelDescendant<Usuario>(
@@ -60,39 +61,50 @@ class CustomDrawer extends StatelessWidget {
                               ],
                             );
                           },
-                        ))
-                  ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const Divider(),
-              DrawerTile(
-                Icons.home,
-                "Início",
-                pageController,
-                0,
-              ),
-              DrawerTile(
-                Icons.people,
-                "Pacientes",
-                pageController,
-                1,
-              ),
-              DrawerTile(
-                Icons.masks_outlined,
-                "Controle de estoque",
-                pageController,
-                2,
-              ),
-              DrawerTile(
-                Icons.assignment_rounded,
-                "Solicitações",
-                pageController,
-                3,
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+                const Divider(),
+                DrawerTile(
+                  Icons.home,
+                  "Início",
+                  pageController,
+                  0,
+                ),
+                DrawerTile(
+                  Icons.people,
+                  "Pacientes",
+                  pageController,
+                  1,
+                ),
+                DrawerTile(
+                  Icons.masks_outlined,
+                  "Controle de estoque",
+                  pageController,
+                  2,
+                ),
+                DrawerTile(
+                  Icons.assignment_rounded,
+                  "Solicitações",
+                  pageController,
+                  3,
+                ),
+                Visibility(
+                  visible: usuario.perfil == PerfilUsuario.mestre,
+                  child: DrawerTile(
+                    Icons.assignment_rounded,
+                    "Usuários",
+                    pageController,
+                    4,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    });
   }
 }

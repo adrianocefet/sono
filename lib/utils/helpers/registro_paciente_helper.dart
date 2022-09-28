@@ -89,7 +89,7 @@ class RegistroPacienteHelper {
     bool jaPossuiPaciente = false;
 
     idPacientePreexistente =
-        await FirebaseService().procurarPacienteNoBancoDeDados(respostas);
+        await FirebaseService().procurarUsuarioNoBancoDeDados(respostas);
 
     if (idPacientePreexistente != null) {
       jaPossuiPaciente = true;
@@ -104,7 +104,7 @@ class RegistroPacienteHelper {
 
   Future<String> _adicionarNovoPacienteAoBancoDeDados() async {
     return await FirebaseService()
-        .uploadDadosDoPaciente(respostas, fotoDePerfil: _fotoDePerfil);
+        .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
   }
 
   Future<String> _editarInfomarcoesDoPacienteNoBancoDeDados() async {

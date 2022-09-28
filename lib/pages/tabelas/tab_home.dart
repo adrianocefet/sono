@@ -21,7 +21,7 @@ class _HomeTabState extends State<HomeTab> {
       imagemHospital(Instituicao.hgcc),
       imagemHospital(Instituicao.hgf),
       imagemHospital(Instituicao.huwc),
-      imagemHospital(Instituicao.hospitalDeMessejana),
+      imagemHospital(Instituicao.hm),
     ];
 
     return Scaffold(
