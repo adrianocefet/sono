@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
 import 'package:sono/utils/models/equipamento.dart';
 
 class ItemEquipamentoEmprestado extends StatelessWidget {
@@ -9,6 +11,7 @@ class ItemEquipamentoEmprestado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
@@ -73,7 +76,14 @@ class ItemEquipamentoEmprestado extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 5.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TelaEquipamento(id: equipamento.id,controller: controller,),
+                              ),
+                            );
+                          },
                           child: const Text(
                             "Ver equipamento em detalhe",
                             textAlign: TextAlign.center,

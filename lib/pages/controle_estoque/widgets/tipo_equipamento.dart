@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/tabelas/tab_lista_de_equipamentos.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import '../../../constants/constants.dart';
@@ -11,9 +12,11 @@ class BotaoTipoEquipamento extends StatefulWidget {
   final String imagem;
   final TipoEquipamento titulo;
   final Paciente? pacientePreEscolhido;
+  final ControllerPerfilClinicoEquipamento controller;
   const BotaoTipoEquipamento(
       {required this.imagem,
       required this.titulo,
+      required this.controller,
       this.pacientePreEscolhido,
       Key? key})
       : super(key: key);
@@ -29,8 +32,8 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
-              .where('hospital', isEqualTo: model.instituicao)
-              .where('status', isEqualTo: model.status.emString)
+              .where('hospital', isEqualTo: model.instituicao.emString)
+              .where('status', isEqualTo: widget.controller.status.emString)
               .where('tipo', isEqualTo: widget.titulo.emStringSnakeCase)
               .snapshots(),
           builder: (context, snapshot) {
@@ -47,13 +50,14 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                     style:
                         OutlinedButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: () async {
-                      model.tipo = widget.titulo;
+                      widget.controller.tipo = widget.titulo;
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ListaDeEquipamentos(
                                     pacientePreEscolhido:
                                         widget.pacientePreEscolhido,
+                                    controller: widget.controller,
                                   )));
                     },
                     child: Column(

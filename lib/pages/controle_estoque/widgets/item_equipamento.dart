@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/usuario.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/deletar_equipamento.dart';
@@ -12,9 +13,10 @@ import '../../../../utils/services/firebase.dart';
 import '../../perfis/perfil_equipamento/tela_equipamento.dart';
 
 class ItemEquipamento extends StatefulWidget {
+  final ControllerPerfilClinicoEquipamento controller;
   final String id;
   final Paciente? pacientePreEscolhido;
-  const ItemEquipamento({required this.id, this.pacientePreEscolhido, Key? key})
+  const ItemEquipamento({required this.controller,required this.id, this.pacientePreEscolhido, Key? key})
       : super(key: key);
 
   @override
@@ -58,6 +60,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => TelaEquipamento(
+                                      controller: widget.controller,
                                       id: widget.id,
                                       pacientePreEscolhido:
                                           widget.pacientePreEscolhido)));
@@ -109,7 +112,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                               BorderRadius.circular(15),
                                           child: Image.network(
                                             equipamento.urlFotoDePerfil ??
-                                                model.semimagem,
+                                                widget.controller.semimagem,
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *

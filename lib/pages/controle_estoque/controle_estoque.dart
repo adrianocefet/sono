@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
 import '../../utils/models/usuario.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
+import '../perfis/perfil_equipamento/equipamento_controller.dart';
 
 class ControleEstoque extends StatefulWidget {
   final PageController pageController;
@@ -19,6 +20,7 @@ class ControleEstoque extends StatefulWidget {
 }
 
 class _ControleEstoqueState extends State<ControleEstoque> {
+  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,11 +63,12 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                       borderRadius: BorderRadius.circular(10)),
                                   backgroundColor: Colors.white),
                               onPressed: () {
+                                controller.status = status;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const TiposEquipamentos()));
+                                            TiposEquipamentos(controller: controller,)));
                               },
                               child: SizedBox(
                                 height: 50,
@@ -294,7 +297,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      Color.fromRGBO(97, 253, 125, 1),
+                                      const Color.fromRGBO(97, 253, 125, 1),
                                 ),
                                 onPressed: () {
                                   Navigator.push(

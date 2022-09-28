@@ -33,7 +33,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
               QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('solicitacoes')
-              .where('hospital', isEqualTo: model.instituicao)
+              .where('hospital', isEqualTo: model.instituicao.emString)
               .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {

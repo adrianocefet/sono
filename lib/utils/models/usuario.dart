@@ -18,7 +18,7 @@ class Usuario extends Model {
       'HGCC': Instituicao.hgcc,
       'HGF': Instituicao.hgf,
       'HUWC': Instituicao.huwc,
-      "Hospital De Messejana": Instituicao.hospitalDeMessejana,
+      "HM": Instituicao.hospitalDeMessejana,
     };
 
     return instituicoes[instituicao]!;
@@ -30,10 +30,6 @@ class Usuario extends Model {
   String cpf = 'CPFGENERICO';
   String urlFotoDePerfil = 'URLFOTODEPERFIL';
   Instituicao instituicao = Instituicao.huwc;
-  String semimagem =
-      'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png';
-  TipoEquipamento tipo = TipoEquipamento.nasal;
-  StatusDoEquipamento status = StatusDoEquipamento.disponivel;
 }
 
 enum Instituicao {
@@ -49,7 +45,7 @@ extension ExtensaoInstituicao on Instituicao {
       Instituicao.hgcc: 'HGCC',
       Instituicao.hgf: 'HGF',
       Instituicao.huwc: 'HUWC',
-      Instituicao.hospitalDeMessejana: "Hospital De Messejana"
+      Instituicao.hospitalDeMessejana: "HM"
     };
 
     return strings[this]!;

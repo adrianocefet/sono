@@ -8,10 +8,12 @@ import '../../utils/models/paciente.dart';
 import '../controle_estoque/widgets/item_equipamento.dart';
 import '../controle_estoque/widgets/pesquisa_equipamento.dart';
 import '../perfis/perfil_equipamento/adicionar_equipamento.dart';
+import '../perfis/perfil_equipamento/equipamento_controller.dart';
 
 class ListaDeEquipamentos extends StatefulWidget {
   final Paciente? pacientePreEscolhido;
-  const ListaDeEquipamentos({Key? key, this.pacientePreEscolhido})
+  final ControllerPerfilClinicoEquipamento controller;
+  const ListaDeEquipamentos({required this.controller,Key? key, this.pacientePreEscolhido})
       : super(key: key);
 
   @override
@@ -25,9 +27,9 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
-              .where('hospital', isEqualTo: model.instituicao)
-              .where('status', isEqualTo: model.status.emString)
-              .where('tipo', isEqualTo: model.tipo.emStringSnakeCase)
+              .where('hospital', isEqualTo: model.instituicao.emString)
+              .where('status', isEqualTo: widget.controller.status.emString)
+              .where('tipo', isEqualTo: widget.controller.tipo.emStringSnakeCase)
               .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -36,7 +38,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                 return Scaffold(
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).primaryColor,
-                    title: Text(model.tipo.emString),
+                    title: Text(widget.controller.tipo.emString),
                     centerTitle: true,
                   ),
                   body: const Center(
@@ -47,14 +49,15 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                 return Scaffold(
                     appBar: AppBar(
                       title: Text(
-                          '${model.tipo.emString} (${snapshot.data!.docs.length})'),
+                          '${widget.controller.tipo.emString} (${snapshot.data!.docs.length})'),
                       actions: [
                         IconButton(
                             onPressed: () {
                               showSearch(
                                 context: context,
                                 delegate: PesquisaEquipamento(
-                                    tipo: model.tipo, status: model.status),
+                                    controller: widget.controller,
+                                    tipo: widget.controller.tipo, status: widget.controller.status),
                               );
                             },
                             icon: const Icon(Icons.search))
@@ -84,6 +87,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: ItemEquipamento(
+                                        controller: widget.controller,
                                         id: document.id,
                                         pacientePreEscolhido:
                                             widget.pacientePreEscolhido),
@@ -106,7 +110,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                                       height: 16.0,
                                     ),
                                     Text(
-                                      'Nenhum(a) ${model.tipo.emString.toLowerCase()} ${model.status.emString.toLowerCase()}!',
+                                      'Nenhum(a) ${widget.controller.tipo.emString.toLowerCase()} ${widget.controller.status.emString.toLowerCase()}!',
                                       style: const TextStyle(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold,
@@ -127,7 +131,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        AdicionarEquipamento(tipo: model.tipo)),
+                                        AdicionarEquipamento(tipo: widget.controller.tipo)),
                               );
                             },
                             child: const Icon(Icons.add),

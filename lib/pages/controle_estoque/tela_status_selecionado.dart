@@ -5,11 +5,13 @@ import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/usuario.dart';
 
 import '../../constants/constants.dart';
+import '../perfis/perfil_equipamento/equipamento_controller.dart';
 
 int currentIndex = 0;
 
 class TiposEquipamentos extends StatefulWidget {
-  const TiposEquipamentos({Key? key}) : super(key: key);
+  final ControllerPerfilClinicoEquipamento controller;
+  const TiposEquipamentos({required this.controller,Key? key}) : super(key: key);
   @override
   State<TiposEquipamentos> createState() => _TiposEquipamentosState();
 }
@@ -23,20 +25,20 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
     3: StatusDoEquipamento.desinfeccao,
     4: StatusDoEquipamento.concedido
   };
-  final telas = const [
-    TiposDeEquipamentos(),
-    TiposDeEquipamentos(),
-    TiposDeEquipamentos(),
-    TiposDeEquipamentos(),
-    TiposDeEquipamentos(),
-  ];
 
   bool inicializado = false;
   @override
   Widget build(BuildContext context) {
+   final telas = [
+    TiposDeEquipamentos(controller: widget.controller,),
+    TiposDeEquipamentos(controller: widget.controller,),
+    TiposDeEquipamentos(controller: widget.controller,),
+    TiposDeEquipamentos(controller: widget.controller,),
+    TiposDeEquipamentos(controller: widget.controller,),
+   ];
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
       if (inicializado == false) {
-        currentIndex = Status.keys.firstWhere((i) => Status[i] == model.status);
+        currentIndex = Status.keys.firstWhere((i) => Status[i] == widget.controller.status);
         inicializado = true;
       }
 
@@ -52,7 +54,7 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
           unselectedItemColor: Color.fromARGB(255, 33, 35, 87),
           onTap: (index) => setState(() {
             currentIndex = index;
-            model.status = Status[index]!;
+            widget.controller.status = Status[index]!;
           }),
           // ignore: prefer_const_literals_to_create_immutables
           items: [

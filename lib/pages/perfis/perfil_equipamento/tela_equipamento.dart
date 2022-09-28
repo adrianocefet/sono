@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/adicionar_equipamento.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/informacoes_adicionais.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/adicionarObservacao.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributos_equipamento.dart';
@@ -24,9 +25,10 @@ import '../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../utils/services/firebase.dart';
 
 class TelaEquipamento extends StatefulWidget {
+  final ControllerPerfilClinicoEquipamento controller;
   final String id;
   final Paciente? pacientePreEscolhido;
-  const TelaEquipamento({required this.id, this.pacientePreEscolhido, Key? key})
+  const TelaEquipamento({required this.controller,required this.id, this.pacientePreEscolhido, Key? key})
       : super(key: key);
 
   @override
@@ -57,6 +59,26 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
       return false;
     }
     return true;
+  }
+
+  Widget _testarYoutube(){
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+          controller: controller),
+      builder: (context, player) =>
+          Padding(
+            padding:
+                const EdgeInsets.only(
+                    bottom: 30.0),
+            child: SizedBox(
+              height:
+                  MediaQuery.of(context)
+                          .size
+                          .height *
+                      0.5,
+              child: player,
+            ),
+          ));
   }
 
   @override
@@ -139,7 +161,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                     children: [
                                       TituloEFoto(
                                           equipamento: equipamento,
-                                          semfoto: model.semimagem),
+                                          semfoto: widget.controller.semimagem),
                                       const SizedBox(
                                         height: 20,
                                       ),
@@ -673,8 +695,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                         .network(
                                                                       pacienteEmprestado
                                                                               .urlFotoDePerfil ??
-                                                                          model
-                                                                              .semimagem,
+                                                                          widget.controller
+                                                                              .semimagemPaciente,
                                                                       width: 50,
                                                                       height:
                                                                           50,
@@ -902,7 +924,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             BorderRadius
                                                                 .circular(25),
                                                         child: Image.network(
-                                                          model.semimagem,
+                                                          widget.controller.semimagemPaciente,
                                                           width: 50,
                                                           height: 50,
                                                           fit: BoxFit.fill,
@@ -1168,14 +1190,19 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             onPressed: _testarUrl(
                                                     equipamento.manualPdf ?? '')
                                                 ? () async {
-                                                    mostrarDialogCarregando(
+                                                  mostrarDialogCarregando(
                                                         context);
-                                                    final url =
-                                                        equipamento.manualPdf!;
-                                                    final arquivo = await PDFapi
-                                                        .carregarLink(url);
+                                                  try {
+                                                    final url = equipamento.manualPdf!;
+                                                    final arquivo = await PDFapi.carregarLink(url);
                                                     Navigator.pop(context);
                                                     abrirPDF(context, arquivo);
+                                                  } catch (e) {
+                                                    Navigator.pop(context);
+                                                    mostrarMensagemErro(
+                                                      context,
+                                                      'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
+                                                  }
                                                   }
                                                 : null,
                                             label: Text(
@@ -1246,23 +1273,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        YoutubePlayerBuilder(
-                                            player: YoutubePlayer(
-                                                controller: controller),
-                                            builder: (context, player) =>
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 30.0),
-                                                  child: SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.5,
-                                                    child: player,
-                                                  ),
-                                                ))
+                                        _testarYoutube()
                                       ],
                                     ),
                                   ),

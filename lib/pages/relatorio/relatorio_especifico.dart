@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
 import '../../utils/models/equipamento.dart';
 import '../../utils/models/usuario.dart';
@@ -17,6 +18,7 @@ class RelatorioEspecifico extends StatefulWidget {
 }
 
 class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
+  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
   List<Equipamento> equipamentos = [];
@@ -27,7 +29,7 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
         builder: (context, child, model) => StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('equipamentos')
-                .where('hospital', isEqualTo: model.instituicao)
+                .where('hospital', isEqualTo: model.instituicao.emString)
                 .snapshots(),
             builder: (
               context,
@@ -115,7 +117,7 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          TelaEquipamento(id: equipamento.id)));
+                          TelaEquipamento(id: equipamento.id,controller: controller,)));
               inicializou = false;
             });
       }).toList();

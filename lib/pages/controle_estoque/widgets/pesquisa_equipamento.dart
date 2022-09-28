@@ -5,12 +5,14 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/usuario.dart';
 import '../../../../constants/constants.dart';
+import '../../perfis/perfil_equipamento/equipamento_controller.dart';
 import 'item_equipamento.dart';
 
 class PesquisaEquipamento extends SearchDelegate {
+  final ControllerPerfilClinicoEquipamento controller;
   final TipoEquipamento tipo;
   final StatusDoEquipamento status;
-  PesquisaEquipamento({required this.tipo, required this.status});
+  PesquisaEquipamento({required this.controller,required this.tipo, required this.status});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -45,9 +47,9 @@ class PesquisaEquipamento extends SearchDelegate {
       builder: (context, child, model) => StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
-              .where('hospital', isEqualTo: model.instituicao)
-              .where('status', isEqualTo: model.status.emString)
-              .where('tipo', isEqualTo: model.tipo.emStringSnakeCase)
+              .where('hospital', isEqualTo: model.instituicao.emString)
+              .where('status', isEqualTo: controller.status.emString)
+              .where('tipo', isEqualTo: controller.tipo.emStringSnakeCase)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             switch (snapshot.connectionState) {
@@ -90,7 +92,7 @@ class PesquisaEquipamento extends SearchDelegate {
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: ItemEquipamento(id: document.id),
+                                child: ItemEquipamento(id: document.id,controller: controller,),
                               );
                             },
                           ).toList(),

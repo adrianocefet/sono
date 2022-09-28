@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/usuario.dart';
 
 Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
+  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
   return await showDialog<Paciente>(
       context: context,
       builder: (BuildContext context) {
@@ -58,7 +60,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                           stream: FirebaseFirestore.instance
                               .collection('pacientes')
                               .where('hospitais_vinculados',
-                                  arrayContains: model.instituicao)
+                                  arrayContains: model.instituicao.emString)
                               .snapshots(),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
@@ -108,7 +110,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                                         backgroundImage:
                                                             NetworkImage(
                                                           paciente.urlFotoDePerfil ??
-                                                              model.semimagem,
+                                                              controller.semimagem,
                                                         ),
                                                       ),
                                                     ),

@@ -51,7 +51,7 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                           child: Center(
                             child: Table(
                               border: TableBorder.all(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(10),
                                       topRight: Radius.circular(10))),
                               columnWidths: const {
@@ -119,18 +119,24 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                     height: 25,
                                     child: Text(
                                       'Percentual ${tipo.emString.toLowerCase()}(%)',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   SfCircularChart(
+                                    palette: [
+                                    Constantes.corVerdeClaroPrincipal,
+                                    const Color.fromARGB(255, 255, 191, 87),
+                                    const Color.fromARGB(255, 255, 112, 122),
+                                      StatusDoEquipamento.desinfeccao.cor],
                                     backgroundColor: Colors.white,
                                     legend: Legend(
+                                        position: LegendPosition.bottom,
                                         isVisible: true,
                                         overflowMode:
                                             LegendItemOverflowMode.wrap,
-                                        textStyle: TextStyle(
+                                        textStyle: const TextStyle(
                                             fontWeight: FontWeight.w300,
                                             fontStyle: FontStyle.italic)),
                                     series: <CircularSeries>[
@@ -147,7 +153,7 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                                           status.emString,
                                                           model.instituicao
                                                               .emString) *
-                                                      100 ~/
+                                                      100 /
                                                       (calcularQuantidade(
                                                                   documentos,
                                                                   tipo,
@@ -200,7 +206,7 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
         decoration: BoxDecoration(
             color: topo ? Constantes.corAzulEscuroSecundario : Colors.white,
             borderRadius: topo
-                ? BorderRadius.only(
+                ? const BorderRadius.only(
                     topLeft: Radius.circular(10), topRight: Radius.circular(10))
                 : null),
         children: celula.map((celula) {
@@ -269,5 +275,5 @@ class GDPData {
   GDPData(this.tipo, this.qntd);
 
   String tipo;
-  int qntd;
+  double qntd;
 }

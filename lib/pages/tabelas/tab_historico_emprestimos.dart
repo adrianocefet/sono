@@ -27,14 +27,14 @@ class _HistoricoEmprestimosState extends State<HistoricoEmprestimos> {
           stream: widget.pacientePreEscolhido == null
               ? FirebaseFirestore.instance
                   .collection('solicitacoes')
-                  .where('hospital', isEqualTo: model.instituicao)
+                  .where('hospital', isEqualTo: model.instituicao.emString)
                   .where('confirmacao',
                       isEqualTo: Confirmacao.confirmado.emString.toLowerCase())
                   .where('equipamento', isEqualTo: widget.equipamento)
                   .snapshots()
               : FirebaseFirestore.instance
                   .collection('solicitacoes')
-                  .where('hospital', isEqualTo: model.instituicao)
+                  .where('hospital', isEqualTo: model.instituicao.emString)
                   .where('confirmacao',
                       isEqualTo: Confirmacao.confirmado.emString.toLowerCase())
                   .where('equipamento', isEqualTo: widget.equipamento)
@@ -66,7 +66,7 @@ class _HistoricoEmprestimosState extends State<HistoricoEmprestimos> {
                   return solicitacao;
                 }).toList()
                   ..sort(((Solicitacao a, Solicitacao b) =>
-                      a.dataDaSolicitacao.compareTo(b.dataDaSolicitacao)));
+                      a.dataDeResposta!.compareTo(b.dataDeResposta!)));
                 return Scaffold(
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).primaryColor,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
@@ -14,7 +15,8 @@ import 'dialog/negar_solicitacao.dart';
 
 class SolicitacoesPainel extends StatefulWidget {
   final String idSolicitacao;
-  const SolicitacoesPainel({Key? key, required this.idSolicitacao})
+  final ControllerPerfilClinicoEquipamento controller=ControllerPerfilClinicoEquipamento();
+  SolicitacoesPainel({Key? key, required this.idSolicitacao})
       : super(key: key);
 
   @override
@@ -235,7 +237,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                           equipamentoSolicitado.tipo.emString),
                                       leading: Image.network(
                                         equipamentoSolicitado.urlFotoDePerfil ??
-                                            model.semimagem,
+                                            widget.controller.semimagem,
                                         height: 50,
                                         width: 50,
                                         fit: BoxFit.cover,
@@ -278,7 +280,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                       "Prontuário: ${pacienteSolicitado.numeroProntuario}"),
                                   leading: Image.network(
                                     pacienteSolicitado.urlFotoDePerfil ??
-                                        model.semimagem,
+                                        widget.controller.semimagemPaciente,
                                     height: 50,
                                     width: 50,
                                     fit: BoxFit.cover,

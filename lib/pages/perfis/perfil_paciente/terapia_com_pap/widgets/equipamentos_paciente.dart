@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
 import 'package:sono/pages/tabelas/tab_tipos_equipamento.dart';
 import 'package:sono/utils/models/equipamento.dart';
@@ -11,6 +12,7 @@ class EquipamentosDoPaciente extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
     List<Equipamento> equipamentosEmOrdem = [
       ...paciente.equipamentos!
           .where((equip) => equip.tipo == TipoEquipamento.cpap),
@@ -79,7 +81,7 @@ class EquipamentosDoPaciente extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TiposDeEquipamentos(pacientePreEscolhido: paciente,),
+                    builder: (context) => TiposDeEquipamentos(pacientePreEscolhido: paciente,controller: controller,),
                   ),
                 );
               },

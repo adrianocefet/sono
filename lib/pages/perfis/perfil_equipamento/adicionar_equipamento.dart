@@ -127,7 +127,7 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                     elevation: 0.0,
                     shadowColor: Colors.transparent,
                     fixedSize: Size(MediaQuery.of(context).size.width, 50),
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                     ),

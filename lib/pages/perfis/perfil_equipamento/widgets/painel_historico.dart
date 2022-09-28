@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
@@ -20,6 +21,7 @@ class PainelHistorico extends StatefulWidget {
 }
 
 class _PainelHistoricoState extends State<PainelHistorico> {
+  final ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
   @override
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
@@ -50,7 +52,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                     collapsedIconColor: Constantes.corAzulEscuroPrincipal,
                     leading: const Icon(Icons.people),
                     title: Text(
-                      "${solicitacao.tipo.emString}\n${solicitacao.dataDaSolicitacaoEmString}",
+                      "${solicitacao.tipo.emString}\n${solicitacao.dataDeRespostaEmString}",
                       style: const TextStyle(fontWeight: FontWeight.w300),
                     ),
                     children: [
@@ -156,7 +158,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                           "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
                                       leading: Image.network(
                                         pacienteSolicitado.urlFotoDePerfil ??
-                                            model.semimagem,
+                                            controller.semimagemPaciente,
                                         height: 50,
                                         width: 50,
                                         fit: BoxFit.cover,
@@ -207,7 +209,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                           leading: Image.network(
                                             equipamentoSolicitado
                                                     .urlFotoDePerfil ??
-                                                model.semimagem,
+                                                controller.semimagem,
                                             height: 50,
                                             width: 50,
                                             fit: BoxFit.cover,
