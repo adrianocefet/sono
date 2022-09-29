@@ -7,9 +7,10 @@ class Usuario extends Model {
   DateTime dataDeCadastro = DateTime.now();
   String id = 'IDGENERICO';
   String cpf = 'CPFGENERICO';
-  String urlFotoDePerfil = 'URLFOTODEPERFIL';
+  String? urlFotoDePerfil = 'URLFOTODEPERFIL';
   Instituicao instituicao = Instituicao.huwc;
   PerfilUsuario perfil = PerfilUsuario.mestre;
+  String senha = 'SENHAGENERICA';
 
   Usuario();
 
@@ -21,6 +22,7 @@ class Usuario extends Model {
     nomeCompleto = dados['nome_completo'];
     urlFotoDePerfil = dados['url_foto_de_perfil'];
     cpf = dados['cpf'];
+    senha = dados['senha'];
   }
 
   String get dataDeCadastroFormatada {

@@ -23,9 +23,11 @@ class CadastroUsuarioController {
           case CondicaoUsuario.novo:
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
+              SnackBar(
+                backgroundColor: Theme.of(context).focusColor,
+                content: const Text(
                   'Usuário registrado com sucesso!',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             );
@@ -35,6 +37,7 @@ class CadastroUsuarioController {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
+                backgroundColor: Colors.red,
                 content: Text(
                   'Usuário já existe!',
                 ),

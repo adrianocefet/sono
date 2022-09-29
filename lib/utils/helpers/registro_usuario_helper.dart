@@ -12,6 +12,7 @@ class RegistroUsuarioHelper {
   File? _fotoDePerfil;
   String? idUsuarioPreexistente;
   String? senhaGerada;
+  String? cpfDoUsuario;
 
   Map<String, dynamic> _gerarMapaDeRespostas() {
     for (Pergunta p in perguntas) {
@@ -27,6 +28,7 @@ class RegistroUsuarioHelper {
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
     respostas['senha'] = _gerarSenha();
     senhaGerada = respostas['senha'];
+    cpfDoUsuario = respostas['cpf'];
 
     return respostas;
   }

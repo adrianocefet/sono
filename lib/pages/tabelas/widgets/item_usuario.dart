@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente.dart';
 import 'package:sono/utils/models/usuario.dart';
 
 class ItemUsuario extends StatelessWidget {
@@ -36,39 +36,54 @@ class ItemUsuario extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               vertical: 2,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
+              alignment: Alignment.centerRight,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    children: [
-                      const Text("Instituição: "),
-                      Text(
-                        usuario.instituicao.emString,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColorLight,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Text(
-                  'Perfil: ${usuario.perfil.emString}',
-                ),
-                Text(
-                  'Data de Cadastro: ${usuario.perfil.emString}',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Row(
+                        children: [
+                          const Text("Instituição: "),
+                          Text(
+                            usuario.instituicao.emString,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColorLight,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(
+                      'Perfil: ${usuario.perfil.emString}'
+                      '\nData de Cadastro: ${usuario.dataDeCadastroFormatada}',
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PerfilClinicoPaciente(usuario.id),
-            ),
-          ),
+          onTap: () async {
+            await Clipboard.setData(
+              ClipboardData(
+                text:
+                    "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${usuario.cpf}\nSenha: ${usuario.senha}",
+              ),
+            );
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).focusColor,
+                content: Text(
+                  'Informações de login do usuário ${usuario.nomeCompleto} copiadas!',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -84,46 +99,41 @@ class _FotoDoUsuarioThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        urlImagem == null
-            ? Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 2,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColorLight,
-                ),
-                child: const Center(
-                  child: FaIcon(
-                    FontAwesomeIcons.user,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ),
-              )
-            : CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(urlImagem!),
+    return urlImagem == null
+        ? Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              border: Border.all(
+                strokeAlign: StrokeAlign.outside,
+                width: 2,
+                color: Theme.of(context).primaryColor,
               ),
-        Container(
-          padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Theme.of(context).primaryColor,
-          ),
-          child: const FaIcon(
-            FontAwesomeIcons.smile,
-            color: Colors.white,
-            size: 15,
-          ),
-        )
-      ],
-    );
+              shape: BoxShape.circle,
+              color: Theme.of(context).primaryColorLight,
+            ),
+            child: const Center(
+              child: FaIcon(
+                FontAwesomeIcons.user,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          )
+        : Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                strokeAlign: StrokeAlign.outside,
+                width: 2,
+                color: Theme.of(context).primaryColor,
+              ),
+              shape: BoxShape.circle,
+              color: Theme.of(context).primaryColor,
+            ),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(urlImagem!),
+            ),
+          );
   }
 }

@@ -21,11 +21,6 @@ List<Map<String, dynamic>> baseCadastroUsuario = [
     },
   },
   {
-    'enunciado': "Data de Nascimento *",
-    'tipo': TipoPergunta.data,
-    'codigo': 'data_de_cadastro',
-  },
-  {
     'enunciado': "Instituição *",
     'tipo': TipoPergunta.dropdownCadastros,
     'codigo': 'instituicao',
@@ -55,6 +50,10 @@ List<Map<String, dynamic>> baseCadastroUsuario = [
     'tipo': TipoPergunta.extensoNumericoCadastros,
     'dominio': 'conversa',
     'codigo': 'cpf',
-    'validador': (value) => value != '' ? null : 'Dado obrigatório.',
+    'validador': (value) => value != ''
+        ? int.tryParse(value) == null
+            ? 'Insira apenas números.'
+            : null
+        : 'Dado obrigatório.',
   },
 ];

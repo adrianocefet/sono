@@ -1,71 +1,195 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
 
 import 'cadastro_usuario_controller.dart';
 
-class CadastroDeUsuario extends StatelessWidget {
+class CadastroDeUsuario extends StatefulWidget {
   const CadastroDeUsuario({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final CadastroUsuarioController controller = CadastroUsuarioController();
+  State<CadastroDeUsuario> createState() => _CadastroDeUsuarioState();
+}
 
+class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
+  final CadastroUsuarioController controller = CadastroUsuarioController();
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Registrar usuário",
+        title: Text(
+          controller.senhaGerada != null
+              ? 'Usuário registrado!'
+              : "Registrar usuário",
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: controller.senhaGerada != null
-          ? Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1.5,
-                    color: Theme.of(context).primaryColor,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
+            stops: [0, 0.2],
+          ),
+        ),
+        child: controller.senhaGerada != null
+            ? Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(17)),
+                    border: Border.all(
+                      width: 2,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(14),
+                            topRight: Radius.circular(14),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Informações de login",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            IconButton(
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(
+                                    text:
+                                        "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${controller.helper.cpfDoUsuario}\nSenha: ${controller.helper.senhaGerada}",
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor:
+                                        Theme.of(context).focusColor,
+                                    content: const Text(
+                                      'Informações copiadas!',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.copy,
+                                color: Theme.of(context).focusColor,
+                                size: 30,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Usuário: ',
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        controller.helper.cpfDoUsuario!,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Senha: ',
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        controller.helper.senhaGerada!,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    children: [
+                      for (Pergunta pergunta in controller.perguntas)
+                        RespostaWidget(
+                          pergunta,
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: ElevatedButton(
+                          onPressed: () async =>
+                              await controller.registrarUsuario(context),
+                          child: const Text(
+                            'Registrar usuário',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 5.0,
+                            backgroundColor: Theme.of(context).focusColor,
+                            fixedSize: Size(
+                              MediaQuery.of(context).size.width,
+                              50,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            )
-          : SingleChildScrollView(
-              controller: ScrollController(),
-              child: Form(
-                key: controller.formKey,
-                child: Column(
-                  children: [
-                    for (Pergunta pergunta in controller.perguntas)
-                      RespostaWidget(
-                        pergunta,
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: ElevatedButton(
-                        onPressed: () async =>
-                            await controller.registrarUsuario(context),
-                        child: const Text(
-                          'Registrar usuário',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 5.0,
-                          backgroundColor: Theme.of(context).focusColor,
-                          fixedSize: Size(
-                            MediaQuery.of(context).size.width,
-                            50,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      ),
     );
   }
 }

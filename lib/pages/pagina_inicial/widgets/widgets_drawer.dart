@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/pages/pagina_inicial/widgets/tile_drawer.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -94,7 +95,7 @@ class CustomDrawer extends StatelessWidget {
                 Visibility(
                   visible: usuario.perfil == PerfilUsuario.mestre,
                   child: DrawerTile(
-                    Icons.assignment_rounded,
+                    FontAwesomeIcons.users,
                     "Usuários",
                     pageController,
                     4,

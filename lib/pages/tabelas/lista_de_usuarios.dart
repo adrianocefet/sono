@@ -6,8 +6,6 @@ import 'package:sono/pages/tabelas/widgets/item_usuario.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/services/firebase.dart';
-
-import '../../widgets/pesquisa_de_pacientes.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 
 class ListaDeUsuarios extends StatelessWidget {
@@ -29,13 +27,13 @@ class ListaDeUsuarios extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: PesquisaDePacientes(
-                      'Paciente',
-                      usuario.instituicao.emString,
-                    ),
-                  );
+                  // showSearch(
+                  //   context: context,
+                  //   delegate: PesquisaDePacientes(
+                  //     'Paciente',
+                  //     usuario.instituicao.emString,
+                  //   ),
+                  // );
                 },
                 icon: const Icon(Icons.search),
               ),
