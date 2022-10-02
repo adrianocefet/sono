@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_escapes
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +63,16 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     return true;
   }
 
-  Widget _testarYoutube(){
+  bool _testarYoutubeUrl(String link){
+    String p = '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
+    RegExp regExp = RegExp(p);
+    if(!regExp.hasMatch(link) || link == ''){
+      return false;
+    }
+    return true;
+  }
+
+  Widget _youtubeBuilder(){
     return YoutubePlayerBuilder(
       player: YoutubePlayer(
           controller: controller),
@@ -680,9 +691,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                               .bold,
                                                                       color: Constantes
                                                                           .corAzulEscuroSecundario,
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline),
+                                                                      ),
                                                                 ),
                                                               ),
                                                               Row(
@@ -747,8 +756,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                               .bold,
                                                                           color: Constantes
                                                                               .corAzulEscuroSecundario,
-                                                                          decoration:
-                                                                              TextDecoration.underline),
+                                                                          ),
                                                                     ),
                                                                   ),
                                                                   Text(equipamento
@@ -912,9 +920,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                               FontWeight.bold,
                                                           color: Constantes
                                                               .corAzulEscuroSecundario,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          ),
                                                     ),
                                                   ),
                                                   Row(
@@ -979,9 +985,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                         .bold,
                                                                 color: Constantes
                                                                     .corAzulEscuroSecundario,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .underline),
+                                                                ),
                                                           ),
                                                         ),
                                                         Text(equipamento
@@ -1000,9 +1004,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                               FontWeight.bold,
                                                           color: Constantes
                                                               .corAzulEscuroSecundario,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          ),
                                                     ),
                                                   ),
                                                   Text(equipamento
@@ -1241,8 +1243,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                         'Clique em editar para adicionar informações',
                                   )),
                               Visibility(
-                                // ignore: unrelated_type_equality_checks
-                                visible: _testarUrl(
+                                visible: _testarYoutubeUrl(
                                         equipamento.videoInstrucional ?? '') ==
                                     true,
                                 child: Padding(
@@ -1273,7 +1274,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        _testarYoutube()
+                                        _youtubeBuilder()
                                       ],
                                     ),
                                   ),

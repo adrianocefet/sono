@@ -350,6 +350,18 @@ class FirebaseService {
         },
       );
     }
+      await _db.collection(_stringSolicitacoes).doc().set(
+        {
+          "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
+          "equipamento": equipamento.id,
+          "paciente": paciente.id,
+          "solicitante": usuario.id,
+          "data_da_solicitacao": FieldValue.serverTimestamp(),
+          "data_de_resposta": FieldValue.serverTimestamp(),
+          "confirmacao": "confirmado",
+          "hospital": equipamento.hospital,
+        },
+      ).then((value) => null);
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.concedido.emString,

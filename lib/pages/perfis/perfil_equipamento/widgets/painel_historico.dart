@@ -8,6 +8,8 @@ import 'package:sono/utils/services/firebase.dart';
 import '../../../../constants/constants.dart';
 import '../../../../pdf/pdf_api.dart';
 import '../../../../pdf/tela_pdf.dart';
+import '../../../../utils/dialogs/carregando.dart';
+import '../../../../utils/dialogs/error_message.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/usuario.dart';
 
@@ -195,6 +197,12 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                     dadosEquipamento["id"] = snapshot.data!.id;
                                     equipamentoSolicitado =
                                         Equipamento.porMap(dadosEquipamento);
+                                    if (solicitacao.urlPdf==null) {
+                                      solicitacao.gerarTermoEmprestimo(
+                                        pacienteSolicitado,
+                                        equipamentoSolicitado,
+                                        model);
+                                    }
                                     return Column(
                                       children: [
                                         ListTile(
@@ -232,9 +240,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                         BorderRadius.circular(
                                                             18.0),
                                                   )),
-                                              onPressed: solicitacao.urlPdf !=
-                                                      null
-                                                  ? () async {
+                                              onPressed: solicitacao.urlPdf!=null ? () async {
                                                       final url =
                                                           solicitacao.urlPdf;
                                                       final arquivo = await PDFapi
@@ -249,12 +255,9 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                                   TelaPDF(
                                                                       arquivo:
                                                                           arquivo)));
-                                                    }
-                                                  : null,
+                                                    }:null,
                                               label: Text(
-                                                solicitacao.tipo ==
-                                                        TipoSolicitacao
-                                                            .emprestimo
+                                                solicitacao.tipo != TipoSolicitacao.devolucao
                                                     ? equipamentoSolicitado.tipo
                                                                 .emStringSnakeCase
                                                                 .contains(

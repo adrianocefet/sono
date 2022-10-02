@@ -20,6 +20,7 @@ class PDFapi{
     final dir = await getApplicationDocumentsDirectory();
     final File arquivo;
     switch(tipo){
+      case TipoSolicitacao.concessao:
       case TipoSolicitacao.emprestimo:
         arquivo = File('${dir.path}/${equipamento.tipo.emStringSnakeCase.contains('mascara')||equipamento.tipo.emStringSnakeCase.contains('ap')?"TermoDeResponsabilidade.pdf":"ReciboDeItens.pdf"}');
         break;
