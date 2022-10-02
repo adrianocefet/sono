@@ -176,16 +176,14 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                const Text(
+                                                Text(
                                                   "Tamanho",
                                                   style: TextStyle(
                                                       fontSize: 10,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          221, 137, 137, 137),
-                                                      decoration: TextDecoration
-                                                          .underline),
+                                                      color: Theme.of(context).primaryColor,
+                                                      ),
                                                 ),
                                                 Text(
                                                   equipamento.tamanho ?? "N/A",
@@ -206,15 +204,13 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text(
+                                              Text(
                                                 "Fabricante",
                                                 style: TextStyle(
                                                     fontSize: 10,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        221, 137, 137, 137),
-                                                    decoration: TextDecoration
-                                                        .underline),
+                                                    color: Theme.of(context).primaryColor,
+                                                    ),
                                               ),
                                               Text(
                                                 equipamento.fabricante,
@@ -265,7 +261,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              const Text(
+                                                              Text(
                                                                 "Paciente emprestado",
                                                                 style: TextStyle(
                                                                     fontSize:
@@ -273,15 +269,8 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            221,
-                                                                            137,
-                                                                            137,
-                                                                            137),
-                                                                    decoration:
-                                                                        TextDecoration
-                                                                            .underline),
+                                                                    color: Theme.of(context).primaryColor,
+                                                                    ),
                                                               ),
                                                               Text(
                                                                 pacienteEmprestado
@@ -311,20 +300,14 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    const Text(
+                                                    Text(
                                                       "Previsão para entrega",
                                                       style: TextStyle(
                                                           fontSize: 10,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Color.fromARGB(
-                                                              221,
-                                                              137,
-                                                              137,
-                                                              137),
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          color: Theme.of(context).primaryColor,
+                                                          ),
                                                     ),
                                                     Text(
                                                       equipamento
@@ -350,20 +333,14 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    const Text(
+                                                    Text(
                                                       "Data de despache",
                                                       style: TextStyle(
                                                           fontSize: 10,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Color.fromARGB(
-                                                              221,
-                                                              137,
-                                                              137,
-                                                              137),
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          color: Theme.of(context).primaryColor,
+                                                          ),
                                                     ),
                                                     Text(
                                                       equipamento

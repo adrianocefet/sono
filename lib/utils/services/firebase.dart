@@ -102,6 +102,11 @@ class FirebaseService {
     return _db.collection(_strPacientes).doc(idPaciente).snapshots();
   }
 
+    Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoUsuarioPorID(
+      String idUsuario) {
+    return _db.collection(_strUsuarios).doc(idUsuario).snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> streamAvaliacoesPorIdDoPaciente(
       String idPaciente) {
     return _db

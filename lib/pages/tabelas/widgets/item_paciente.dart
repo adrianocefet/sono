@@ -22,7 +22,7 @@ class ItemPaciente extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
-          leading: _FotoDoPacienteThumbnail(
+          leading: FotoDoPacienteThumbnail(
             paciente.urlFotoDePerfil,
             statusPaciente: paciente.status,
           ),
@@ -73,10 +73,10 @@ class ItemPaciente extends StatelessWidget {
   }
 }
 
-class _FotoDoPacienteThumbnail extends StatelessWidget {
+class FotoDoPacienteThumbnail extends StatelessWidget {
   final String? urlImagem;
   final String statusPaciente;
-  const _FotoDoPacienteThumbnail(
+  const FotoDoPacienteThumbnail(
     this.urlImagem, {
     Key? key,
     required this.statusPaciente,
