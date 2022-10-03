@@ -537,7 +537,7 @@ class FirebaseService {
     return idPaciente;
   }
 
-  Future<String> updateDadosDoPaciente(
+  Future<String> atualizarDadosDoPaciente(
       Map<String, dynamic> data, String idPaciente,
       {File? fotoDePerfil}) async {
     String? urlImagem;
@@ -558,6 +558,29 @@ class FirebaseService {
     await _db.collection(_strPacientes).doc(idPaciente).update(data);
 
     return idPaciente;
+  }
+
+  Future<String> atualizarDadosDoUsuario(
+      Map<String, dynamic> data, String idUsuario,
+      {File? fotoDePerfil}) async {
+    String? urlImagem;
+
+    if (fotoDePerfil != null) {
+      await deletarImagemDoFirebaseStorage(idUsuario);
+
+      urlImagem =
+          await FirebaseService().adicionarImagemDoUsuarioAoFirebaseStorage(
+        idUsuario: idUsuario,
+        imageFile: fotoDePerfil,
+      );
+    } else {
+      await deletarImagemDoUsuarioDoFirebaseStorage(idUsuario);
+    }
+
+    data['url_foto_de_perfil'] = urlImagem;
+    await _db.collection(_strUsuarios).doc(idUsuario).update(data);
+
+    return idUsuario;
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamQuestionarios(
@@ -589,6 +612,16 @@ class FirebaseService {
     );
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();
+  }
+
+  Future deletarImagemDoUsuarioDoFirebaseStorage(String idElemento) async {
+    Reference ref = _storage.ref(
+      "$_strUsuarios/perfil_$idElemento",
+    );
+
+    try {
+      await ref.delete();
+    } on Exception {}
   }
 
   Future<String> adicionarImagemDoEquipamentoAoFirebaseStorage({
@@ -691,7 +724,8 @@ class FirebaseService {
         .toList();
 
     Map<String, dynamic> dadosSimples = {
-      'id_avaliador': avaliacao.idAvaliador,
+      'nome_avaliador': avaliacao.avaliador.nomeCompleto,
+      'id_avaliador': avaliacao.avaliador.id,
       'data_de_realizacao': avaliacao.dataDaAvaliacao,
     };
 

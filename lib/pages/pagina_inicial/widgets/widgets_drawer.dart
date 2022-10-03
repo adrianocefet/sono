@@ -96,7 +96,7 @@ class CustomDrawer extends StatelessWidget {
                   visible: usuario.perfil == PerfilUsuario.mestre,
                   child: DrawerTile(
                     FontAwesomeIcons.users,
-                    "Usuários",
+                    "Profissionais",
                     pageController,
                     4,
                   ),

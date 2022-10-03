@@ -26,15 +26,16 @@ import 'package:sono/pages/avaliacao/questionarios/pittsburg/questionario/pittsb
 import 'package:sono/pages/avaliacao/questionarios/sacs_br/questionario/sacs_br.dart';
 import 'package:sono/pages/avaliacao/questionarios/stop_bang/questionario/stop_bang.dart';
 import 'package:sono/pages/avaliacao/questionarios/whodas/questionario/whodas_view.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class ControllerAvaliacao {
   ControllerAvaliacao({
-    required this.idAvaliador,
+    required this.avaliador,
     required this.paciente,
   });
 
-  final String idAvaliador;
+  final Usuario avaliador;
   final Paciente paciente;
   final Timestamp dataDaAvaliacao = Timestamp.now();
   final GlobalKey<FormState> keyExamesDescritivos = GlobalKey<FormState>();

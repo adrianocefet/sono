@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sono/pages/cadastros/cadastro_usuario/cadastro_usuario.dart';
 import 'package:sono/utils/models/usuario.dart';
 
 class ItemUsuario extends StatelessWidget {
@@ -40,6 +41,49 @@ class ItemUsuario extends StatelessWidget {
               alignment: Alignment.centerRight,
               children: [
                 Column(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        await Clipboard.setData(
+                          ClipboardData(
+                            text:
+                                "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${usuario.cpf}\nSenha: ${usuario.senha}",
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Theme.of(context).focusColor,
+                            content: Text(
+                              'Informações de login do usuário ${usuario.nomeCompleto} copiadas!',
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.copy,
+                        color: Theme.of(context).focusColor,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                CadastroDeUsuario(usuario: usuario),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).focusColor,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -59,31 +103,14 @@ class ItemUsuario extends StatelessWidget {
                     ),
                     Text(
                       'Perfil: ${usuario.perfil.emString}'
-                      '\nData de Cadastro: ${usuario.dataDeCadastroFormatada}',
+                      '\nData de Cadastro: ${usuario.dataDeCadastroFormatada}'
+                      '\nProfissão: ${usuario.profissao}',
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          onTap: () async {
-            await Clipboard.setData(
-              ClipboardData(
-                text:
-                    "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${usuario.cpf}\nSenha: ${usuario.senha}",
-              ),
-            );
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Theme.of(context).focusColor,
-                content: Text(
-                  'Informações de login do usuário ${usuario.nomeCompleto} copiadas!',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            );
-          },
         ),
       ),
     );

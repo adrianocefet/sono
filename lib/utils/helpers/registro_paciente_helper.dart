@@ -108,7 +108,7 @@ class RegistroPacienteHelper {
   }
 
   Future<String> _editarInfomarcoesDoPacienteNoBancoDeDados() async {
-    return await FirebaseService().updateDadosDoPaciente(
+    return await FirebaseService().atualizarDadosDoPaciente(
       respostas,
       paciente!.id,
       fotoDePerfil: _fotoDePerfil,

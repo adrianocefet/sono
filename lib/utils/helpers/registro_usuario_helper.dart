@@ -44,6 +44,16 @@ class RegistroUsuarioHelper {
     return status;
   }
 
+  Future<void> editarUsuario(String idUsuario) async {
+    print(_gerarMapaDeRespostas());
+    respostas.remove('data_de_cadastro');
+    await FirebaseService().atualizarDadosDoUsuario(
+      respostas,
+      idUsuario,
+      fotoDePerfil: _fotoDePerfil,
+    );
+  }
+
   String _gerarSenha({
     bool letter = true,
     bool isNumber = true,
@@ -86,6 +96,11 @@ class RegistroUsuarioHelper {
   Future<String> _adicionarNovoUsuarioAoBancoDeDados() async {
     return await FirebaseService()
         .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
+  }
+
+  Future<String> _editarInformacoesDoUsuario(String idUsuario) async {
+    return await FirebaseService().atualizarDadosDoUsuario(respostas, idUsuario,
+        fotoDePerfil: _fotoDePerfil);
   }
 }
 

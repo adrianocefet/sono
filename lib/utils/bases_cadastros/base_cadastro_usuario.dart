@@ -35,13 +35,22 @@ List<Map<String, dynamic>> baseCadastroUsuario = [
   {
     'enunciado': "Perfil *",
     'tipo': TipoPergunta.dropdownCadastros,
-    'dominio': 'conversa',
     'codigo': 'perfil',
     'opcoes': [
       "Clínico",
       "Dispensação",
       "Gestão",
       "Vigilância",
+    ],
+    'validador': (value) => value != '' ? null : 'Dado obrigatório.',
+  },
+  {
+    'enunciado': "Profissão *",
+    'tipo': TipoPergunta.dropdownCadastros,
+    'codigo': 'profissao',
+    'opcoes': [
+      "Médico",
+      "Fisioterapeuta",
     ],
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },

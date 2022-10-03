@@ -3,14 +3,16 @@ import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/helpers/registro_usuario_helper.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 class CadastroUsuarioController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final RegistroUsuarioHelper helper = RegistroUsuarioHelper();
   String? senhaGerada;
   List<Pergunta> get perguntas => helper.perguntas;
+  Usuario? usuario;
 
-  CadastroUsuarioController();
+  CadastroUsuarioController({this.usuario});
 
   Future<void> registrarUsuario(BuildContext context) async {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -45,6 +47,32 @@ class CadastroUsuarioController {
             );
             break;
         }
+      } catch (e) {
+        Navigator.pop(context);
+        mostrarMensagemErro(context, e.toString());
+      }
+    }
+  }
+
+  Future<void> editarUsuario(BuildContext context) async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+    if (_validarFormulario()) {
+      _salvarRespostasDoFormulario();
+      try {
+        mostrarDialogCarregando(context);
+        await helper.editarUsuario(usuario!.id);
+
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).focusColor,
+            content: const Text(
+              'Usuário editado com sucesso!',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        );
       } catch (e) {
         Navigator.pop(context);
         mostrarMensagemErro(context, e.toString());

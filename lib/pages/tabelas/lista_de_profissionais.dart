@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/pages/cadastros/cadastro_usuario/cadastro_usuario.dart';
 import 'package:sono/pages/tabelas/widgets/item_usuario.dart';
 import 'package:sono/utils/models/usuario.dart';
@@ -21,7 +20,7 @@ class ListaDeUsuarios extends StatelessWidget {
       builder: (context, child, usuario) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Usuários"),
+            title: const Text("Profissionais"),
             centerTitle: true,
             backgroundColor: Theme.of(context).primaryColor,
             actions: [

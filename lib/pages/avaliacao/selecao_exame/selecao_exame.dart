@@ -4,15 +4,18 @@ import 'package:sono/pages/avaliacao/selecao_exame/widgets/exame_descritivo.dart
 import 'package:sono/pages/avaliacao/selecao_exame/widgets/selecionar_questionario.dart';
 import 'package:sono/utils/models/exame.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/usuario.dart';
 import '../avaliacao_controller.dart';
 import 'widgets/selecionar_exame.dart';
 
 class SelecaoDeExames extends StatefulWidget {
   final Paciente paciente;
+  final Usuario usuario;
   late final ControllerAvaliacao controllerAvaliacao;
-  SelecaoDeExames({Key? key, required this.paciente}) : super(key: key) {
+  SelecaoDeExames({Key? key, required this.paciente, required this.usuario})
+      : super(key: key) {
     controllerAvaliacao =
-        ControllerAvaliacao(paciente: paciente, idAvaliador: 'IDGENERICO');
+        ControllerAvaliacao(paciente: paciente, avaliador: usuario);
   }
 
   @override

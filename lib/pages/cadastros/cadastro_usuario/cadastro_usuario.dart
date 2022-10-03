@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sono/utils/helpers/resposta_widget.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 import 'cadastro_usuario_controller.dart';
 
 class CadastroDeUsuario extends StatefulWidget {
-  const CadastroDeUsuario({Key? key}) : super(key: key);
+  final Usuario? usuario;
+  const CadastroDeUsuario({Key? key, this.usuario}) : super(key: key);
 
   @override
   State<CadastroDeUsuario> createState() => _CadastroDeUsuarioState();
@@ -16,12 +18,16 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
   final CadastroUsuarioController controller = CadastroUsuarioController();
   @override
   Widget build(BuildContext context) {
+    controller.usuario = widget.usuario;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           controller.senhaGerada != null
-              ? 'Usuário registrado!'
-              : "Registrar usuário",
+              ? 'Profissional registrado!'
+              : widget.usuario != null
+                  ? "Editar profissional"
+                  : "Registrar profissional",
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
@@ -80,7 +86,7 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
                                 await Clipboard.setData(
                                   ClipboardData(
                                     text:
-                                        "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${controller.helper.cpfDoUsuario}\nSenha: ${controller.helper.senhaGerada}",
+                                        "Informações de cadastro na plataforma Projeto Sono\n\nProfissional: ${controller.helper.cpfDoUsuario}\nSenha: ${controller.helper.senhaGerada}",
                                   ),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -108,7 +114,7 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
                                   Row(
                                     children: [
                                       Text(
-                                        'Usuário: ',
+                                        'Profissional: ',
                                         style: TextStyle(
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.bold,
@@ -162,15 +168,24 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
                       for (Pergunta pergunta in controller.perguntas)
                         RespostaWidget(
                           pergunta,
+                          autoPreencher:
+                              widget.usuario?.infoMap[pergunta.codigo],
                         ),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: ElevatedButton(
-                          onPressed: () async =>
-                              await controller.registrarUsuario(context),
-                          child: const Text(
-                            'Registrar usuário',
-                            style: TextStyle(color: Colors.black),
+                          onPressed: () async {
+                            if (widget.usuario != null) {
+                              await controller.editarUsuario(context);
+                            } else {
+                              await controller.registrarUsuario(context);
+                            }
+                          },
+                          child: Text(
+                            widget.usuario != null
+                                ? 'Editar profissional'
+                                : 'Registrar profissional',
+                            style: const TextStyle(color: Colors.black),
                           ),
                           style: ElevatedButton.styleFrom(
                             elevation: 5.0,

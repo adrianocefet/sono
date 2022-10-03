@@ -11,11 +11,14 @@ class Usuario extends Model {
   Instituicao instituicao = Instituicao.huwc;
   PerfilUsuario perfil = PerfilUsuario.mestre;
   String senha = 'SENHAGENERICA';
+  String profissao = 'Médico';
+  Map<String, dynamic> infoMap = {};
 
   Usuario();
 
-  Usuario.porDocumentSnapshot(DocumentSnapshot<Map> document) {
-    Map dados = document.data()!;
+  Usuario.porDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+    Map<String, dynamic> dados = document.data()!;
+    infoMap = dados;
     id = document.id;
     instituicao = _instituicaoPorString(dados['instituicao']);
     perfil = _perfilPorString(dados['perfil']);
@@ -23,6 +26,8 @@ class Usuario extends Model {
     urlFotoDePerfil = dados['url_foto_de_perfil'];
     cpf = dados['cpf'];
     senha = dados['senha'];
+    profissao = dados['profissao'] ?? 'Médico';
+    dataDeCadastro = dados['data_de_cadastro'].toDate();
   }
 
   String get dataDeCadastroFormatada {
