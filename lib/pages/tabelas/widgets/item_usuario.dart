@@ -23,7 +23,7 @@ class ItemUsuario extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
-          leading: _FotoDoUsuarioThumbnail(
+          leading: FotoDoUsuarioThumbnail(
             usuario.urlFotoDePerfil,
           ),
           title: Text(
@@ -117,9 +117,9 @@ class ItemUsuario extends StatelessWidget {
   }
 }
 
-class _FotoDoUsuarioThumbnail extends StatelessWidget {
+class FotoDoUsuarioThumbnail extends StatelessWidget {
   final String? urlImagem;
-  const _FotoDoUsuarioThumbnail(
+  const FotoDoUsuarioThumbnail(
     this.urlImagem, {
     Key? key,
   }) : super(key: key);

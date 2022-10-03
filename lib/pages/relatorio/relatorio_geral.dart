@@ -172,12 +172,12 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                                               status.emString,
                                                               model.instituicao
                                                                   .emString,
-                                                              total: true)))),
+                                                              total: true))).toStringAsFixed(2)),
                                           ],
                                           xValueMapper: (GDPData data, _) =>
                                               data.tipo,
                                           yValueMapper: (GDPData data, _) =>
-                                              data.qntd,
+                                              double.tryParse(data.qntd),
                                           dataLabelSettings:
                                               const DataLabelSettings(
                                                   textStyle: TextStyle(
@@ -275,5 +275,5 @@ class GDPData {
   GDPData(this.tipo, this.qntd);
 
   String tipo;
-  double qntd;
+  String qntd;
 }

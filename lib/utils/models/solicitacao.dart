@@ -96,6 +96,8 @@ class Solicitacao {
         return TipoSolicitacao.emprestimo;
       case 'devolucao':
         return TipoSolicitacao.devolucao;
+      case 'concessao':
+        return TipoSolicitacao.concessao;
     }
     return null;
   }
@@ -121,10 +123,22 @@ extension ExtensaoTipoSolicitacao on TipoSolicitacao {
         return 'Devolução';
       case TipoSolicitacao.emprestimo:
         return 'Empréstimo';
+      case TipoSolicitacao.concessao:
+        return 'Concessão';
+    }
+  }
+  String get emStringSemAcentos {
+    switch (this) {
+      case TipoSolicitacao.devolucao:
+        return 'decolucao';
+      case TipoSolicitacao.emprestimo:
+        return 'emprestimo';
+      case TipoSolicitacao.concessao:
+        return 'concessao';
     }
   }
 }
 
 enum Confirmacao { pendente, confirmado, negado }
 
-enum TipoSolicitacao { emprestimo, devolucao }
+enum TipoSolicitacao { emprestimo, devolucao, concessao }

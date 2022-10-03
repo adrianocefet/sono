@@ -94,6 +94,8 @@ Future negarSolicitacao(BuildContext context,Solicitacao solicitacao)async{
                           try{
                             solicitacao.infoMap['motivo_negacao']=_Textcontroller.value.text;
                             solicitacao.infoMap['confirmacao']='negado';
+                            solicitacao.infoMap['data_de_resposta'] =
+                                              FieldValue.serverTimestamp();
                             FirebaseService.atualizarSolicitacao(solicitacao);
                             Navigator.pop(context);
                             Navigator.pop(context);

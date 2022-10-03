@@ -110,7 +110,7 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                                         backgroundImage:
                                                             NetworkImage(
                                                           paciente.urlFotoDePerfil ??
-                                                              controller.semimagem,
+                                                              controller.semimagemPaciente,
                                                         ),
                                                       ),
                                                     ),

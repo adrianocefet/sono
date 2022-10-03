@@ -1,3 +1,4 @@
+// ignore_for_file: unnecessary_string_escapes
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,12 @@ import '../../../../utils/models/equipamento.dart';
 import 'package:sono/pdf/pdf_api.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import '../../../pdf/criar_pdf.dart';
 import '../../../pdf/tela_pdf.dart';
 import '../../../utils/dialogs/carregando.dart';
 import '../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../utils/services/firebase.dart';
+import '../../tabelas/widgets/item_paciente.dart';
+import '../../tabelas/widgets/item_usuario.dart';
 
 class TelaEquipamento extends StatefulWidget {
   final ControllerPerfilClinicoEquipamento controller;
@@ -42,6 +44,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
   bool videoExiste = true;
   String link = '';
   Paciente? _pacienteResponsavel;
+  Usuario usuarioQueModificouStatus = Usuario();
 
   void _definirPacienteResponsavel(Paciente? novoPacienteResponsavel) =>
       setState(
@@ -61,7 +64,16 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     return true;
   }
 
-  Widget _testarYoutube(){
+  bool _testarYoutubeUrl(String link){
+    String p = '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
+    RegExp regExp = RegExp(p);
+    if(!regExp.hasMatch(link) || link == ''){
+      return false;
+    }
+    return true;
+  }
+
+  Widget _youtubeBuilder(){
     return YoutubePlayerBuilder(
       player: YoutubePlayer(
           controller: controller),
@@ -680,30 +692,12 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                               .bold,
                                                                       color: Constantes
                                                                           .corAzulEscuroSecundario,
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline),
+                                                                      ),
                                                                 ),
                                                               ),
                                                               Row(
                                                                 children: [
-                                                                  ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            25),
-                                                                    child: Image
-                                                                        .network(
-                                                                      pacienteEmprestado
-                                                                              .urlFotoDePerfil ??
-                                                                          widget.controller
-                                                                              .semimagemPaciente,
-                                                                      width: 50,
-                                                                      height:
-                                                                          50,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
+                                                                  FotoDoPacienteThumbnail(pacienteEmprestado.urlFotoDePerfil,statusPaciente: pacienteEmprestado.status,),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -747,8 +741,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                               .bold,
                                                                           color: Constantes
                                                                               .corAzulEscuroSecundario,
-                                                                          decoration:
-                                                                              TextDecoration.underline),
+                                                                          ),
                                                                     ),
                                                                   ),
                                                                   Text(equipamento
@@ -906,55 +899,65 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             .symmetric(
                                                         vertical: 8.0),
                                                     child: Text(
-                                                      "${equipamento.status.emStringMaiuscula} alterado por",
+                                                      "Enviado à ${equipamento.status.emStringMaiuscula} por",
                                                       style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Constantes
                                                               .corAzulEscuroSecundario,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          ),
                                                     ),
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(25),
-                                                        child: Image.network(
-                                                          widget.controller.semimagemPaciente,
-                                                          width: 50,
-                                                          height: 50,
-                                                          fit: BoxFit.fill,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 20,
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.6,
-                                                        child: Text(
+                                                  /* StreamBuilder<DocumentSnapshot<
+                                                          Map<String,
+                                                              dynamic>>>(
+                                                    stream: FirebaseService()
+                                                      .streamInfoUsuarioPorID(
                                                           equipamento
                                                                   .alteradoPor ??
-                                                              'Sem nome',
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
-                                                          style: const TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
+                                                              'N/A'),
+                                                    builder: (context, snapshot) {
+                                                      switch (snapshot
+                                                        .connectionState) {
+                                                      case ConnectionState.none:
+                                                      case ConnectionState
+                                                          .waiting:
+                                                        return const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        );
+                                                      default:
+                                                            _usuarioQueModificouStatus =
+                                                            Usuario
+                                                                .porDocumentSnapshot(
+                                                                    snapshot
+                                                                        .data!);
+                                                      return  */Row(
+                                                        children: [
+                                                          const FotoDoUsuarioThumbnail(null),
+                                                          const SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.6,
+                                                            child: Text(
+                                                              usuarioQueModificouStatus.nomeCompleto,
+                                                              overflow: TextOverflow
+                                                                  .ellipsis,
+                                                              maxLines: 2,
+                                                              style: const TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
                                                   const Divider(),
                                                   Visibility(
                                                     visible:
@@ -979,9 +982,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                         .bold,
                                                                 color: Constantes
                                                                     .corAzulEscuroSecundario,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .underline),
+                                                                ),
                                                           ),
                                                         ),
                                                         Text(equipamento
@@ -994,15 +995,13 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     padding: EdgeInsets.only(
                                                         top: 8.0),
                                                     child: Text(
-                                                      "Data expedição",
+                                                      "Data de expedição",
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Constantes
                                                               .corAzulEscuroSecundario,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          ),
                                                     ),
                                                   ),
                                                   Text(equipamento
@@ -1241,8 +1240,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                         'Clique em editar para adicionar informações',
                                   )),
                               Visibility(
-                                // ignore: unrelated_type_equality_checks
-                                visible: _testarUrl(
+                                visible: _testarYoutubeUrl(
                                         equipamento.videoInstrucional ?? '') ==
                                     true,
                                 child: Padding(
@@ -1273,7 +1271,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        _testarYoutube()
+                                        _youtubeBuilder()
                                       ],
                                     ),
                                   ),

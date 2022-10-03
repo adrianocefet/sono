@@ -59,7 +59,7 @@ Future<bool?> mostrarDialogConfirmacao(context,String mensagem,String submensage
                           onPressed: ()=>Navigator.pop(context,false), 
                           child: const Text('Não',style: TextStyle(color: Colors.black),),
                           style: ElevatedButton.styleFrom(
-                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                          backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(18.0),
@@ -71,7 +71,7 @@ Future<bool?> mostrarDialogConfirmacao(context,String mensagem,String submensage
                           }, 
                           child: const Text('Sim',style: TextStyle(color: Colors.black),),
                           style: ElevatedButton.styleFrom(
-                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                          backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(18.0),

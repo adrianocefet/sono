@@ -102,6 +102,11 @@ class FirebaseService {
     return _db.collection(_strPacientes).doc(idPaciente).snapshots();
   }
 
+    Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoUsuarioPorID(
+      String idUsuario) {
+    return _db.collection(_strUsuarios).doc(idUsuario).snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> streamAvaliacoesPorIdDoPaciente(
       String idPaciente) {
     return _db
@@ -200,8 +205,6 @@ class FirebaseService {
 
   static Future<void> atualizarSolicitacao(
       Solicitacao solicitacaoAtualizada) async {
-    solicitacaoAtualizada.infoMap['data_de_resposta'] =
-        FieldValue.serverTimestamp();
 
     await FirebaseFirestore.instance
         .collection(_stringSolicitacoes)
@@ -350,11 +353,24 @@ class FirebaseService {
         },
       );
     }
+      final FieldValue horaAtual = FieldValue.serverTimestamp();
+      await _db.collection(_stringSolicitacoes).doc().set(
+        {
+          "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
+          "equipamento": equipamento.id,
+          "paciente": paciente.id,
+          "solicitante": usuario.id,
+          "data_da_solicitacao": horaAtual,
+          "data_de_resposta": horaAtual,
+          "confirmacao": "confirmado",
+          "hospital": equipamento.hospital,
+        },
+      );
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.concedido.emString,
         "paciente_responsavel": paciente.id,
-        "data_de_expedicao": FieldValue.serverTimestamp(),
+        "data_de_expedicao": horaAtual,
         "alterado_por": usuario.id,
       },
     );
