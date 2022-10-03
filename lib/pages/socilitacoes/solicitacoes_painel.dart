@@ -337,6 +337,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                   pacienteSolicitado);
                                           solicitacao.infoMap['confirmacao'] =
                                               'confirmado';
+                                          solicitacao.infoMap['data_de_resposta'] =
+                                              FieldValue.serverTimestamp();
                                           FirebaseService.atualizarSolicitacao(
                                               solicitacao);
                                         } catch (erro) {
@@ -378,6 +380,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               .devolver();
                                           solicitacao.infoMap['confirmacao'] =
                                               'confirmado';
+                                          solicitacao.infoMap['data_de_resposta'] =
+                                              FieldValue.serverTimestamp();
                                           FirebaseService.atualizarSolicitacao(
                                               solicitacao);
                                         } catch (erro) {

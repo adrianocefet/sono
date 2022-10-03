@@ -223,6 +223,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
+                                        solicitacao.urlPdf!=null?
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4.0),
@@ -272,7 +273,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                 style: TextStyle(
                                                     color: Colors.black),
                                               )),
-                                        ),
+                                        ):const LinearProgressIndicator(color: Constantes.corAzulEscuroPrincipal,)
                                       ],
                                     );
                                 }

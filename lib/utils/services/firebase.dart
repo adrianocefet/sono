@@ -205,8 +205,6 @@ class FirebaseService {
 
   static Future<void> atualizarSolicitacao(
       Solicitacao solicitacaoAtualizada) async {
-    solicitacaoAtualizada.infoMap['data_de_resposta'] =
-        FieldValue.serverTimestamp();
 
     await FirebaseFirestore.instance
         .collection(_stringSolicitacoes)
@@ -355,23 +353,24 @@ class FirebaseService {
         },
       );
     }
+      final FieldValue horaAtual = FieldValue.serverTimestamp();
       await _db.collection(_stringSolicitacoes).doc().set(
         {
           "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
           "equipamento": equipamento.id,
           "paciente": paciente.id,
           "solicitante": usuario.id,
-          "data_da_solicitacao": FieldValue.serverTimestamp(),
-          "data_de_resposta": FieldValue.serverTimestamp(),
+          "data_da_solicitacao": horaAtual,
+          "data_de_resposta": horaAtual,
           "confirmacao": "confirmado",
           "hospital": equipamento.hospital,
         },
-      ).then((value) => null);
+      );
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.concedido.emString,
         "paciente_responsavel": paciente.id,
-        "data_de_expedicao": FieldValue.serverTimestamp(),
+        "data_de_expedicao": horaAtual,
         "alterado_por": usuario.id,
       },
     );
