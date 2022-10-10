@@ -19,12 +19,12 @@ class _AtributosEquipamentoState extends State<AtributosEquipamento> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Fabricante",
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(221, 171, 171, 171)),
+                      color: Theme.of(context).primaryColor),
                 ),
                 const Divider(),
                 Text(
@@ -39,13 +39,13 @@ class _AtributosEquipamentoState extends State<AtributosEquipamento> {
                         const SizedBox(
                           height: 20,
                         ),
-                      const Text(
+                      Text(
                       "Tamanho",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(221, 171, 171, 171)),
+                          color: Theme.of(context).primaryColor),
                                             ),
                       const Divider(),
                       Text(
@@ -68,13 +68,13 @@ class _AtributosEquipamentoState extends State<AtributosEquipamento> {
                         const SizedBox(
                           height: 20,
                         ),
-                      const Text(
+                      Text(
                       "Número de série",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(221, 171, 171, 171)),
+                          color: Theme.of(context).primaryColor),
                                             ),
                       const Divider(),
                       Text(
@@ -92,12 +92,12 @@ class _AtributosEquipamentoState extends State<AtributosEquipamento> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
+                Text(
                   "Descrição",
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(221, 171, 171, 171)),
+                      color: Theme.of(context).primaryColor),
                 ),
                 const Divider(),
                 Text(

@@ -11,7 +11,8 @@ class ItemEquipamentoEmprestado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
+    ControllerPerfilClinicoEquipamento controller =
+        ControllerPerfilClinicoEquipamento();
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
@@ -43,7 +44,7 @@ class ItemEquipamentoEmprestado extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _FotoDoEquipamento(
+              FotoDoEquipamento(
                 equipamento.urlFotoDePerfil,
               ),
               Column(
@@ -80,7 +81,10 @@ class ItemEquipamentoEmprestado extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TelaEquipamento(id: equipamento.id,controller: controller,),
+                                builder: (context) => TelaEquipamento(
+                                  id: equipamento.id,
+                                  controller: controller,
+                                ),
                               ),
                             );
                           },
@@ -159,9 +163,9 @@ class _AtributoEquipamento extends StatelessWidget {
   }
 }
 
-class _FotoDoEquipamento extends StatelessWidget {
+class FotoDoEquipamento extends StatelessWidget {
   final String? urlImagem;
-  const _FotoDoEquipamento(
+  const FotoDoEquipamento(
     this.urlImagem, {
     Key? key,
   }) : super(key: key);

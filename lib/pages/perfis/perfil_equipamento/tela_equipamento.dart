@@ -681,8 +681,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                             children: [
                                                               const Padding(
                                                                 padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
+                                                                    .only(
+                                                                        top:
                                                                             8.0),
                                                                 child: Text(
                                                                   "Paciente",
@@ -695,6 +695,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                       ),
                                                                 ),
                                                               ),
+                                                              const Divider(),
                                                               Row(
                                                                 children: [
                                                                   FotoDoPacienteThumbnail(pacienteEmprestado.urlFotoDePerfil,statusPaciente: pacienteEmprestado.status,),
@@ -714,7 +715,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                               .ellipsis,
                                                                       maxLines:
                                                                           2,
-                                                                      style: const TextStyle(
+                                                                      style: TextStyle(
+                                                                          color: Theme.of(context).primaryColor,
                                                                           fontSize:
                                                                               15,
                                                                           fontWeight:
@@ -723,7 +725,6 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                   ),
                                                                 ],
                                                               ),
-                                                              const Divider(),
                                                               Column(
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
@@ -733,7 +734,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                     padding: EdgeInsets
                                                                         .only(
                                                                             top:
-                                                                                8.0),
+                                                                                16.0),
                                                                     child: Text(
                                                                       "Data de expedição",
                                                                       style: TextStyle(
@@ -896,8 +897,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                 children: [
                                                   Padding(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 8.0),
+                                                            .only(
+                                                        top: 8.0),
                                                     child: Text(
                                                       "Enviado à ${equipamento.status.emStringMaiuscula} por",
                                                       style: const TextStyle(
@@ -908,6 +909,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           ),
                                                     ),
                                                   ),
+                                                  const Divider(),
                                                   /* StreamBuilder<DocumentSnapshot<
                                                           Map<String,
                                                               dynamic>>>(
@@ -949,7 +951,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                               overflow: TextOverflow
                                                                   .ellipsis,
                                                               maxLines: 2,
-                                                              style: const TextStyle(
+                                                              style: TextStyle(
+                                                                  color: Theme.of(context).primaryColor,
                                                                   fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
@@ -958,7 +961,21 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           ),
                                                         ],
                                                       ),
-                                                  const Divider(),
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 8.0),
+                                                    child: Text(
+                                                      "Data de expedição",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Constantes
+                                                              .corAzulEscuroSecundario,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  Text(equipamento
+                                                      .dataDeExpedicaoEmString),
                                                   Visibility(
                                                     visible:
                                                         equipamento.status ==
@@ -991,21 +1008,6 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                       ],
                                                     ),
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 8.0),
-                                                    child: Text(
-                                                      "Data de expedição",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Constantes
-                                                              .corAzulEscuroSecundario,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  Text(equipamento
-                                                      .dataDeExpedicaoEmString),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.all(
