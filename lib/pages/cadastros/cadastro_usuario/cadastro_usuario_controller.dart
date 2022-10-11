@@ -8,7 +8,7 @@ import 'package:sono/utils/models/usuario.dart';
 class CadastroUsuarioController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final RegistroUsuarioHelper helper = RegistroUsuarioHelper();
-  String? senhaGerada;
+  ValueNotifier<String?> senhaGerada = ValueNotifier<String?>(null);
   List<Pergunta> get perguntas => helper.perguntas;
   Usuario? usuario;
 
@@ -33,7 +33,7 @@ class CadastroUsuarioController {
                 ),
               ),
             );
-            senhaGerada = helper.senhaGerada;
+            senhaGerada.value = helper.senhaGerada;
             break;
           case CondicaoUsuario.jaExistenteNoBancoDeDados:
             Navigator.pop(context);

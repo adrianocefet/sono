@@ -102,7 +102,7 @@ class FirebaseService {
     return _db.collection(_strPacientes).doc(idPaciente).snapshots();
   }
 
-    Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoUsuarioPorID(
+  Stream<DocumentSnapshot<Map<String, dynamic>>> streamInfoUsuarioPorID(
       String idUsuario) {
     return _db.collection(_strUsuarios).doc(idUsuario).snapshots();
   }
@@ -205,7 +205,6 @@ class FirebaseService {
 
   static Future<void> atualizarSolicitacao(
       Solicitacao solicitacaoAtualizada) async {
-
     await FirebaseFirestore.instance
         .collection(_stringSolicitacoes)
         .doc(solicitacaoAtualizada.id)
@@ -353,19 +352,19 @@ class FirebaseService {
         },
       );
     }
-      final FieldValue horaAtual = FieldValue.serverTimestamp();
-      await _db.collection(_stringSolicitacoes).doc().set(
-        {
-          "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
-          "equipamento": equipamento.id,
-          "paciente": paciente.id,
-          "solicitante": usuario.id,
-          "data_da_solicitacao": horaAtual,
-          "data_de_resposta": horaAtual,
-          "confirmacao": "confirmado",
-          "hospital": equipamento.hospital,
-        },
-      );
+    final FieldValue horaAtual = FieldValue.serverTimestamp();
+    await _db.collection(_stringSolicitacoes).doc().set(
+      {
+        "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
+        "equipamento": equipamento.id,
+        "paciente": paciente.id,
+        "solicitante": usuario.id,
+        "data_da_solicitacao": horaAtual,
+        "data_de_resposta": horaAtual,
+        "confirmacao": "confirmado",
+        "hospital": equipamento.hospital,
+      },
+    );
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.concedido.emString,
@@ -494,6 +493,7 @@ class FirebaseService {
     QuerySnapshot query = await _db
         .collection(_strUsuarios)
         .where("cpf", isEqualTo: data["cpf"])
+        .where("senha", isEqualTo: data["senha"])
         .get();
 
     if (query.docs.isNotEmpty) idUsuario = query.docs[0].id;
