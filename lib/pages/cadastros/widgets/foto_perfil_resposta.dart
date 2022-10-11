@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/dialogs/selecionar_origem_foto.dart';
@@ -29,9 +30,14 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
       try {
         ImageSource? origem = await selecionarOrigemFoto(context);
         if (origem != null) {
-          final pickedFile = await _picker.pickImage(
+          var pickedFile = await _picker.pickImage(
             source: origem,
           );
+          if (pickedFile != null) {
+            CroppedFile? croppedFile =
+                await ImageCropper().cropImage(sourcePath: pickedFile.path);
+            pickedFile = XFile(croppedFile!.path);
+          }
           setState(
             () {
               _imageFile = pickedFile ?? _imageFile;
