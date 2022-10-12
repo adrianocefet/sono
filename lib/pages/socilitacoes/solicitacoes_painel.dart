@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
+import 'package:sono/utils/dialogs/justificativa.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
@@ -15,9 +16,9 @@ import 'dialog/negar_solicitacao.dart';
 
 class SolicitacoesPainel extends StatefulWidget {
   final String idSolicitacao;
-  final ControllerPerfilClinicoEquipamento controller=ControllerPerfilClinicoEquipamento();
-  SolicitacoesPainel({Key? key, required this.idSolicitacao})
-      : super(key: key);
+  final ControllerPerfilClinicoEquipamento controller =
+      ControllerPerfilClinicoEquipamento();
+  SolicitacoesPainel({Key? key, required this.idSolicitacao}) : super(key: key);
 
   @override
   State<SolicitacoesPainel> createState() => _SolicitacoesPainelState();
@@ -337,7 +338,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                   pacienteSolicitado);
                                           solicitacao.infoMap['confirmacao'] =
                                               'confirmado';
-                                          solicitacao.infoMap['data_de_resposta'] =
+                                          solicitacao
+                                                  .infoMap['data_de_resposta'] =
                                               FieldValue.serverTimestamp();
                                           FirebaseService.atualizarSolicitacao(
                                               solicitacao);
@@ -374,27 +376,38 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               'Confirmar devolução?',
                                               'O equipamento se tornará disponível') ==
                                           true) {
-                                        mostrarDialogCarregando(context);
-                                        try {
-                                          await equipamentoSolicitado
-                                              .devolver();
-                                          solicitacao.infoMap['confirmacao'] =
-                                              'confirmado';
-                                          solicitacao.infoMap['data_de_resposta'] =
-                                              FieldValue.serverTimestamp();
-                                          FirebaseService.atualizarSolicitacao(
-                                              solicitacao);
-                                        } catch (erro) {
-                                          equipamentoSolicitado.status =
-                                              StatusDoEquipamento.emprestado;
-                                          mostrarMensagemErro(
-                                              context, erro.toString());
+                                        String? integridadeDoEquipamento =
+                                            await mostrarDialogJustificativa(
+                                                context,
+                                                'Integridade do equipamento',
+                                                'Qual o estado do equipamento devolvido?\n(Em perfeito estado, apresentando defeito, faltando peças/acessórios)');
+
+                                        if (integridadeDoEquipamento != null) {
+                                          mostrarDialogCarregando(context);
+                                          try {
+                                            await equipamentoSolicitado
+                                                .devolver();
+                                            solicitacao.infoMap['confirmacao'] =
+                                                'confirmado';
+                                            solicitacao.infoMap[
+                                                    'data_de_resposta'] =
+                                                FieldValue.serverTimestamp();
+                                            FirebaseService
+                                                .atualizarSolicitacao(
+                                                    solicitacao);
+                                          } catch (erro) {
+                                            equipamentoSolicitado.status =
+                                                StatusDoEquipamento.emprestado;
+                                            mostrarMensagemErro(
+                                                context, erro.toString());
+                                          }
+                                          Navigator.pop(context);
+                                          await solicitacao.gerarTermoDevolucao(
+                                              integridadeDoEquipamento,
+                                              pacienteSolicitado,
+                                              equipamentoSolicitado,
+                                              model);
                                         }
-                                        Navigator.pop(context);
-                                        await solicitacao.gerarTermoDevolucao(
-                                            pacienteSolicitado,
-                                            equipamentoSolicitado,
-                                            model);
                                       }
                                     } else {
                                       ScaffoldMessenger.of(context)

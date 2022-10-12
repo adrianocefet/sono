@@ -42,6 +42,7 @@ class PdfInvoiceApi {
 
   static Future<File> gerarTermoDeDevolucao(
       Solicitacao solicitacao,
+      String integridadeDoEquipamento,
       Paciente pacienteEmprestado,
       Equipamento equipamentoEmprestado,
       Usuario usuario) async {
@@ -52,7 +53,8 @@ class PdfInvoiceApi {
               titulo(TipoSolicitacao.devolucao, equipamentoEmprestado),
               solicitante(pacienteEmprestado, equipamentoEmprestado,
                   TipoSolicitacao.devolucao),
-              equipamento(equipamentoEmprestado, solicitacao, usuario),
+              equipamento(equipamentoEmprestado, solicitacao, usuario,
+                  integridadeDoEquipamento: integridadeDoEquipamento),
               paciente(pacienteEmprestado),
             ]));
 
@@ -74,7 +76,8 @@ paciente(Paciente pacienteEmprestado) {
 }
 
 Widget equipamento(Equipamento equipamentoEmprestado, Solicitacao solicitacao,
-    Usuario dispensacao) {
+    Usuario dispensacao,
+    {String? integridadeDoEquipamento}) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text('Descrição do item',
         textAlign: TextAlign.left,
@@ -103,13 +106,18 @@ Widget equipamento(Equipamento equipamentoEmprestado, Solicitacao solicitacao,
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
     SizedBox(height: 0.8 * PdfPageFormat.cm),
-    Text('Fortaleza, CE, ${solicitacao.tipo!=TipoSolicitacao.concessao? PdfInvoiceApi().dataAtualFormatada : solicitacao.dataDeResposta}',
+    Text(
+        'Fortaleza, CE, ${solicitacao.tipo != TipoSolicitacao.concessao ? PdfInvoiceApi().dataAtualFormatada : solicitacao.dataDeResposta}',
         textAlign: TextAlign.left,
         style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
     SizedBox(height: 0.8 * PdfPageFormat.cm),
     if (solicitacao.tipo == TipoSolicitacao.devolucao)
       Text(
-          'Razão para devolução dos itens: ${solicitacao.justificativaDevolucao}',
+          'Razão para devolução do item: ${solicitacao.justificativaDevolucao}',
+          textAlign: TextAlign.left,
+          style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
+    if (solicitacao.tipo == TipoSolicitacao.devolucao)
+      Text('Integridade do item: ${integridadeDoEquipamento}',
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
     if (solicitacao.tipo == TipoSolicitacao.devolucao)

@@ -70,10 +70,10 @@ class Solicitacao {
         .salvarTermoDaSolicitacao(this, paciente, equipamento, pdfArquivo);
   }
 
-  Future<void> gerarTermoDevolucao(
+  Future<void> gerarTermoDevolucao(String integridadeDoEquipamento,
       Paciente paciente, Equipamento equipamento, Usuario usuario) async {
     final pdfArquivo = await PdfInvoiceApi.gerarTermoDeDevolucao(
-        this, paciente, equipamento, usuario);
+        this, integridadeDoEquipamento, paciente, equipamento, usuario);
     await FirebaseService()
         .salvarTermoDaSolicitacao(this, paciente, equipamento, pdfArquivo);
   }
@@ -127,6 +127,7 @@ extension ExtensaoTipoSolicitacao on TipoSolicitacao {
         return 'Concessão';
     }
   }
+
   String get emStringSemAcentos {
     switch (this) {
       case TipoSolicitacao.devolucao:
