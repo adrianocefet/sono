@@ -5,16 +5,19 @@ class DrawerTile extends StatelessWidget {
   final String text;
   final PageController controller;
   final int page;
+  final Future Function()? onTap;
 
-   const DrawerTile(this.icon, this.text, this.controller, this.page,
-      {Key? key});
+  const DrawerTile(this.icon, this.text, this.controller, this.page,
+      {Key? key, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          if (onTap != null) await onTap!();
           Navigator.of(context).pop();
           controller.jumpToPage(page);
         },

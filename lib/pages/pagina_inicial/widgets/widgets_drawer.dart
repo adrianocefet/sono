@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sono/pages/login/login.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/pages/pagina_inicial/widgets/tile_drawer.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -100,6 +102,16 @@ class CustomDrawer extends StatelessWidget {
                     pageController,
                     4,
                   ),
+                ),
+                DrawerTile(
+                  Icons.exit_to_app,
+                  "Sair",
+                  pageController,
+                  5,
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('logado', false);
+                  },
                 ),
               ],
             )

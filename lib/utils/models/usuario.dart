@@ -51,6 +51,7 @@ class Usuario extends Model {
       "Dispensação": PerfilUsuario.dispensacao,
       "Gestão": PerfilUsuario.gestao,
       "Vigilância": PerfilUsuario.vigilancia,
+      "Mestre": PerfilUsuario.mestre,
     };
 
     return perfis[perfilEmString]!;

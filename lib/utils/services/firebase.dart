@@ -116,6 +116,13 @@ class FirebaseService {
         .snapshots();
   }
 
+  Future<Usuario> obterProfissionalPorID(String id) async {
+    DocumentSnapshot<Map<String, dynamic>> snap =
+        await _db.collection(_strUsuarios).doc(id).get();
+
+    return Usuario.porDocumentSnapshot(snap);
+  }
+
   Future<Avaliacao> obterAvaliacaoPorID(
       String idPaciente, String idAvaliacao) async {
     Map<String, dynamic> dadosBasicos = (await _db

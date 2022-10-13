@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/login/login.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -9,14 +10,18 @@ import 'pages/pagina_inicial/screen_home.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  final prefs = await SharedPreferences.getInstance();
+  final bool statusLogin = prefs.getBool('logado') ?? false;
   runApp(
-    const MyApp(),
+    MyApp(
+      usuarioLogado: statusLogin,
+    ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool usuarioLogado;
+  const MyApp({Key? key, required this.usuarioLogado}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();

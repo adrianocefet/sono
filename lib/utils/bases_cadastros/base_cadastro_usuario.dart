@@ -41,6 +41,7 @@ List<Map<String, dynamic>> baseCadastroUsuario = [
       "Dispensação",
       "Gestão",
       "Vigilância",
+      "Mestre",
     ],
     'validador': (value) => value != '' ? null : 'Dado obrigatório.',
   },

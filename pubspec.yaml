@@ -65,6 +65,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.2.48-beta
   share_plus: ^4.4.0
   image_cropper: ^3.0.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

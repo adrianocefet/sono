@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sono/pages/pagina_inicial/screen_home.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -27,15 +29,22 @@ class _Credenciais extends StatelessWidget {
   const _Credenciais({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     TextEditingController _cpfController = TextEditingController();
     TextEditingController _senhaController = TextEditingController();
 
-    return Column(
-      children: [
-        _Credencial.cpf(_cpfController),
-        _Credencial.senha(_senhaController),
-        _BotaoDeLogin([_cpfController.text, _senhaController.text]),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          _Credencial.cpf(_cpfController),
+          _Credencial.senha(_senhaController),
+          _BotaoDeLogin(
+            [_cpfController.text, _senhaController.text],
+            formKey: _formKey,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -73,11 +82,18 @@ class _CredencialState extends State<_Credencial> {
         children: [
           TextFormField(
             obscureText: widget._senha && _obscuro,
-            validator: widget._senha
-                ? (value) => int.tryParse(value!) == null
-                    ? 'Insira apenas números.'
-                    : null
-                : (value) => null,
+            validator: !widget._senha
+                ? (value) {
+                    if (value!.isEmpty) return 'Dado obrigatório.';
+                    if (int.tryParse(value) == null) {
+                      return 'Insira apenas números.';
+                    }
+                    return null;
+                  }
+                : (value) {
+                    if (value!.isEmpty) return 'Dado obrigatório.';
+                    return null;
+                  },
             textAlign: TextAlign.left,
             style: const TextStyle(
               color: Colors.black,
@@ -114,13 +130,21 @@ class _CredencialState extends State<_Credencial> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor, width: 1.2),
+                  color: Theme.of(context).primaryColor,
+                  width: 1.2,
+                ),
               ),
               focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red, width: 1.2),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: 1.2,
+                ),
               ),
               errorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red, width: 1.2),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: 1.2,
+                ),
               ),
               labelStyle: TextStyle(
                 color: Theme.of(context).primaryColor,
@@ -136,14 +160,43 @@ class _CredencialState extends State<_Credencial> {
 
 class _BotaoDeLogin extends StatelessWidget {
   final List<String?> infoLogin;
-  const _BotaoDeLogin(this.infoLogin, {Key? key}) : super(key: key);
+  final GlobalKey<FormState> formKey;
+  const _BotaoDeLogin(this.infoLogin, {Key? key, required this.formKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: ElevatedButton(
-        onPressed: () async {},
+        onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            final prefs = await SharedPreferences.getInstance();
+            final idUsuario =
+                await FirebaseService().procurarUsuarioNoBancoDeDados({
+              'cpf': infoLogin.first,
+              'senha': infoLogin.last,
+            });
+
+            if (idUsuario != null) {
+              await FirebaseService().obterProfissionalPorID(idUsuario);
+              await prefs.setBool('logado', true);
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Credenciais não autorizadas!'),
+                ),
+              );
+            }
+          }
+        },
         child: const Text(
           'Login',
           style: TextStyle(color: Colors.black),
