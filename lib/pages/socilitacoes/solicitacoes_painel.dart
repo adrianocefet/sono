@@ -10,6 +10,7 @@ import '../../constants/constants.dart';
 import '../../utils/dialogs/carregando.dart';
 import '../../utils/dialogs/confirmar.dart';
 import '../../utils/dialogs/error_message.dart';
+import '../../utils/dialogs/integridade_equipamento.dart';
 import '../../utils/models/paciente.dart';
 import '../../utils/models/usuario.dart';
 import 'dialog/negar_solicitacao.dart';
@@ -377,10 +378,10 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               'O equipamento se tornará disponível') ==
                                           true) {
                                         String? integridadeDoEquipamento =
-                                            await mostrarDialogJustificativa(
+                                            await mostrarDialogIntegridade(
                                                 context,
                                                 'Integridade do equipamento',
-                                                'Qual o estado do equipamento devolvido?\n(Em perfeito estado, apresentando defeito, faltando peças/acessórios)');
+                                                'Qual o estado do equipamento devolvido?');
 
                                         if (integridadeDoEquipamento != null) {
                                           mostrarDialogCarregando(context);
