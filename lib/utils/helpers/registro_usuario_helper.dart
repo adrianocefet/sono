@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/bases_cadastros/base_cadastro_usuario.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 import 'dart:math';
 
@@ -10,7 +11,7 @@ class RegistroUsuarioHelper {
       baseCadastroUsuario.map((e) => Pergunta.pelaBase(e)).toList();
   Map<String, dynamic> respostas = {};
   File? _fotoDePerfil;
-  String? idUsuarioPreexistente;
+  Usuario? usuarioPreexistente;
   String? senhaGerada;
   String? cpfDoUsuario;
 
@@ -18,7 +19,7 @@ class RegistroUsuarioHelper {
     for (Pergunta p in perguntas) {
       switch (p.tipo) {
         case TipoPergunta.foto:
-          _fotoDePerfil = p.respostaArquivo;
+          _fotoDePerfil = p.respostaArquivo ;
           break;
         default:
           respostas[p.codigo] = p.respostaExtenso;
@@ -26,8 +27,11 @@ class RegistroUsuarioHelper {
     }
 
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
-    respostas['senha'] = _gerarSenha();
-    senhaGerada = respostas['senha'];
+    if (usuarioPreexistente == null) {
+      respostas['senha'] = _gerarSenha();
+      senhaGerada = respostas['senha'];
+    }
+
     cpfDoUsuario = respostas['cpf'];
 
     return respostas;
@@ -44,12 +48,13 @@ class RegistroUsuarioHelper {
     return status;
   }
 
-  Future<void> editarUsuario(String idUsuario) async {
+  Future<void> editarUsuario(Usuario usuario) async {
+    usuarioPreexistente = usuario;
     print(_gerarMapaDeRespostas());
     respostas.remove('data_de_cadastro');
     await FirebaseService().atualizarDadosDoUsuario(
       respostas,
-      idUsuario,
+      usuario.id,
       fotoDePerfil: _fotoDePerfil,
     );
   }
@@ -79,12 +84,9 @@ class RegistroUsuarioHelper {
   Future<CondicaoUsuario> _checarSeUsuarioJaExiste() async {
     bool jaPossuiPaciente = false;
 
-    idUsuarioPreexistente =
-        await FirebaseService().procurarUsuarioNoBancoDeDados(respostas);
-
-    if (idUsuarioPreexistente != null) {
-      jaPossuiPaciente = true;
-    }
+    jaPossuiPaciente =
+        await FirebaseService().procurarUsuarioNoBancoDeDados(respostas) !=
+            null;
 
     if (jaPossuiPaciente) {
       return CondicaoUsuario.jaExistenteNoBancoDeDados;
@@ -96,11 +98,6 @@ class RegistroUsuarioHelper {
   Future<String> _adicionarNovoUsuarioAoBancoDeDados() async {
     return await FirebaseService()
         .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
-  }
-
-  Future<String> _editarInformacoesDoUsuario(String idUsuario) async {
-    return await FirebaseService().atualizarDadosDoUsuario(respostas, idUsuario,
-        fotoDePerfil: _fotoDePerfil);
   }
 }
 

@@ -13,13 +13,32 @@ class Usuario extends Model {
   String senha = 'SENHAGENERICA';
   String profissao = 'Médico';
   Map<String, dynamic> infoMap = {};
+  Map<String, String?> get infoJsonMap {
+    Map<String, dynamic> dados = infoMap;
+    infoMap['data_de_cadastro'] = dataDeCadastro.toString();
+    return Map<String, String?>.from(dados);
+  }
 
   Usuario();
 
+  Usuario.porMapJson(Map<String, String?> dados) {
+    id = dados['id']!;
+    instituicao = _instituicaoPorString(dados['instituicao']!);
+    perfil = _perfilPorString(dados['perfil']!);
+    nomeCompleto = dados['nome_completo']!;
+    urlFotoDePerfil = dados['url_foto_de_perfil'];
+    cpf = dados['cpf']!;
+    senha = dados['senha']!;
+    profissao = dados['profissao']!;
+    dataDeCadastro = DateTime.parse(dados['data_de_cadastro']!);
+    infoMap = dados;
+  }
+
   Usuario.porDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     Map<String, dynamic> dados = document.data()!;
+    dados['id'] = document.id;
     infoMap = dados;
-    id = document.id;
+    id = dados['id'];
     instituicao = _instituicaoPorString(dados['instituicao']);
     perfil = _perfilPorString(dados['perfil']);
     nomeCompleto = dados['nome_completo'];

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/pagina_inicial/screen_home.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class Login extends StatelessWidget {
@@ -40,7 +45,7 @@ class _Credenciais extends StatelessWidget {
           _Credencial.cpf(_cpfController),
           _Credencial.senha(_senhaController),
           _BotaoDeLogin(
-            [_cpfController.text, _senhaController.text],
+            [_cpfController, _senhaController],
             formKey: _formKey,
           ),
         ],
@@ -81,6 +86,7 @@ class _CredencialState extends State<_Credencial> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+            controller: widget.controller,
             obscureText: widget._senha && _obscuro,
             validator: !widget._senha
                 ? (value) {
@@ -159,60 +165,80 @@ class _CredencialState extends State<_Credencial> {
 }
 
 class _BotaoDeLogin extends StatelessWidget {
-  final List<String?> infoLogin;
+  final List<TextEditingController> infoLogin;
   final GlobalKey<FormState> formKey;
   const _BotaoDeLogin(this.infoLogin, {Key? key, required this.formKey})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: ElevatedButton(
-        onPressed: () async {
-          if (formKey.currentState!.validate()) {
-            final prefs = await SharedPreferences.getInstance();
-            final idUsuario =
-                await FirebaseService().procurarUsuarioNoBancoDeDados({
-              'cpf': infoLogin.first,
-              'senha': infoLogin.last,
-            });
+    return ScopedModelDescendant<Usuario>(
+      builder: (context, child, usuario) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+                mostrarDialogCarregando(context);
+                if (!formKey.currentState!.validate()) {
+                  throw Exception('Credenciais inválidas.');
+                }
 
-            if (idUsuario != null) {
-              await FirebaseService().obterProfissionalPorID(idUsuario);
-              await prefs.setBool('logado', true);
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                final String? idUsuario =
+                    await FirebaseService().procurarUsuarioNoBancoDeDados({
+                  'cpf': infoLogin.first.text,
+                  'senha': infoLogin.last.text,
+                });
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Credenciais não autorizadas!'),
-                ),
-              );
-            }
-          }
-        },
-        child: const Text(
-          'Login',
-          style: TextStyle(color: Colors.black),
-        ),
-        style: ElevatedButton.styleFrom(
-          elevation: 5.0,
-          backgroundColor: Theme.of(context).focusColor,
-          fixedSize: Size(
-            MediaQuery.of(context).size.width,
-            50,
+                if (idUsuario != null) {
+                  usuario =
+                      await FirebaseService().obterProfissionalPorID(idUsuario);
+                  await prefs.setString(
+                    'usuario',
+                    json.encode(usuario.infoJsonMap),
+                  );
+
+                  print(usuario.infoMap);
+
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                  );
+                }
+              } catch (e) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text('Erro ao logar! $e'),
+                  ),
+                );
+              }
+            },
+            child: const Text(
+              'Login',
+              style: TextStyle(color: Colors.black),
+            ),
+            style: ElevatedButton.styleFrom(
+              elevation: 5.0,
+              backgroundColor: Theme.of(context).focusColor,
+              fixedSize: Size(
+                MediaQuery.of(context).size.width,
+                50,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

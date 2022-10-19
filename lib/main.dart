@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/login/login.dart';
@@ -11,7 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final prefs = await SharedPreferences.getInstance();
-  final bool statusLogin = prefs.getBool('logado') ?? false;
+  final Usuario? statusLogin = prefs.getString('usuario') == null
+      ? null
+      : Usuario.porMapJson(
+          Map<String, String?>.from(jsonDecode(prefs.getString('usuario')!)));
   runApp(
     MyApp(
       usuarioLogado: statusLogin,
@@ -20,7 +25,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  final bool usuarioLogado;
+  final Usuario? usuarioLogado;
   const MyApp({Key? key, required this.usuarioLogado}) : super(key: key);
 
   @override
@@ -31,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScopedModel<Usuario>(
-      model: Usuario(),
+      model: widget.usuarioLogado ?? Usuario(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Projeto Sono - UFC',
@@ -42,7 +47,8 @@ class _MyAppState extends State<MyApp> {
           highlightColor: const Color.fromRGBO(97, 253, 125, 1.0),
         ),
         home: SplashScreenView(
-          navigateRoute: HomeScreen(),
+          navigateRoute:
+              widget.usuarioLogado == null ? const Login() : HomeScreen(),
           duration: 5000,
           imageSize: 500,
           imageSrc: "assets/imagens/splash.jpeg",

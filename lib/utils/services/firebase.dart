@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sono/pages/avaliacao/avaliacao_controller.dart';
 import 'package:sono/utils/models/avaliacao.dart';
 import 'package:sono/utils/models/exame.dart';
@@ -585,7 +587,7 @@ class FirebaseService {
 
   Future<String> atualizarDadosDoUsuario(
       Map<String, dynamic> data, String idUsuario,
-      {File? fotoDePerfil}) async {
+      {File? fotoDePerfil, bool fotoDePerfilJaCadastrada = false}) async {
     String? urlImagem;
 
     if (fotoDePerfil != null) {
@@ -645,6 +647,17 @@ class FirebaseService {
     try {
       await ref.delete();
     } on Exception {}
+  }
+
+  Future<File?> obterImagemDoFirebaseStorage(String urlImagem) async {
+    Uint8List? rawPath = await _storage.refFromURL(urlImagem).getData();
+    final Directory tempDir = await getTemporaryDirectory();
+    final String fullPath = "${tempDir.path}/tempFotoDePerfil";
+
+    final File imagem = File(fullPath);
+    if (await imagem.exists()) await imagem.delete();
+    if (rawPath != null) await imagem.writeAsBytes(rawPath);
+    return rawPath != null ? imagem : null;
   }
 
   Future<String> adicionarImagemDoEquipamentoAoFirebaseStorage({

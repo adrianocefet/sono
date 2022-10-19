@@ -25,10 +25,11 @@ class _HomeTabState extends State<HomeTab> {
     ];
 
     return Scaffold(
-      drawer: CustomDrawer(widget.pageController),
+      drawer: FuncionalidadesDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
       body: ScopedModelDescendant<Usuario>(
         builder: (context, child, model) {
+          print(model.nomeCompleto);
           return Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [

@@ -29,7 +29,7 @@ class _ControleEstoqueState extends State<ControleEstoque> {
         backgroundColor: Constantes.corAzulEscuroPrincipal,
         centerTitle: true,
       ),
-      drawer: CustomDrawer(widget.pageController),
+      drawer: FuncionalidadesDrawer(widget.pageController),
       drawerEnableOpenDragGesture: true,
       body: ScopedModelDescendant<Usuario>(builder: (context, child, model) {
         return Container(

@@ -6,10 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/utils/dialogs/selecionar_origem_foto.dart';
 import 'package:sono/utils/models/pergunta.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 class RegistrarFotoPerfil extends StatefulWidget {
   final Pergunta pergunta;
-  final dynamic autoPreencher;
+  final String? autoPreencher;
   const RegistrarFotoPerfil(
       {required this.pergunta, this.autoPreencher, Key? key})
       : super(key: key);
@@ -22,6 +23,7 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
   final ImagePicker _picker = ImagePicker();
 
   XFile? _imageFile;
+  File? _imagemAutoPreenchida;
   bool autoPreencherDeletado = false;
 
   @override
@@ -48,7 +50,6 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
         setState(
           () {},
         );
-        rethrow;
       }
     }
 
@@ -117,54 +118,41 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                               width: 2,
                             ),
                           ),
-                          child: FutureBuilder<dynamic>(
+                          child: FutureBuilder(
                             future: () async {
-                              dynamic foto;
-                              if (widget.autoPreencher.runtimeType == File) {
-                                foto = await (widget.autoPreencher as File?)
-                                    ?.readAsBytes();
-                              } else {
-                                foto = autoPreencherDeletado
-                                    ? null
-                                    : widget.autoPreencher;
+                              if (!autoPreencherDeletado &&
+                                  widget.autoPreencher != null) {
+                                _imagemAutoPreenchida = await FirebaseService()
+                                    .obterImagemDoFirebaseStorage(
+                                        widget.autoPreencher!);
+                                return true;
                               }
-
-                              return foto;
                             }(),
                             builder: (context, snapshot) {
-                              return Center(
-                                child: _imageFile == null &&
-                                        snapshot.data == null
-                                    ? FaIcon(
-                                        FontAwesomeIcons.userAlt,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.23,
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                      )
-                                    : SizedBox(
-                                        height: Constantes.alturaFotoDePerfil,
-                                        width: Constantes.larguraFotoDePerfil,
-                                        child: _imageFile == null
-                                            ? snapshot.data!.runtimeType ==
-                                                    String
-                                                ? Image.network(
-                                                    snapshot.data,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Image.memory(
-                                                    snapshot.data,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                            : Image.file(
-                                                File(
-                                                  _imageFile!.path,
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                      ),
-                              );
+                              if (snapshot.hasData) {
+                                return SizedBox(
+                                  height: Constantes.alturaFotoDePerfil,
+                                  width: Constantes.larguraFotoDePerfil,
+                                  child: _imageFile == null
+                                      ? Image.memory(_imagemAutoPreenchida!
+                                          .readAsBytesSync())
+                                      : Image.file(
+                                          File(
+                                            _imageFile!.path,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                );
+                              } else {
+                                return Center(
+                                  child: FaIcon(
+                                    FontAwesomeIcons.userAlt,
+                                    size: MediaQuery.of(context).size.width *
+                                        0.23,
+                                    color: Theme.of(context).primaryColorLight,
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),

@@ -39,7 +39,7 @@ class ListaDePacientes extends StatelessWidget {
               ),
             ],
           ),
-          drawer: CustomDrawer(pageController),
+          drawer: FuncionalidadesDrawer(pageController),
           drawerEnableOpenDragGesture: true,
           body: Container(
             decoration: const BoxDecoration(

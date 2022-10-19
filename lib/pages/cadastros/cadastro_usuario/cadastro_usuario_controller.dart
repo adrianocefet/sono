@@ -61,7 +61,7 @@ class CadastroUsuarioController {
       _salvarRespostasDoFormulario();
       try {
         mostrarDialogCarregando(context);
-        await helper.editarUsuario(usuario!.id);
+        await helper.editarUsuario(usuario!);
 
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(

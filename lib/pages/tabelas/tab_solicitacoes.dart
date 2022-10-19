@@ -40,7 +40,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
               case ConnectionState.none:
               case ConnectionState.waiting:
                 return Scaffold(
-                  drawer: CustomDrawer(widget.pageController),
+                  drawer: FuncionalidadesDrawer(widget.pageController),
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).primaryColor,
                     title: const Text('Solicitações'),
@@ -57,7 +57,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                   ..sort(((Solicitacao a, Solicitacao b) =>
                       a.dataDaSolicitacao.compareTo(b.dataDaSolicitacao)));
                 return Scaffold(
-                  drawer: CustomDrawer(widget.pageController),
+                  drawer: FuncionalidadesDrawer(widget.pageController),
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).primaryColor,
                     title: const Text('Solicitações'),
@@ -80,7 +80,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                             ])),
                         child: filtradas.isNotEmpty
                             ? SingleChildScrollView(
-                                padding: EdgeInsets.only(bottom: 140),
+                                padding: const EdgeInsets.only(bottom: 140),
                                 child: Column(
                                   children: filtradas.reversed
                                       .map((Solicitacao solicitacao) {
