@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/login/login.dart';
@@ -33,6 +32,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Map<PerfilUsuario, dynamic> paginasIniciais = {
+    PerfilUsuario.mestre: PaginalInicial(),
+    PerfilUsuario.clinico: PaginalInicial(),
+    PerfilUsuario.dispensacao: PaginalInicial(),
+  };
   @override
   Widget build(BuildContext context) {
     return ScopedModel<Usuario>(
@@ -48,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         ),
         home: SplashScreenView(
           navigateRoute:
-              widget.usuarioLogado == null ? const Login() : HomeScreen(),
+              widget.usuarioLogado == null ? const Login() : PaginalInicial(),
           duration: 5000,
           imageSize: 500,
           imageSrc: "assets/imagens/splash.jpeg",

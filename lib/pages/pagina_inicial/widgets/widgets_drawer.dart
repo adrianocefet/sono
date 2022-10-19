@@ -8,7 +8,8 @@ import 'package:scoped_model/scoped_model.dart';
 class FuncionalidadesDrawer extends StatelessWidget {
   final PageController pageController;
 
-  const FuncionalidadesDrawer(this.pageController, {Key? key}) : super(key: key);
+  const FuncionalidadesDrawer(this.pageController, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,29 +62,47 @@ class FuncionalidadesDrawer extends StatelessWidget {
                     ),
                   ),
                   const Divider(),
-                  DrawerTile(
-                    Icons.home,
-                    "Início",
-                    pageController,
-                    0,
+                  Visibility(
+                    visible: [PerfilUsuario.mestre].contains(usuario.perfil),
+                    child: DrawerTile(
+                      Icons.home,
+                      "Início",
+                      pageController,
+                      0,
+                    ),
                   ),
-                  DrawerTile(
-                    Icons.people,
-                    "Pacientes",
-                    pageController,
-                    1,
+                  Visibility(
+                    visible: [
+                      PerfilUsuario.mestre,
+                      PerfilUsuario.clinico,
+                      PerfilUsuario.vigilancia
+                    ].contains(usuario.perfil),
+                    child: DrawerTile(
+                      Icons.people,
+                      "Pacientes",
+                      pageController,
+                      1,
+                    ),
                   ),
-                  DrawerTile(
-                    Icons.masks_outlined,
-                    "Controle de estoque",
-                    pageController,
-                    2,
+                  Visibility(
+                    visible: [PerfilUsuario.mestre, PerfilUsuario.dispensacao]
+                        .contains(usuario.perfil),
+                    child: DrawerTile(
+                      Icons.masks_outlined,
+                      "Controle de estoque",
+                      pageController,
+                      2,
+                    ),
                   ),
-                  DrawerTile(
-                    Icons.assignment_rounded,
-                    "Solicitações",
-                    pageController,
-                    3,
+                  Visibility(
+                    visible: [PerfilUsuario.mestre, PerfilUsuario.dispensacao]
+                        .contains(usuario.perfil),
+                    child: DrawerTile(
+                      Icons.assignment_rounded,
+                      "Solicitações",
+                      pageController,
+                      3,
+                    ),
                   ),
                   Visibility(
                     visible: usuario.perfil == PerfilUsuario.mestre,

@@ -4,6 +4,7 @@ import 'package:sono/pages/avaliacao/relatorio/widgets/exames_realizados.dart';
 import 'package:sono/pages/historico_avaliacoes/avaliacao_detalhe/avaliacao_detalhe.dart';
 import 'package:sono/utils/models/avaliacao.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class ItemAvaliacaoAntiga extends StatefulWidget {
@@ -22,6 +23,7 @@ class ItemAvaliacaoAntiga extends StatefulWidget {
 class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
   bool expandido = false;
   Avaliacao? avaliacaoComExames;
+  Usuario? avaliador;
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +99,24 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                                 .obterAvaliacaoPorID(
                                     widget.avaliacaoSemExames.id);
                             if (avaliacaoPreexistente != null) {
+                              if (avaliacaoPreexistente.idAvaliador !=
+                                  'IDGENERICO') {
+                                avaliador = await FirebaseService()
+                                    .obterProfissionalPorID(
+                                        avaliacaoPreexistente.idAvaliador);
+                              }
                               return avaliacaoPreexistente;
                             }
 
-                            return await FirebaseService().obterAvaliacaoPorID(
-                                widget.paciente.id,
-                                widget.avaliacaoSemExames.id);
+                            Avaliacao avaliacao = await FirebaseService()
+                                .obterAvaliacaoPorID(widget.paciente.id,
+                                    widget.avaliacaoSemExames.id);
+                            if (avaliacao.idAvaliador != 'IDGENERICO') {
+                              avaliador = await FirebaseService()
+                                  .obterProfissionalPorID(
+                                      avaliacao.idAvaliador);
+                            }
+                            return avaliacao;
                           }(),
                           builder: (context, snap) {
                             if (snap.hasData) {
@@ -140,7 +154,8 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                                         width: 15,
                                       ),
                                       Text(
-                                        'Dra. Camila',
+                                        avaliador?.nomeCompleto ??
+                                            'Dra. Camila',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,

@@ -207,9 +207,18 @@ class FotoDoEquipamento extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             child: Image(
               image: NetworkImage(urlImagem!, scale: 1),
-              loadingBuilder: ((context, child, loadingProgress) {
-                return child;
-              }),
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
               fit: BoxFit.fill,
             ),
           );

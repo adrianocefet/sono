@@ -123,9 +123,11 @@ class _CredencialState extends State<_Credencial> {
                               Icons.visibility,
                               color: Theme.of(context).primaryColorLight,
                             ),
-                      onPressed: () => setState(() {
-                        _obscuro = !_obscuro;
-                      }),
+                      onPressed: () => setState(
+                        () {
+                          _obscuro = !_obscuro;
+                        },
+                      ),
                     )
                   : null,
               enabledBorder: OutlineInputBorder(
@@ -207,7 +209,7 @@ class _BotaoDeLogin extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
+                      builder: (context) => PaginalInicial(),
                     ),
                   );
                 }

@@ -124,9 +124,11 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                                   widget.autoPreencher != null) {
                                 _imagemAutoPreenchida = await FirebaseService()
                                     .obterImagemDoFirebaseStorage(
-                                        widget.autoPreencher!);
+                                  widget.autoPreencher!,
+                                );
                                 return true;
                               }
+                              if (_imageFile != null) return true;
                             }(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -134,8 +136,10 @@ class _RegistrarFotoPerfilState extends State<RegistrarFotoPerfil> {
                                   height: Constantes.alturaFotoDePerfil,
                                   width: Constantes.larguraFotoDePerfil,
                                   child: _imageFile == null
-                                      ? Image.memory(_imagemAutoPreenchida!
-                                          .readAsBytesSync())
+                                      ? Image.memory(
+                                          _imagemAutoPreenchida!
+                                              .readAsBytesSync(),
+                                        )
                                       : Image.file(
                                           File(
                                             _imageFile!.path,

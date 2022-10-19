@@ -650,14 +650,19 @@ class FirebaseService {
   }
 
   Future<File?> obterImagemDoFirebaseStorage(String urlImagem) async {
-    Uint8List? rawPath = await _storage.refFromURL(urlImagem).getData();
-    final Directory tempDir = await getTemporaryDirectory();
-    final String fullPath = "${tempDir.path}/tempFotoDePerfil";
+    try {
+      Uint8List? rawPath = await _storage.refFromURL(urlImagem).getData();
 
-    final File imagem = File(fullPath);
-    if (await imagem.exists()) await imagem.delete();
-    if (rawPath != null) await imagem.writeAsBytes(rawPath);
-    return rawPath != null ? imagem : null;
+      final Directory tempDir = await getTemporaryDirectory();
+      final String fullPath = "${tempDir.path}/tempFotoDePerfil";
+
+      final File imagem = File(fullPath);
+      if (await imagem.exists()) await imagem.delete();
+      if (rawPath != null) await imagem.writeAsBytes(rawPath);
+      return rawPath != null ? imagem : null;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<String> adicionarImagemDoEquipamentoAoFirebaseStorage({

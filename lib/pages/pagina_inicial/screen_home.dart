@@ -6,10 +6,10 @@ import 'package:sono/pages/tabelas/lista_de_pacientes.dart';
 import 'package:sono/pages/tabelas/tab_solicitacoes.dart';
 import '../controle_estoque/controle_estoque.dart';
 
-class HomeScreen extends StatelessWidget {
+class PaginalInicial extends StatelessWidget {
   final _pageController = PageController();
 
-  HomeScreen({Key? key}) : super(key: key);
+  PaginalInicial({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
