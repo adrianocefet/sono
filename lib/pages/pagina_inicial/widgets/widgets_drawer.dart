@@ -49,8 +49,9 @@ class FuncionalidadesDrawer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "\n${usuario.nomeCompleto}\n\n"
-                              "${usuario.instituicao.emString}",
+                              "\n${usuario.nomeCompleto}\n"
+                              "${usuario.instituicao.emString}\n\n"
+                              "Perfil ${usuario.perfil.emString}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
@@ -121,6 +122,7 @@ class FuncionalidadesDrawer extends StatelessWidget {
                     onTap: () async {
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.remove('usuario');
+                      usuario = Usuario();
                     },
                   ),
                 ],

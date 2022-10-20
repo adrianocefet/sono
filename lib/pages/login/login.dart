@@ -9,7 +9,9 @@ import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/utils/services/firebase.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,22 +37,30 @@ class _Credenciais extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    TextEditingController _cpfController = TextEditingController();
-    TextEditingController _senhaController = TextEditingController();
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          _Credencial.cpf(_cpfController),
-          _Credencial.senha(_senhaController),
-          _BotaoDeLogin(
-            [_cpfController, _senhaController],
-            formKey: _formKey,
-          ),
-        ],
-      ),
-    );
+    return FutureBuilder<SharedPreferences>(
+        future: SharedPreferences.getInstance(),
+        builder: (context, prefs) {
+          List<String>? dadosSalvos = prefs.data?.getStringList('lembrarDeMim');
+          TextEditingController _cpfController =
+              TextEditingController(text: dadosSalvos?.first);
+          TextEditingController _senhaController =
+              TextEditingController(text: dadosSalvos?.last);
+          return Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _Credencial.cpf(_cpfController),
+                _Credencial.senha(_senhaController),
+                _BotaoDeLogin(
+                  [_cpfController, _senhaController],
+                  formKey: _formKey,
+                  lembrarDeMim: dadosSalvos != null,
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -107,7 +117,7 @@ class _CredencialState extends State<_Credencial> {
               fontWeight: FontWeight.bold,
             ),
             maxLines: 1,
-            keyboardType: TextInputType.number,
+            keyboardType: widget._senha ? null : TextInputType.number,
             decoration: InputDecoration(
               labelText: widget._senha ? 'Senha' : 'CPF',
               filled: true,
@@ -166,23 +176,45 @@ class _CredencialState extends State<_Credencial> {
   }
 }
 
-class _BotaoDeLogin extends StatelessWidget {
+class _BotaoDeLogin extends StatefulWidget {
+  bool lembrarDeMim;
   final List<TextEditingController> infoLogin;
   final GlobalKey<FormState> formKey;
-  const _BotaoDeLogin(this.infoLogin, {Key? key, required this.formKey})
+  _BotaoDeLogin(this.infoLogin,
+      {Key? key, required this.formKey, required this.lembrarDeMim})
       : super(key: key);
 
   @override
+  State<_BotaoDeLogin> createState() => _BotaoDeLoginState();
+}
+
+class _BotaoDeLoginState extends State<_BotaoDeLogin> {
+  @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<Usuario>(
-      builder: (context, child, usuario) {
-        return Padding(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Row(
+            children: [
+              Checkbox(
+                activeColor: Theme.of(context).focusColor,
+                value: widget.lembrarDeMim,
+                onChanged: (value) => setState(() {
+                  widget.lembrarDeMim = value!;
+                }),
+              ),
+              const Text('Lembrar de mim'),
+            ],
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.all(20),
           child: ElevatedButton(
             onPressed: () async {
               try {
                 mostrarDialogCarregando(context);
-                if (!formKey.currentState!.validate()) {
+                if (!widget.formKey.currentState!.validate()) {
                   throw Exception('Credenciais inválidas.');
                 }
 
@@ -190,17 +222,25 @@ class _BotaoDeLogin extends StatelessWidget {
                     await SharedPreferences.getInstance();
                 final String? idUsuario =
                     await FirebaseService().procurarUsuarioNoBancoDeDados({
-                  'cpf': infoLogin.first.text,
-                  'senha': infoLogin.last.text,
+                  'cpf': widget.infoLogin.first.text,
+                  'senha': widget.infoLogin.last.text,
                 });
 
                 if (idUsuario != null) {
-                  usuario =
+                  Usuario usuario =
                       await FirebaseService().obterProfissionalPorID(idUsuario);
                   await prefs.setString(
                     'usuario',
                     json.encode(usuario.infoJsonMap),
                   );
+                  if (widget.lembrarDeMim) {
+                    await prefs.setStringList(
+                      'lembrarDeMim',
+                      [usuario.cpf, usuario.senha],
+                    );
+                  } else {
+                    await prefs.remove('lembrarDeMim');
+                  }
 
                   print(usuario.infoMap);
 
@@ -209,7 +249,10 @@ class _BotaoDeLogin extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PaginalInicial(),
+                      builder: (context) => ScopedModel<Usuario>(
+                        model: usuario,
+                        child: const PaginalInicial(),
+                      ),
                     ),
                   );
                 }
@@ -239,8 +282,8 @@ class _BotaoDeLogin extends StatelessWidget {
               ),
             ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
