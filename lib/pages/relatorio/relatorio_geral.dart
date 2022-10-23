@@ -18,8 +18,10 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) => StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('equipamentos').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('equipamentos')
+              .where('hospital', isEqualTo: model.instituicao.emString)
+              .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -126,10 +128,11 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                   ),
                                   SfCircularChart(
                                     palette: [
-                                    Constantes.corVerdeClaroPrincipal,
-                                    const Color.fromARGB(255, 255, 191, 87),
-                                    const Color.fromARGB(255, 255, 112, 122),
-                                      StatusDoEquipamento.desinfeccao.cor],
+                                      Constantes.corVerdeClaroPrincipal,
+                                      const Color.fromARGB(255, 255, 191, 87),
+                                      const Color.fromARGB(255, 255, 112, 122),
+                                      StatusDoEquipamento.desinfeccao.cor
+                                    ],
                                     backgroundColor: Colors.white,
                                     legend: Legend(
                                         position: LegendPosition.bottom,
@@ -148,13 +151,25 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                               GDPData(
                                                   status.emStringMaiuscula,
                                                   (calcularQuantidade(
-                                                          documentos,
-                                                          tipo,
-                                                          status.emString,
-                                                          model.instituicao
-                                                              .emString) *
-                                                      100 /
-                                                      (calcularQuantidade(
+                                                              documentos,
+                                                              tipo,
+                                                              status.emString,
+                                                              model.instituicao
+                                                                  .emString) *
+                                                          100 /
+                                                          (calcularQuantidade(
+                                                                      documentos,
+                                                                      tipo,
+                                                                      status
+                                                                          .emString,
+                                                                      model
+                                                                          .instituicao
+                                                                          .emString,
+                                                                      total:
+                                                                          true) ==
+                                                                  0
+                                                              ? 1
+                                                              : calcularQuantidade(
                                                                   documentos,
                                                                   tipo,
                                                                   status
@@ -162,17 +177,8 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
                                                                   model
                                                                       .instituicao
                                                                       .emString,
-                                                                  total:
-                                                                      true) ==
-                                                              0
-                                                          ? 1
-                                                          : calcularQuantidade(
-                                                              documentos,
-                                                              tipo,
-                                                              status.emString,
-                                                              model.instituicao
-                                                                  .emString,
-                                                              total: true))).toStringAsFixed(2)),
+                                                                  total: true)))
+                                                      .toStringAsFixed(2)),
                                           ],
                                           xValueMapper: (GDPData data, _) =>
                                               data.tipo,

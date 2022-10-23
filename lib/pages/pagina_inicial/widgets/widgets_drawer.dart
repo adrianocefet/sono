@@ -76,7 +76,8 @@ class FuncionalidadesDrawer extends StatelessWidget {
                     visible: [
                       PerfilUsuario.mestre,
                       PerfilUsuario.clinico,
-                      PerfilUsuario.vigilancia
+                      PerfilUsuario.vigilancia,
+                      PerfilUsuario.gestao
                     ].contains(usuario.perfil),
                     child: DrawerTile(
                       Icons.people,
@@ -86,8 +87,12 @@ class FuncionalidadesDrawer extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: [PerfilUsuario.mestre, PerfilUsuario.dispensacao]
-                        .contains(usuario.perfil),
+                    visible: [
+                      PerfilUsuario.mestre,
+                      PerfilUsuario.dispensacao,
+                      PerfilUsuario.gestao,
+                      PerfilUsuario.vigilancia
+                    ].contains(usuario.perfil),
                     child: DrawerTile(
                       Icons.masks_outlined,
                       "Controle de estoque",

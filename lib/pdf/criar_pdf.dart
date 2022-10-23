@@ -121,7 +121,7 @@ Widget equipamento(Equipamento equipamentoEmprestado, Solicitacao solicitacao,
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
     if (solicitacao.tipo == TipoSolicitacao.devolucao)
-      Text('Recebido por: ${dispensacao.id}',
+      Text('Recebido por: ${dispensacao.nomeCompleto}',
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
   ]);

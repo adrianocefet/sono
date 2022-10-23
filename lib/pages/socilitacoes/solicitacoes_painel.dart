@@ -13,6 +13,7 @@ import '../../utils/dialogs/error_message.dart';
 import '../../utils/dialogs/integridade_equipamento.dart';
 import '../../utils/models/paciente.dart';
 import '../../utils/models/usuario.dart';
+import '../tabelas/widgets/item_usuario.dart';
 import 'dialog/negar_solicitacao.dart';
 
 class SolicitacoesPainel extends StatefulWidget {
@@ -145,10 +146,52 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         color: Constantes.corAzulEscuroPrincipal,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 8),
-                        child: Text(solicitacao.idSolicitante),
-                      ),
+                          padding: const EdgeInsets.only(
+                              top: 8.0, bottom: 8, left: 15),
+                          child: StreamBuilder<
+                                  DocumentSnapshot<Map<String, dynamic>>>(
+                              stream: FirebaseService().streamInfoUsuarioPorID(
+                                  solicitacao.idSolicitante),
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                  case ConnectionState.waiting:
+                                    return const Center(
+                                      child: LinearProgressIndicator(),
+                                    );
+                                  default:
+                                    Usuario profissionalSolicitante =
+                                        Usuario.porDocumentSnapshot(
+                                            snapshot.data!);
+                                    return Row(
+                                      children: [
+                                        FotoDoUsuarioThumbnail(
+                                            profissionalSolicitante
+                                                .urlFotoDePerfil),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          child: Text(
+                                            profissionalSolicitante
+                                                .nomeCompleto,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                }
+                              })),
                       const Padding(
                         padding: EdgeInsets.only(top: 8.0, left: 15),
                         child: Text(
@@ -234,7 +277,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               null
                                           ? Text(equipamentoSolicitado.nome)
                                           : Text(
-                                              "${equipamentoSolicitado.nome}\n(Tamanho:${equipamentoSolicitado.tamanho})"),
+                                              "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
                                       subtitle: Text(
                                           equipamentoSolicitado.tipo.emString),
                                       leading: Image.network(
