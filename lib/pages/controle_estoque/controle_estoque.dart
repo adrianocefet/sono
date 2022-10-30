@@ -48,52 +48,57 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      direction: Axis.horizontal,
-                      spacing: 50,
-                      runSpacing: 20,
-                      children: [
-                        for (StatusDoEquipamento status
-                            in StatusDoEquipamento.values)
-                          OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20, horizontal: 20),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  backgroundColor: Colors.white),
-                              onPressed: () {
-                                controller.status = status;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TiposEquipamentos(
-                                              controller: controller,
-                                            )));
-                              },
-                              child: SizedBox(
-                                height: 50,
-                                width: 90,
-                                child: Column(
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  children: [
-                                    Icon(
-                                      status.icone,
-                                      size: 34,
-                                      color:
-                                          const Color.fromRGBO(97, 253, 125, 1),
-                                    ),
-                                    Text(
-                                      status.emStringPlural,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                      ],
+                    Visibility(
+                      visible: model.perfil != PerfilUsuario.gestao,
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        direction: Axis.horizontal,
+                        spacing: 50,
+                        runSpacing: 20,
+                        children: [
+                          for (StatusDoEquipamento status
+                              in StatusDoEquipamento.values)
+                            OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    backgroundColor: Colors.white),
+                                onPressed: () {
+                                  controller.status = status;
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TiposEquipamentos(
+                                                controller: controller,
+                                              )));
+                                },
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 90,
+                                  child: Column(
+                                    // ignore: prefer_const_literals_to_create_immutables
+                                    children: [
+                                      Icon(
+                                        status.icone,
+                                        size: 34,
+                                        color: const Color.fromRGBO(
+                                            97, 253, 125, 1),
+                                      ),
+                                      Text(
+                                        status.emStringPlural,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(

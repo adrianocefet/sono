@@ -127,7 +127,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                         Visibility(
                           visible: [
                             PerfilUsuario.mestre,
-                            PerfilUsuario.dispensacao
+                            PerfilUsuario.dispensacao,
+                            PerfilUsuario.vigilancia
                           ].contains(model.perfil),
                           child: IconButton(
                               onPressed: () {
@@ -184,7 +185,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       Visibility(
                                         visible: [
                                           PerfilUsuario.mestre,
-                                          PerfilUsuario.dispensacao
+                                          PerfilUsuario.dispensacao,
+                                          PerfilUsuario.vigilancia
                                         ].contains(model.perfil),
                                         child: Visibility(
                                           visible: equipamento.status ==
@@ -778,7 +780,9 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                   PerfilUsuario
                                                                       .mestre,
                                                                   PerfilUsuario
-                                                                      .dispensacao
+                                                                      .dispensacao,
+                                                                  PerfilUsuario
+                                                                      .vigilancia
                                                                 ].contains(model
                                                                     .perfil),
                                                                 child: Padding(
@@ -847,7 +851,9 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                   PerfilUsuario
                                                                       .mestre,
                                                                   PerfilUsuario
-                                                                      .dispensacao
+                                                                      .dispensacao,
+                                                                  PerfilUsuario
+                                                                      .vigilancia
                                                                 ].contains(model
                                                                     .perfil),
                                                                 child:
@@ -1328,7 +1334,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                 visible: [
                                   PerfilUsuario.mestre,
                                   PerfilUsuario.dispensacao,
-                                  PerfilUsuario.clinico
+                                  PerfilUsuario.clinico,
+                                  PerfilUsuario.vigilancia
                                 ].contains(model.perfil),
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),

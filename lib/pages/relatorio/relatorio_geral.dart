@@ -26,8 +26,10 @@ class _RelatorioGeralState extends State<RelatorioGeral> {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
               case ConnectionState.waiting:
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor,
+                  ),
                 );
               default:
                 List<QueryDocumentSnapshot<Object?>> documentos =

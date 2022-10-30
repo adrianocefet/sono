@@ -25,7 +25,7 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
-      return StreamBuilder<QuerySnapshot>(
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
               .where('hospital', isEqualTo: model.instituicao.emString)
@@ -43,11 +43,26 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                     title: Text(widget.controller.tipo.emString),
                     centerTitle: true,
                   ),
-                  body: const Center(
-                    child: CircularProgressIndicator(),
+                  body: Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          Color.fromARGB(255, 194, 195, 255),
+                          Colors.white
+                        ],
+                            stops: [
+                          0,
+                          0.4
+                        ])),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 );
               default:
+                List<DocumentSnapshot> docsEquipamentos = snapshot.data!.docs;
                 return Scaffold(
                     appBar: AppBar(
                       title: Text(
@@ -81,22 +96,22 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                             0.4
                           ])),
                       child: snapshot.data!.docs.isNotEmpty
-                          ? ListView(
-                              children: snapshot.data!.docs.map(
-                                (DocumentSnapshot document) {
-                                  Map<String, dynamic> data =
-                                      document.data()! as Map<String, dynamic>;
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: ItemEquipamento(
-                                        controller: widget.controller,
-                                        id: document.id,
-                                        pacientePreEscolhido:
-                                            widget.pacientePreEscolhido),
-                                  );
-                                },
-                              ).toList(),
+                          ? ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> data =
+                                    docsEquipamentos[index].data()!
+                                        as Map<String, dynamic>;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ItemEquipamento(
+                                      controller: widget.controller,
+                                      id: docsEquipamentos[index].id,
+                                      pacientePreEscolhido:
+                                          widget.pacientePreEscolhido),
+                                );
+                              },
                             )
                           : Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -131,7 +146,8 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                         ? Visibility(
                             visible: [
                               PerfilUsuario.mestre,
-                              PerfilUsuario.dispensacao
+                              PerfilUsuario.dispensacao,
+                              PerfilUsuario.vigilancia
                             ].contains(model.perfil),
                             child: FloatingActionButton(
                               onPressed: () {
