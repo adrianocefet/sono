@@ -20,7 +20,8 @@ class ControleEstoque extends StatefulWidget {
 }
 
 class _ControleEstoqueState extends State<ControleEstoque> {
-  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
+  ControllerPerfilClinicoEquipamento controller =
+      ControllerPerfilClinicoEquipamento();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,8 +68,9 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            TiposEquipamentos(controller: controller,)));
+                                        builder: (context) => TiposEquipamentos(
+                                              controller: controller,
+                                            )));
                               },
                               child: SizedBox(
                                 height: 50,

@@ -94,20 +94,22 @@ class ListaDePacientes extends StatelessWidget {
               },
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).focusColor,
-            child: const Icon(
-              Icons.add,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CadastroPaciente(),
+          floatingActionButton: usuario.perfil == PerfilUsuario.vigilancia
+              ? null
+              : FloatingActionButton(
+                  backgroundColor: Theme.of(context).focusColor,
+                  child: const Icon(
+                    Icons.add,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CadastroPaciente(),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         );
       },
     );
