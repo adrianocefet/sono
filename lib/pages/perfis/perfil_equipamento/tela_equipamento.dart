@@ -30,7 +30,11 @@ class TelaEquipamento extends StatefulWidget {
   final ControllerPerfilClinicoEquipamento controller;
   final String id;
   final Paciente? pacientePreEscolhido;
-  const TelaEquipamento({required this.controller,required this.id, this.pacientePreEscolhido, Key? key})
+  const TelaEquipamento(
+      {required this.controller,
+      required this.id,
+      this.pacientePreEscolhido,
+      Key? key})
       : super(key: key);
 
   @override
@@ -44,7 +48,6 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
   bool videoExiste = true;
   String link = '';
   Paciente? _pacienteResponsavel;
-  Usuario usuarioQueModificouStatus = Usuario();
 
   void _definirPacienteResponsavel(Paciente? novoPacienteResponsavel) =>
       setState(
@@ -64,33 +67,26 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     return true;
   }
 
-  bool _testarYoutubeUrl(String link){
-    String p = '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
+  bool _testarYoutubeUrl(String link) {
+    String p =
+        '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
     RegExp regExp = RegExp(p);
-    if(!regExp.hasMatch(link) || link == ''){
+    if (!regExp.hasMatch(link) || link == '') {
       return false;
     }
     return true;
   }
 
-  Widget _youtubeBuilder(){
+  Widget _youtubeBuilder() {
     return YoutubePlayerBuilder(
-      player: YoutubePlayer(
-          controller: controller),
-      builder: (context, player) =>
-          Padding(
-            padding:
-                const EdgeInsets.only(
-                    bottom: 30.0),
-            child: SizedBox(
-              height:
-                  MediaQuery.of(context)
-                          .size
-                          .height *
-                      0.5,
-              child: player,
-            ),
-          ));
+        player: YoutubePlayer(controller: controller),
+        builder: (context, player) => Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: player,
+              ),
+            ));
   }
 
   @override
@@ -128,18 +124,25 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                       centerTitle: true,
                       backgroundColor: Constantes.corAzulEscuroPrincipal,
                       actions: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          AdicionarEquipamento(
-                                            equipamentoJaCadastrado:
-                                                equipamento,
-                                          )));
-                            },
-                            icon: Icon(Icons.edit))
+                        Visibility(
+                          visible: [
+                            PerfilUsuario.mestre,
+                            PerfilUsuario.dispensacao,
+                            PerfilUsuario.vigilancia
+                          ].contains(model.perfil),
+                          child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AdicionarEquipamento(
+                                              equipamentoJaCadastrado:
+                                                  equipamento,
+                                            )));
+                              },
+                              icon: Icon(Icons.edit)),
+                        )
                       ],
                     ),
                     body: Container(
@@ -180,425 +183,439 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       AtributosEquipamento(
                                           equipamento: equipamento),
                                       Visibility(
-                                        visible: equipamento.status ==
-                                            StatusDoEquipamento.disponivel,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              const Color
-                                                                      .fromRGBO(
-                                                                  97,
-                                                                  253,
-                                                                  125,
-                                                                  1),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        18.0),
-                                                          )),
-                                                  onPressed: () async {
-                                                    if (widget
-                                                            .pacientePreEscolhido ==
-                                                        null) {
-                                                      Paciente?
-                                                          pacienteEscolhido =
-                                                          await mostrarDialogEscolherPaciente(
-                                                              context);
-                                                      if (pacienteEscolhido !=
+                                        visible: [
+                                          PerfilUsuario.mestre,
+                                          PerfilUsuario.dispensacao,
+                                          PerfilUsuario.vigilancia
+                                        ].contains(model.perfil),
+                                        child: Visibility(
+                                          visible: equipamento.status ==
+                                              StatusDoEquipamento.disponivel,
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10.0),
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                const Color
+                                                                        .fromRGBO(
+                                                                    97,
+                                                                    253,
+                                                                    125,
+                                                                    1),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          18.0),
+                                                            )),
+                                                    onPressed: () async {
+                                                      if (widget
+                                                              .pacientePreEscolhido ==
                                                           null) {
-                                                        try {
-                                                          await equipamento
-                                                              .solicitarEmprestimo(
-                                                                  pacienteEscolhido,
-                                                                  model);
-                                                        } catch (erro) {
-                                                          equipamento.status =
-                                                              StatusDoEquipamento
-                                                                  .disponivel;
-                                                          mostrarMensagemErro(
-                                                              context,
-                                                              erro.toString());
+                                                        Paciente?
+                                                            pacienteEscolhido =
+                                                            await mostrarDialogEscolherPaciente(
+                                                                context);
+                                                        if (pacienteEscolhido !=
+                                                            null) {
+                                                          try {
+                                                            await equipamento
+                                                                .solicitarEmprestimo(
+                                                                    pacienteEscolhido,
+                                                                    model);
+                                                          } catch (erro) {
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .disponivel;
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                erro.toString());
+                                                          }
+                                                          _definirPacienteResponsavel(
+                                                              pacienteEscolhido);
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor:
+                                                                  Constantes
+                                                                      .corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                  "Solicitação enviada à dispensação!"),
+                                                            ),
+                                                          );
                                                         }
-                                                        _definirPacienteResponsavel(
-                                                            pacienteEscolhido);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            backgroundColor:
-                                                                Constantes
-                                                                    .corAzulEscuroPrincipal,
-                                                            content: Text(
-                                                                "Solicitação enviada à dispensação!"),
-                                                          ),
-                                                        );
-                                                      }
-                                                    } else {
-                                                      if (await mostrarDialogConfirmacao(
-                                                              context,
-                                                              'Deseja mesmo alterar o status?',
-                                                              'Ele será emprestado ao paciente selecionado') ==
-                                                          true) {
-                                                        try {
-                                                          await equipamento
-                                                              .solicitarEmprestimo(
-                                                                  widget
-                                                                      .pacientePreEscolhido!,
-                                                                  model);
-                                                        } catch (erro) {
-                                                          equipamento.status =
-                                                              StatusDoEquipamento
-                                                                  .disponivel;
-                                                          mostrarMensagemErro(
-                                                              context,
-                                                              erro.toString());
+                                                      } else {
+                                                        if (await mostrarDialogConfirmacao(
+                                                                context,
+                                                                'Deseja mesmo alterar o status?',
+                                                                'Ele será emprestado ao paciente selecionado') ==
+                                                            true) {
+                                                          try {
+                                                            await equipamento
+                                                                .solicitarEmprestimo(
+                                                                    widget
+                                                                        .pacientePreEscolhido!,
+                                                                    model);
+                                                          } catch (erro) {
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .disponivel;
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                erro.toString());
+                                                          }
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor:
+                                                                  Constantes
+                                                                      .corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                  "Solicitação enviada à dispensação!"),
+                                                            ),
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
                                                         }
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            backgroundColor:
-                                                                Constantes
-                                                                    .corAzulEscuroPrincipal,
-                                                            content: Text(
-                                                                "Solicitação enviada à dispensação!"),
-                                                          ),
-                                                        );
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
                                                       }
-                                                    }
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: const [
-                                                      Text(
-                                                        "Solicitar empréstimo ",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Icon(
-                                                        Icons.people,
-                                                        color: Colors.black,
-                                                        size: 16,
-                                                      )
-                                                    ],
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: const [
+                                                        Text(
+                                                          "Solicitar empréstimo ",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        Icon(
+                                                          Icons.people,
+                                                          color: Colors.black,
+                                                          size: 16,
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Visibility(
-                                              visible:
-                                                  widget.pacientePreEscolhido ==
-                                                      null,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 10.0),
-                                                    child: SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.4,
-                                                      child: ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                                backgroundColor:
-                                                                    const Color
-                                                                            .fromRGBO(
-                                                                        97,
-                                                                        253,
-                                                                        125,
-                                                                        1),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              18.0),
-                                                                )),
-                                                        onPressed: () async {
-                                                          if (await mostrarDialogConfirmacao(
-                                                                  context,
-                                                                  'Deseja mesmo alterar o status?',
-                                                                  'Ele será alterado para Manutenção') ==
-                                                              true) {
-                                                            mostrarDialogCarregando(
-                                                                context);
-                                                            try {
-                                                              await equipamento
-                                                                  .manutencao(
-                                                                      model);
-                                                              equipamento
-                                                                      .status =
-                                                                  StatusDoEquipamento
-                                                                      .manutencao;
-                                                            } catch (e) {
-                                                              mostrarMensagemErro(
-                                                                  context,
-                                                                  e.toString());
+                                              Visibility(
+                                                visible: widget
+                                                        .pacientePreEscolhido ==
+                                                    null,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 10.0),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        child: ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                              .fromRGBO(
+                                                                          97,
+                                                                          253,
+                                                                          125,
+                                                                          1),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18.0),
+                                                                  )),
+                                                          onPressed: () async {
+                                                            if (await mostrarDialogConfirmacao(
+                                                                    context,
+                                                                    'Deseja mesmo alterar o status?',
+                                                                    'Ele será alterado para Manutenção') ==
+                                                                true) {
+                                                              mostrarDialogCarregando(
+                                                                  context);
+                                                              try {
+                                                                await equipamento
+                                                                    .manutencao(
+                                                                        model);
+                                                                equipamento
+                                                                        .status =
+                                                                    StatusDoEquipamento
+                                                                        .manutencao;
+                                                              } catch (e) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    e.toString());
+                                                              }
+                                                              Navigator.pop(
+                                                                  context);
                                                             }
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: const [
-                                                            Text(
-                                                              "Reparar ",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .build_rounded,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 16,
-                                                            )
-                                                          ],
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: const [
+                                                              Text(
+                                                                "Reparar ",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .build_rounded,
+                                                                color: Colors
+                                                                    .black,
+                                                                size: 16,
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 10.0),
-                                                    child: SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.4,
-                                                      child: ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                                backgroundColor:
-                                                                    const Color
-                                                                            .fromRGBO(
-                                                                        97,
-                                                                        253,
-                                                                        125,
-                                                                        1),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              18.0),
-                                                                )),
-                                                        onPressed: () async {
-                                                          if (await mostrarDialogConfirmacao(
-                                                                  context,
-                                                                  'Deseja mesmo alterar o status?',
-                                                                  'Ele será alterado para Desinfecção') ==
-                                                              true) {
-                                                            mostrarDialogCarregando(
-                                                                context);
-                                                            try {
-                                                              await equipamento
-                                                                  .desinfectar(
-                                                                      model);
-                                                              equipamento
-                                                                      .status =
-                                                                  StatusDoEquipamento
-                                                                      .desinfeccao;
-                                                            } catch (e) {
-                                                              mostrarMensagemErro(
-                                                                  context,
-                                                                  e.toString());
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 10.0),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        child: ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                              .fromRGBO(
+                                                                          97,
+                                                                          253,
+                                                                          125,
+                                                                          1),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18.0),
+                                                                  )),
+                                                          onPressed: () async {
+                                                            if (await mostrarDialogConfirmacao(
+                                                                    context,
+                                                                    'Deseja mesmo alterar o status?',
+                                                                    'Ele será alterado para Desinfecção') ==
+                                                                true) {
+                                                              mostrarDialogCarregando(
+                                                                  context);
+                                                              try {
+                                                                await equipamento
+                                                                    .desinfectar(
+                                                                        model);
+                                                                equipamento
+                                                                        .status =
+                                                                    StatusDoEquipamento
+                                                                        .desinfeccao;
+                                                              } catch (e) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    e.toString());
+                                                              }
+                                                              Navigator.pop(
+                                                                  context);
                                                             }
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: const [
-                                                            Text(
-                                                              "Desinfectar ",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .clean_hands_sharp,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 16,
-                                                            )
-                                                          ],
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: const [
+                                                              Text(
+                                                                "Desinfectar ",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .clean_hands_sharp,
+                                                                color: Colors
+                                                                    .black,
+                                                                size: 16,
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0),
-                                              child: SizedBox(
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              const Color
-                                                                      .fromRGBO(
-                                                                  97,
-                                                                  253,
-                                                                  125,
-                                                                  1),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        18.0),
-                                                          )),
-                                                  onPressed: () async {
-                                                    if (widget
-                                                            .pacientePreEscolhido ==
-                                                        null) {
-                                                      Paciente?
-                                                          pacienteEscolhido =
-                                                          await mostrarDialogEscolherPaciente(
-                                                              context);
-                                                      if (pacienteEscolhido !=
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10.0),
+                                                child: SizedBox(
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                const Color
+                                                                        .fromRGBO(
+                                                                    97,
+                                                                    253,
+                                                                    125,
+                                                                    1),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          18.0),
+                                                            )),
+                                                    onPressed: () async {
+                                                      if (widget
+                                                              .pacientePreEscolhido ==
                                                           null) {
-                                                        try {
-                                                          await equipamento
-                                                              .conceder(
-                                                                  pacienteEscolhido,
-                                                                  model);
-                                                        } catch (erro) {
-                                                          equipamento.status =
-                                                              StatusDoEquipamento
-                                                                  .disponivel;
-                                                          mostrarMensagemErro(
-                                                              context,
-                                                              erro.toString());
+                                                        Paciente?
+                                                            pacienteEscolhido =
+                                                            await mostrarDialogEscolherPaciente(
+                                                                context);
+                                                        if (pacienteEscolhido !=
+                                                            null) {
+                                                          try {
+                                                            await equipamento
+                                                                .conceder(
+                                                                    pacienteEscolhido,
+                                                                    model);
+                                                          } catch (erro) {
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .disponivel;
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                erro.toString());
+                                                          }
+                                                          _definirPacienteResponsavel(
+                                                              pacienteEscolhido);
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor:
+                                                                  Constantes
+                                                                      .corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                  "Equipamento concedido ao paciente selecionado!"),
+                                                            ),
+                                                          );
                                                         }
-                                                        _definirPacienteResponsavel(
-                                                            pacienteEscolhido);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            backgroundColor:
-                                                                Constantes
-                                                                    .corAzulEscuroPrincipal,
-                                                            content: Text(
-                                                                "Equipamento concedido ao paciente selecionado!"),
-                                                          ),
-                                                        );
-                                                      }
-                                                    } else {
-                                                      if (await mostrarDialogConfirmacao(
-                                                              context,
-                                                              'Deseja conceder?',
-                                                              'Ele será concedido ao paciente selecionado') ==
-                                                          true) {
-                                                        try {
-                                                          await equipamento
-                                                              .conceder(
-                                                                  widget
-                                                                      .pacientePreEscolhido!,
-                                                                  model);
-                                                        } catch (erro) {
-                                                          equipamento.status =
-                                                              StatusDoEquipamento
-                                                                  .disponivel;
-                                                          mostrarMensagemErro(
-                                                              context,
-                                                              erro.toString());
+                                                      } else {
+                                                        if (await mostrarDialogConfirmacao(
+                                                                context,
+                                                                'Deseja conceder?',
+                                                                'Ele será concedido ao paciente selecionado') ==
+                                                            true) {
+                                                          try {
+                                                            await equipamento
+                                                                .conceder(
+                                                                    widget
+                                                                        .pacientePreEscolhido!,
+                                                                    model);
+                                                          } catch (erro) {
+                                                            equipamento.status =
+                                                                StatusDoEquipamento
+                                                                    .disponivel;
+                                                            mostrarMensagemErro(
+                                                                context,
+                                                                erro.toString());
+                                                          }
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              backgroundColor:
+                                                                  Constantes
+                                                                      .corAzulEscuroPrincipal,
+                                                              content: Text(
+                                                                  "Equipamento concedido"),
+                                                            ),
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
                                                         }
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            backgroundColor:
-                                                                Constantes
-                                                                    .corAzulEscuroPrincipal,
-                                                            content: Text(
-                                                                "Equipamento concedido"),
-                                                          ),
-                                                        );
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
                                                       }
-                                                    }
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        widget.pacientePreEscolhido ==
-                                                                null
-                                                            ? MainAxisAlignment
-                                                                .spaceAround
-                                                            : MainAxisAlignment
-                                                                .center,
-                                                    mainAxisSize:
-                                                        widget.pacientePreEscolhido ==
-                                                                null
-                                                            ? MainAxisSize.min
-                                                            : MainAxisSize.max,
-                                                    children: const [
-                                                      Text(
-                                                        "Conceder ",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Icon(
-                                                        Icons.assignment_ind,
-                                                        color: Colors.black,
-                                                        size: 16,
-                                                      )
-                                                    ],
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          widget.pacientePreEscolhido ==
+                                                                  null
+                                                              ? MainAxisAlignment
+                                                                  .spaceAround
+                                                              : MainAxisAlignment
+                                                                  .center,
+                                                      mainAxisSize:
+                                                          widget.pacientePreEscolhido ==
+                                                                  null
+                                                              ? MainAxisSize.min
+                                                              : MainAxisSize
+                                                                  .max,
+                                                      children: const [
+                                                        Text(
+                                                          "Conceder ",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        Icon(
+                                                          Icons.assignment_ind,
+                                                          color: Colors.black,
+                                                          size: 16,
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -686,19 +703,26 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                             8.0),
                                                                 child: Text(
                                                                   "Paciente",
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Constantes
-                                                                          .corAzulEscuroSecundario,
-                                                                      ),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Constantes
+                                                                        .corAzulEscuroSecundario,
+                                                                  ),
                                                                 ),
                                                               ),
                                                               const Divider(),
                                                               Row(
                                                                 children: [
-                                                                  FotoDoPacienteThumbnail(pacienteEmprestado.urlFotoDePerfil,statusPaciente: pacienteEmprestado.status,),
+                                                                  FotoDoPacienteThumbnail(
+                                                                    pacienteEmprestado
+                                                                        .urlFotoDePerfil,
+                                                                    statusPaciente:
+                                                                        pacienteEmprestado
+                                                                            .status,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -716,7 +740,8 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                       maxLines:
                                                                           2,
                                                                       style: TextStyle(
-                                                                          color: Theme.of(context).primaryColor,
+                                                                          color: Theme.of(context)
+                                                                              .primaryColor,
                                                                           fontSize:
                                                                               15,
                                                                           fontWeight:
@@ -737,94 +762,29 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                                 16.0),
                                                                     child: Text(
                                                                       "Data de expedição",
-                                                                      style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color: Constantes
-                                                                              .corAzulEscuroSecundario,
-                                                                          ),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        color: Constantes
+                                                                            .corAzulEscuroSecundario,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                   Text(equipamento
                                                                       .dataDeExpedicaoEmString),
                                                                 ],
                                                               ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            8.0),
-                                                                child: SizedBox(
-                                                                  width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                                  child:
-                                                                      ElevatedButton(
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                            backgroundColor: const Color.fromRGBO(
-                                                                                97,
-                                                                                253,
-                                                                                125,
-                                                                                1),
-                                                                            shape:
-                                                                                RoundedRectangleBorder(
-                                                                              borderRadius: BorderRadius.circular(18.0),
-                                                                            )),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      if (await mostrarDialogConfirmacao(
-                                                                              context,
-                                                                              'Deseja mesmo disponibilizar?',
-                                                                              'Ele será alterado para Disponível') ==
-                                                                          true) {
-                                                                        String? justificativa = await mostrarDialogJustificativa(
-                                                                            context,
-                                                                            'Retornar ao hospital?',
-                                                                            'Qual o motivo da devolução?');
-                                                                        if (justificativa !=
-                                                                            null) {
-                                                                          try {
-                                                                            await equipamento.solicitarDevolucao(
-                                                                                pacienteEmprestado,
-                                                                                model,
-                                                                                justificativa);
-                                                                          } catch (e) {
-                                                                            mostrarMensagemErro(context,
-                                                                                e.toString());
-                                                                          }
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(
-                                                                            const SnackBar(
-                                                                              backgroundColor: Constantes.corAzulEscuroPrincipal,
-                                                                              content: Text("Solicitação enviada à dispensação!"),
-                                                                            ),
-                                                                          );
-                                                                        }
-                                                                      }
-                                                                    },
-                                                                    child: Text(
-                                                                      equipamento.status ==
-                                                                              StatusDoEquipamento.emprestado
-                                                                          ? "Solicitar devolução"
-                                                                          : "Voltar ao hospital",
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      style: const TextStyle(
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
                                                               Visibility(
-                                                                visible: equipamento
-                                                                        .status ==
-                                                                    StatusDoEquipamento
-                                                                        .emprestado,
+                                                                visible: [
+                                                                  PerfilUsuario
+                                                                      .mestre,
+                                                                  PerfilUsuario
+                                                                      .dispensacao,
+                                                                  PerfilUsuario
+                                                                      .vigilancia
+                                                                ].contains(model
+                                                                    .perfil),
                                                                 child: Padding(
                                                                   padding: const EdgeInsets
                                                                           .only(
@@ -847,30 +807,101 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                                           () async {
                                                                         if (await mostrarDialogConfirmacao(
                                                                                 context,
-                                                                                'Deseja mesmo conceder?',
-                                                                                'Ele será concedido ao paciente atualmente emprestado') ==
+                                                                                'Deseja mesmo disponibilizar?',
+                                                                                'Ele será alterado para Disponível') ==
                                                                             true) {
-                                                                          mostrarDialogCarregando(
-                                                                              context);
-                                                                          try {
-                                                                            await equipamento.conceder(pacienteEmprestado,
-                                                                                model);
-                                                                          } catch (erro) {
-                                                                            mostrarMensagemErro(context,
-                                                                                erro.toString());
+                                                                          String? justificativa = await mostrarDialogJustificativa(
+                                                                              context,
+                                                                              'Retornar ao hospital?',
+                                                                              'Qual o motivo da devolução?');
+                                                                          if (justificativa !=
+                                                                              null) {
+                                                                            try {
+                                                                              await equipamento.solicitarDevolucao(pacienteEmprestado, model, justificativa);
+                                                                            } catch (e) {
+                                                                              mostrarMensagemErro(context, e.toString());
+                                                                            }
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                              const SnackBar(
+                                                                                backgroundColor: Constantes.corAzulEscuroPrincipal,
+                                                                                content: Text("Solicitação enviada à dispensação!"),
+                                                                              ),
+                                                                            );
                                                                           }
-                                                                          Navigator.pop(
-                                                                              context);
                                                                         }
                                                                       },
                                                                       child:
-                                                                          const Text(
-                                                                        "Conceder ao paciente",
+                                                                          Text(
+                                                                        equipamento.status ==
+                                                                                StatusDoEquipamento.emprestado
+                                                                            ? "Solicitar devolução"
+                                                                            : "Voltar ao hospital",
                                                                         textAlign:
                                                                             TextAlign.center,
-                                                                        style: TextStyle(
+                                                                        style: const TextStyle(
                                                                             color:
                                                                                 Colors.black),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Visibility(
+                                                                visible: [
+                                                                  PerfilUsuario
+                                                                      .mestre,
+                                                                  PerfilUsuario
+                                                                      .dispensacao,
+                                                                  PerfilUsuario
+                                                                      .vigilancia
+                                                                ].contains(model
+                                                                    .perfil),
+                                                                child:
+                                                                    Visibility(
+                                                                  visible: equipamento
+                                                                          .status ==
+                                                                      StatusDoEquipamento
+                                                                          .emprestado,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                      child:
+                                                                          ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                                                                            shape: RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(18.0),
+                                                                            )),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          if (await mostrarDialogConfirmacao(context, 'Deseja mesmo conceder?', 'Ele será concedido ao paciente atualmente emprestado') ==
+                                                                              true) {
+                                                                            mostrarDialogCarregando(context);
+                                                                            try {
+                                                                              await equipamento.conceder(pacienteEmprestado, model);
+                                                                            } catch (erro) {
+                                                                              mostrarMensagemErro(context, erro.toString());
+                                                                            }
+                                                                            Navigator.pop(context);
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            const Text(
+                                                                          "Conceder ao paciente",
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style:
+                                                                              TextStyle(color: Colors.black),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -896,82 +927,92 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: const EdgeInsets
-                                                            .only(
-                                                        top: 8.0),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0),
                                                     child: Text(
                                                       "Enviado à ${equipamento.status.emStringMaiuscula} por",
                                                       style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Constantes
-                                                              .corAzulEscuroSecundario,
-                                                          ),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Constantes
+                                                            .corAzulEscuroSecundario,
+                                                      ),
                                                     ),
                                                   ),
                                                   const Divider(),
-                                                  /* StreamBuilder<DocumentSnapshot<
-                                                          Map<String,
-                                                              dynamic>>>(
-                                                    stream: FirebaseService()
-                                                      .streamInfoUsuarioPorID(
-                                                          equipamento
-                                                                  .alteradoPor ??
-                                                              'N/A'),
-                                                    builder: (context, snapshot) {
-                                                      switch (snapshot
-                                                        .connectionState) {
-                                                      case ConnectionState.none:
-                                                      case ConnectionState
-                                                          .waiting:
-                                                        return const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        );
-                                                      default:
-                                                            _usuarioQueModificouStatus =
+                                                  StreamBuilder<
+                                                          DocumentSnapshot<
+                                                              Map<String,
+                                                                  dynamic>>>(
+                                                      stream: FirebaseService()
+                                                          .streamInfoUsuarioPorID(
+                                                              equipamento
+                                                                      .alteradoPor ??
+                                                                  'N/A'),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        switch (snapshot
+                                                            .connectionState) {
+                                                          case ConnectionState
+                                                              .none:
+                                                          case ConnectionState
+                                                              .waiting:
+                                                            return const Center(
+                                                              child:
+                                                                  LinearProgressIndicator(),
+                                                            );
+                                                          default:
                                                             Usuario
-                                                                .porDocumentSnapshot(
+                                                                profissionalQueModificouStatus =
+                                                                Usuario.porDocumentSnapshot(
                                                                     snapshot
                                                                         .data!);
-                                                      return  */Row(
-                                                        children: [
-                                                          const FotoDoUsuarioThumbnail(null),
-                                                          const SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.6,
-                                                            child: Text(
-                                                              usuarioQueModificouStatus.nomeCompleto,
-                                                              overflow: TextOverflow
-                                                                  .ellipsis,
-                                                              maxLines: 2,
-                                                              style: TextStyle(
-                                                                  color: Theme.of(context).primaryColor,
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                            return Row(
+                                                              children: [
+                                                                FotoDoUsuarioThumbnail(
+                                                                    profissionalQueModificouStatus
+                                                                        .urlFotoDePerfil),
+                                                                const SizedBox(
+                                                                  width: 20,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.6,
+                                                                  child: Text(
+                                                                    profissionalQueModificouStatus
+                                                                        .nomeCompleto,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    style: TextStyle(
+                                                                        color: Theme.of(context)
+                                                                            .primaryColor,
+                                                                        fontSize:
+                                                                            15,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            );
+                                                        }
+                                                      }),
                                                   const Padding(
                                                     padding: EdgeInsets.only(
                                                         top: 8.0),
                                                     child: Text(
                                                       "Data de expedição",
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Constantes
-                                                              .corAzulEscuroSecundario,
-                                                          ),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Constantes
+                                                            .corAzulEscuroSecundario,
+                                                      ),
                                                     ),
                                                   ),
                                                   Text(equipamento
@@ -994,12 +1035,12 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                           child: Text(
                                                             "Previsão de entrega",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Constantes
-                                                                    .corAzulEscuroSecundario,
-                                                                ),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Constantes
+                                                                  .corAzulEscuroSecundario,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(equipamento
@@ -1008,63 +1049,68 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                       ],
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                                backgroundColor:
-                                                                    const Color
-                                                                            .fromRGBO(
-                                                                        97,
-                                                                        253,
-                                                                        125,
-                                                                        1),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              18.0),
-                                                                )),
-                                                        onPressed: () async {
-                                                          if (await mostrarDialogConfirmacao(
-                                                                  context,
-                                                                  'Deseja mesmo disponibilizar?',
-                                                                  'Ele será alterado para Disponível') ==
-                                                              true) {
-                                                            mostrarDialogCarregando(
-                                                                context);
-                                                            try {
-                                                              equipamento
-                                                                  .disponibilizar();
-                                                              equipamento
-                                                                      .status =
-                                                                  StatusDoEquipamento
-                                                                      .disponivel;
-                                                            } catch (e) {
-                                                              mostrarMensagemErro(
-                                                                  context,
-                                                                  e.toString());
+                                                  Visibility(
+                                                    visible: [
+                                                      PerfilUsuario.mestre,
+                                                      PerfilUsuario.dispensacao
+                                                    ].contains(model.perfil),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                              .fromRGBO(
+                                                                          97,
+                                                                          253,
+                                                                          125,
+                                                                          1),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18.0),
+                                                                  )),
+                                                          onPressed: () async {
+                                                            if (await mostrarDialogConfirmacao(
+                                                                    context,
+                                                                    'Deseja mesmo disponibilizar?',
+                                                                    'Ele será alterado para Disponível') ==
+                                                                true) {
+                                                              mostrarDialogCarregando(
+                                                                  context);
+                                                              try {
+                                                                equipamento
+                                                                    .disponibilizar();
+                                                                equipamento
+                                                                        .status =
+                                                                    StatusDoEquipamento
+                                                                        .disponivel;
+                                                              } catch (e) {
+                                                                mostrarMensagemErro(
+                                                                    context,
+                                                                    e.toString());
+                                                              }
+                                                              Navigator.pop(
+                                                                  context);
                                                             }
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                        child: const Text(
-                                                          "Disponibilizar",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black),
+                                                          },
+                                                          child: const Text(
+                                                            "Disponibilizar",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -1191,19 +1237,24 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                             onPressed: _testarUrl(
                                                     equipamento.manualPdf ?? '')
                                                 ? () async {
-                                                  mostrarDialogCarregando(
+                                                    mostrarDialogCarregando(
                                                         context);
-                                                  try {
-                                                    final url = equipamento.manualPdf!;
-                                                    final arquivo = await PDFapi.carregarLink(url);
-                                                    Navigator.pop(context);
-                                                    abrirPDF(context, arquivo);
-                                                  } catch (e) {
-                                                    Navigator.pop(context);
-                                                    mostrarMensagemErro(
-                                                      context,
-                                                      'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
-                                                  }
+                                                    try {
+                                                      final url = equipamento
+                                                          .manualPdf!;
+                                                      final arquivo =
+                                                          await PDFapi
+                                                              .carregarLink(
+                                                                  url);
+                                                      Navigator.pop(context);
+                                                      abrirPDF(
+                                                          context, arquivo);
+                                                    } catch (e) {
+                                                      Navigator.pop(context);
+                                                      mostrarMensagemErro(
+                                                          context,
+                                                          'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
+                                                    }
                                                   }
                                                 : null,
                                             label: Text(
@@ -1279,130 +1330,143 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: AnimatedContainer(
-                                  curve: Curves.easeIn,
-                                  constraints: BoxConstraints(
-                                      minHeight:
-                                          MediaQuery.of(context).size.height *
-                                              0.1),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(width: 1)),
-                                  duration: const Duration(milliseconds: 240),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
+                              Visibility(
+                                visible: [
+                                  PerfilUsuario.mestre,
+                                  PerfilUsuario.dispensacao,
+                                  PerfilUsuario.clinico,
+                                  PerfilUsuario.vigilancia
+                                ].contains(model.perfil),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: AnimatedContainer(
+                                    curve: Curves.easeIn,
+                                    constraints: BoxConstraints(
+                                        minHeight:
+                                            MediaQuery.of(context).size.height *
+                                                0.1),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(width: 1)),
+                                    duration: const Duration(milliseconds: 240),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(8),
+                                              topRight: Radius.circular(8),
+                                            ),
+                                            color: Constantes
+                                                .corAzulEscuroSecundario,
                                           ),
-                                          color: Constantes
-                                              .corAzulEscuroSecundario,
+                                          height: 30,
+                                          child: const Text(
+                                            "Observações",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
-                                        height: 30,
-                                        child: const Text(
-                                          "Observações",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      equipamento.observacao != null
-                                          ? Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: Text(
-                                                    equipamento.observacao ??
-                                                        'Observação vazia!',
-                                                    maxLines:
-                                                        clicado ? null : 3,
-                                                    overflow: clicado
-                                                        ? null
-                                                        : TextOverflow.ellipsis,
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                ),
-                                                Visibility(
-                                                  visible: equipamento
-                                                          .observacao!.length >
-                                                      141,
-                                                  child: Padding(
+                                        equipamento.observacao != null
+                                            ? Column(
+                                                children: [
+                                                  Padding(
                                                     padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 10.0),
-                                                    child: ElevatedButton(
-                                                      onPressed: mostrarMais,
-                                                      child: Text(
-                                                        clicado
-                                                            ? 'Mostrar menos'
-                                                            : 'Mostrar mais',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              backgroundColor:
-                                                                  const Color
-                                                                          .fromRGBO(
-                                                                      97,
-                                                                      253,
-                                                                      125,
-                                                                      1),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18.0),
-                                                              )),
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: Text(
+                                                      equipamento.observacao ??
+                                                          'Observação vazia!',
+                                                      maxLines:
+                                                          clicado ? null : 3,
+                                                      overflow: clicado
+                                                          ? null
+                                                          : TextOverflow
+                                                              .ellipsis,
+                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
-                                                )
-                                              ],
-                                            )
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              backgroundColor:
-                                                                  const Color
-                                                                          .fromRGBO(
-                                                                      97,
-                                                                      253,
-                                                                      125,
-                                                                      1),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18.0),
-                                                              )),
-                                                      onPressed: () {
-                                                        adicionarObservacao(
-                                                            context,
-                                                            equipamento);
-                                                        setState(() {});
-                                                      },
-                                                      child: const Icon(
-                                                        Icons.add,
-                                                        color: Colors.black,
-                                                      ))),
-                                            )
-                                    ],
+                                                  Visibility(
+                                                    visible: equipamento
+                                                            .observacao!
+                                                            .length >
+                                                        141,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10.0),
+                                                      child: ElevatedButton(
+                                                        onPressed: mostrarMais,
+                                                        child: Text(
+                                                          clicado
+                                                              ? 'Mostrar menos'
+                                                              : 'Mostrar mais',
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                backgroundColor:
+                                                                    const Color
+                                                                            .fromRGBO(
+                                                                        97,
+                                                                        253,
+                                                                        125,
+                                                                        1),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              18.0),
+                                                                )),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                backgroundColor:
+                                                                    const Color
+                                                                            .fromRGBO(
+                                                                        97,
+                                                                        253,
+                                                                        125,
+                                                                        1),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              18.0),
+                                                                )),
+                                                        onPressed: () {
+                                                          adicionarObservacao(
+                                                              context,
+                                                              equipamento);
+                                                          setState(() {});
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.add,
+                                                          color: Colors.black,
+                                                        ))),
+                                              )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

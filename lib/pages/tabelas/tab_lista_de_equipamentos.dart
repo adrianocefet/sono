@@ -13,7 +13,8 @@ import '../perfis/perfil_equipamento/equipamento_controller.dart';
 class ListaDeEquipamentos extends StatefulWidget {
   final Paciente? pacientePreEscolhido;
   final ControllerPerfilClinicoEquipamento controller;
-  const ListaDeEquipamentos({required this.controller,Key? key, this.pacientePreEscolhido})
+  const ListaDeEquipamentos(
+      {required this.controller, Key? key, this.pacientePreEscolhido})
       : super(key: key);
 
   @override
@@ -24,12 +25,13 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
-      return StreamBuilder<QuerySnapshot>(
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
               .where('hospital', isEqualTo: model.instituicao.emString)
               .where('status', isEqualTo: widget.controller.status.emString)
-              .where('tipo', isEqualTo: widget.controller.tipo.emStringSnakeCase)
+              .where('tipo',
+                  isEqualTo: widget.controller.tipo.emStringSnakeCase)
               .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -41,11 +43,26 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                     title: Text(widget.controller.tipo.emString),
                     centerTitle: true,
                   ),
-                  body: const Center(
-                    child: CircularProgressIndicator(),
+                  body: Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          Color.fromARGB(255, 194, 195, 255),
+                          Colors.white
+                        ],
+                            stops: [
+                          0,
+                          0.4
+                        ])),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 );
               default:
+                List<DocumentSnapshot> docsEquipamentos = snapshot.data!.docs;
                 return Scaffold(
                     appBar: AppBar(
                       title: Text(
@@ -57,7 +74,8 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                                 context: context,
                                 delegate: PesquisaEquipamento(
                                     controller: widget.controller,
-                                    tipo: widget.controller.tipo, status: widget.controller.status),
+                                    tipo: widget.controller.tipo,
+                                    status: widget.controller.status),
                               );
                             },
                             icon: const Icon(Icons.search))
@@ -78,22 +96,22 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                             0.4
                           ])),
                       child: snapshot.data!.docs.isNotEmpty
-                          ? ListView(
-                              children: snapshot.data!.docs.map(
-                                (DocumentSnapshot document) {
-                                  Map<String, dynamic> data =
-                                      document.data()! as Map<String, dynamic>;
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: ItemEquipamento(
-                                        controller: widget.controller,
-                                        id: document.id,
-                                        pacientePreEscolhido:
-                                            widget.pacientePreEscolhido),
-                                  );
-                                },
-                              ).toList(),
+                          ? ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> data =
+                                    docsEquipamentos[index].data()!
+                                        as Map<String, dynamic>;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ItemEquipamento(
+                                      controller: widget.controller,
+                                      id: docsEquipamentos[index].id,
+                                      pacientePreEscolhido:
+                                          widget.pacientePreEscolhido),
+                                );
+                              },
                             )
                           : Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -125,17 +143,26 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                             ),
                     ),
                     floatingActionButton: widget.pacientePreEscolhido == null
-                        ? FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AdicionarEquipamento(tipo: widget.controller.tipo)),
-                              );
-                            },
-                            child: const Icon(Icons.add),
-                            backgroundColor: Constantes.corAzulEscuroPrincipal,
+                        ? Visibility(
+                            visible: [
+                              PerfilUsuario.mestre,
+                              PerfilUsuario.dispensacao,
+                              PerfilUsuario.vigilancia
+                            ].contains(model.perfil),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AdicionarEquipamento(
+                                              tipo: widget.controller.tipo)),
+                                );
+                              },
+                              child: const Icon(Icons.add),
+                              backgroundColor:
+                                  Constantes.corAzulEscuroPrincipal,
+                            ),
                           )
                         : null);
             }

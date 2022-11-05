@@ -18,7 +18,8 @@ class RelatorioEspecifico extends StatefulWidget {
 }
 
 class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
-  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
+  ControllerPerfilClinicoEquipamento controller =
+      ControllerPerfilClinicoEquipamento();
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
   List<Equipamento> equipamentos = [];
@@ -38,8 +39,10 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   );
                 default:
                   inicializou == false
@@ -116,8 +119,10 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          TelaEquipamento(id: equipamento.id,controller: controller,)));
+                      builder: (context) => TelaEquipamento(
+                            id: equipamento.id,
+                            controller: controller,
+                          )));
               inicializou = false;
             });
       }).toList();

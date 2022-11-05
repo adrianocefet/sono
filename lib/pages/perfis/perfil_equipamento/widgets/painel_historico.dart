@@ -12,6 +12,7 @@ import '../../../../utils/dialogs/carregando.dart';
 import '../../../../utils/dialogs/error_message.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/usuario.dart';
+import '../../../tabelas/widgets/item_usuario.dart';
 
 class PainelHistorico extends StatefulWidget {
   final String idSolicitacao;
@@ -23,7 +24,8 @@ class PainelHistorico extends StatefulWidget {
 }
 
 class _PainelHistoricoState extends State<PainelHistorico> {
-  final ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
+  final ControllerPerfilClinicoEquipamento controller =
+      ControllerPerfilClinicoEquipamento();
   @override
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
@@ -82,7 +84,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                           const Padding(
                             padding: EdgeInsets.only(top: 8.0, left: 15),
                             child: Text(
-                              'Clínico solicitante',
+                              'Solicitante',
                               style: TextStyle(
                                   color: Constantes.corAzulEscuroPrincipal,
                                   fontSize: 15,
@@ -93,10 +95,54 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                             color: Constantes.corAzulEscuroPrincipal,
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 8),
-                            child: Text(solicitacao.idSolicitante),
-                          ),
+                              padding: const EdgeInsets.only(
+                                  top: 8.0, bottom: 8, left: 15),
+                              child: StreamBuilder<
+                                      DocumentSnapshot<Map<String, dynamic>>>(
+                                  stream: FirebaseService()
+                                      .streamInfoUsuarioPorID(
+                                          solicitacao.idSolicitante),
+                                  builder: (context, snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.none:
+                                      case ConnectionState.waiting:
+                                        return const Center(
+                                          child: LinearProgressIndicator(),
+                                        );
+                                      default:
+                                        Usuario profissionalSolicitante =
+                                            Usuario.porDocumentSnapshot(
+                                                snapshot.data!);
+                                        return Row(
+                                          children: [
+                                            FotoDoUsuarioThumbnail(
+                                                profissionalSolicitante
+                                                    .urlFotoDePerfil),
+                                            const SizedBox(
+                                              width: 20,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.6,
+                                              child: Text(
+                                                profissionalSolicitante
+                                                    .nomeCompleto,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                    }
+                                  })),
                           Visibility(
                             visible: solicitacao.justificativaDevolucao != null,
                             child: Column(
@@ -197,11 +243,11 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                     dadosEquipamento["id"] = snapshot.data!.id;
                                     equipamentoSolicitado =
                                         Equipamento.porMap(dadosEquipamento);
-                                    if (solicitacao.urlPdf==null) {
+                                    if (solicitacao.urlPdf == null) {
                                       solicitacao.gerarTermoEmprestimo(
-                                        pacienteSolicitado,
-                                        equipamentoSolicitado,
-                                        model);
+                                          pacienteSolicitado,
+                                          equipamentoSolicitado,
+                                          model);
                                     }
                                     return Column(
                                       children: [
@@ -211,7 +257,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                   null
                                               ? Text(equipamentoSolicitado.nome)
                                               : Text(
-                                                  "${equipamentoSolicitado.nome}\n(Tamanho:${equipamentoSolicitado.tamanho})"),
+                                                  "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
                                           subtitle: Text(equipamentoSolicitado
                                               .tipo.emString),
                                           leading: Image.network(
@@ -223,57 +269,78 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-                                        solicitacao.urlPdf!=null?
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4.0),
-                                          child: ElevatedButton.icon(
-                                              icon: const Icon(
-                                                Icons.list_alt,
-                                                color: Colors.black,
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      const Color.fromRGBO(
-                                                          97, 253, 125, 1),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            18.0),
-                                                  )),
-                                              onPressed: solicitacao.urlPdf!=null ? () async {
-                                                      final url =
-                                                          solicitacao.urlPdf;
-                                                      final arquivo = await PDFapi
-                                                          .gerarPdfSolicitacao(
-                                                              url!,
-                                                              solicitacao.tipo,
-                                                              equipamentoSolicitado);
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  TelaPDF(
-                                                                      arquivo:
-                                                                          arquivo)));
-                                                    }:null,
-                                              label: Text(
-                                                solicitacao.tipo != TipoSolicitacao.devolucao
-                                                    ? equipamentoSolicitado.tipo
-                                                                .emStringSnakeCase
-                                                                .contains(
-                                                                    'mascara') ||
-                                                            equipamentoSolicitado
-                                                                .tipo
-                                                                .emStringSnakeCase
-                                                                .contains('ap')
-                                                        ? "Ver termo de responsabilidade"
-                                                        : "Ver recibo"
-                                                    : "Ver documento de devolução",
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              )),
-                                        ):const LinearProgressIndicator(color: Constantes.corAzulEscuroPrincipal,)
+                                        solicitacao.urlPdf != null
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4.0),
+                                                child: ElevatedButton.icon(
+                                                    icon: const Icon(
+                                                      Icons.list_alt,
+                                                      color: Colors.black,
+                                                    ),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                const Color
+                                                                        .fromRGBO(
+                                                                    97,
+                                                                    253,
+                                                                    125,
+                                                                    1),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          18.0),
+                                                            )),
+                                                    onPressed:
+                                                        solicitacao.urlPdf !=
+                                                                null
+                                                            ? () async {
+                                                                final url =
+                                                                    solicitacao
+                                                                        .urlPdf;
+                                                                final arquivo =
+                                                                    await PDFapi.gerarPdfSolicitacao(
+                                                                        url!,
+                                                                        solicitacao
+                                                                            .tipo,
+                                                                        equipamentoSolicitado);
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                TelaPDF(arquivo: arquivo)));
+                                                              }
+                                                            : null,
+                                                    label: Text(
+                                                      solicitacao.tipo !=
+                                                              TipoSolicitacao
+                                                                  .devolucao
+                                                          ? equipamentoSolicitado
+                                                                      .tipo
+                                                                      .emStringSnakeCase
+                                                                      .contains(
+                                                                          'mascara') ||
+                                                                  equipamentoSolicitado
+                                                                      .tipo
+                                                                      .emStringSnakeCase
+                                                                      .contains(
+                                                                          'ap')
+                                                              ? "Ver termo de responsabilidade"
+                                                              : "Ver recibo"
+                                                          : "Ver documento de devolução",
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    )),
+                                              )
+                                            : const LinearProgressIndicator(
+                                                color: Constantes
+                                                    .corAzulEscuroPrincipal,
+                                              )
                                       ],
                                     );
                                 }

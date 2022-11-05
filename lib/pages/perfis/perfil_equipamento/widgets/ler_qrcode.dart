@@ -8,6 +8,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
+import 'package:sono/utils/dialogs/mostrar_foto_completa.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/equipamento.dart';
@@ -94,8 +95,19 @@ class _LerQrCodeState extends State<LerQrCode> {
                                                 child: Text(
                                                     '${equipamento!.nome}'),
                                               ),
-                                              FotoDoEquipamento(
-                                                  equipamento!.urlFotoDePerfil),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  mostrarFotoCompleta(
+                                                      context,
+                                                      equipamento!
+                                                          .urlFotoDePerfil,
+                                                      widget.controller
+                                                          .semimagem);
+                                                },
+                                                child: FotoDoEquipamento(
+                                                    equipamento!
+                                                        .urlFotoDePerfil),
+                                              ),
                                               const Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 15.0),
@@ -264,7 +276,7 @@ class _LerQrCodeState extends State<LerQrCode> {
                                                           .width *
                                                       0.8,
                                                   child: Text(
-                                                    '${equipamento!.nome} não está disponível, tente outro equipamento!',
+                                                    '${equipamento!.nome} não está disponível!',
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 3,
@@ -273,6 +285,19 @@ class _LerQrCodeState extends State<LerQrCode> {
                                                         fontSize: 21),
                                                   ),
                                                 ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  mostrarFotoCompleta(
+                                                      context,
+                                                      equipamento!
+                                                          .urlFotoDePerfil,
+                                                      widget.controller
+                                                          .semimagem);
+                                                },
+                                                child: FotoDoEquipamento(
+                                                    equipamento!
+                                                        .urlFotoDePerfil),
                                               ),
                                               const Padding(
                                                 padding: EdgeInsets.all(8.0),

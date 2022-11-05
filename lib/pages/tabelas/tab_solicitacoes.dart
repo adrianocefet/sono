@@ -46,9 +46,23 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                     title: const Text('Solicitações'),
                     centerTitle: true,
                   ),
-                  body: const Center(
-                    child: CircularProgressIndicator(
-                      color: Constantes.corAzulEscuroPrincipal,
+                  body: Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          Color.fromARGB(255, 194, 195, 255),
+                          Colors.white
+                        ],
+                            stops: [
+                          0,
+                          0.4
+                        ])),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Constantes.corAzulEscuroPrincipal,
+                      ),
                     ),
                   ),
                 );

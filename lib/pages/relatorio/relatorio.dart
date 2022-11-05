@@ -22,18 +22,27 @@ class _TelaRelatorioState extends State<TelaRelatorio> {
           backgroundColor: Constantes.corAzulEscuroPrincipal,
           title: const Text("Relatório de equipamentos"),
           centerTitle: true,
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: 'Visão geral',),
-              Tab(text: 'Visão específica',),
-            ]),
+          bottom: const TabBar(indicatorColor: Colors.white, tabs: [
+            Tab(
+              text: 'Visão geral',
+            ),
+            Tab(
+              text: 'Visão específica',
+            ),
+          ]),
         ),
-        body: const TabBarView(
-          children: [
+        body: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color.fromARGB(255, 194, 195, 255), Colors.white],
+                  stops: [0, 0.4])),
+          child: const TabBarView(children: [
             RelatorioGeral(),
             RelatorioEspecifico(),
           ]),
+        ),
       ),
     );
   }
