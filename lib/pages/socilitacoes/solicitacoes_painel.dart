@@ -31,7 +31,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
     late Equipamento equipamentoSolicitado;
-    PageStorageKey _key = PageStorageKey('${widget.key}');
+    final GlobalKey _key = GlobalKey();
 
     return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) => StreamBuilder<
@@ -342,8 +342,9 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               TextButton(
-                                onPressed: () async {
+                                onPressed: () {
                                   negarSolicitacao(context, solicitacao);
+                                  setState(() {});
                                 },
                                 child: const Text(
                                   'Negar ',
