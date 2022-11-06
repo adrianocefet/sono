@@ -1,4 +1,3 @@
-// ignore_for_file: unnecessary_string_escapes
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +5,14 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/adicionar_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/widgets/botoes_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/detalhes.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/informacoes_adicionais.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/adicionarObservacao.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/atributos_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/observacao.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/widgets/titulo_e_foto.dart';
 import 'package:sono/pages/tabelas/tab_historico_emprestimos.dart';
-import 'package:sono/utils/dialogs/confirmar.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
-import 'package:sono/utils/dialogs/justificativa.dart';
 import 'package:sono/utils/models/paciente.dart';
 import '../../../../utils/models/equipamento.dart';
 import 'package:sono/pdf/pdf_api.dart';
@@ -23,7 +20,9 @@ import 'package:sono/utils/models/usuario.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../pdf/tela_pdf.dart';
 import '../../../utils/dialogs/carregando.dart';
+import '../../../utils/dialogs/confirmar.dart';
 import '../../../utils/dialogs/escolher_paciente_dialog.dart';
+import '../../../utils/dialogs/justificativa.dart';
 import '../../../utils/services/firebase.dart';
 import '../../tabelas/widgets/item_paciente.dart';
 import '../../tabelas/widgets/item_usuario.dart';
@@ -44,18 +43,10 @@ class TelaEquipamento extends StatefulWidget {
 }
 
 class _TelaEquipamentoState extends State<TelaEquipamento> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late YoutubePlayerController controller;
   bool videoExiste = true;
   String link = '';
-  Paciente? _pacienteResponsavel;
-
-  void _definirPacienteResponsavel(Paciente? novoPacienteResponsavel) =>
-      setState(
-        () {
-          _pacienteResponsavel =
-              novoPacienteResponsavel ?? _pacienteResponsavel;
-        },
-      );
 
   _testarUrl(String value) {
     String pattern =
@@ -122,6 +113,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                       flags: const YoutubePlayerFlags(
                           autoPlay: false, loop: false, hideControls: false));
                   return Scaffold(
+                    key: _scaffoldKey,
                     appBar: AppBar(
                       title: Text(equipamento.nome),
                       centerTitle: true,
@@ -144,7 +136,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                                   equipamento,
                                             )));
                               },
-                              icon: Icon(Icons.edit)),
+                              icon: const Icon(Icons.edit)),
                         )
                       ],
                     ),
@@ -194,429 +186,15 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                         child: Visibility(
                                           visible: equipamento.status ==
                                               StatusDoEquipamento.disponivel,
-                                          child: Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
-                                                child: SizedBox(
-                                                  width: mediaQuery.size.width,
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            backgroundColor:
-                                                                const Color
-                                                                        .fromRGBO(
-                                                                    97,
-                                                                    253,
-                                                                    125,
-                                                                    1),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          18.0),
-                                                            )),
-                                                    onPressed: () async {
-                                                      if (widget
-                                                              .pacientePreEscolhido ==
-                                                          null) {
-                                                        Paciente?
-                                                            pacienteEscolhido =
-                                                            await mostrarDialogEscolherPaciente(
-                                                                context);
-                                                        if (pacienteEscolhido !=
-                                                            null) {
-                                                          try {
-                                                            await equipamento
-                                                                .solicitarEmprestimo(
-                                                                    pacienteEscolhido,
-                                                                    model);
-                                                          } catch (erro) {
-                                                            equipamento.status =
-                                                                StatusDoEquipamento
-                                                                    .disponivel;
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                erro.toString());
-                                                          }
-                                                          _definirPacienteResponsavel(
-                                                              pacienteEscolhido);
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              backgroundColor:
-                                                                  Constantes
-                                                                      .corAzulEscuroPrincipal,
-                                                              content: Text(
-                                                                  "Solicitação enviada à dispensação!"),
-                                                            ),
-                                                          );
-                                                        }
-                                                      } else {
-                                                        if (await mostrarDialogConfirmacao(
-                                                                context,
-                                                                'Deseja mesmo alterar o status?',
-                                                                'Ele será emprestado ao paciente selecionado') ==
-                                                            true) {
-                                                          try {
-                                                            await equipamento
-                                                                .solicitarEmprestimo(
-                                                                    widget
-                                                                        .pacientePreEscolhido!,
-                                                                    model);
-                                                          } catch (erro) {
-                                                            equipamento.status =
-                                                                StatusDoEquipamento
-                                                                    .disponivel;
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                erro.toString());
-                                                          }
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              backgroundColor:
-                                                                  Constantes
-                                                                      .corAzulEscuroPrincipal,
-                                                              content: Text(
-                                                                  "Solicitação enviada à dispensação!"),
-                                                            ),
-                                                          );
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: const [
-                                                        Text(
-                                                          "Solicitar empréstimo ",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        Icon(
-                                                          Icons.people,
-                                                          color: Colors.black,
-                                                          size: 16,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: widget
-                                                        .pacientePreEscolhido ==
-                                                    null,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 10.0),
-                                                      child: SizedBox(
-                                                        width: mediaQuery
-                                                                .size.width *
-                                                            0.4,
-                                                        child: ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  backgroundColor:
-                                                                      const Color
-                                                                              .fromRGBO(
-                                                                          97,
-                                                                          253,
-                                                                          125,
-                                                                          1),
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18.0),
-                                                                  )),
-                                                          onPressed: () async {
-                                                            if (await mostrarDialogConfirmacao(
-                                                                    context,
-                                                                    'Deseja mesmo alterar o status?',
-                                                                    'Ele será alterado para Manutenção') ==
-                                                                true) {
-                                                              mostrarDialogCarregando(
-                                                                  context);
-                                                              try {
-                                                                await equipamento
-                                                                    .manutencao(
-                                                                        model);
-                                                                equipamento
-                                                                        .status =
-                                                                    StatusDoEquipamento
-                                                                        .manutencao;
-                                                              } catch (e) {
-                                                                mostrarMensagemErro(
-                                                                    context,
-                                                                    e.toString());
-                                                              }
-                                                              Navigator.pop(
-                                                                  context);
-                                                            }
-                                                          },
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: const [
-                                                              Text(
-                                                                "Reparar ",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .build_rounded,
-                                                                color: Colors
-                                                                    .black,
-                                                                size: 16,
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 10.0),
-                                                      child: SizedBox(
-                                                        width: mediaQuery
-                                                                .size.width *
-                                                            0.4,
-                                                        child: ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  backgroundColor:
-                                                                      const Color
-                                                                              .fromRGBO(
-                                                                          97,
-                                                                          253,
-                                                                          125,
-                                                                          1),
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18.0),
-                                                                  )),
-                                                          onPressed: () async {
-                                                            if (await mostrarDialogConfirmacao(
-                                                                    context,
-                                                                    'Deseja mesmo alterar o status?',
-                                                                    'Ele será alterado para Desinfecção') ==
-                                                                true) {
-                                                              mostrarDialogCarregando(
-                                                                  context);
-                                                              try {
-                                                                await equipamento
-                                                                    .desinfectar(
-                                                                        model);
-                                                                equipamento
-                                                                        .status =
-                                                                    StatusDoEquipamento
-                                                                        .desinfeccao;
-                                                              } catch (e) {
-                                                                mostrarMensagemErro(
-                                                                    context,
-                                                                    e.toString());
-                                                              }
-                                                              Navigator.pop(
-                                                                  context);
-                                                            }
-                                                          },
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: const [
-                                                              Text(
-                                                                "Desinfectar ",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .clean_hands_sharp,
-                                                                color: Colors
-                                                                    .black,
-                                                                size: 16,
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
-                                                child: SizedBox(
-                                                  width: mediaQuery.size.width *
-                                                      (1 / 3),
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            backgroundColor:
-                                                                const Color
-                                                                        .fromRGBO(
-                                                                    97,
-                                                                    253,
-                                                                    125,
-                                                                    1),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          18.0),
-                                                            )),
-                                                    onPressed: () async {
-                                                      if (widget
-                                                              .pacientePreEscolhido ==
-                                                          null) {
-                                                        Paciente?
-                                                            pacienteEscolhido =
-                                                            await mostrarDialogEscolherPaciente(
-                                                                context);
-                                                        if (pacienteEscolhido !=
-                                                            null) {
-                                                          try {
-                                                            await equipamento
-                                                                .conceder(
-                                                                    pacienteEscolhido,
-                                                                    model);
-                                                          } catch (erro) {
-                                                            equipamento.status =
-                                                                StatusDoEquipamento
-                                                                    .disponivel;
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                erro.toString());
-                                                          }
-                                                          _definirPacienteResponsavel(
-                                                              pacienteEscolhido);
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              backgroundColor:
-                                                                  Constantes
-                                                                      .corAzulEscuroPrincipal,
-                                                              content: Text(
-                                                                  "Equipamento concedido ao paciente selecionado!"),
-                                                            ),
-                                                          );
-                                                        }
-                                                      } else {
-                                                        if (await mostrarDialogConfirmacao(
-                                                                context,
-                                                                'Deseja conceder?',
-                                                                'Ele será concedido ao paciente selecionado') ==
-                                                            true) {
-                                                          try {
-                                                            await equipamento
-                                                                .conceder(
-                                                                    widget
-                                                                        .pacientePreEscolhido!,
-                                                                    model);
-                                                          } catch (erro) {
-                                                            equipamento.status =
-                                                                StatusDoEquipamento
-                                                                    .disponivel;
-                                                            mostrarMensagemErro(
-                                                                context,
-                                                                erro.toString());
-                                                          }
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              backgroundColor:
-                                                                  Constantes
-                                                                      .corAzulEscuroPrincipal,
-                                                              content: Text(
-                                                                  "Equipamento concedido"),
-                                                            ),
-                                                          );
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          widget.pacientePreEscolhido ==
-                                                                  null
-                                                              ? MainAxisAlignment
-                                                                  .spaceAround
-                                                              : MainAxisAlignment
-                                                                  .center,
-                                                      mainAxisSize:
-                                                          widget.pacientePreEscolhido ==
-                                                                  null
-                                                              ? MainAxisSize.min
-                                                              : MainAxisSize
-                                                                  .max,
-                                                      children: const [
-                                                        Text(
-                                                          "Conceder ",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        Icon(
-                                                          Icons.assignment_ind,
-                                                          color: Colors.black,
-                                                          size: 16,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                          child: BotoesEquipamento(
+                                            equipamento: equipamento,
+                                            model: model,
+                                            pacientePreEscolhido:
+                                                widget.pacientePreEscolhido,
+                                            contextoScaffold: context,
                                           ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -625,9 +203,9 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                   visible: equipamento.status !=
                                       StatusDoEquipamento.disponivel,
                                   child: Detalhes(
-                                    model: model,
-                                    equipamento: equipamento,
-                                  )),
+                                      model: model,
+                                      equipamento: equipamento,
+                                      contextoScaffold: context)),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Container(

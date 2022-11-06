@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sono/utils/dialogs/carregando.dart';
-import 'package:sono/utils/dialogs/error_message.dart';
-import 'package:sono/utils/models/solicitacao.dart';
-import 'package:sono/utils/services/firebase.dart';
 
 Future<String?> mostrarDialogJustificativa(
-    context, String mensagem, String submensagem) async {
+    BuildContext context, String mensagem, String submensagem) async {
   final TextEditingController _Textcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   return await showDialog(
       context: context,
-      builder: (context) => Center(
+      builder: (contexto) => Center(
             child: Container(
               margin: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(contexto).primaryColor,
                   width: 2,
                 ),
                 borderRadius: const BorderRadius.all(
@@ -39,7 +35,7 @@ Future<String?> mostrarDialogJustificativa(
                           topLeft: Radius.circular(17),
                           topRight: Radius.circular(17),
                         ),
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(contexto).primaryColor,
                       ),
                       child: Center(
                         child: Text(
@@ -92,7 +88,7 @@ Future<String?> mostrarDialogJustificativa(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.pop(contexto),
                             child: const Text(
                               'Cancelar',
                               style: TextStyle(color: Colors.black),
@@ -108,15 +104,8 @@ Future<String?> mostrarDialogJustificativa(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                mostrarDialogCarregando(context);
-                                try {
-                                  Navigator.pop(context);
-                                  Navigator.pop(
-                                      context, _Textcontroller.value.text);
-                                } catch (e) {
-                                  Navigator.pop(context);
-                                  mostrarMensagemErro(context, e.toString());
-                                }
+                                Navigator.pop(
+                                    contexto, _Textcontroller.value.text);
                               }
                             },
                             child: const Text(

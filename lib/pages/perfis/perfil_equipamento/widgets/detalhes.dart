@@ -16,7 +16,12 @@ import '../../../tabelas/widgets/item_usuario.dart';
 class Detalhes extends StatefulWidget {
   final Usuario model;
   final Equipamento equipamento;
-  const Detalhes({Key? key, required this.model, required this.equipamento})
+  final BuildContext contextoScaffold;
+  const Detalhes(
+      {Key? key,
+      required this.model,
+      required this.equipamento,
+      required this.contextoScaffold})
       : super(key: key);
 
   @override
@@ -144,37 +149,33 @@ class _DetalhesState extends State<Detalhes> {
                                                 BorderRadius.circular(18.0),
                                           )),
                                       onPressed: () async {
-                                        if (await mostrarDialogConfirmacao(
+                                        final scaffoldcontext =
+                                            ScaffoldMessenger.of(
+                                                widget.contextoScaffold);
+                                        String? justificativa =
+                                            await mostrarDialogJustificativa(
                                                 context,
-                                                'Deseja mesmo disponibilizar?',
-                                                'Ele será alterado para Disponível') ==
-                                            true) {
-                                          String? justificativa =
-                                              await mostrarDialogJustificativa(
-                                                  context,
-                                                  'Retornar ao hospital?',
-                                                  'Qual o motivo da devolução?');
-                                          if (justificativa != null) {
-                                            try {
-                                              await widget.equipamento
-                                                  .solicitarDevolucao(
-                                                      pacienteEmprestado,
-                                                      widget.model,
-                                                      justificativa);
-                                            } catch (e) {
-                                              mostrarMensagemErro(
-                                                  context, e.toString());
-                                            }
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                backgroundColor: Constantes
-                                                    .corAzulEscuroPrincipal,
-                                                content: Text(
-                                                    "Solicitação enviada à dispensação!"),
-                                              ),
-                                            );
+                                                'Retornar ao hospital?',
+                                                'Qual o motivo da devolução?');
+                                        if (justificativa != null) {
+                                          try {
+                                            await widget.equipamento
+                                                .solicitarDevolucao(
+                                                    pacienteEmprestado,
+                                                    widget.model,
+                                                    justificativa);
+                                          } catch (e) {
+                                            mostrarMensagemErro(
+                                                context, e.toString());
                                           }
+                                          scaffoldcontext.showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Constantes
+                                                  .corAzulEscuroPrincipal,
+                                              content: Text(
+                                                  "Solicitação enviada à dispensação!"),
+                                            ),
+                                          );
                                         }
                                       },
                                       child: Text(

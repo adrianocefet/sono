@@ -31,7 +31,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
     late Equipamento equipamentoSolicitado;
-    bool estaDisponivel;
+    PageStorageKey _key = PageStorageKey('${widget.key}');
+
     return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) => StreamBuilder<
               DocumentSnapshot<Map<String, dynamic>>>(
@@ -61,6 +62,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white),
                   child: ExpansionTile(
+                    key: _key,
                     childrenPadding: const EdgeInsets.all(10),
                     expandedCrossAxisAlignment: CrossAxisAlignment.start,
                     expandedAlignment: Alignment.topLeft,
@@ -86,7 +88,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(top: 8.0, left: 15),
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, left: 15),
                                 child: Text(
                                   'Motivo da negação',
                                   style: TextStyle(
@@ -113,7 +116,8 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(top: 8.0, left: 15),
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, left: 15),
                                 child: Text(
                                   'Data de resposta',
                                   style: TextStyle(
@@ -266,10 +270,6 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 dadosEquipamento["id"] = snapshot.data!.id;
                                 equipamentoSolicitado =
                                     Equipamento.porMap(dadosEquipamento);
-                                equipamentoSolicitado.status !=
-                                        StatusDoEquipamento.disponivel
-                                    ? estaDisponivel = false
-                                    : estaDisponivel = true;
                                 return Column(
                                   children: [
                                     ListTile(
@@ -322,7 +322,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 return ListTile(
                                   title: Text(pacienteSolicitado.nomeCompleto),
                                   subtitle: Text(
-                                      "Prontuário: ${pacienteSolicitado.numeroProntuario}"),
+                                      "CPF: ${pacienteSolicitado.cpf ?? 'Não informado'}"),
                                   leading: Image.network(
                                     pacienteSolicitado.urlFotoDePerfil ??
                                         widget.controller.semimagemPaciente,
@@ -341,28 +341,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              ElevatedButton(
+                              TextButton(
                                 onPressed: () async {
                                   negarSolicitacao(context, solicitacao);
                                 },
-                                child: Row(
-                                  children: const [
-                                    Text(
-                                      'Negar ',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Icon(
-                                      Icons.close,
-                                      color: Colors.black,
-                                    ),
-                                  ],
+                                child: const Text(
+                                  'Negar ',
+                                  style: TextStyle(
+                                      color: Constantes.corAzulEscuroPrincipal),
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 254, 102, 112),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    )),
                               ),
                               ElevatedButton(
                                 onPressed: () async {
@@ -466,24 +453,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                     }
                                   }
                                 },
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      solicitacao.tipo ==
-                                              TipoSolicitacao.emprestimo
-                                          ? 'Emprestar '
-                                          : 'Devolver ',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    const Icon(
-                                      Icons.check,
-                                      color: Colors.black,
-                                    ),
-                                  ],
+                                child: Text(
+                                  solicitacao.tipo == TipoSolicitacao.emprestimo
+                                      ? 'Emprestar '
+                                      : 'Devolver ',
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        const Color.fromRGBO(97, 253, 125, 1),
+                                        Constantes.corAzulEscuroPrincipal,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
@@ -501,9 +479,20 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                 child: Text('ERRO!'),
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Constantes.corAzulEscuroPrincipal,
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 2, color: Constantes.corAzulEscuroPrincipal),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white),
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Constantes.corAzulEscuroPrincipal,
+                    ),
+                  ),
                 ),
               );
             }
