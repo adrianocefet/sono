@@ -29,6 +29,7 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
+      MediaQueryData mediaQuery = MediaQuery.of(context);
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
@@ -75,12 +76,15 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                           child: Stack(children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                widget.imagem,
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                fit: BoxFit.fill,
+                              child: SizedBox(
+                                height: mediaQuery.size.height * 0.1,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.asset(
+                                    widget.imagem,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
                               ),
                             ),
                             Positioned(
@@ -121,8 +125,7 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                           child: Text(
                             widget.titulo.emString,
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.03,
+                                fontSize: mediaQuery.size.width * 0.03,
                                 fontWeight: FontWeight.w300,
                                 color: Colors.black),
                           ),

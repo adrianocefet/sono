@@ -6,8 +6,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:sono/constants/constants.dart';
 
-class qrCodeGerado extends StatelessWidget {
-  const qrCodeGerado({required this.idEquipamento, Key? key}) : super(key: key);
+class QrCodeGerado extends StatelessWidget {
+  const QrCodeGerado({required this.idEquipamento, Key? key}) : super(key: key);
 
   final String idEquipamento;
 
@@ -30,8 +30,11 @@ class qrCodeGerado extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Text('Código gerado do equipamento: \n$idEquipamento',
-                style: const TextStyle(color: Colors.black),textAlign: TextAlign.center,),
+            Text(
+              'Código gerado do equipamento: \n$idEquipamento',
+              style: const TextStyle(color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -48,8 +51,7 @@ class qrCodeGerado extends StatelessWidget {
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).highlightColor
-                ),
+                    backgroundColor: Theme.of(context).highlightColor),
                 onPressed: () async {
                   const snackBar = SnackBar(
                     content: Text(
@@ -66,7 +68,10 @@ class qrCodeGerado extends StatelessWidget {
                     return;
                   }
                 },
-                child: Text('Salvar na Galeria',style: TextStyle(color: Colors.black),))
+                child: const Text(
+                  'Salvar na Galeria',
+                  style: TextStyle(color: Colors.black),
+                ))
           ],
         ),
       ),

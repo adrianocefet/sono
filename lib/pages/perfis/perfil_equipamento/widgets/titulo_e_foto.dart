@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/qrCodeGerado.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/qr_code/qrCodeGerado.dart';
 import 'package:sono/utils/dialogs/mostrar_foto_completa.dart';
 import 'package:sono/utils/models/equipamento.dart';
 
 import '../../../../constants/constants.dart';
+import '../../../controle_estoque/widgets/foto_equipamento.dart';
 
 class TituloEFoto extends StatefulWidget {
   final Equipamento equipamento;
@@ -26,49 +27,15 @@ class _TituloEFotoState extends State<TituloEFoto> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Stack(
-          children: [
-            InkWell(
-              onTap: () async {
-                await mostrarFotoCompleta(
-                    context, equipamento.urlFotoDePerfil, widget.semfoto);
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  equipamento.urlFotoDePerfil ?? widget.semfoto,
-                  width: MediaQuery.of(context).size.width * 0.26,
-                  height: MediaQuery.of(context).size.height * 0.14,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 30,
-                  width: 30,
-                  decoration: const BoxDecoration(
-                    color: Constantes.corAzulEscuroPrincipal,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: equipamento.status.cor,
-                    ),
-                    child: Icon(
-                      equipamento.status.icone2,
-                      size: 20,
-                      color: Constantes.corAzulEscuroPrincipal,
-                    ),
-                  ),
-                ))
-          ],
+        InkWell(
+          onTap: () async {
+            await mostrarFotoCompleta(
+                context, equipamento.urlFotoDePerfil, widget.semfoto);
+          },
+          child: FotoEquipamento(
+            equipamento: equipamento,
+            semimagem: widget.semfoto,
+          ),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +60,7 @@ class _TituloEFotoState extends State<TituloEFoto> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => qrCodeGerado(
+                    builder: (context) => QrCodeGerado(
                           idEquipamento: equipamento.id,
                         )));
           },

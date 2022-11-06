@@ -11,12 +11,17 @@ import '../../../../utils/models/equipamento.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/services/firebase.dart';
 import '../../perfis/perfil_equipamento/tela_equipamento.dart';
+import 'foto_equipamento.dart';
 
 class ItemEquipamento extends StatefulWidget {
   final ControllerPerfilClinicoEquipamento controller;
   final String id;
   final Paciente? pacientePreEscolhido;
-  const ItemEquipamento({required this.controller,required this.id, this.pacientePreEscolhido, Key? key})
+  const ItemEquipamento(
+      {required this.controller,
+      required this.id,
+      this.pacientePreEscolhido,
+      Key? key})
       : super(key: key);
 
   @override
@@ -37,8 +42,42 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          width: 2,
+                          color: Constantes.corAzulEscuroPrincipal,
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(7),
+                                topRight: Radius.circular(7),
+                              ),
+                              color: Constantes.corAzulEscuroSecundario,
+                            ),
+                            height: 25,
+                            child: null,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: LinearProgressIndicator(
+                                color: Constantes.corAzulEscuroPrincipal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 default:
                   Map<String, dynamic> dadosEquipamento =
@@ -74,7 +113,6 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                             ),
                             color: Colors.white,
                           ),
-                          //height: MediaQuery.of(context).size.height * 0.2,
                           child: Column(
                             children: [
                               Container(
@@ -105,55 +143,9 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Image.network(
-                                            equipamento.urlFotoDePerfil ??
-                                                widget.controller.semimagem,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.26,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.14,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned(
-                                            right: 0,
-                                            bottom: 0,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 30,
-                                              width: 30,
-                                              decoration: const BoxDecoration(
-                                                color: Constantes
-                                                    .corAzulEscuroPrincipal,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Container(
-                                                height: 25,
-                                                width: 25,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
-                                                  color: equipamento.status.cor,
-                                                ),
-                                                child: Icon(
-                                                  equipamento.status.icone2,
-                                                  size: 20,
-                                                  color: Constantes
-                                                      .corAzulEscuroPrincipal,
-                                                ),
-                                              ),
-                                            ))
-                                      ],
-                                    ),
+                                    FotoEquipamento(
+                                        equipamento: equipamento,
+                                        semimagem: widget.controller.semimagem),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -164,14 +156,8 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          if (equipamento.tipo ==
-                                                  TipoEquipamento.nasal ||
-                                              equipamento.tipo ==
-                                                  TipoEquipamento.oronasal ||
-                                              equipamento.tipo ==
-                                                  TipoEquipamento.facial ||
-                                              equipamento.tipo ==
-                                                  TipoEquipamento.pillow)
+                                          if (equipamento.tipo.emStringSnakeCase
+                                              .contains('mascara'))
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -179,11 +165,11 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                 Text(
                                                   "Tamanho",
                                                   style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Theme.of(context).primaryColor,
-                                                      ),
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
                                                 ),
                                                 Text(
                                                   equipamento.tamanho ?? "N/A",
@@ -207,10 +193,11 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                               Text(
                                                 "Fabricante",
                                                 style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context).primaryColor,
-                                                    ),
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
                                               ),
                                               Text(
                                                 equipamento.fabricante,
@@ -263,14 +250,16 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                             children: [
                                                               Text(
                                                                 "Paciente emprestado",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Theme.of(context).primaryColor,
-                                                                    ),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                                ),
                                                               ),
                                                               Text(
                                                                 pacienteEmprestado
@@ -303,11 +292,12 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                     Text(
                                                       "Previsão para entrega",
                                                       style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Theme.of(context).primaryColor,
-                                                          ),
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
                                                     ),
                                                     Text(
                                                       equipamento
@@ -336,11 +326,12 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                                     Text(
                                                       "Data de despache",
                                                       style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Theme.of(context).primaryColor,
-                                                          ),
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
                                                     ),
                                                     Text(
                                                       equipamento

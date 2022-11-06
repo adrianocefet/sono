@@ -57,7 +57,9 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
                           0.4
                         ])),
                     child: const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Constantes.corAzulEscuroPrincipal,
+                      ),
                     ),
                   ),
                 );

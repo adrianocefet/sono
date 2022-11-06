@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
@@ -49,11 +46,37 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
                       ? equipamentos = pegarEquipamentos(snapshot.data!.docs)
                       : null;
                   inicializou = true;
-                  return Scaffold(
-                    body: ListView(
-                        scrollDirection: Axis.vertical,
-                        children: [construirTabela()]),
-                  );
+
+                  return equipamentos.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.cancel,
+                                size: 80.0,
+                                color: Constantes.corAzulEscuroPrincipal,
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Text(
+                                'Nenhum equipamento encontrado nesse hospital!',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Constantes.corAzulEscuroPrincipal,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        )
+                      : Scaffold(
+                          body: ListView(
+                              scrollDirection: Axis.vertical,
+                              children: [construirTabela()]),
+                        );
               }
             }));
   }

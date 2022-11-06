@@ -92,13 +92,9 @@ class Equipamento {
     descricao = equipamentoInfoMap["descrição"];
     tipo = _lerTipoDeEquipamentoDoBancoDeDados(equipamentoInfoMap["tipo"])!;
     hospital = equipamentoInfoMap["hospital"];
-    equipamentoInfoMap["informacoes_tecnicas"] != null
-        ? informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"]
-        : informacoesTecnicas = '';
-    equipamentoInfoMap["higiene_e_cuidados_paciente"] != null
-        ? higieneECuidadosPaciente =
-            equipamentoInfoMap["higiene_e_cuidados_paciente"]
-        : higieneECuidadosPaciente = null;
+    informacoesTecnicas = equipamentoInfoMap["informacoes_tecnicas"] ?? '';
+    higieneECuidadosPaciente =
+        equipamentoInfoMap["higiene_e_cuidados_paciente"] ?? null;
     fabricante = equipamentoInfoMap["fabricante"];
     alteradoPor = equipamentoInfoMap["alterado_por"];
     manualPdf = equipamentoInfoMap["manual"];
@@ -109,10 +105,9 @@ class Equipamento {
 
     tamanho = equipamentoInfoMap["tamanho"];
     numeroSerie = equipamentoInfoMap["numero_serie"];
-    equipamentoInfoMap["data_de_expedicao"] != null
-        ? dataDeExpedicao =
-            (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate()
-        : dataDeExpedicao = null;
+    dataDeExpedicao = equipamentoInfoMap["data_de_expedicao"] != null
+        ? (equipamentoInfoMap["data_de_expedicao"] as Timestamp).toDate()
+        : null;
     dataDeDevolucao = equipamentoInfoMap["data_de_devolucao"];
     observacao = equipamentoInfoMap["observacao"];
 

@@ -92,8 +92,7 @@ class _LerQrCodeState extends State<LerQrCode> {
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 10.0),
-                                                child: Text(
-                                                    '${equipamento!.nome}'),
+                                                child: Text(equipamento!.nome),
                                               ),
                                               GestureDetector(
                                                 onTap: () {

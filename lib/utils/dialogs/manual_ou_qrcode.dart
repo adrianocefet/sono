@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
-import 'package:sono/pages/perfis/perfil_equipamento/widgets/ler_qrcode.dart';
+import 'package:sono/pages/perfis/perfil_equipamento/qr_code/ler_qrcode.dart';
 
 import '../../pages/tabelas/tab_tipos_equipamento.dart';
 import '../models/paciente.dart';
