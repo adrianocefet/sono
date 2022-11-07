@@ -193,7 +193,9 @@ class BotoesEquipamento extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: SizedBox(
-            width: mediaQuery.size.width * (1 / 3),
+            width: pacientePreEscolhido == null
+                ? mediaQuery.size.width * (1 / 3)
+                : null,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
