@@ -17,62 +17,67 @@ class QrCodeGerado extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text('QR CODE'),
+        title: const Text('Qr Code'),
         centerTitle: true,
       ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            Text(
-              'Código gerado do equipamento: \n$idEquipamento',
-              style: const TextStyle(color: Colors.black),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Screenshot(
-              controller: screenshotController,
-              child: QrImage(
-                data: idEquipamento,
-                size: 200,
-                backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(
+                height: 30,
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).highlightColor),
-                onPressed: () async {
-                  const snackBar = SnackBar(
-                    content: Text(
-                      'Salvo com sucesso!',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Constantes.corAzulEscuroSecundario,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  final imagefile = await screenshotController.capture();
-                  if (imagefile != null) {
-                    saveImage(imagefile);
-                  } else {
-                    return;
-                  }
-                },
-                child: const Text(
-                  'Salvar na Galeria',
-                  style: TextStyle(color: Colors.black),
-                ))
-          ],
+              Text(
+                'Código gerado do equipamento: \n$idEquipamento',
+                style: const TextStyle(color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Screenshot(
+                controller: screenshotController,
+                child: QrImage(
+                  data: idEquipamento,
+                  size: 250,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        )),
+                    onPressed: () async {
+                      const snackBar = SnackBar(
+                        content: Text(
+                          'Salvo com sucesso!',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Constantes.corAzulEscuroSecundario,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      final imagefile = await screenshotController.capture();
+                      if (imagefile != null) {
+                        saveImage(imagefile);
+                      } else {
+                        return;
+                      }
+                    },
+                    child: const Text(
+                      'Salvar na Galeria',
+                      style: TextStyle(color: Colors.black),
+                    )),
+              )
+            ],
+          ),
         ),
       ),
     );

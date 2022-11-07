@@ -99,6 +99,7 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                                   children: filtradas.reversed
                                       .map((Solicitacao solicitacao) {
                                     return SolicitacoesPainel(
+                                        key: ValueKey(solicitacao.id),
                                         idSolicitacao: solicitacao.id);
                                   }).toList(),
                                 ))

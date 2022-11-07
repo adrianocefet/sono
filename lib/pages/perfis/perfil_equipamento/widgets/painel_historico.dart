@@ -299,6 +299,8 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                         solicitacao.urlPdf !=
                                                                 null
                                                             ? () async {
+                                                                mostrarDialogCarregando(
+                                                                    context);
                                                                 final url =
                                                                     solicitacao
                                                                         .urlPdf;
@@ -308,6 +310,9 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                                         solicitacao
                                                                             .tipo,
                                                                         equipamentoSolicitado);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
@@ -333,7 +338,7 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                                               ? "Ver termo de responsabilidade"
                                                               : "Ver recibo"
                                                           : "Ver documento de devolução",
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                     )),
                                               )

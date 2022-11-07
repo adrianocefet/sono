@@ -344,7 +344,6 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                               TextButton(
                                 onPressed: () {
                                   negarSolicitacao(context, solicitacao);
-                                  setState(() {});
                                 },
                                 child: const Text(
                                   'Negar ',
