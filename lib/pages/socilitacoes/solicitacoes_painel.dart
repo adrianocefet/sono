@@ -381,6 +381,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               context, erro.toString());
                                         }
                                         Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Constantes
+                                                .corAzulEscuroPrincipal,
+                                            content: Text(
+                                                "Solicitação aceita com sucesso!"),
+                                          ),
+                                        );
                                         await solicitacao.gerarTermoEmprestimo(
                                             pacienteSolicitado,
                                             equipamentoSolicitado,
@@ -433,6 +442,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                 context, erro.toString());
                                           }
                                           Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Constantes
+                                                  .corAzulEscuroPrincipal,
+                                              content: Text(
+                                                  "Solicitação aceita com sucesso!"),
+                                            ),
+                                          );
                                           await solicitacao.gerarTermoDevolucao(
                                               integridadeDoEquipamento,
                                               pacienteSolicitado,

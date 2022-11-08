@@ -94,9 +94,29 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
+                  return Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Constantes.corAzulEscuroPrincipal,
+                      centerTitle: true,
+                    ),
+                    body: Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                            Color.fromARGB(255, 194, 195, 255),
+                            Colors.white
+                          ],
+                              stops: [
+                            0,
+                            0.4
+                          ])),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: Constantes.corAzulEscuroPrincipal,
+                        ),
+                      ),
                     ),
                   );
                 default:
@@ -153,277 +173,264 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                               0,
                               0.4
                             ])),
-                        child: Padding(
+                        child: ListView(
                           padding: const EdgeInsets.all(8.0),
-                          child: ListView(
-                            children: [
-                              Container(
+                          children: [
+                            Container(
+                              width: mediaQuery.size.width,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(width: 1)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TituloEFoto(
+                                        equipamento: equipamento,
+                                        semfoto: widget.controller.semimagem),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    AtributosEquipamento(
+                                        equipamento: equipamento),
+                                    Visibility(
+                                      visible: [
+                                        PerfilUsuario.mestre,
+                                        PerfilUsuario.dispensacao,
+                                        PerfilUsuario.vigilancia
+                                      ].contains(model.perfil),
+                                      child: Visibility(
+                                        visible: equipamento.status ==
+                                            StatusDoEquipamento.disponivel,
+                                        child: BotoesEquipamento(
+                                          equipamento: equipamento,
+                                          model: model,
+                                          pacientePreEscolhido:
+                                              widget.pacientePreEscolhido,
+                                          contextoScaffold: context,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                                visible: equipamento.status !=
+                                    StatusDoEquipamento.disponivel,
+                                child: Detalhes(
+                                    model: model,
+                                    equipamento: equipamento,
+                                    contextoScaffold: context)),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
                                 width: mediaQuery.size.width,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(width: 1)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TituloEFoto(
-                                          equipamento: equipamento,
-                                          semfoto: widget.controller.semimagem),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      AtributosEquipamento(
-                                          equipamento: equipamento),
-                                      Visibility(
-                                        visible: [
-                                          PerfilUsuario.mestre,
-                                          PerfilUsuario.dispensacao,
-                                          PerfilUsuario.vigilancia
-                                        ].contains(model.perfil),
-                                        child: Visibility(
-                                          visible: equipamento.status ==
-                                              StatusDoEquipamento.disponivel,
-                                          child: BotoesEquipamento(
-                                            equipamento: equipamento,
-                                            model: model,
-                                            pacientePreEscolhido:
-                                                widget.pacientePreEscolhido,
-                                            contextoScaffold: context,
-                                          ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Visibility(
-                                  visible: equipamento.status !=
-                                      StatusDoEquipamento.disponivel,
-                                  child: Detalhes(
-                                      model: model,
-                                      equipamento: equipamento,
-                                      contextoScaffold: context)),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                  width: mediaQuery.size.width,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(width: 1)),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
-                                          color: Constantes
-                                              .corAzulEscuroSecundario,
-                                        ),
-                                        height: 30,
-                                        child: const Text(
-                                          "Histórico de empréstimos e devoluções",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
-                                        child: ElevatedButton.icon(
-                                            icon: const Icon(
-                                              Icons.list_alt,
-                                              color: Colors.black,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color.fromRGBO(
-                                                        97, 253, 125, 1),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          18.0),
-                                                )),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HistoricoEmprestimos(
-                                                            equipamento:
-                                                                equipamento.id,
-                                                            pacientePreEscolhido:
-                                                                widget
-                                                                    .pacientePreEscolhido,
-                                                          )));
-                                            },
-                                            label: const Text(
-                                              "Ver lista",
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                  width: mediaQuery.size.width,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(width: 1)),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
-                                          color: Constantes
-                                              .corAzulEscuroSecundario,
-                                        ),
-                                        height: 30,
-                                        child: const Text(
-                                          "Manual do equipamento",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
-                                        child: ElevatedButton.icon(
-                                            icon: const Icon(
-                                              Icons.picture_as_pdf,
-                                              color: Colors.black,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color.fromRGBO(
-                                                        97, 253, 125, 1),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          18.0),
-                                                )),
-                                            onPressed: _testarUrl(
-                                                    equipamento.manualPdf ?? '')
-                                                ? () async {
-                                                    mostrarDialogCarregando(
-                                                        context);
-                                                    try {
-                                                      final url = equipamento
-                                                          .manualPdf!;
-                                                      final arquivo =
-                                                          await PDFapi
-                                                              .carregarLink(
-                                                                  url);
-                                                      Navigator.pop(context);
-                                                      abrirPDF(
-                                                          context, arquivo);
-                                                    } catch (e) {
-                                                      Navigator.pop(context);
-                                                      mostrarMensagemErro(
-                                                          context,
-                                                          'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
-                                                    }
-                                                  }
-                                                : null,
-                                            label: Text(
-                                              _testarUrl(
-                                                      equipamento.manualPdf ??
-                                                          '')
-                                                  ? "Visualizar PDF"
-                                                  : "PDF indisponível",
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Visibility(
-                                  visible:
-                                      equipamento.informacoesTecnicas != null,
-                                  child: InformacoesAdicionais(
-                                      equipamento,
-                                      "Informações técnicas",
-                                      equipamento.informacoesTecnicas == ''
-                                          ? 'Clique em editar para adicionar informações'
-                                          : equipamento.informacoesTecnicas)),
-                              Visibility(
-                                  visible: equipamento
-                                              .higieneECuidadosPaciente !=
-                                          null &&
-                                      equipamento.higieneECuidadosPaciente !=
-                                          '',
-                                  child: InformacoesAdicionais(
-                                    equipamento,
-                                    "Higiene e informações ao paciente",
-                                    equipamento.higieneECuidadosPaciente ??
-                                        'Clique em editar para adicionar informações',
-                                  )),
-                              Visibility(
-                                visible: _testarYoutubeUrl(
-                                        equipamento.videoInstrucional ?? '') ==
-                                    true,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Container(
-                                    width: mediaQuery.size.width,
-                                    decoration: BoxDecoration(
                                         color:
                                             Constantes.corAzulEscuroSecundario,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(width: 1)),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(8),
-                                              topRight: Radius.circular(8),
-                                            ),
-                                            color: Constantes
-                                                .corAzulEscuroSecundario,
-                                          ),
-                                          height: 30,
-                                          child: const Text(
-                                            "Modo de uso",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        _youtubeBuilder()
-                                      ],
+                                      ),
+                                      height: 30,
+                                      child: const Text(
+                                        "Histórico de empréstimos e devoluções",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: ElevatedButton.icon(
+                                          icon: const Icon(
+                                            Icons.list_alt,
+                                            color: Colors.black,
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromRGBO(
+                                                      97, 253, 125, 1),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18.0),
+                                              )),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoricoEmprestimos(
+                                                          equipamento:
+                                                              equipamento.id,
+                                                          pacientePreEscolhido:
+                                                              widget
+                                                                  .pacientePreEscolhido,
+                                                        )));
+                                          },
+                                          label: const Text(
+                                            "Ver lista",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                width: mediaQuery.size.width,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(width: 1)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        color:
+                                            Constantes.corAzulEscuroSecundario,
+                                      ),
+                                      height: 30,
+                                      child: const Text(
+                                        "Manual do equipamento",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: ElevatedButton.icon(
+                                          icon: const Icon(
+                                            Icons.picture_as_pdf,
+                                            color: Colors.black,
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromRGBO(
+                                                      97, 253, 125, 1),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18.0),
+                                              )),
+                                          onPressed: _testarUrl(
+                                                  equipamento.manualPdf ?? '')
+                                              ? () async {
+                                                  mostrarDialogCarregando(
+                                                      context);
+                                                  try {
+                                                    final url =
+                                                        equipamento.manualPdf!;
+                                                    final arquivo = await PDFapi
+                                                        .carregarLink(url);
+                                                    Navigator.pop(context);
+                                                    abrirPDF(context, arquivo);
+                                                  } catch (e) {
+                                                    Navigator.pop(context);
+                                                    mostrarMensagemErro(context,
+                                                        'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
+                                                  }
+                                                }
+                                              : null,
+                                          label: Text(
+                                            _testarUrl(
+                                                    equipamento.manualPdf ?? '')
+                                                ? "Visualizar PDF"
+                                                : "PDF indisponível",
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                                visible:
+                                    equipamento.informacoesTecnicas != null,
+                                child: InformacoesAdicionais(
+                                    equipamento,
+                                    "Informações técnicas",
+                                    equipamento.informacoesTecnicas == ''
+                                        ? 'Clique em editar para adicionar informações'
+                                        : equipamento.informacoesTecnicas)),
+                            Visibility(
+                                visible: equipamento.higieneECuidadosPaciente !=
+                                        null &&
+                                    equipamento.higieneECuidadosPaciente != '',
+                                child: InformacoesAdicionais(
+                                  equipamento,
+                                  "Higiene e informações ao paciente",
+                                  equipamento.higieneECuidadosPaciente ??
+                                      'Clique em editar para adicionar informações',
+                                )),
+                            Visibility(
+                              visible: _testarYoutubeUrl(
+                                      equipamento.videoInstrucional ?? '') ==
+                                  true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  width: mediaQuery.size.width,
+                                  decoration: BoxDecoration(
+                                      color: Constantes.corAzulEscuroSecundario,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(width: 1)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8),
+                                          ),
+                                          color: Constantes
+                                              .corAzulEscuroSecundario,
+                                        ),
+                                        height: 30,
+                                        child: const Text(
+                                          "Modo de uso",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      _youtubeBuilder()
+                                    ],
                                   ),
                                 ),
                               ),
-                              Visibility(
-                                visible: [
-                                  PerfilUsuario.mestre,
-                                  PerfilUsuario.dispensacao,
-                                  PerfilUsuario.clinico,
-                                  PerfilUsuario.vigilancia
-                                ].contains(model.perfil),
-                                child: Observacao(equipamento),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Visibility(
+                              visible: [
+                                PerfilUsuario.mestre,
+                                PerfilUsuario.dispensacao,
+                                PerfilUsuario.clinico,
+                                PerfilUsuario.vigilancia
+                              ].contains(model.perfil),
+                              child: Observacao(equipamento),
+                            ),
+                          ],
                         )),
                   );
               }

@@ -361,9 +361,20 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                 child: Text('ERRO!'),
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Constantes.corAzulEscuroPrincipal,
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 2, color: Constantes.corAzulEscuroPrincipal),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white),
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Constantes.corAzulEscuroPrincipal,
+                    ),
+                  ),
                 ),
               );
             }

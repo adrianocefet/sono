@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/usuario.dart';
 
 Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
-  ControllerPerfilClinicoEquipamento controller = ControllerPerfilClinicoEquipamento();
+  ControllerPerfilClinicoEquipamento controller =
+      ControllerPerfilClinicoEquipamento();
   return await showDialog<Paciente>(
       context: context,
       builder: (BuildContext context) {
@@ -51,26 +53,39 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 400,
-                    height: 200,
-                    child: ScopedModelDescendant<Usuario>(
-                      builder: (context, child, model) {
-                        return StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('pacientes')
-                              .where('hospitais_vinculados',
-                                  arrayContains: model.instituicao.emString)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.none:
-                              case ConnectionState.waiting:
+                  ScopedModelDescendant<Usuario>(
+                    builder: (context, child, model) {
+                      return StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('pacientes')
+                            .where('hospitais_vinculados',
+                                arrayContains: model.instituicao.emString)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                            case ConnectionState.waiting:
+                              return const Center(
+                                child: LinearProgressIndicator(
+                                  color: Constantes.corAzulEscuroPrincipal,
+                                ),
+                              );
+                            default:
+                              if (snapshot.data!.docs.isEmpty) {
                                 return const Center(
-                                  child: CircularProgressIndicator(),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: FittedBox(
+                                      child: Text(
+                                          'Nenhum paciente encontrado nesse hospital!'),
+                                    ),
+                                  ),
                                 );
-                              default:
-                                return Padding(
+                              }
+                              return SizedBox(
+                                width: 400,
+                                height: 200,
+                                child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GridView(
                                     padding: EdgeInsets.zero,
@@ -110,7 +125,8 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                                         backgroundImage:
                                                             NetworkImage(
                                                           paciente.urlFotoDePerfil ??
-                                                              controller.semimagemPaciente,
+                                                              controller
+                                                                  .semimagemPaciente,
                                                         ),
                                                       ),
                                                     ),
@@ -161,12 +177,12 @@ Future<Paciente?> mostrarDialogEscolherPaciente(BuildContext context) async {
                                       },
                                     ).toList(),
                                   ),
-                                );
-                            }
-                          },
-                        );
-                      },
-                    ),
+                                ),
+                              );
+                          }
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
