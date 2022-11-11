@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/login/login.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
@@ -16,6 +17,10 @@ void main() async {
       ? null
       : Usuario.porMapJson(
           Map<String, String?>.from(jsonDecode(prefs.getString('usuario')!)));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     MyApp(
       usuarioLogado: statusLogin,
