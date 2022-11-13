@@ -20,12 +20,7 @@ import 'package:sono/utils/models/usuario.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../pdf/tela_pdf.dart';
 import '../../../utils/dialogs/carregando.dart';
-import '../../../utils/dialogs/confirmar.dart';
-import '../../../utils/dialogs/escolher_paciente_dialog.dart';
-import '../../../utils/dialogs/justificativa.dart';
 import '../../../utils/services/firebase.dart';
-import '../../tabelas/widgets/item_paciente.dart';
-import '../../tabelas/widgets/item_usuario.dart';
 
 class TelaEquipamento extends StatefulWidget {
   final ControllerPerfilClinicoEquipamento controller;

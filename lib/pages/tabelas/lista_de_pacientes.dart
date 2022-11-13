@@ -6,16 +6,21 @@ import 'package:sono/utils/models/paciente.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sono/utils/services/firebase.dart';
-
+import '../../utils/models/equipamento.dart';
+import '../../utils/models/solicitacao.dart';
 import '../../widgets/pesquisa_de_pacientes.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
 
 class ListaDePacientes extends StatelessWidget {
-  final PageController pageController;
-  const ListaDePacientes({
-    Key? key,
-    required this.pageController,
-  }) : super(key: key);
+  final PageController? pageController;
+  final Equipamento? equipamentoPreEscolhido;
+  final TipoSolicitacao? tipoSolicitacao;
+  const ListaDePacientes(
+      {Key? key,
+      this.pageController,
+      this.equipamentoPreEscolhido,
+      this.tipoSolicitacao})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,9 @@ class ListaDePacientes extends StatelessWidget {
               ),
             ],
           ),
-          drawer: FuncionalidadesDrawer(pageController),
+          drawer: equipamentoPreEscolhido == null
+              ? FuncionalidadesDrawer(pageController!)
+              : null,
           drawerEnableOpenDragGesture: true,
           body: Container(
             decoration: const BoxDecoration(
@@ -78,7 +85,11 @@ class ListaDePacientes extends StatelessWidget {
                                 SizedBox(
                                   height: index == 0 ? 10 : 0,
                                 ),
-                                ItemPaciente(paciente: paciente),
+                                ItemPaciente(
+                                    paciente: paciente,
+                                    equipamentoPreEscolhido:
+                                        equipamentoPreEscolhido,
+                                    tipoSolicitacao: tipoSolicitacao),
                               ],
                             );
                           },
@@ -94,7 +105,8 @@ class ListaDePacientes extends StatelessWidget {
               },
             ),
           ),
-          floatingActionButton: usuario.perfil == PerfilUsuario.vigilancia
+          floatingActionButton: usuario.perfil == PerfilUsuario.vigilancia ||
+                  equipamentoPreEscolhido != null
               ? null
               : FloatingActionButton(
                   backgroundColor: Theme.of(context).focusColor,

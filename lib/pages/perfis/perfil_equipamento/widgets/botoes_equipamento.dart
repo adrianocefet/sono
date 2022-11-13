@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/tabelas/lista_de_pacientes.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/models/equipamento.dart';
+import 'package:sono/utils/models/solicitacao.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/confirmar.dart';
 import '../../../../utils/dialogs/error_message.dart';
-import '../../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/usuario.dart';
 
@@ -43,26 +44,13 @@ class _BotoesEquipamentoState extends State<BotoesEquipamento> {
                   )),
               onPressed: () async {
                 if (widget.pacientePreEscolhido == null) {
-                  Paciente? pacienteEscolhido =
-                      await mostrarDialogEscolherPaciente(context);
-                  if (pacienteEscolhido != null) {
-                    mostrarDialogCarregando(widget.contextoScaffold);
-                    try {
-                      await widget.equipamento
-                          .solicitarEmprestimo(pacienteEscolhido, widget.model);
-                    } catch (erro) {
-                      widget.equipamento.status =
-                          StatusDoEquipamento.disponivel;
-                      mostrarMensagemErro(context, erro.toString());
-                    }
-                    Navigator.pop(widget.contextoScaffold);
-                    ScaffoldMessenger.of(widget.contextoScaffold).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Constantes.corAzulEscuroPrincipal,
-                        content: Text("Solicitação enviada à dispensação!"),
-                      ),
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ListaDePacientes(
+                      equipamentoPreEscolhido: widget.equipamento,
+                      tipoSolicitacao: TipoSolicitacao.emprestimo,
                     );
-                  }
+                  }));
                 } else {
                   if (await mostrarDialogConfirmacao(
                           context,
@@ -218,28 +206,10 @@ class _BotoesEquipamentoState extends State<BotoesEquipamento> {
                   )),
               onPressed: () async {
                 if (widget.pacientePreEscolhido == null) {
-                  Paciente? pacienteEscolhido =
-                      await mostrarDialogEscolherPaciente(context);
-                  if (pacienteEscolhido != null) {
-                    mostrarDialogCarregando(widget.contextoScaffold);
-                    try {
-                      await widget.equipamento
-                          .conceder(pacienteEscolhido, widget.model);
-                    } catch (erro) {
-                      widget.equipamento.status =
-                          StatusDoEquipamento.disponivel;
-                      mostrarMensagemErro(
-                          widget.contextoScaffold, erro.toString());
-                    }
-                    Navigator.pop(widget.contextoScaffold);
-                    ScaffoldMessenger.of(widget.contextoScaffold).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Constantes.corAzulEscuroPrincipal,
-                        content: Text(
-                            "Equipamento concedido ao paciente selecionado!"),
-                      ),
-                    );
-                  }
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => ListaDePacientes(
+                          equipamentoPreEscolhido: widget.equipamento,
+                          tipoSolicitacao: TipoSolicitacao.concessao))));
                 } else {
                   if (await mostrarDialogConfirmacao(
                           context,
