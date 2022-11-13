@@ -102,15 +102,18 @@ class _HistoricoEmprestimosState extends State<HistoricoEmprestimos> {
                             0.4
                           ])),
                       child: docsSolicitacoes.isNotEmpty
-                          ? SingleChildScrollView(
+                          ? ListView.builder(
+                              itemCount: docsSolicitacoes.length,
                               padding: const EdgeInsets.only(bottom: 140),
-                              child: Column(
-                                children: docsSolicitacoes.reversed
-                                    .map((Solicitacao solicitacao) {
-                                  return PainelHistorico(
-                                      idSolicitacao: solicitacao.id);
-                                }).toList(),
-                              ))
+                              itemBuilder: (context, index) {
+                                int reversedIndex =
+                                    docsSolicitacoes.length - 1 - index;
+
+                                return PainelHistorico(
+                                    idSolicitacao:
+                                        docsSolicitacoes[reversedIndex].id);
+                              },
+                            )
                           : Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Center(
