@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/utils/models/avaliacao.dart';
 import 'package:sono/utils/models/equipamento.dart';
@@ -10,7 +12,7 @@ class Paciente {
   late final String idCadastrador;
   late final String numeroProntuario;
   late final String sexo;
-  late final String status;
+  late final StatusPaciente status;
   late final String endereco;
   late final String? email;
   late final String? telefonePrincipal;
@@ -100,21 +102,17 @@ class Paciente {
     }
   }
 
-  String get statusFormatado {
-    switch (status) {
-      case 'aguardando_cpap':
-        return 'Aguardando CPAP';
-      case 'em_adaptacao':
-        return 'Em adaptação';
-      case 'acomp_servico_terciario':
-        return 'Acompanhando em serviço terciário';
-      case 'acomp_servico_secundario':
-        return 'Acompanhando em serviço secundário';
-      case 'nao_aderente':
-        return 'Não aderente';
-      default:
-        return 'Em assistência hospitalar';
-    }
+  StatusPaciente obterStatusPorString(String stringStatus) {
+    const Map<String, StatusPaciente> status = {
+      'aguardando_cpap': StatusPaciente.aguardandoCPAP,
+      'em_adaptacao': StatusPaciente.emAdaptacao,
+      'acomp_servico_terciario': StatusPaciente.acompServicoTerciario,
+      'acomp_servico_secundario': StatusPaciente.acompServicoSecundario,
+      'nao_aderente': StatusPaciente.naoAderente,
+      'em_assistencia_hospitalar': StatusPaciente.emAssistenciaHospitalar,
+    };
+
+    return status[stringStatus]!;
   }
 
   String get sexoReduzido {
@@ -147,7 +145,7 @@ class Paciente {
   void _setarAtributos() {
     nomeDaMae = infoMap['nome_da_mae'];
     sexo = infoMap['sexo'];
-    status = infoMap["status"];
+    status = obterStatusPorString(infoMap["status"]);
     idCadastrador = infoMap["id_cadastrador"];
     nomeCompleto = infoMap["nome_completo"];
     urlFotoDePerfil = infoMap["url_foto_de_perfil"];
@@ -178,5 +176,63 @@ class Paciente {
     datasUltimosExames = infoMap['datas_ultimos_exames'] != null
         ? Map<String, Timestamp>.from(infoMap['datas_ultimos_exames'])
         : null;
+  }
+}
+
+enum StatusPaciente {
+  aguardandoCPAP,
+  emAdaptacao,
+  acompServicoTerciario,
+  acompServicoSecundario,
+  naoAderente,
+  emAssistenciaHospitalar
+}
+
+extension ExtensionStatusPaciente on StatusPaciente {
+  String get emString {
+    const Map<StatusPaciente, String> strings = {
+      StatusPaciente.aguardandoCPAP: 'aguardando_cpap',
+      StatusPaciente.emAdaptacao: 'em_adaptacao',
+      StatusPaciente.acompServicoTerciario: 'acomp_servico_terciario',
+      StatusPaciente.acompServicoSecundario: 'acomp_servico_secundario',
+      StatusPaciente.naoAderente: 'nao_aderente',
+      StatusPaciente.emAssistenciaHospitalar: 'em_assistencia_hospitalar',
+    };
+
+    return strings[this]!;
+  }
+
+  String get emStringFormatada {
+    switch (this) {
+      case StatusPaciente.aguardandoCPAP:
+        return 'Aguardando CPAP';
+      case StatusPaciente.emAdaptacao:
+        return 'Em adaptação';
+      case StatusPaciente.acompServicoTerciario:
+        return 'Acompanhando em serviço terciário';
+      case StatusPaciente.acompServicoSecundario:
+        return 'Acompanhando em serviço secundário';
+      case StatusPaciente.naoAderente:
+        return 'Não aderente';
+      case StatusPaciente.emAssistenciaHospitalar:
+        return 'Em assistência hospitalar';
+    }
+  }
+
+  Widget get icone {
+    const Map<StatusPaciente, Widget> icones = {
+      StatusPaciente.aguardandoCPAP:
+          FaIcon(FontAwesomeIcons.clock, color: Colors.white),
+      StatusPaciente.emAdaptacao: FaIcon(Icons.masks, color: Colors.yellow),
+      StatusPaciente.acompServicoTerciario:
+          FaIcon(FontAwesomeIcons.smile, color: Colors.lightBlueAccent),
+      StatusPaciente.acompServicoSecundario:
+          FaIcon(FontAwesomeIcons.smile, color: Colors.greenAccent),
+      StatusPaciente.naoAderente: Icon(Icons.close, color: Colors.red),
+      StatusPaciente.emAssistenciaHospitalar:
+          FaIcon(Icons.warning_rounded, color: Colors.orange),
+    };
+
+    return icones[this]!;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/avaliacao/questionarios/widgets/enunciado_respostas.dart';
@@ -41,7 +42,7 @@ class _RespostaHorarioPittsburgState extends State<RespostaHorarioPittsburg> {
         ),
         IconButton(
           onPressed: () async => _escolherHorario(),
-          icon: const Icon(Icons.lock_clock),
+          icon: const FaIcon(FontAwesomeIcons.clock),
           iconSize: MediaQuery.of(context).size.width * 0.25,
           color: Constantes.corAzulEscuroPrincipal,
         ),

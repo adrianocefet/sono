@@ -63,29 +63,29 @@ class RegistroPacienteHelper {
     return peso / (altura * altura);
   }
 
-  Future<StatusPaciente> registrarPaciente() async {
+  Future<StatusPacienteNoBancoDeDados> registrarPaciente() async {
     print(_gerarMapaDeRespostas());
 
-    StatusPaciente status = await _checarSePacienteJaExiste();
-    if (status == StatusPaciente.pacienteNovo) {
+    StatusPacienteNoBancoDeDados status = await _checarSePacienteJaExiste();
+    if (status == StatusPacienteNoBancoDeDados.pacienteNovo) {
       idPaciente = await _adicionarNovoPacienteAoBancoDeDados();
     }
 
     return status;
   }
 
-  Future<StatusPaciente> editarPaciente() async {
+  Future<StatusPacienteNoBancoDeDados> editarPaciente() async {
     print(_gerarMapaDeRespostas());
 
-    StatusPaciente status = await _checarSePacienteJaExiste();
-    if (status == StatusPaciente.jaExistenteNoBancoDeDados) {
+    StatusPacienteNoBancoDeDados status = await _checarSePacienteJaExiste();
+    if (status == StatusPacienteNoBancoDeDados.jaExistenteNoBancoDeDados) {
       idPaciente = await _editarInfomarcoesDoPacienteNoBancoDeDados();
     }
 
     return status;
   }
 
-  Future<StatusPaciente> _checarSePacienteJaExiste() async {
+  Future<StatusPacienteNoBancoDeDados> _checarSePacienteJaExiste() async {
     bool jaPossuiPaciente = false;
 
     idPacientePreexistente =
@@ -96,9 +96,9 @@ class RegistroPacienteHelper {
     }
 
     if (jaPossuiPaciente) {
-      return StatusPaciente.jaExistenteNoBancoDeDados;
+      return StatusPacienteNoBancoDeDados.jaExistenteNoBancoDeDados;
     } else {
-      return StatusPaciente.pacienteNovo;
+      return StatusPacienteNoBancoDeDados.pacienteNovo;
     }
   }
 
@@ -116,7 +116,7 @@ class RegistroPacienteHelper {
   }
 }
 
-enum StatusPaciente {
+enum StatusPacienteNoBancoDeDados {
   pacienteNovo,
   jaExistenteNoBancoDeDados,
 }

@@ -46,7 +46,7 @@ class ItemPaciente extends StatelessWidget {
                     children: [
                       const Text("Status: "),
                       Text(
-                        paciente.statusFormatado,
+                        paciente.status.emStringFormatada,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColorLight,
@@ -75,7 +75,7 @@ class ItemPaciente extends StatelessWidget {
 
 class FotoDoPacienteThumbnail extends StatelessWidget {
   final String? urlImagem;
-  final String statusPaciente;
+  final StatusPaciente statusPaciente;
   const FotoDoPacienteThumbnail(
     this.urlImagem, {
     Key? key,
@@ -116,17 +116,15 @@ class FotoDoPacienteThumbnail extends StatelessWidget {
                     : NetworkImage(urlImagem!),
               ),
         Container(
+          width: 20,
+          height: 20,
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Theme.of(context).primaryColor,
           ),
-          child: const FaIcon(
-            FontAwesomeIcons.smile,
-            color: Colors.white,
-            size: 15,
-          ),
-        )
+          child: FittedBox(child: statusPaciente.icone),
+        ),
       ],
     );
   }

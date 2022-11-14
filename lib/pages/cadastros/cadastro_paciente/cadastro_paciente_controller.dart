@@ -29,7 +29,7 @@ class CadastroPacienteController {
       try {
         mostrarDialogCarregando(context);
         switch (await helper.registrarPaciente()) {
-          case StatusPaciente.pacienteNovo:
+          case StatusPacienteNoBancoDeDados.pacienteNovo:
             Navigator.pop(context);
             Navigator.pushReplacement(
               context,
@@ -38,7 +38,7 @@ class CadastroPacienteController {
               ),
             );
             break;
-          case StatusPaciente.jaExistenteNoBancoDeDados:
+          case StatusPacienteNoBancoDeDados.jaExistenteNoBancoDeDados:
             Navigator.pop(context);
             mostrarAvisoJaPossuiPaciente(context);
             break;

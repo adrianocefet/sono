@@ -28,51 +28,66 @@ class _TelaResultadoBerlinState extends State<TelaResultadoBerlin> {
         centerTitle: true,
         backgroundColor: Constantes.corAzulEscuroPrincipal,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            color: corDoResultado.withOpacity(0.4),
-            child: Text(
-              widget.resultadoBerlin.resultadoEmString,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w500,
-                color: Constantes.corAzulEscuroPrincipal,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
+            stops: [0, 0.2],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              color: corDoResultado.withOpacity(0.4),
+              child: Text(
+                widget.resultadoBerlin.resultadoEmString,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                  color: Constantes.corAzulEscuroPrincipal,
+                ),
               ),
             ),
-          ),
-          const Divider(
-            color: Constantes.corAzulEscuroPrincipal,
-            thickness: 3,
-          ),
-          for (MapEntry<String, bool> resultado
-              in widget.resultadoBerlin.resultadosPorCategoria.entries)
-            _TextoResultadoDaCategoria(resultadoDaCategoria: resultado)
-        ],
+            const Divider(
+              color: Constantes.corAzulEscuroPrincipal,
+              thickness: 3,
+            ),
+            for (MapEntry<String, bool> resultado
+                in widget.resultadoBerlin.resultadosPorCategoria.entries)
+              _TextoResultadoDaCategoria(resultadoDaCategoria: resultado),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Constantes.corAzulEscuroPrincipal,
-              minimumSize: const Size(0, 140),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 5.0,
+            backgroundColor: Theme.of(context).focusColor,
+            fixedSize: Size(
+              MediaQuery.of(context).size.width,
+              50,
             ),
-            child: const Text(
-              "Salvar resultado no perfil do paciente",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
             ),
-            onPressed: () async {
-              if(!widget.consultando) Navigator.pop(context);
-              Navigator.pop(
-                context,
-                widget.resultadoBerlin.mapaDeRespostasEPontuacao,
-              );
-            },
           ),
+          child: const Text(
+            "Salvar resultado",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15, color: Colors.black),
+          ),
+          onPressed: () async {
+            if (!widget.consultando) Navigator.pop(context);
+            Navigator.pop(
+              context,
+              widget.resultadoBerlin.mapaDeRespostasEPontuacao,
+            );
+          },
         ),
       ),
     );
@@ -103,6 +118,7 @@ class _TextoResultadoDaCategoria extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         border: Border.all(width: 2, color: corDoResultado),
         borderRadius: const BorderRadius.all(

@@ -9,7 +9,7 @@ import 'widgets/controle_de_nav_pittsburg.dart';
 class Pittsburg extends StatefulWidget {
   late final PittsburgController _controller;
   Pittsburg({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
-    _controller = PittsburgController(autoPreencher:autoPreencher);
+    _controller = PittsburgController(autoPreencher: autoPreencher);
   }
 
   @override
@@ -91,17 +91,14 @@ class _PittsburgState extends State<Pittsburg> {
             },
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: Constantes.corAzulEscuroPrincipal,
-          child: ValueListenableBuilder(
-            valueListenable: paginaAtual!,
-            builder: (context, int paginaAtual, _) =>
-                ControleDeNavegacaoPittsburg(
-              controller: widget._controller,
-              paginaAtual: paginaAtual,
-              perguntaAtual: perguntaAtual,
-              questionarioSetState: () => setState(() {}),
-            ),
+        bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: paginaAtual!,
+          builder: (context, int paginaAtual, _) =>
+              ControleDeNavegacaoPittsburg(
+            controller: widget._controller,
+            paginaAtual: paginaAtual,
+            perguntaAtual: perguntaAtual,
+            questionarioSetState: () => setState(() {}),
           ),
         ),
       ),

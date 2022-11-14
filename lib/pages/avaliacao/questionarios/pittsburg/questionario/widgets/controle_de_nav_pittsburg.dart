@@ -56,7 +56,8 @@ class _ControleDeNavegacaoPittsburgState
                           if (widget.controller.formKey.currentState!
                               .validate()) {
                             widget.controller.formKey.currentState!.save();
-                            await widget.controller.passarParaProximaPagina(widget.questionarioSetState);
+                            await widget.controller.passarParaProximaPagina(
+                                widget.questionarioSetState);
                           }
                         }
                       : null;
@@ -102,7 +103,7 @@ class _ControleDeNavegacaoPittsburgState
               }(),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(40),
-                primary: naoEstaNaUltimaPergunta ? null : Colors.green,
+                backgroundColor: naoEstaNaUltimaPergunta ? null : Colors.green,
               ),
             ),
           ),
@@ -122,7 +123,7 @@ class _ControleDeNavegacaoPittsburgState
               ),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(40),
-                primary: Colors.orange[300],
+                backgroundColor: Colors.orange[300],
               ),
               onPressed: () async {
                 await widget.controller.passarParaPaginaAnterior();

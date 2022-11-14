@@ -20,7 +20,8 @@ class MultiplaCustomizadaPittsburg extends StatefulWidget {
       _MultiplaCustomizadaPittsburgState();
 }
 
-class _MultiplaCustomizadaPittsburgState extends State<MultiplaCustomizadaPittsburg> {
+class _MultiplaCustomizadaPittsburgState
+    extends State<MultiplaCustomizadaPittsburg> {
   ValueNotifier<bool> opcoesAtivadas = ValueNotifier<bool>(false);
 
   @override
@@ -40,7 +41,7 @@ class _MultiplaCustomizadaPittsburgState extends State<MultiplaCustomizadaPittsb
             child: TextFormField(
               onSaved: (value) {
                 widget.pergunta.setRespostaExtenso(value);
-              } ,
+              },
               onChanged: (value) {
                 if (value != "") {
                   opcoesAtivadas.value = true;
@@ -134,7 +135,7 @@ class _BotaoState extends State<_Botao> {
       ),
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(50),
-        primary: estaSelecionado
+        backgroundColor: estaSelecionado
             ? widget.corSelecionado ?? (peso == 0 ? Colors.green : Colors.red)
             : Constantes.corCinzaPrincipal,
       ),

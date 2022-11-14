@@ -40,8 +40,8 @@ class _SacsBRState extends State<SacsBR> {
   Widget build(BuildContext context) {
     perguntaAtual = perguntaAtual ?? widget.controller.listaDePerguntas.first;
 
-    final listaDeRespostas =
-        widget.controller.gerarListaDeRespostas(context, _passarParaProximaPagina);
+    final listaDeRespostas = widget.controller
+        .gerarListaDeRespostas(context, _passarParaProximaPagina);
 
     ValueNotifier paginaAtual = ValueNotifier(
       _pageViewController.positions.isNotEmpty
@@ -57,6 +57,7 @@ class _SacsBRState extends State<SacsBR> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text(
             "SACS-BR",
@@ -94,115 +95,112 @@ class _SacsBRState extends State<SacsBR> {
             },
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: Constantes.corAzulEscuroPrincipal,
-          child: ValueListenableBuilder(
-            valueListenable: paginaAtual,
-            builder: (context, paginaAtual, _) {
-              bool estaNaPrimeiraPergunta = paginaAtual == 1;
-              bool naoEstaNaUltimaPergunta =
-                  paginaAtual != widget.controller.tamanhoListaDeRespostas;
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      height:
-                          perguntaAtual?.tipo != TipoPergunta.extensoNumerico &&
-                                  naoEstaNaUltimaPergunta
-                              ? 0
-                              : 40,
-                      width:
-                          perguntaAtual?.tipo != TipoPergunta.extensoNumerico &&
-                                  naoEstaNaUltimaPergunta
-                              ? 0
-                              : double.maxFinite,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (naoEstaNaUltimaPergunta) {
-                            return perguntaAtual?.tipo ==
-                                    TipoPergunta.extensoNumerico
-                                ? () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      _formKey.currentState!.save();
-                                      await _passarParaProximaPagina();
-                                    }
+        bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: paginaAtual,
+          builder: (context, paginaAtual, _) {
+            bool estaNaPrimeiraPergunta = paginaAtual == 1;
+            bool naoEstaNaUltimaPergunta =
+                paginaAtual != widget.controller.tamanhoListaDeRespostas;
+            return Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    height:
+                        perguntaAtual?.tipo != TipoPergunta.extensoNumerico &&
+                                naoEstaNaUltimaPergunta
+                            ? 0
+                            : 40,
+                    width:
+                        perguntaAtual?.tipo != TipoPergunta.extensoNumerico &&
+                                naoEstaNaUltimaPergunta
+                            ? 0
+                            : double.maxFinite,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (naoEstaNaUltimaPergunta) {
+                          return perguntaAtual?.tipo ==
+                                  TipoPergunta.extensoNumerico
+                              ? () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    await _passarParaProximaPagina();
                                   }
-                                : null;
-                          } else {
-                            return () async {
-                              ScaffoldMessenger.of(context)
-                                  .removeCurrentSnackBar();
+                                }
+                              : null;
+                        } else {
+                          return () async {
+                            ScaffoldMessenger.of(context)
+                                .removeCurrentSnackBar();
 
-                              ResultadoSACSBR? resultadoSACSBR =
-                                  widget.controller.validarFormulario(_formKey);
-                              if (resultadoSACSBR != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    maintainState: true,
-                                    builder: (context) => ResultadoSACSBRView(
-                                      resultadoSACSBR: resultadoSACSBR,
-                                    ),
+                            ResultadoSACSBR? resultadoSACSBR =
+                                widget.controller.validarFormulario(_formKey);
+                            if (resultadoSACSBR != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  maintainState: true,
+                                  builder: (context) => ResultadoSACSBRView(
+                                    resultadoSACSBR: resultadoSACSBR,
                                   ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                      "Existem perguntas não respondidas!",
-                                    ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                    "Existem perguntas não respondidas!",
                                   ),
-                                );
-                              }
-                            };
-                          }
-                        }(),
-                        child: naoEstaNaUltimaPergunta
-                            ? const Text("Confirmar resposta")
-                            : const Text(
-                                "Finalizar questionário",
-                              ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(40),
-                          primary:
-                              naoEstaNaUltimaPergunta ? null : Colors.green,
-                        ),
+                                ),
+                              );
+                            }
+                          };
+                        }
+                      }(),
+                      child: naoEstaNaUltimaPergunta
+                          ? const Text("Confirmar resposta")
+                          : const Text(
+                              "Finalizar questionário",
+                            ),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(40),
+                        backgroundColor:
+                            naoEstaNaUltimaPergunta ? null : Colors.green,
                       ),
                     ),
-                    Visibility(
-                      visible: !(perguntaAtual?.tipo !=
-                              TipoPergunta.extensoNumerico &&
-                          naoEstaNaUltimaPergunta),
-                      child: const SizedBox(
-                        height: 10,
-                      ),
+                  ),
+                  Visibility(
+                    visible:
+                        !(perguntaAtual?.tipo != TipoPergunta.extensoNumerico &&
+                            naoEstaNaUltimaPergunta),
+                    child: const SizedBox(
+                      height: 10,
                     ),
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      height: estaNaPrimeiraPergunta ? 0 : 40,
-                      width: estaNaPrimeiraPergunta ? 0 : double.maxFinite,
-                      child: ElevatedButton(
-                        child: const Text(
-                          "Voltar para pergunta anterior",
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(40),
-                          primary: Colors.orange[300],
-                        ),
-                        onPressed: () async {
-                          await _passarParaPaginaAnterior();
-                        },
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    height: estaNaPrimeiraPergunta ? 0 : 40,
+                    width: estaNaPrimeiraPergunta ? 0 : double.maxFinite,
+                    child: ElevatedButton(
+                      child: const Text(
+                        "Voltar para pergunta anterior",
                       ),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(40),
+                        backgroundColor: Colors.orange[300],
+                      ),
+                      onPressed: () async {
+                        await _passarParaPaginaAnterior();
+                      },
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sono/pages/perfis/perfil_paciente/perfil_clinico_paciente_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/visao_geral/widgets/informacoes_gerais.dart';
+import 'package:sono/utils/helpers/registro_paciente_helper.dart';
 import 'package:sono/utils/models/paciente.dart';
 
 class FotoEInformacoesPaciente extends StatefulWidget {
@@ -41,7 +42,7 @@ class _FotoEInformacoesPacienteState extends State<FotoEInformacoesPaciente> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  'Status: ${paciente.statusFormatado}',
+                  'Status: ${paciente.status.emStringFormatada}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black,
@@ -54,7 +55,10 @@ class _FotoEInformacoesPacienteState extends State<FotoEInformacoesPaciente> {
             ],
           ),
         ),
-        _FotoDoPaciente(paciente.urlFotoDePerfil),
+        _FotoDoPaciente(
+          paciente.urlFotoDePerfil,
+          statusPaciente: widget.controller.paciente.status,
+        ),
       ],
     );
   }
@@ -62,9 +66,11 @@ class _FotoEInformacoesPacienteState extends State<FotoEInformacoesPaciente> {
 
 class _FotoDoPaciente extends StatelessWidget {
   final String? urlImagem;
+  final StatusPaciente statusPaciente;
   const _FotoDoPaciente(
     this.urlImagem, {
     Key? key,
+    required this.statusPaciente,
   }) : super(key: key);
 
   @override
@@ -106,10 +112,7 @@ class _FotoDoPaciente extends StatelessWidget {
             shape: BoxShape.circle,
             color: Theme.of(context).primaryColor,
           ),
-          child: const FaIcon(
-            FontAwesomeIcons.smile,
-            color: Colors.white,
-          ),
+          child: statusPaciente.icone,
         )
       ],
     );

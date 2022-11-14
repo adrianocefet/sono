@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_usuario/cadastro_usuario.dart';
+import 'package:sono/pages/controle_estoque/widgets/pesquisa_equipamento.dart';
 import 'package:sono/pages/tabelas/widgets/item_usuario.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,13 +27,10 @@ class ListaDeUsuarios extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  // showSearch(
-                  //   context: context,
-                  //   delegate: PesquisaDePacientes(
-                  //     'Paciente',
-                  //     usuario.instituicao.emString,
-                  //   ),
-                  // );
+                  showSearch(
+                    context: context,
+                    delegate: PesquisaEmLista(emUsuarios: true),
+                  );
                 },
                 icon: const Icon(Icons.search),
               ),

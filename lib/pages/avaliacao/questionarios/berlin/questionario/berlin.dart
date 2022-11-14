@@ -7,9 +7,7 @@ import 'berlin_controller.dart';
 
 class Berlin extends StatefulWidget {
   late final BerlinController controller;
-  Berlin(
-      {Map<String, dynamic>? autoPreencher, Key? key})
-      : super(key: key) {
+  Berlin({Map<String, dynamic>? autoPreencher, Key? key}) : super(key: key) {
     controller = BerlinController(autoPreencher: autoPreencher);
   }
 
@@ -128,7 +126,7 @@ class _BerlinState extends State<Berlin> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          color: Constantes.corAzulEscuroPrincipal,
+          color: Colors.white,
           child: ValueListenableBuilder(
             valueListenable: paginaAtual,
             builder: (context, paginaAtual, _) {
@@ -142,21 +140,18 @@ class _BerlinState extends State<Berlin> {
                   children: [
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 400),
-                      height:
-                          perguntaAtual?.tipo != TipoPergunta.numerica &&
-                                  naoEstaNaUltimaPergunta
-                              ? 0
-                              : 40,
-                      width:
-                          perguntaAtual?.tipo != TipoPergunta.numerica &&
-                                  naoEstaNaUltimaPergunta
-                              ? 0
-                              : double.maxFinite,
+                      height: perguntaAtual?.tipo != TipoPergunta.numerica &&
+                              naoEstaNaUltimaPergunta
+                          ? 0
+                          : 40,
+                      width: perguntaAtual?.tipo != TipoPergunta.numerica &&
+                              naoEstaNaUltimaPergunta
+                          ? 0
+                          : double.maxFinite,
                       child: ElevatedButton(
                         onPressed: () {
                           if (naoEstaNaUltimaPergunta) {
-                            return perguntaAtual?.tipo ==
-                                    TipoPergunta.numerica
+                            return perguntaAtual?.tipo == TipoPergunta.numerica
                                 ? () async {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
@@ -211,8 +206,9 @@ class _BerlinState extends State<Berlin> {
                               ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(40),
-                          primary:
-                              naoEstaNaUltimaPergunta ? null : Colors.green,
+                          backgroundColor: naoEstaNaUltimaPergunta
+                              ? Theme.of(context).primaryColor
+                              : Colors.green,
                         ),
                       ),
                     ),
@@ -229,7 +225,7 @@ class _BerlinState extends State<Berlin> {
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(40),
-                          primary: Colors.orange[300],
+                          backgroundColor: Colors.orange[300],
                         ),
                         onPressed: () async {
                           await _passarParaPaginaAnterior();

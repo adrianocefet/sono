@@ -27,62 +27,81 @@ class TelaResultadoStopBang extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           'Resultado',
         ),
-        backgroundColor: Constantes.corPrincipalQuestionarios,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Container(
-            height: 400,
-            alignment: AlignmentDirectional.center,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: Constantes.corAzulEscuroSecundario.withOpacity(0.7),
-              border: Border.all(
-                color: Constantes.corAzulEscuroPrincipal,
-                width: 4,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
+            stops: [0, 0.2],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Container(
+              height: 400,
+              alignment: AlignmentDirectional.center,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Constantes.corAzulEscuroPrincipal,
+                  width: 4,
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                resultadoEmString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: _cor,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  resultadoEmString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: _cor,
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Constantes.corPrincipalQuestionarios,
-              minimumSize: const Size(0, 140),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 5.0,
+            backgroundColor: Theme.of(context).focusColor,
+            fixedSize: Size(
+              MediaQuery.of(context).size.width,
+              50,
             ),
-            child: const Text(
-              "Salvar resultado no perfil do paciente",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
             ),
-            onPressed: () async {
-              if (!consultando) Navigator.pop(context);
-              Navigator.pop(
-                context,
-                resultadoStopBang.mapaDeRespostasEPontuacao,
-              );
-            },
           ),
+          child: const Text(
+            "Salvar resultado",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+            ),
+          ),
+          onPressed: () async {
+            if (!consultando) Navigator.pop(context);
+            Navigator.pop(
+              context,
+              resultadoStopBang.mapaDeRespostasEPontuacao,
+            );
+          },
         ),
       ),
     );

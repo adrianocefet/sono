@@ -21,6 +21,22 @@ class Usuario extends Model {
 
   Usuario();
 
+  Usuario.porQueryDocumentSnapshot(QueryDocumentSnapshot document) {
+    Map<String, dynamic> dados =
+        Map<String, dynamic>.from(document.data() as Map);
+    dados['id'] = document.id;
+    infoMap = dados;
+    id = dados['id'];
+    instituicao = _instituicaoPorString(dados['instituicao']);
+    perfil = _perfilPorString(dados['perfil']);
+    nomeCompleto = dados['nome_completo'];
+    urlFotoDePerfil = dados['url_foto_de_perfil'];
+    cpf = dados['cpf'];
+    senha = dados['senha'];
+    profissao = dados['profissao'] ?? 'Médico';
+    dataDeCadastro = dados['data_de_cadastro'].toDate();
+  }
+
   Usuario.porMapJson(Map<String, String?> dados) {
     id = dados['id']!;
     instituicao = _instituicaoPorString(dados['instituicao']!);

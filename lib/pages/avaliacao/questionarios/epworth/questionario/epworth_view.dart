@@ -81,15 +81,11 @@ class _EpworthState extends State<Epworth> {
             },
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: Constantes.corAzulEscuroPrincipal,
-          child: ValueListenableBuilder(
-            valueListenable: paginaAtual!,
-            builder: (context, int paginaAtual, _) =>
-                ControleDeNavegacaoEpworth(
-              controller: widget._controller,
-              paginaAtual: paginaAtual,
-            ),
+        bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: paginaAtual!,
+          builder: (context, int paginaAtual, _) => ControleDeNavegacaoEpworth(
+            controller: widget._controller,
+            paginaAtual: paginaAtual,
           ),
         ),
       ),

@@ -35,109 +35,129 @@ class ResultadoWHODASViewState extends State<ResultadoWHODASView> {
           actions: const <Widget>[],
         ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'TOTAL',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Constantes.corAzulEscuroSecundario,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color.fromRGBO(165, 166, 246, 1.0), Colors.white],
+              stops: [0, 0.2],
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'TOTAL',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Constantes.corAzulEscuroSecundario,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            height: 80,
-                            width: 80,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Constantes.domTotalColor,
+                            const SizedBox(
+                              height: 5,
                             ),
-                            child: Center(
-                              child: Text(
-                                pontuacao['total'].toString(),
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Constantes.domTotalColor,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  pontuacao['total'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 0),
-                      child: Divider(
-                        color: Constantes.corAzulEscuroSecundario,
-                        thickness: 2.5,
-                        indent: 30,
-                        endIndent: 30,
-                        height: 0,
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 0),
+                        child: Divider(
+                          color: Constantes.corAzulEscuroSecundario,
+                          thickness: 2.5,
+                          indent: 30,
+                          endIndent: 30,
+                          height: 0,
+                        ),
                       ),
-                    ),
-                    _Pontuacao('dom_1', pontuacao['dom_1']),
-                    _Pontuacao('dom_2', pontuacao['dom_2']),
-                    _Pontuacao('dom_3', pontuacao['dom_3']),
-                    _Pontuacao('dom_4', pontuacao['dom_4']),
-                    _Pontuacao('dom_51', pontuacao['dom_51']),
-                    _Pontuacao('dom_52', pontuacao['dom_52']),
-                    _Pontuacao('dom_6', pontuacao['dom_6']),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 15),
-                      child: Divider(
-                        color: Constantes.corAzulEscuroPrincipal,
-                        thickness: 2.5,
-                        indent: 30,
-                        endIndent: 30,
-                        height: 0,
+                      _Pontuacao('dom_1', pontuacao['dom_1']),
+                      _Pontuacao('dom_2', pontuacao['dom_2']),
+                      _Pontuacao('dom_3', pontuacao['dom_3']),
+                      _Pontuacao('dom_4', pontuacao['dom_4']),
+                      _Pontuacao('dom_51', pontuacao['dom_51']),
+                      _Pontuacao('dom_52', pontuacao['dom_52']),
+                      _Pontuacao('dom_6', pontuacao['dom_6']),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 15),
+                        child: Divider(
+                          color: Constantes.corAzulEscuroPrincipal,
+                          thickness: 2.5,
+                          indent: 30,
+                          endIndent: 30,
+                          height: 0,
+                        ),
                       ),
-                    ),
-                    isLoading == true
-                        ? const CircularProgressIndicator()
-                        : Container(
-                            height: 50.0,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15),
+                      isLoading == true
+                          ? const CircularProgressIndicator()
+                          : Container(
+                              height: 50.0,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                color: Constantes.corAzulEscuroPrincipal,
                               ),
-                              color: Constantes.corAzulEscuroPrincipal,
-                            ),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).primaryColor,
-                              ),
-                              onPressed: () async {
-                                if (!widget.consultando) Navigator.pop(context);
-                                Navigator.pop(
-                                  context,
-                                  widget.resultado.mapaDeRespostasEPontuacao,
-                                );
-                              },
-                              child: const Text(
-                                "Salvar respostas",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 5.0,
+                                  backgroundColor: Theme.of(context).focusColor,
+                                  fixedSize: Size(
+                                    MediaQuery.of(context).size.width,
+                                    50,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (!widget.consultando) {
+                                    Navigator.pop(context);
+                                  }
+                                  Navigator.pop(
+                                    context,
+                                    widget.resultado.mapaDeRespostasEPontuacao,
+                                  );
+                                },
+                                child: const Text(
+                                  "Salvar respostas",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25.0,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

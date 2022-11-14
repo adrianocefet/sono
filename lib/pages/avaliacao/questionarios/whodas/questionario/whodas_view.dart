@@ -99,15 +99,12 @@ class _WHODASState extends State<WHODAS> {
             },
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: Constantes.corAzulEscuroPrincipal,
-          child: ValueListenableBuilder(
-            valueListenable: paginaAtual!,
-            builder: (context, int paginaAtual, _) => ControleDeNavegacao(
-              controller: widget._controller,
-              paginaAtual: paginaAtual,
-              perguntaAtual: perguntaAtual,
-            ),
+        bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: paginaAtual!,
+          builder: (context, int paginaAtual, _) => ControleDeNavegacao(
+            controller: widget._controller,
+            paginaAtual: paginaAtual,
+            perguntaAtual: perguntaAtual,
           ),
         ),
       ),
