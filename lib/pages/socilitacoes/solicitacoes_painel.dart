@@ -288,8 +288,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               context,
                                               equipamentoSolicitado
                                                   .urlFotoDePerfil,
-                                              widget.controller
-                                                  .semimagemPaciente),
+                                              widget.controller.semimagem),
                                           child: FotoEquipamento(
                                               equipamento:
                                                   equipamentoSolicitado,

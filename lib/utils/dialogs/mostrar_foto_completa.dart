@@ -13,7 +13,7 @@ Future<void> mostrarFotoCompleta(
               height: mediaQuery.size.height * 0.6,
               child: Image.network(
                 urlFotoDePerfil ?? semfoto,
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.fitWidth,
               ),
             ),
           ),

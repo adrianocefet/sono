@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/controle_estoque/widgets/grafico_relatorio.dart';
 import 'package:sono/pages/relatorio/relatorio.dart';
 import 'package:sono/pages/controle_estoque/tela_status_selecionado.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
 import '../../utils/models/usuario.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';

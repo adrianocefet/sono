@@ -10,8 +10,11 @@ import '../../../../pdf/pdf_api.dart';
 import '../../../../pdf/tela_pdf.dart';
 import '../../../../utils/dialogs/carregando.dart';
 import '../../../../utils/dialogs/error_message.dart';
+import '../../../../utils/dialogs/mostrar_foto_completa.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/usuario.dart';
+import '../../../controle_estoque/widgets/foto_equipamento.dart';
+import '../../../tabelas/widgets/item_paciente.dart';
 import '../../../tabelas/widgets/item_usuario.dart';
 
 class PainelHistorico extends StatefulWidget {
@@ -200,18 +203,14 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                         Paciente.porDocumentSnapshot(
                                             snapshot.data!);
                                     return ListTile(
-                                      title:
-                                          Text(pacienteSolicitado.nomeCompleto),
-                                      subtitle: Text(
-                                          "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
-                                      leading: Image.network(
-                                        pacienteSolicitado.urlFotoDePerfil ??
-                                            controller.semimagemPaciente,
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
+                                        title: Text(
+                                            pacienteSolicitado.nomeCompleto),
+                                        subtitle: Text(
+                                            "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
+                                        leading: FotoDoPacienteThumbnail(
+                                            pacienteSolicitado.urlFotoDePerfil,
+                                            statusPaciente:
+                                                pacienteSolicitado.status));
                                 }
                               }),
                           const Padding(
@@ -252,23 +251,27 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                     return Column(
                                       children: [
                                         ListTile(
-                                          title: equipamentoSolicitado
-                                                      .tamanho ==
-                                                  null
-                                              ? Text(equipamentoSolicitado.nome)
-                                              : Text(
-                                                  "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
-                                          subtitle: Text(equipamentoSolicitado
-                                              .tipo.emString),
-                                          leading: Image.network(
-                                            equipamentoSolicitado
-                                                    .urlFotoDePerfil ??
-                                                controller.semimagem,
-                                            height: 50,
-                                            width: 50,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                            title: equipamentoSolicitado
+                                                        .tamanho ==
+                                                    null
+                                                ? Text(
+                                                    equipamentoSolicitado.nome)
+                                                : Text(
+                                                    "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
+                                            subtitle: Text(equipamentoSolicitado
+                                                .tipo.emString),
+                                            leading: GestureDetector(
+                                              onTap: () => mostrarFotoCompleta(
+                                                  context,
+                                                  equipamentoSolicitado
+                                                      .urlFotoDePerfil,
+                                                  controller.semimagem),
+                                              child: FotoEquipamento(
+                                                  equipamento:
+                                                      equipamentoSolicitado,
+                                                  semimagem:
+                                                      controller.semimagem),
+                                            )),
                                         solicitacao.urlPdf != null
                                             ? Padding(
                                                 padding:
