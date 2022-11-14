@@ -232,9 +232,9 @@ class _BotoesEquipamentoState extends State<BotoesEquipamento> {
                         content: Text("Equipamento concedido"),
                       ),
                     );
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    Navigator.pop(widget.contextoScaffold);
+                    Navigator.pop(widget.contextoScaffold);
+                    Navigator.pop(widget.contextoScaffold);
                   }
                 }
               },

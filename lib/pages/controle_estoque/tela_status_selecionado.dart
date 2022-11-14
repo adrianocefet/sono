@@ -11,7 +11,8 @@ int currentIndex = 0;
 
 class TiposEquipamentos extends StatefulWidget {
   final ControllerPerfilClinicoEquipamento controller;
-  const TiposEquipamentos({required this.controller,Key? key}) : super(key: key);
+  const TiposEquipamentos({required this.controller, Key? key})
+      : super(key: key);
   @override
   State<TiposEquipamentos> createState() => _TiposEquipamentosState();
 }
@@ -29,48 +30,58 @@ class _TiposEquipamentosState extends State<TiposEquipamentos> {
   bool inicializado = false;
   @override
   Widget build(BuildContext context) {
-   final telas = [
-    TiposDeEquipamentos(controller: widget.controller,),
-    TiposDeEquipamentos(controller: widget.controller,),
-    TiposDeEquipamentos(controller: widget.controller,),
-    TiposDeEquipamentos(controller: widget.controller,),
-    TiposDeEquipamentos(controller: widget.controller,),
-   ];
-    return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
-      if (inicializado == false) {
-        currentIndex = Status.keys.firstWhere((i) => Status[i] == widget.controller.status);
-        inicializado = true;
-      }
+    List<TiposDeEquipamentos> telas = [
+      TiposDeEquipamentos(
+        controller: widget.controller,
+      ),
+      TiposDeEquipamentos(
+        controller: widget.controller,
+      ),
+      TiposDeEquipamentos(
+        controller: widget.controller,
+      ),
+      TiposDeEquipamentos(
+        controller: widget.controller,
+      ),
+      TiposDeEquipamentos(
+        controller: widget.controller,
+      ),
+    ];
 
-      return Scaffold(
-        body: telas[currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Constantes.corAzulEscuroPrincipal,
-          selectedFontSize: 10,
-          currentIndex: currentIndex,
-          selectedItemColor: Colors.white,
-          showUnselectedLabels: false,
-          unselectedItemColor: Color.fromARGB(255, 33, 35, 87),
-          onTap: (index) => setState(() {
-            currentIndex = index;
-            widget.controller.status = Status[index]!;
-          }),
-          // ignore: prefer_const_literals_to_create_immutables
-          items: [
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.check_circle), label: 'Disponíveis'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.people), label: 'Empréstimos'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.build_circle_rounded), label: 'Reparos'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.clean_hands_rounded), label: 'Desinfecção'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.assignment_ind), label: 'Concedidos'),
-          ],
-        ),
-      );
-    });
+    if (inicializado == false) {
+      currentIndex =
+          Status.keys.firstWhere((i) => Status[i] == widget.controller.status);
+      inicializado = true;
+    }
+
+    return Scaffold(
+      body: telas[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Constantes.corAzulEscuroPrincipal,
+        selectedFontSize: 10,
+        currentIndex: currentIndex,
+        selectedItemColor: Colors.white,
+        showUnselectedLabels: false,
+        unselectedItemColor: Color.fromARGB(255, 33, 35, 87),
+        onTap: (index) => setState(() {
+          currentIndex = index;
+          widget.controller.status = Status[index]!;
+        }),
+        // ignore: prefer_const_literals_to_create_immutables
+        items: [
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.check_circle), label: 'Disponíveis'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.people), label: 'Empréstimos'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.build_circle_rounded), label: 'Reparos'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.clean_hands_rounded), label: 'Desinfecção'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.assignment_ind), label: 'Concedidos'),
+        ],
+      ),
+    );
   }
 }

@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/controle_estoque/widgets/grafico_relatorio.dart';
 import 'package:sono/pages/relatorio/relatorio.dart';
 import 'package:sono/pages/controle_estoque/tela_status_selecionado.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../utils/models/equipamento.dart';
 import '../../utils/models/usuario.dart';
 import '../pagina_inicial/widgets/widgets_drawer.dart';
@@ -69,13 +67,12 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                     backgroundColor: Colors.white),
                                 onPressed: () {
                                   controller.status = status;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TiposEquipamentos(
-                                                controller: controller,
-                                              )));
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => TiposEquipamentos(
+                                              controller: controller,
+                                            )),
+                                  );
                                 },
                                 child: SizedBox(
                                   height: 50,
@@ -143,11 +140,11 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                       const Color.fromRGBO(97, 253, 125, 1),
                                 ),
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const TelaRelatorio()));
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TelaRelatorio()),
+                                  );
                                 },
                                 child: const Text(
                                   "Gerar relatório",
