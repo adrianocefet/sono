@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:sono/pages/tabelas/lista_de_pacientes.dart';
+import 'package:sono/utils/dialogs/carregando.dart';
 import 'package:sono/utils/models/equipamento.dart';
+import 'package:sono/utils/models/solicitacao.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/dialogs/confirmar.dart';
 import '../../../../utils/dialogs/error_message.dart';
-import '../../../../utils/dialogs/escolher_paciente_dialog.dart';
 import '../../../../utils/models/paciente.dart';
 import '../../../../utils/models/usuario.dart';
 
-class BotoesEquipamento extends StatelessWidget {
+class BotoesEquipamento extends StatefulWidget {
   final Equipamento equipamento;
   final Usuario model;
   final Paciente? pacientePreEscolhido;
@@ -20,6 +22,11 @@ class BotoesEquipamento extends StatelessWidget {
       required this.contextoScaffold})
       : super(key: key);
 
+  @override
+  State<BotoesEquipamento> createState() => _BotoesEquipamentoState();
+}
+
+class _BotoesEquipamentoState extends State<BotoesEquipamento> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -36,38 +43,31 @@ class BotoesEquipamento extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                   )),
               onPressed: () async {
-                if (pacientePreEscolhido == null) {
-                  Paciente? pacienteEscolhido =
-                      await mostrarDialogEscolherPaciente(context);
-                  if (pacienteEscolhido != null) {
-                    try {
-                      await equipamento.solicitarEmprestimo(
-                          pacienteEscolhido, model);
-                    } catch (erro) {
-                      equipamento.status = StatusDoEquipamento.disponivel;
-                      mostrarMensagemErro(context, erro.toString());
-                    }
-                    ScaffoldMessenger.of(contextoScaffold).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Constantes.corAzulEscuroPrincipal,
-                        content: Text("Solicitação enviada à dispensação!"),
-                      ),
+                if (widget.pacientePreEscolhido == null) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ListaDePacientes(
+                      equipamentoPreEscolhido: widget.equipamento,
+                      tipoSolicitacao: TipoSolicitacao.emprestimo,
                     );
-                  }
+                  }));
                 } else {
                   if (await mostrarDialogConfirmacao(
                           context,
                           'Deseja mesmo alterar o status?',
                           'Ele será emprestado ao paciente selecionado') ==
                       true) {
+                    mostrarDialogCarregando(widget.contextoScaffold);
                     try {
-                      await equipamento.solicitarEmprestimo(
-                          pacientePreEscolhido!, model);
+                      await widget.equipamento.solicitarEmprestimo(
+                          widget.pacientePreEscolhido!, widget.model);
                     } catch (erro) {
-                      equipamento.status = StatusDoEquipamento.disponivel;
+                      widget.equipamento.status =
+                          StatusDoEquipamento.disponivel;
                       mostrarMensagemErro(context, erro.toString());
                     }
-                    ScaffoldMessenger.of(contextoScaffold).showSnackBar(
+                    Navigator.pop(widget.contextoScaffold);
+                    ScaffoldMessenger.of(widget.contextoScaffold).showSnackBar(
                       const SnackBar(
                         backgroundColor: Constantes.corAzulEscuroPrincipal,
                         content: Text("Solicitação enviada à dispensação!"),
@@ -99,7 +99,7 @@ class BotoesEquipamento extends StatelessWidget {
           ),
         ),
         Visibility(
-          visible: pacientePreEscolhido == null,
+          visible: widget.pacientePreEscolhido == null,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -119,9 +119,10 @@ class BotoesEquipamento extends StatelessWidget {
                               'Deseja mesmo alterar o status?',
                               'Ele será alterado para Manutenção') ==
                           true) {
+                        mostrarDialogCarregando(widget.contextoScaffold);
                         try {
-                          await equipamento.manutencao(model);
-                          equipamento.status = StatusDoEquipamento.manutencao;
+                          await widget.equipamento.manutencao(widget.model);
+                          Navigator.pop(widget.contextoScaffold);
                         } catch (e) {
                           mostrarMensagemErro(context, e.toString());
                         }
@@ -161,9 +162,10 @@ class BotoesEquipamento extends StatelessWidget {
                               'Deseja mesmo alterar o status?',
                               'Ele será alterado para Desinfecção') ==
                           true) {
+                        mostrarDialogCarregando(widget.contextoScaffold);
                         try {
-                          await equipamento.desinfectar(model);
-                          equipamento.status = StatusDoEquipamento.desinfeccao;
+                          await widget.equipamento.desinfectar(widget.model);
+                          Navigator.pop(widget.contextoScaffold);
                         } catch (e) {
                           mostrarMensagemErro(context, e.toString());
                         }
@@ -193,7 +195,9 @@ class BotoesEquipamento extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: SizedBox(
-            width: mediaQuery.size.width * (1 / 3),
+            width: widget.pacientePreEscolhido == null
+                ? mediaQuery.size.width * (1 / 3)
+                : null,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(97, 253, 125, 1),
@@ -201,37 +205,28 @@ class BotoesEquipamento extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                   )),
               onPressed: () async {
-                if (pacientePreEscolhido == null) {
-                  Paciente? pacienteEscolhido =
-                      await mostrarDialogEscolherPaciente(context);
-                  if (pacienteEscolhido != null) {
-                    try {
-                      await equipamento.conceder(pacienteEscolhido, model);
-                    } catch (erro) {
-                      equipamento.status = StatusDoEquipamento.disponivel;
-                      mostrarMensagemErro(contextoScaffold, erro.toString());
-                    }
-                    ScaffoldMessenger.of(contextoScaffold).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Constantes.corAzulEscuroPrincipal,
-                        content: Text(
-                            "Equipamento concedido ao paciente selecionado!"),
-                      ),
-                    );
-                  }
+                if (widget.pacientePreEscolhido == null) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => ListaDePacientes(
+                          equipamentoPreEscolhido: widget.equipamento,
+                          tipoSolicitacao: TipoSolicitacao.concessao))));
                 } else {
                   if (await mostrarDialogConfirmacao(
                           context,
                           'Deseja conceder?',
                           'Ele será concedido ao paciente selecionado') ==
                       true) {
+                    mostrarDialogCarregando(widget.contextoScaffold);
                     try {
-                      await equipamento.conceder(pacientePreEscolhido!, model);
+                      await widget.equipamento
+                          .conceder(widget.pacientePreEscolhido!, widget.model);
                     } catch (erro) {
-                      equipamento.status = StatusDoEquipamento.disponivel;
+                      widget.equipamento.status =
+                          StatusDoEquipamento.disponivel;
                       mostrarMensagemErro(context, erro.toString());
                     }
-                    ScaffoldMessenger.of(contextoScaffold).showSnackBar(
+                    Navigator.pop(widget.contextoScaffold);
+                    ScaffoldMessenger.of(widget.contextoScaffold).showSnackBar(
                       const SnackBar(
                         backgroundColor: Constantes.corAzulEscuroPrincipal,
                         content: Text("Equipamento concedido"),
@@ -244,10 +239,10 @@ class BotoesEquipamento extends StatelessWidget {
                 }
               },
               child: Row(
-                mainAxisAlignment: pacientePreEscolhido == null
+                mainAxisAlignment: widget.pacientePreEscolhido == null
                     ? MainAxisAlignment.spaceAround
                     : MainAxisAlignment.center,
-                mainAxisSize: pacientePreEscolhido == null
+                mainAxisSize: widget.pacientePreEscolhido == null
                     ? MainAxisSize.min
                     : MainAxisSize.max,
                 children: const [

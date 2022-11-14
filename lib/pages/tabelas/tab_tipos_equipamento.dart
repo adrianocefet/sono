@@ -11,7 +11,8 @@ import '../controle_estoque/widgets/tipo_equipamento.dart';
 class TiposDeEquipamentos extends StatefulWidget {
   final Paciente? pacientePreEscolhido;
   final ControllerPerfilClinicoEquipamento controller;
-  const TiposDeEquipamentos({required this.controller,Key? key, this.pacientePreEscolhido})
+  const TiposDeEquipamentos(
+      {required this.controller, Key? key, this.pacientePreEscolhido})
       : super(key: key);
 
   @override
@@ -69,26 +70,24 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
                             0,
                             0.4
                           ])),
-                      child: Padding(
+                      child: GridView(
                         padding: const EdgeInsets.all(8.0),
-                        child: GridView(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 1,
-                          ),
-                          children: [
-                            for (var tipo in TipoEquipamento.values)
-                              BotaoTipoEquipamento(
-                                  controller: widget.controller,
-                                  titulo: tipo,
-                                  imagem: tipo.imagens,
-                                  pacientePreEscolhido:
-                                      widget.pacientePreEscolhido),
-                          ],
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1,
                         ),
+                        children: [
+                          for (var tipo in TipoEquipamento.values)
+                            BotaoTipoEquipamento(
+                                controller: widget.controller,
+                                titulo: tipo,
+                                imagem: tipo.imagens,
+                                pacientePreEscolhido:
+                                    widget.pacientePreEscolhido),
+                        ],
                       ),
                     ),
                   );

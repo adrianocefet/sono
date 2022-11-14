@@ -93,16 +93,18 @@ class _TabelaDeSolicitacoesState extends State<TabelaDeSolicitacoes> {
                               0.4
                             ])),
                         child: filtradas.isNotEmpty
-                            ? SingleChildScrollView(
+                            ? ListView.builder(
                                 padding: const EdgeInsets.only(bottom: 140),
-                                child: Column(
-                                  children: filtradas.reversed
-                                      .map((Solicitacao solicitacao) {
-                                    return SolicitacoesPainel(
-                                        key: ValueKey(solicitacao.id),
-                                        idSolicitacao: solicitacao.id);
-                                  }).toList(),
-                                ))
+                                itemCount: filtradas.length,
+                                itemBuilder: ((context, index) {
+                                  int reverseIndex =
+                                      filtradas.length - 1 - index;
+                                  return SolicitacoesPainel(
+                                      key: ValueKey(filtradas[reverseIndex].id),
+                                      idSolicitacao:
+                                          filtradas[reverseIndex].id);
+                                }),
+                              )
                             : Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(

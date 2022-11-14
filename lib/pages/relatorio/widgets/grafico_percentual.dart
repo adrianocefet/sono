@@ -64,6 +64,7 @@ class GraficoPercentual extends StatelessWidget {
                       fontStyle: FontStyle.italic)),
               series: <CircularSeries>[
                 PieSeries<GDPData, String>(
+                    animationDuration: 0,
                     dataSource: [
                       for (var status
                           in StatusDoEquipamento.values.getRange(0, 4))

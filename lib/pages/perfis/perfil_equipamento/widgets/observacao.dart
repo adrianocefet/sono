@@ -45,41 +45,38 @@ class _ObservacaoState extends State<Observacao> {
               ),
             ),
             widget.equipamento.observacao != null
-                ? Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
+                ? Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Text(
                           widget.equipamento.observacao ?? 'Observação vazia!',
                           maxLines: clicado ? null : 3,
                           overflow: clicado ? null : TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                         ),
-                      ),
-                      Visibility(
-                        visible: widget.equipamento.observacao!.length > 141,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                clicado = !clicado;
-                              });
-                            },
-                            child: Text(
-                              clicado ? 'Mostrar menos' : 'Mostrar mais',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromRGBO(97, 253, 125, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                )),
+                        Visibility(
+                          visible: widget.equipamento.observacao!.length > 141,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    clicado = !clicado;
+                                  });
+                                },
+                                child: Text(
+                                  clicado ? 'Mostrar menos' : 'Mostrar mais',
+                                  style: const TextStyle(
+                                      color: Constantes.corAzulEscuroPrincipal),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),

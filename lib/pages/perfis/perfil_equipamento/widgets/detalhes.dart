@@ -66,8 +66,13 @@ class _DetalhesState extends State<Detalhes> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
                       case ConnectionState.waiting:
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(
+                            child: LinearProgressIndicator(
+                              color: Constantes.corAzulEscuroPrincipal,
+                            ),
+                          ),
                         );
                       default:
                         Paciente pacienteEmprestado =
@@ -158,6 +163,8 @@ class _DetalhesState extends State<Detalhes> {
                                                 'Retornar ao hospital?',
                                                 'Qual o motivo da devolução?');
                                         if (justificativa != null) {
+                                          mostrarDialogCarregando(
+                                              widget.contextoScaffold);
                                           try {
                                             await widget.equipamento
                                                 .solicitarDevolucao(
@@ -168,6 +175,8 @@ class _DetalhesState extends State<Detalhes> {
                                             mostrarMensagemErro(
                                                 context, e.toString());
                                           }
+                                          Navigator.pop(
+                                              widget.contextoScaffold);
                                           scaffoldcontext.showSnackBar(
                                             const SnackBar(
                                               backgroundColor: Constantes
@@ -229,6 +238,16 @@ class _DetalhesState extends State<Detalhes> {
                                                   context, erro.toString());
                                             }
                                             Navigator.pop(context);
+                                            ScaffoldMessenger.of(
+                                                    widget.contextoScaffold)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                backgroundColor: Constantes
+                                                    .corAzulEscuroPrincipal,
+                                                content: Text(
+                                                    "Equipamento concedido ao paciente atual!"),
+                                              ),
+                                            );
                                           }
                                         },
                                         child: const Text(
@@ -367,6 +386,14 @@ class _DetalhesState extends State<Detalhes> {
                                 mostrarMensagemErro(context, e.toString());
                               }
                               Navigator.pop(context);
+                              ScaffoldMessenger.of(widget.contextoScaffold)
+                                  .showSnackBar(
+                                const SnackBar(
+                                  backgroundColor:
+                                      Constantes.corAzulEscuroPrincipal,
+                                  content: Text("Equipamento disponibilizado!"),
+                                ),
+                              );
                             }
                           },
                           child: const Text(

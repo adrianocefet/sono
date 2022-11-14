@@ -7,15 +7,16 @@ import '../../../../utils/dialogs/carregando.dart';
 import '../../../../utils/dialogs/error_message.dart';
 import '../../../../utils/models/equipamento.dart';
 import '../../../../utils/services/firebase.dart';
+import '../../../constants/constants.dart';
 
-Future negarSolicitacao(BuildContext context,Solicitacao solicitacao)async{
+Future negarSolicitacao(BuildContext context, Solicitacao solicitacao) async {
   final TextEditingController _Textcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   return await showDialog(
-    context: context, 
-    builder: (BuildContext context){
-      return Center(
-        child: Container(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Container(
             margin: const EdgeInsets.all(30),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -28,7 +29,9 @@ Future negarSolicitacao(BuildContext context,Solicitacao solicitacao)async{
               ),
             ),
             child: Material(
-            borderRadius: const BorderRadius.all(Radius.circular(20),),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(20),
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -57,69 +60,75 @@ Future negarSolicitacao(BuildContext context,Solicitacao solicitacao)async{
                   Form(
                     key: _formKey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
                         controller: _Textcontroller,
                         minLines: 2,
                         maxLines: 5,
                         keyboardType: TextInputType.multiline,
-                        validator: (value){
-                          if(value!.isNotEmpty && value.length>5){
+                        validator: (value) {
+                          if (value!.isNotEmpty && value.length > 5) {
                             return null;
-                          }else if(value.length<5){
+                          } else if (value.length < 5) {
                             return 'Digite uma justificativa mais detalhada!';
-                          }else if(value.isEmpty){
+                          } else if (value.isEmpty) {
                             return 'Campo vazio!';
                           }
                         },
                         decoration: const InputDecoration(
-                          hintText: 'Descreva o que houve para a solicitação ser negada',
-                          hintStyle: TextStyle(
-                            color: Colors.grey
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(17))
-                          )
-                        ),
+                            hintText:
+                                'Descreva o que houve para a solicitação ser negada',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(17)))),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical:8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ElevatedButton(
-                      onPressed: (){
-                        if(_formKey.currentState!.validate()){
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           mostrarDialogCarregando(context);
-                          try{
-                            solicitacao.infoMap['motivo_negacao']=_Textcontroller.value.text;
-                            solicitacao.infoMap['confirmacao']='negado';
+                          try {
+                            solicitacao.infoMap['motivo_negacao'] =
+                                _Textcontroller.value.text;
+                            solicitacao.infoMap['confirmacao'] = 'negado';
                             solicitacao.infoMap['data_de_resposta'] =
-                                              FieldValue.serverTimestamp();
+                                FieldValue.serverTimestamp();
                             FirebaseService.atualizarSolicitacao(solicitacao);
                             Navigator.pop(context);
                             Navigator.pop(context);
-                          }catch (e) {
+                          } catch (e) {
                             Navigator.pop(context);
                             mostrarMensagemErro(context, e.toString());
                           }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor:
+                                  Constantes.corAzulEscuroPrincipal,
+                              content: Text("Solicitação negada!"),
+                            ),
+                          );
                         }
-                        
-                      }, 
-                      child: const Text('Negar',style: TextStyle(color: Colors.black),),
+                      },
+                      child: const Text(
+                        'Negar',
+                        style: TextStyle(color: Colors.black),
+                      ),
                       style: ElevatedButton.styleFrom(
-                        primary: const Color.fromRGBO(97, 253, 125, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(18.0),
-                        )),
-                      ),
+                          primary: const Color.fromRGBO(97, 253, 125, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          )),
+                    ),
                   )
-              ],
-                      ),
+                ],
+              ),
             ),
-        ),
-      );
-    });
-
+          ),
+        );
+      });
 }

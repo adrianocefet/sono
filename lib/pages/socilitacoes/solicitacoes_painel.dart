@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/pages/controle_estoque/widgets/foto_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
+import 'package:sono/pages/tabelas/widgets/item_paciente.dart';
 import 'package:sono/utils/dialogs/justificativa.dart';
+import 'package:sono/utils/dialogs/mostrar_foto_completa.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
@@ -273,21 +276,26 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 return Column(
                                   children: [
                                     ListTile(
-                                      title: equipamentoSolicitado.tamanho ==
-                                              null
-                                          ? Text(equipamentoSolicitado.nome)
-                                          : Text(
-                                              "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
-                                      subtitle: Text(
-                                          equipamentoSolicitado.tipo.emString),
-                                      leading: Image.network(
-                                        equipamentoSolicitado.urlFotoDePerfil ??
-                                            widget.controller.semimagem,
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                        title: equipamentoSolicitado.tamanho ==
+                                                null
+                                            ? Text(equipamentoSolicitado.nome)
+                                            : Text(
+                                                "${equipamentoSolicitado.nome}\n${equipamentoSolicitado.tamanho}"),
+                                        subtitle: Text(equipamentoSolicitado
+                                            .tipo.emString),
+                                        leading: GestureDetector(
+                                          onTap: () => mostrarFotoCompleta(
+                                              context,
+                                              equipamentoSolicitado
+                                                  .urlFotoDePerfil,
+                                              widget.controller
+                                                  .semimagemPaciente),
+                                          child: FotoEquipamento(
+                                              equipamento:
+                                                  equipamentoSolicitado,
+                                              semimagem:
+                                                  widget.controller.semimagem),
+                                        )),
                                   ],
                                 );
                             }
@@ -320,17 +328,14 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                     Paciente.porDocumentSnapshot(
                                         snapshot.data!);
                                 return ListTile(
-                                  title: Text(pacienteSolicitado.nomeCompleto),
-                                  subtitle: Text(
-                                      "CPF: ${pacienteSolicitado.cpf ?? 'Não informado'}"),
-                                  leading: Image.network(
-                                    pacienteSolicitado.urlFotoDePerfil ??
-                                        widget.controller.semimagemPaciente,
-                                    height: 50,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
+                                    title:
+                                        Text(pacienteSolicitado.nomeCompleto),
+                                    subtitle: Text(
+                                        "CPF: ${pacienteSolicitado.cpf ?? 'Não informado'}"),
+                                    leading: FotoDoPacienteThumbnail(
+                                        pacienteSolicitado.urlFotoDePerfil,
+                                        statusPaciente:
+                                            pacienteSolicitado.status));
                             }
                           }),
                       Visibility(
@@ -381,6 +386,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                               context, erro.toString());
                                         }
                                         Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Constantes
+                                                .corAzulEscuroPrincipal,
+                                            content: Text(
+                                                "Solicitação aceita com sucesso!"),
+                                          ),
+                                        );
                                         await solicitacao.gerarTermoEmprestimo(
                                             pacienteSolicitado,
                                             equipamentoSolicitado,
@@ -433,6 +447,15 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                 context, erro.toString());
                                           }
                                           Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Constantes
+                                                  .corAzulEscuroPrincipal,
+                                              content: Text(
+                                                  "Solicitação aceita com sucesso!"),
+                                            ),
+                                          );
                                           await solicitacao.gerarTermoDevolucao(
                                               integridadeDoEquipamento,
                                               pacienteSolicitado,
