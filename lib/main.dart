@@ -37,11 +37,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<PerfilUsuario, dynamic> paginasIniciais = {
-    PerfilUsuario.mestre: PaginalInicial(),
-    PerfilUsuario.clinico: PaginalInicial(),
-    PerfilUsuario.dispensacao: PaginalInicial(),
-  };
   @override
   Widget build(BuildContext context) {
     return ScopedModel<Usuario>(
@@ -56,8 +51,9 @@ class _MyAppState extends State<MyApp> {
           highlightColor: const Color.fromRGBO(97, 253, 125, 1.0),
         ),
         home: SplashScreenView(
-          navigateRoute:
-              widget.usuarioLogado == null ? const Login() : PaginalInicial(),
+          navigateRoute: widget.usuarioLogado == null
+              ? const Login()
+              : const PaginalInicial(),
           duration: 5000,
           imageSize: 500,
           imageSrc: "assets/imagens/splash.jpeg",

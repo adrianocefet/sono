@@ -73,8 +73,11 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              TiposEquipamentos(
-                                                controller: controller,
+                                              ScopedModel<Usuario>(
+                                                model: model,
+                                                child: TiposEquipamentos(
+                                                  controller: controller,
+                                                ),
                                               )));
                                 },
                                 child: SizedBox(
@@ -144,10 +147,15 @@ class _ControleEstoqueState extends State<ControleEstoque> {
                                 ),
                                 onPressed: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const TelaRelatorio()));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ScopedModel<Usuario>(
+                                        model: model,
+                                        child: const TelaRelatorio(),
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: const Text(
                                   "Gerar relatório",
