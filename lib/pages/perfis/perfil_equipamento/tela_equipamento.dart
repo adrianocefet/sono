@@ -63,16 +63,35 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     return true;
   }
 
-  Widget _youtubeBuilder() {
-    return YoutubePlayerBuilder(
-        player: YoutubePlayer(controller: controller),
-        builder: (context, player) => Padding(
-              padding: const EdgeInsets.only(bottom: 30.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: player,
-              ),
-            ));
+  Widget _youtubeBuilder(Equipamento equipamento) {
+    controller = YoutubePlayerController(
+        initialVideoId:
+            YoutubePlayer.convertUrlToId(equipamento.videoInstrucional ?? '') ??
+                '',
+        flags: const YoutubePlayerFlags(
+            autoPlay: false, loop: false, hideControls: false));
+    if (controller.initialVideoId != '') {
+      try {
+        return YoutubePlayerBuilder(
+            player: YoutubePlayer(controller: controller),
+            builder: (context, player) => Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: player,
+                  ),
+                ));
+      } catch (e) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Erro na reprodução do vídeo $e'),
+        );
+      }
+    }
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text('Vídeo indisponível no momento'),
+    );
   }
 
   @override
@@ -121,12 +140,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
 
                   Equipamento equipamento =
                       Equipamento.porMap(dadosEquipamento);
-                  controller = YoutubePlayerController(
-                      initialVideoId: YoutubePlayer.convertUrlToId(
-                              equipamento.videoInstrucional ?? '') ??
-                          '',
-                      flags: const YoutubePlayerFlags(
-                          autoPlay: false, loop: false, hideControls: false));
+
                   return Scaffold(
                     key: _scaffoldKey,
                     appBar: AppBar(
@@ -410,7 +424,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      _youtubeBuilder()
+                                      _youtubeBuilder(equipamento)
                                     ],
                                   ),
                                 ),
