@@ -53,16 +53,6 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     return true;
   }
 
-  bool _testarYoutubeUrl(String link) {
-    String p =
-        '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
-    RegExp regExp = RegExp(p);
-    if (!regExp.hasMatch(link) || link == '') {
-      return false;
-    }
-    return true;
-  }
-
   Widget _youtubeBuilder(Equipamento equipamento) {
     controller = YoutubePlayerController(
         initialVideoId:
@@ -90,7 +80,7 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
     }
     return const Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text('Vídeo indisponível no momento'),
+      child: Text('Não foi possível encontrar o link especificado!'),
     );
   }
 
@@ -299,78 +289,91 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                width: mediaQuery.size.width,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(width: 1)),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          topRight: Radius.circular(8),
-                                        ),
-                                        color:
-                                            Constantes.corAzulEscuroSecundario,
-                                      ),
-                                      height: 30,
-                                      child: const Text(
-                                        "Manual do equipamento",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: ElevatedButton.icon(
-                                          icon: const Icon(
-                                            Icons.picture_as_pdf,
-                                            color: Colors.black,
+                            Visibility(
+                              visible: (equipamento.manualPdf ?? '') != '',
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  width: mediaQuery.size.width,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(width: 1)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8),
                                           ),
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromRGBO(
-                                                      97, 253, 125, 1),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18.0),
-                                              )),
-                                          onPressed: _testarUrl(
-                                                  equipamento.manualPdf ?? '')
-                                              ? () async {
-                                                  mostrarDialogCarregando(
-                                                      context);
-                                                  try {
-                                                    final url =
-                                                        equipamento.manualPdf!;
-                                                    final arquivo = await PDFapi
-                                                        .carregarLink(url);
-                                                    Navigator.pop(context);
-                                                    abrirPDF(context, arquivo);
-                                                  } catch (e) {
-                                                    Navigator.pop(context);
-                                                    mostrarMensagemErro(context,
-                                                        'Não foi possível acessar o pdf indicado. Tente alterar o link do manual.');
-                                                  }
-                                                }
-                                              : null,
-                                          label: Text(
-                                            _testarUrl(
+                                          color: Constantes
+                                              .corAzulEscuroSecundario,
+                                        ),
+                                        height: 30,
+                                        child: const Text(
+                                          "Manual do equipamento",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4.0),
+                                        child: ElevatedButton.icon(
+                                            icon: const Icon(
+                                              Icons.picture_as_pdf,
+                                              color: Colors.black,
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color.fromRGBO(
+                                                        97, 253, 125, 1),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          18.0),
+                                                )),
+                                            onPressed: _testarUrl(
                                                     equipamento.manualPdf ?? '')
-                                                ? "Visualizar PDF"
-                                                : "PDF indisponível",
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          )),
-                                    ),
-                                  ],
+                                                ? () async {
+                                                    mostrarDialogCarregando(
+                                                        context);
+                                                    try {
+                                                      final url = equipamento
+                                                          .manualPdf!;
+                                                      final arquivo =
+                                                          await PDFapi
+                                                              .carregarLink(
+                                                                  url);
+                                                      Navigator.pop(context);
+                                                      arquivo == null
+                                                          ? mostrarMensagemErro(
+                                                              context,
+                                                              'Não foi possível encontrar o pdf indicado.')
+                                                          : abrirPDF(
+                                                              context, arquivo);
+                                                    } catch (e) {
+                                                      Navigator.pop(context);
+                                                      mostrarMensagemErro(
+                                                          context,
+                                                          'Erro ao abrir o link');
+                                                    }
+                                                  }
+                                                : null,
+                                            label: Text(
+                                              _testarUrl(
+                                                      equipamento.manualPdf ??
+                                                          '')
+                                                  ? "Visualizar PDF"
+                                                  : "PDF não encontrado",
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -394,15 +397,14 @@ class _TelaEquipamentoState extends State<TelaEquipamento> {
                                       'Clique em editar para adicionar informações',
                                 )),
                             Visibility(
-                              visible: _testarYoutubeUrl(
-                                      equipamento.videoInstrucional ?? '') ==
-                                  true,
+                              visible:
+                                  (equipamento.videoInstrucional ?? '') != '',
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Container(
                                   width: mediaQuery.size.width,
                                   decoration: BoxDecoration(
-                                      color: Constantes.corAzulEscuroSecundario,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(width: 1)),
                                   child: Column(
