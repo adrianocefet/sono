@@ -55,11 +55,14 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
                         child: Column(
                           children: [
                             for (Pergunta pergunta in controller.perguntas)
-                              RespostaWidget(
-                                pergunta,
-                                autoPreencher:
-                                    widget.usuario?.infoMap[pergunta.codigo],
-                              ),
+                              widget.usuario != null &&
+                                      ['email', 'cpf'].contains(pergunta.codigo)
+                                  ? const SizedBox.shrink()
+                                  : RespostaWidget(
+                                      pergunta,
+                                      autoPreencher: widget
+                                          .usuario?.infoMap[pergunta.codigo],
+                                    ),
                             Padding(
                               padding: const EdgeInsets.all(20),
                               child: ElevatedButton(
@@ -99,65 +102,6 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
   }
 }
 
-class _FormularioDeCadastro extends StatelessWidget {
-  final Usuario? usuario;
-  final CadastroUsuarioController controller;
-  final Function() setState;
-  const _FormularioDeCadastro(
-      {Key? key,
-      required this.usuario,
-      required this.controller,
-      required this.setState})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: controller.formKey,
-        child: Column(
-          children: [
-            for (Pergunta pergunta in controller.perguntas)
-              RespostaWidget(
-                pergunta,
-                autoPreencher: usuario?.infoMap[pergunta.codigo],
-              ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (usuario != null) {
-                    await controller.editarUsuario(context);
-                  } else {
-                    await controller.registrarUsuario(context);
-                  }
-                },
-                child: Text(
-                  usuario != null
-                      ? 'Editar profissional'
-                      : 'Registrar profissional',
-                  style: const TextStyle(color: Colors.black),
-                ),
-                style: ElevatedButton.styleFrom(
-                  elevation: 5.0,
-                  backgroundColor: Theme.of(context).focusColor,
-                  fixedSize: Size(
-                    MediaQuery.of(context).size.width,
-                    50,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _InfoCadastro extends StatelessWidget {
   final CadastroUsuarioController controller;
   const _InfoCadastro({Key? key, required this.controller}) : super(key: key);
@@ -190,7 +134,7 @@ class _InfoCadastro extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  "Informações de login",
+                  "Profissional cadastrado com sucesso!",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -208,7 +152,10 @@ class _InfoCadastro extends StatelessWidget {
                       await Clipboard.setData(
                         ClipboardData(
                           text:
-                              "Informações de cadastro na plataforma Projeto Sono\n\nProfissional: ${controller.helper.cpfDoUsuario}\nSenha: ${controller.helper.senhaGerada}",
+                              "Informações de cadastro na plataforma Projeto Sono\n\nEmail: ${controller.helper.emailDoUsuario}"
+                              "\nSenha: ${controller.helper.senhaGerada}"
+                              "\n\nNão compartilhe esta senha!"
+                              " Recomendamos que você peça a recuperação da senha na tela de login e troque por uma que apenas você tenha conhecimento!",
                         ),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -232,10 +179,18 @@ class _InfoCadastro extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text(
+                          'Informações de cadastro\n',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                         Row(
                           children: [
                             Text(
-                              'Profissional: ',
+                              'Email: ',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -243,7 +198,7 @@ class _InfoCadastro extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              controller.helper.cpfDoUsuario!,
+                              controller.helper.emailDoUsuario!,
                               style: const TextStyle(
                                 fontSize: 20,
                               ),

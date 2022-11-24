@@ -33,7 +33,6 @@ class CadastroUsuarioController {
                 ),
               ),
             );
-            senhaGerada.value = helper.senhaGerada;
             break;
           case CondicaoUsuario.jaExistenteNoBancoDeDados:
             Navigator.pop(context);

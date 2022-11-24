@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:sono/pages/pagina_inicial/widgets/tile_drawer.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sono/utils/services/firebase.dart';
 
 class FuncionalidadesDrawer extends StatelessWidget {
   final PageController pageController;
@@ -125,6 +126,7 @@ class FuncionalidadesDrawer extends StatelessWidget {
                     pageController,
                     5,
                     onTap: () async {
+                      await FirebaseService().deslogarUsuario();
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.remove('usuario');
                       usuario = Usuario();

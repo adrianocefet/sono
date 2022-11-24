@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +23,7 @@ class FirebaseService {
   FirebaseService._internal();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static const String _strPacientes = 'pacientes';
   static const String _strUsuarios = 'usuarios';
@@ -50,6 +52,31 @@ class FirebaseService {
     'stop_bang': TipoQuestionario.stopBang,
     'whodas': TipoQuestionario.whodas,
   };
+
+  String? get idUsuario {
+    return _auth.currentUser?.uid;
+  }
+
+  bool get usuarioEstaLogado {
+    return _auth.currentUser != null;
+  }
+
+  Future<void> deslogarUsuario() async {
+    await _auth.signOut();
+  }
+
+  Future<void> cadastrarUsuarioComEmailESenha(
+      String email, String senha) async {
+    await _auth.createUserWithEmailAndPassword(email: email, password: senha);
+  }
+
+  Future<void> logarComEmailESenha(String email, String senha) async {
+    await _auth.signInWithEmailAndPassword(email: email, password: senha);
+  }
+
+  Future<void> enviarEmailDeRedefinicaoDeSenha(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
 
   Future<Paciente> obterPacientePorID(String idPaciente,
       {bool comAvaliacoes = false,
@@ -501,8 +528,7 @@ class FirebaseService {
 
     QuerySnapshot query = await _db
         .collection(_strUsuarios)
-        .where("cpf", isEqualTo: data["cpf"])
-        .where("senha", isEqualTo: data["senha"])
+        .where("email", isEqualTo: data["email"])
         .get();
 
     if (query.docs.isNotEmpty) idUsuario = query.docs[0].id;
@@ -526,7 +552,8 @@ class FirebaseService {
 
   Future<String> uploadDadosDoUsuario(Map<String, dynamic> data,
       {File? fotoDePerfil}) async {
-    String idUsuario = _db.collection(_strUsuarios).doc().id;
+    String idUsuario =
+        _auth.currentUser!.uid; //_db.collection(_strUsuarios).doc().id;
     String urlImagem = '';
 
     if (fotoDePerfil != null) {

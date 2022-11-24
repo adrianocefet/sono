@@ -12,14 +12,14 @@ class RegistroUsuarioHelper {
   Map<String, dynamic> respostas = {};
   File? _fotoDePerfil;
   Usuario? usuarioPreexistente;
+  String? emailDoUsuario;
   String? senhaGerada;
-  String? cpfDoUsuario;
 
   Map<String, dynamic> _gerarMapaDeRespostas() {
     for (Pergunta p in perguntas) {
       switch (p.tipo) {
         case TipoPergunta.foto:
-          _fotoDePerfil = p.respostaArquivo ;
+          _fotoDePerfil = p.respostaArquivo;
           break;
         default:
           respostas[p.codigo] = p.respostaExtenso;
@@ -28,11 +28,10 @@ class RegistroUsuarioHelper {
 
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
     if (usuarioPreexistente == null) {
-      respostas['senha'] = _gerarSenha();
-      senhaGerada = respostas['senha'];
+      senhaGerada = _gerarSenha();
     }
 
-    cpfDoUsuario = respostas['cpf'];
+    emailDoUsuario = respostas['email'];
 
     return respostas;
   }
@@ -96,6 +95,8 @@ class RegistroUsuarioHelper {
   }
 
   Future<String> _adicionarNovoUsuarioAoBancoDeDados() async {
+    await FirebaseService()
+        .cadastrarUsuarioComEmailESenha(respostas['email'], senhaGerada!);
     return await FirebaseService()
         .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
   }

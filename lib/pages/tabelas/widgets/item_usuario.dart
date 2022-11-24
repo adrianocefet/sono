@@ -44,30 +44,6 @@ class ItemUsuario extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () async {
-                        await Clipboard.setData(
-                          ClipboardData(
-                            text:
-                                "Informações de cadastro na plataforma Projeto Sono\n\nUsuário: ${usuario.cpf}\nSenha: ${usuario.senha}",
-                          ),
-                        );
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(context).focusColor,
-                            content: Text(
-                              'Informações de login do usuário ${usuario.nomeCompleto} copiadas!',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.copy,
-                        color: Theme.of(context).focusColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
                         Navigator.push(
                           context,
                           MaterialPageRoute(

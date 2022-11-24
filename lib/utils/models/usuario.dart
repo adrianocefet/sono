@@ -6,11 +6,11 @@ class Usuario extends Model {
   String nomeCompleto = 'Dra.Camila';
   DateTime dataDeCadastro = DateTime.now();
   String id = 'IDGENERICO';
+  String email = '@';
   String cpf = 'CPFGENERICO';
   String? urlFotoDePerfil = 'URLFOTODEPERFIL';
   Instituicao instituicao = Instituicao.huwc;
   PerfilUsuario perfil = PerfilUsuario.mestre;
-  String senha = 'SENHAGENERICA';
   String profissao = 'Médico';
   Map<String, dynamic> infoMap = {};
   Map<String, String?> get infoJsonMap {
@@ -32,9 +32,9 @@ class Usuario extends Model {
     nomeCompleto = dados['nome_completo'];
     urlFotoDePerfil = dados['url_foto_de_perfil'];
     cpf = dados['cpf'];
-    senha = dados['senha'];
     profissao = dados['profissao'] ?? 'Médico';
     dataDeCadastro = dados['data_de_cadastro'].toDate();
+    email = dados['email']!;
   }
 
   Usuario.porMapJson(Map<String, String?> dados) {
@@ -44,8 +44,8 @@ class Usuario extends Model {
     nomeCompleto = dados['nome_completo']!;
     urlFotoDePerfil = dados['url_foto_de_perfil'];
     cpf = dados['cpf']!;
-    senha = dados['senha']!;
     profissao = dados['profissao']!;
+    email = dados['email']!;
     dataDeCadastro = DateTime.parse(dados['data_de_cadastro']!);
     infoMap = dados;
   }
@@ -60,7 +60,7 @@ class Usuario extends Model {
     nomeCompleto = dados['nome_completo'];
     urlFotoDePerfil = dados['url_foto_de_perfil'];
     cpf = dados['cpf'];
-    senha = dados['senha'];
+    email = dados['email']!;
     profissao = dados['profissao'] ?? 'Médico';
     dataDeCadastro = dados['data_de_cadastro'].toDate();
   }
