@@ -9,37 +9,40 @@ import '../../utils/models/usuario.dart';
 import '../controle_estoque/controle_estoque.dart';
 
 class PaginalInicial extends StatelessWidget {
-  const PaginalInicial({Key? key}) : super(key: key);
+  final Usuario usuarioLogado;
+  const PaginalInicial(
+    this.usuarioLogado, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<Usuario>(
-      builder: (context, child, model) {
-        const Map<PerfilUsuario, int> paginasIniciais = {
-          PerfilUsuario.mestre: 0,
-          PerfilUsuario.clinico: 1,
-          PerfilUsuario.vigilancia: 1,
-          PerfilUsuario.gestao: 2,
-          PerfilUsuario.dispensacao: 2,
-        };
+    const Map<PerfilUsuario, int> paginasIniciais = {
+      PerfilUsuario.mestre: 0,
+      PerfilUsuario.clinico: 1,
+      PerfilUsuario.vigilancia: 1,
+      PerfilUsuario.gestao: 2,
+      PerfilUsuario.dispensacao: 2,
+    };
 
-        final _pageController = PageController(
-          initialPage: paginasIniciais[model.perfil]!,
-        );
+    final _pageController = PageController(
+      initialPage: paginasIniciais[usuarioLogado.perfil]!,
+    );
 
-        return PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            HomeTab(pageController: _pageController),
-            ListaDePacientes(pageController: _pageController),
-            ControleEstoque(pageController: _pageController),
-            TabelaDeSolicitacoes(pageController: _pageController),
-            ListaDeUsuarios(pageController: _pageController),
-            const Login(),
-          ],
-        );
-      },
+    return ScopedModel<Usuario>(
+      model: usuarioLogado,
+      child: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          HomeTab(pageController: _pageController),
+          ListaDePacientes(pageController: _pageController),
+          ControleEstoque(pageController: _pageController),
+          TabelaDeSolicitacoes(pageController: _pageController),
+          ListaDeUsuarios(pageController: _pageController),
+          const Login(),
+        ],
+      ),
     );
   }
 }

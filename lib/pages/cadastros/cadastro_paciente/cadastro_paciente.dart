@@ -22,11 +22,6 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
   final CadastroPacienteController controller = CadastroPacienteController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     controller.helper.paciente = widget.pacienteJaCadastrado;
 
@@ -116,6 +111,18 @@ class _CadastroPacienteState extends State<CadastroPaciente> {
                                             .registrarPaciente();
                                       }
                                       Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor:
+                                              Theme.of(context).focusColor,
+                                          content: Text(
+                                            '${widget.pacienteJaCadastrado == null ? "Registro do paciente" : "Edição do paciente"} realizada com sucesso!',
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      );
                                       if (widget.pacienteJaCadastrado == null) {
                                         Navigator.pop(context);
                                         Navigator.push(

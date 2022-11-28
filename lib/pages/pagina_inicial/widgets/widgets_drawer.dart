@@ -123,7 +123,8 @@ class FuncionalidadesDrawer extends StatelessWidget {
                         PerfilUsuario.mestre,
                         PerfilUsuario.dispensacao,
                         PerfilUsuario.gestao,
-                        PerfilUsuario.vigilancia
+                        PerfilUsuario.vigilancia,
+                        PerfilUsuario.clinico
                       ].contains(usuario.perfil),
                       child: DrawerTile(
                         Icons.masks_outlined,

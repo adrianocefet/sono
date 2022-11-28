@@ -19,7 +19,6 @@ class _CadastroDeUsuarioState extends State<CadastroDeUsuario> {
 
   @override
   Widget build(BuildContext context) {
-    controller.usuario = widget.usuario;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

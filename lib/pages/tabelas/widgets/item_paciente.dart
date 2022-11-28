@@ -24,20 +24,21 @@ class ItemPaciente extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1.2,
-            color: Theme.of(context).primaryColor,
+    return ScopedModelDescendant<Usuario>(
+      builder: (context, _, usuario) {
+        return Container(
+          margin: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1.2,
+              color: Theme.of(context).primaryColor,
+            ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
           ),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: ScopedModelDescendant<Usuario>(
-            builder: (context, child, model) => ListTile(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
               leading: FotoDoPacienteThumbnail(
                 paciente.urlFotoDePerfil,
                 statusPaciente: paciente.status,
@@ -81,8 +82,10 @@ class ItemPaciente extends StatelessWidget {
                   ? () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              PerfilClinicoPaciente(paciente.id),
+                          builder: (context) => ScopedModel<Usuario>(
+                            model: usuario,
+                            child: PerfilClinicoPaciente(paciente.id),
+                          ),
                         ),
                       )
                   : () async {
@@ -90,9 +93,9 @@ class ItemPaciente extends StatelessWidget {
                       try {
                         tipoSolicitacao == TipoSolicitacao.emprestimo
                             ? await equipamentoPreEscolhido!
-                                .solicitarEmprestimo(paciente, model)
+                                .solicitarEmprestimo(paciente, usuario)
                             : await equipamentoPreEscolhido!
-                                .conceder(paciente, model);
+                                .conceder(paciente, usuario);
                       } catch (erro) {
                         equipamentoPreEscolhido!.status =
                             StatusDoEquipamento.disponivel;
@@ -112,7 +115,9 @@ class ItemPaciente extends StatelessWidget {
                     },
             ),
           ),
-        ));
+        );
+      },
+    );
   }
 }
 

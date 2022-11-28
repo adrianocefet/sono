@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/cadastros/cadastro_paciente/cadastro_paciente.dart';
 import 'package:sono/pages/perfis/perfil_paciente/dialogs/selecionar_telefone.dart';
 import 'package:sono/utils/models/paciente.dart';
+import 'package:sono/utils/models/usuario.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class InformacoesGerais extends StatefulWidget {
@@ -17,179 +19,185 @@ class _InformacoesGeraisState extends State<InformacoesGerais> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _AtributoPaciente('Nome completo', widget.paciente.nomeCompleto),
-        Row(
+    return ScopedModelDescendant<Usuario>(
+      builder: (context, _, usuario) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _AtributoPacienteFlex('Sexo', widget.paciente.sexo),
-            const Spacer(flex: 1),
-            _AtributoPacienteFlex('Data de Nascimento',
-                '${widget.paciente.dataDeNascimentoEmString} (${widget.paciente.idade.toString()})'),
-          ],
-        ),
-        Row(
-          children: [
-            _AtributoPacienteFlex('Altura',
-                '${widget.paciente.altura.toString().replaceAll('.', ',')} m'),
-            const Spacer(flex: 1),
-            _AtributoPacienteFlex('Peso',
-                '${widget.paciente.peso.toString().replaceAll('.', ',')} kg'),
-            const Spacer(flex: 1),
-            _AtributoPacienteFlex(
-                'IMC', widget.paciente.imc.toStringAsFixed(2)),
-          ],
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeIn,
-          child: Visibility(
-            visible: expandido,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.min,
+            _AtributoPaciente('Nome completo', widget.paciente.nomeCompleto),
+            Row(
               children: [
-                _Comorbidades(paciente: widget.paciente),
-                Row(
+                _AtributoPacienteFlex('Sexo', widget.paciente.sexo),
+                const Spacer(flex: 1),
+                _AtributoPacienteFlex('Data de Nascimento',
+                    '${widget.paciente.dataDeNascimentoEmString} (${widget.paciente.idade.toString()})'),
+              ],
+            ),
+            Row(
+              children: [
+                _AtributoPacienteFlex('Altura',
+                    '${widget.paciente.altura.toString().replaceAll('.', ',')} m'),
+                const Spacer(flex: 1),
+                _AtributoPacienteFlex('Peso',
+                    '${widget.paciente.peso.toString().replaceAll('.', ',')} kg'),
+                const Spacer(flex: 1),
+                _AtributoPacienteFlex(
+                    'IMC', widget.paciente.imc.toStringAsFixed(2)),
+              ],
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeIn,
+              child: Visibility(
+                visible: expandido,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    _AtributoPacienteFlex(
-                      'Mallampati',
-                      widget.paciente.mallampati.toString(),
+                    _Comorbidades(paciente: widget.paciente),
+                    Row(
+                      children: [
+                        _AtributoPacienteFlex(
+                          'Mallampati',
+                          widget.paciente.mallampati.toString(),
+                        ),
+                        const Spacer(flex: 1),
+                        _AtributoPacienteFlex(
+                          'Circ. do pescoço',
+                          '${widget.paciente.circunferenciaDoPescoco} cm',
+                        ),
+                      ],
                     ),
-                    const Spacer(flex: 1),
-                    _AtributoPacienteFlex(
-                      'Circ. do pescoço',
-                      '${widget.paciente.circunferenciaDoPescoco} cm',
+                    Row(
+                      children: [
+                        _AtributoPacienteFlex(
+                          'CPF',
+                          widget.paciente.cpf ?? 'Não cadastrado',
+                        ),
+                        const Spacer(flex: 1),
+                        _AtributoPacienteFlex(
+                          'Profissão',
+                          widget.paciente.profissao ?? 'Não cadastrado',
+                        ),
+                      ],
+                    ),
+                    _AtributoPaciente(
+                      'Endereço',
+                      widget.paciente.endereco,
+                    ),
+                    _AtributoPaciente(
+                      'Nome da mãe',
+                      widget.paciente.nomeDaMae ?? 'Não cadastrado',
+                    ),
+                    _AtributoPaciente(
+                      widget.paciente.hospitaisVinculados.length > 1
+                          ? 'Hospitais vinculados'
+                          : 'Hospital vinculado',
+                      widget.paciente.hospitaisVinculados.join(','),
+                    ),
+                    Row(
+                      children: [
+                        _AtributoPacienteFlex(
+                          'Num. do prontuário',
+                          widget.paciente.numeroProntuario,
+                        ),
+                        const Spacer(flex: 1),
+                        _AtributoPacienteFlex(
+                          'Data de Cadastro',
+                          widget.paciente.dataDeCadastroEmString,
+                        ),
+                      ],
+                    ),
+                    _AtributoPaciente(
+                      'Possui sinal telefônico estável na residência',
+                      widget.paciente.sinalTelefonicoEstavelEmString,
+                    ),
+                    _AtributoPaciente(
+                      'Tem acesso a internet',
+                      widget.paciente.temAcessoAInternetEmString,
+                    ),
+                    _AtributoPaciente(
+                      'Trabalhador de turno',
+                      widget.paciente.trabalhadorDeTurnoEmString,
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    _AtributoPacienteFlex(
-                      'CPF',
-                      widget.paciente.cpf ?? 'Não cadastrado',
+              ),
+            ),
+            _Contatos(paciente: widget.paciente),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).focusColor,
+                    minimumSize: const Size(60, 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    const Spacer(flex: 1),
-                    _AtributoPacienteFlex(
-                      'Profissão',
-                      widget.paciente.profissao ?? 'Não cadastrado',
+                  ),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ScopedModel<Usuario>(
+                          model: usuario,
+                          child: CadastroPaciente(
+                            pacienteJaCadastrado: widget.paciente,
+                          )),
                     ),
-                  ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Text(
+                        'Editar informações ',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                    ],
+                  ),
                 ),
-                _AtributoPaciente(
-                  'Endereço',
-                  widget.paciente.endereco,
-                ),
-                _AtributoPaciente(
-                  'Nome da mãe',
-                  widget.paciente.nomeDaMae ?? 'Não cadastrado',
-                ),
-                _AtributoPaciente(
-                  widget.paciente.hospitaisVinculados.length > 1
-                      ? 'Hospitais vinculados'
-                      : 'Hospital vinculado',
-                  widget.paciente.hospitaisVinculados.join(','),
-                ),
-                Row(
-                  children: [
-                    _AtributoPacienteFlex(
-                      'Num. do prontuário',
-                      widget.paciente.numeroProntuario,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColorLight,
+                    minimumSize: const Size(60, 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    const Spacer(flex: 1),
-                    _AtributoPacienteFlex(
-                      'Data de Cadastro',
-                      widget.paciente.dataDeCadastroEmString,
-                    ),
-                  ],
-                ),
-                _AtributoPaciente(
-                  'Possui sinal telefônico estável na residência',
-                  widget.paciente.sinalTelefonicoEstavelEmString,
-                ),
-                _AtributoPaciente(
-                  'Tem acesso a internet',
-                  widget.paciente.temAcessoAInternetEmString,
-                ),
-                _AtributoPaciente(
-                  'Trabalhador de turno',
-                  widget.paciente.trabalhadorDeTurnoEmString,
+                  ),
+                  onPressed: () => setState(() {
+                    expandido = !expandido;
+                  }),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        expandido ? 'Colapsar ' : 'Expandir ',
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      Icon(
+                        expandido ? Icons.arrow_upward : Icons.arrow_downward,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-        _Contatos(paciente: widget.paciente),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).focusColor,
-                minimumSize: const Size(60, 30),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CadastroPaciente(
-                    pacienteJaCadastrado: widget.paciente,
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
-                    'Editar informações ',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                    size: 16,
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColorLight,
-                minimumSize: const Size(60, 30),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-              onPressed: () => setState(() {
-                expandido = !expandido;
-              }),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    expandido ? 'Colapsar ' : 'Expandir ',
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Icon(
-                    expandido ? Icons.arrow_upward : Icons.arrow_downward,
-                    color: Colors.black,
-                    size: 16,
-                  ),
-                ],
-              ),
-            ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/qr_code/ler_qrcode.dart';
+import 'package:sono/utils/models/usuario.dart';
 
 import '../../pages/tabelas/tab_tipos_equipamento.dart';
 import '../models/paciente.dart';
 
 Future<void> manualOuQrcode(BuildContext context, Paciente paciente,
-    ControllerPerfilClinicoEquipamento controller) async {
+    ControllerPerfilClinicoEquipamento controller, Usuario usuario) async {
   return await showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -97,9 +99,12 @@ Future<void> manualOuQrcode(BuildContext context, Paciente paciente,
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TiposDeEquipamentos(
-                              pacientePreEscolhido: paciente,
-                              controller: controller,
+                            builder: (context) => ScopedModel<Usuario>(
+                              model: usuario,
+                              child: TiposDeEquipamentos(
+                                pacientePreEscolhido: paciente,
+                                controller: controller,
+                              ),
                             ),
                           ),
                         );

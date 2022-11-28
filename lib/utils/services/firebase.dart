@@ -65,9 +65,10 @@ class FirebaseService {
     await _auth.signOut();
   }
 
-  Future<void> cadastrarUsuarioComEmailESenha(
+  Future<UserCredential> cadastrarUsuarioComEmailESenha(
       String email, String senha) async {
-    await _auth.createUserWithEmailAndPassword(email: email, password: senha);
+    return await _auth.createUserWithEmailAndPassword(
+        email: email, password: senha);
   }
 
   Future<void> logarComEmailESenha(String email, String senha) async {
@@ -542,10 +543,9 @@ class FirebaseService {
     return idPaciente;
   }
 
-  Future<String> uploadDadosDoUsuario(Map<String, dynamic> data,
+  Future<String> uploadDadosDoUsuario(
+      String idUsuario, Map<String, dynamic> data,
       {File? fotoDePerfil}) async {
-    String idUsuario =
-        _auth.currentUser!.uid; //_db.collection(_strUsuarios).doc().id;
     String urlImagem = '';
 
     if (fotoDePerfil != null) {

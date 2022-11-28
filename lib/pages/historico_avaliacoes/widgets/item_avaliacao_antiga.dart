@@ -112,9 +112,13 @@ class _ItemAvaliacaoAntigaState extends State<ItemAvaliacaoAntiga> {
                                 .obterAvaliacaoPorID(widget.paciente.id,
                                     widget.avaliacaoSemExames.id);
                             if (avaliacao.idAvaliador != 'IDGENERICO') {
-                              avaliador = await FirebaseService()
-                                  .obterProfissionalPorID(
-                                      avaliacao.idAvaliador);
+                              try {
+                                avaliador = await FirebaseService()
+                                    .obterProfissionalPorID(
+                                        avaliacao.idAvaliador);
+                              } catch (e) {
+                                avaliador = null;
+                              }
                             }
                             return avaliacao;
                           }(),

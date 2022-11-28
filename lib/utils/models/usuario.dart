@@ -62,7 +62,20 @@ class Usuario extends Model {
     cpf = dados['cpf'];
     email = dados['email']!;
     profissao = dados['profissao'] ?? 'Médico';
-    dataDeCadastro = dados['data_de_cadastro'].toDate();
+    dataDeCadastro = dados['data_de_cadastro']?.toDate() ?? dataDeCadastro;
+  }
+
+  void trocarInfo(Map<String, String?> dados) {
+    id = dados['id']!;
+    instituicao = _instituicaoPorString(dados['instituicao']!);
+    perfil = _perfilPorString(dados['perfil']!);
+    nomeCompleto = dados['nome_completo']!;
+    urlFotoDePerfil = dados['url_foto_de_perfil'];
+    cpf = dados['cpf']!;
+    profissao = dados['profissao']!;
+    email = dados['email']!;
+    dataDeCadastro = DateTime.parse(dados['data_de_cadastro']!);
+    infoMap = dados;
   }
 
   String get dataDeCadastroFormatada {

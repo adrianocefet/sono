@@ -47,15 +47,17 @@ class HistoricoDeAvaliacoes extends StatelessWidget {
               );
               return Scrollbar(
                 scrollbarOrientation: ScrollbarOrientation.left,
-                child: ListView(
-                  children: avaliacoesSemExames
-                      .map(
-                        (e) => ItemAvaliacaoAntiga(
-                          avaliacaoSemExames: e,
-                          paciente: paciente,
-                        ),
-                      )
-                      .toList(),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: avaliacoesSemExames
+                        .map(
+                          (e) => ItemAvaliacaoAntiga(
+                            avaliacaoSemExames: e,
+                            paciente: paciente,
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               );
             } else if (snapshot.hasError) {

@@ -42,7 +42,7 @@ class RegistroPacienteHelper {
 
     respostas['status'] = 'aguardando_cpap';
     respostas['id_cadastrador'] = usuario!.id;
-    respostas['hospitais_vinculados'] = [usuario!.instituicao];
+    respostas['hospitais_vinculados'] = [usuario!.instituicao.emString];
     respostas["imc"] = _gerarIMC(respostas['altura'], respostas['peso']);
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
 
@@ -104,7 +104,7 @@ class RegistroPacienteHelper {
 
   Future<String> _adicionarNovoPacienteAoBancoDeDados() async {
     return await FirebaseService()
-        .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
+        .uploadDadosDoPaciente(respostas, fotoDePerfil: _fotoDePerfil);
   }
 
   Future<String> _editarInfomarcoesDoPacienteNoBancoDeDados() async {

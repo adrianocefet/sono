@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sono/utils/bases_cadastros/base_cadastro_usuario.dart';
 import 'package:sono/utils/models/pergunta.dart';
 import 'package:sono/utils/models/usuario.dart';
@@ -28,7 +29,7 @@ class RegistroUsuarioHelper {
 
     respostas['data_de_cadastro'] = FieldValue.serverTimestamp();
     if (usuarioPreexistente == null) {
-      senhaGerada = _gerarSenha();
+      senhaGerada = "sonoufc1234"; //_gerarSenha();
     }
 
     emailDoUsuario = respostas['email'];
@@ -95,10 +96,13 @@ class RegistroUsuarioHelper {
   }
 
   Future<String> _adicionarNovoUsuarioAoBancoDeDados() async {
-    await FirebaseService()
+    UserCredential usuarioInfo = await FirebaseService()
         .cadastrarUsuarioComEmailESenha(respostas['email'], senhaGerada!);
-    return await FirebaseService()
-        .uploadDadosDoUsuario(respostas, fotoDePerfil: _fotoDePerfil);
+    return await FirebaseService().uploadDadosDoUsuario(
+      usuarioInfo.user!.uid,
+      respostas,
+      fotoDePerfil: _fotoDePerfil,
+    );
   }
 }
 

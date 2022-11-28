@@ -73,7 +73,7 @@ class Paciente {
 
   String? get dataDaUltimaAvaliacaoEmString {
     if (datasUltimosExames == null) return null;
-    return DateFormat('dd/MM/yyyy  HH:mm').format(dataDaUltimaAvaliacao!);
+    return DateFormat('dd/MM/yyyy HH:mm').format(dataDaUltimaAvaliacao!);
   }
 
   DateTime? get dataDaUltimaAvaliacao {

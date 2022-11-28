@@ -1,15 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/tela_equipamento.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
 import 'package:sono/utils/dialogs/mostrar_foto_completa.dart';
-
 import '../../../../constants/constants.dart';
 import '../../../../utils/models/equipamento.dart';
 import '../../../../utils/models/paciente.dart';
@@ -163,20 +157,22 @@ class _LerQrCodeState extends State<LerQrCode> {
                                                     ElevatedButton.icon(
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                              backgroundColor:
-                                                                  const Color
-                                                                          .fromRGBO(
-                                                                      97,
-                                                                      253,
-                                                                      125,
-                                                                      1),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18.0),
-                                                              )),
+                                                        backgroundColor:
+                                                            const Color
+                                                                    .fromRGBO(
+                                                                97,
+                                                                253,
+                                                                125,
+                                                                1),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            18.0,
+                                                          ),
+                                                        ),
+                                                      ),
                                                       onPressed: () async {
                                                         if (equipamento !=
                                                             null) {

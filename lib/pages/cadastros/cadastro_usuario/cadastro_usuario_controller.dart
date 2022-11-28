@@ -24,6 +24,7 @@ class CadastroUsuarioController {
         switch (await helper.registrarUsuario()) {
           case CondicaoUsuario.novo:
             Navigator.pop(context);
+            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Theme.of(context).focusColor,

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sono/pages/pagina_inicial/screen_home.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/models/usuario.dart';
@@ -18,6 +21,11 @@ class Login extends StatelessWidget {
         try {
           usuarioLogado = await FirebaseService()
               .obterProfissionalPorID(FirebaseService().idUsuario!);
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.remove("usuario");
+          await prefs.setString(
+              "usuario", json.encode(usuarioLogado!.infoJsonMap));
         } catch (e) {
           mostrarMensagemErro(context, e.toString());
         }
@@ -46,9 +54,10 @@ class Login extends StatelessWidget {
               ),
             );
           } else {
-            return ScopedModel<Usuario>(
-              model: usuarioLogado!,
-              child: const PaginalInicial(),
+            return ScopedModelDescendant<Usuario>(
+              builder: (context, _, usuario) {
+                return PaginalInicial(usuarioLogado!);
+              },
             );
           }
         } else {

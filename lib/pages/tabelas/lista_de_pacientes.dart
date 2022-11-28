@@ -37,7 +37,9 @@ class ListaDePacientes extends StatelessWidget {
                   showSearch(
                     context: context,
                     delegate: PesquisaDePacientes(
-                        'Paciente', usuario.instituicao.emString),
+                      'Paciente',
+                      usuario.instituicao.emString,
+                    ),
                   );
                 },
                 icon: const Icon(Icons.search),
@@ -85,11 +87,15 @@ class ListaDePacientes extends StatelessWidget {
                                 SizedBox(
                                   height: index == 0 ? 10 : 0,
                                 ),
-                                ItemPaciente(
+                                ScopedModel<Usuario>(
+                                  model: usuario,
+                                  child: ItemPaciente(
                                     paciente: paciente,
                                     equipamentoPreEscolhido:
                                         equipamentoPreEscolhido,
-                                    tipoSolicitacao: tipoSolicitacao),
+                                    tipoSolicitacao: tipoSolicitacao,
+                                  ),
+                                ),
                               ],
                             );
                           },
