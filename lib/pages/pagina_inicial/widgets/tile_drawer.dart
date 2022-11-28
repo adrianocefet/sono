@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sono/constants/constants.dart';
 
 class DrawerTile extends StatelessWidget {
   final IconData icon;
@@ -16,35 +17,44 @@ class DrawerTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
+        highlightColor: Constantes.corAzulEscuroPrincipal.withAlpha(70),
         onTap: () async {
           if (onTap != null) await onTap!();
           Navigator.of(context).pop();
           controller.jumpToPage(page);
         },
-        child: SizedBox(
-          height: 60.0,
-          child: Row(
-            children: <Widget>[
-              Icon(
-                icon,
-                size: 32.0,
-                color: controller.page!.round() == page
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[700],
-              ),
-              const SizedBox(
-                width: 32.0,
-              ),
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: 16.0,
+        child: Container(
+          color: controller.page!.round() == page
+              ? Colors.black.withAlpha(20)
+              : null,
+          child: SizedBox(
+            height: 60.0,
+            child: Row(
+              children: <Widget>[
+                const SizedBox(
+                  width: 32.0,
+                ),
+                Icon(
+                  icon,
+                  size: 32.0,
                   color: controller.page!.round() == page
                       ? Theme.of(context).primaryColor
                       : Colors.grey[700],
                 ),
-              )
-            ],
+                const SizedBox(
+                  width: 32.0,
+                ),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: controller.page!.round() == page
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[700],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

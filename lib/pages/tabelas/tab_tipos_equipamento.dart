@@ -6,7 +6,7 @@ import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart
 import 'package:sono/utils/models/equipamento.dart';
 import '../../utils/models/paciente.dart';
 import '../../utils/models/usuario.dart';
-import '../controle_estoque/widgets/tipo_equipamento.dart';
+import '../controle_estoque/widgets/botao_tipo_equipamento.dart';
 
 class TiposDeEquipamentos extends StatefulWidget {
   final Paciente? pacientePreEscolhido;

@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/utils/models/usuario.dart';
@@ -90,10 +88,13 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: InkWell(
                         splashColor: Constantes.corAzulEscuroSecundario,
-                        onLongPress: () {
-                          mostrarDialogDeletarEquipamento(
-                              context, equipamento.id);
-                        },
+                        onLongPress: widget.controller.status ==
+                                StatusDoEquipamento.disponivel
+                            ? () {
+                                mostrarDialogDeletarEquipamento(
+                                    context, equipamento.id);
+                              }
+                            : null,
                         onTap: () {
                           Navigator.push(
                               context,
@@ -128,14 +129,16 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
-                                  child: Text(
-                                    equipamento.nome,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
+                                  child: FittedBox(
+                                    child: Text(
+                                      equipamento.nome,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),

@@ -302,7 +302,10 @@ class FirebaseService {
     }
     if (urlImagem.isNotEmpty) dadosDoEquipamento['url_foto'] = urlImagem;
 
-    await _db.collection(_stringEquipamento).doc().set(dadosDoEquipamento);
+    await _db
+        .collection(_stringEquipamento)
+        .doc(idEquipamento)
+        .set(dadosDoEquipamento);
 
     return idEquipamento;
   }
@@ -497,17 +500,6 @@ class FirebaseService {
   Future removerEquipamento(String idEquipamento) async {
     DocumentSnapshot<Map<String, dynamic>> info =
         await _db.collection(_stringEquipamento).doc(idEquipamento).get();
-    if (info["status"] == StatusDoEquipamento.emprestado.emString ||
-        info["status"] == StatusDoEquipamento.concedido.emString) {
-      Map<String, dynamic> dadosEquipamento = info.data()!;
-      dadosEquipamento["id"] = info.id;
-
-      await devolverEquipamento(
-        Equipamento.porMap(
-          dadosEquipamento,
-        ),
-      );
-    }
     try {
       await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches

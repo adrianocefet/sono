@@ -29,6 +29,7 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
+      print(model.infoMap);
       MediaQueryData mediaQuery = MediaQuery.of(context);
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
