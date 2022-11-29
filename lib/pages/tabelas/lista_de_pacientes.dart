@@ -76,32 +76,44 @@ class ListaDePacientes extends StatelessWidget {
                     if (snapshot.hasData) {
                       List<DocumentSnapshot<Map<String, dynamic>>>
                           docsPacientes = snapshot.data!.docs;
-                      return Scrollbar(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            Paciente paciente = Paciente.porDocumentSnapshot(
-                              docsPacientes[index],
-                            );
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: index == 0 ? 10 : 0,
+                      return docsPacientes.isEmpty
+                          ? Center(
+                              child: Text(
+                                "Nenhum paciente cadastrado neste hospital.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                ScopedModel<Usuario>(
-                                  model: usuario,
-                                  child: ItemPaciente(
-                                    paciente: paciente,
-                                    equipamentoPreEscolhido:
-                                        equipamentoPreEscolhido,
-                                    tipoSolicitacao: tipoSolicitacao,
-                                  ),
-                                ),
-                              ],
+                              ),
+                            )
+                          : Scrollbar(
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  Paciente paciente =
+                                      Paciente.porDocumentSnapshot(
+                                    docsPacientes[index],
+                                  );
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: index == 0 ? 10 : 0,
+                                      ),
+                                      ScopedModel<Usuario>(
+                                        model: usuario,
+                                        child: ItemPaciente(
+                                          paciente: paciente,
+                                          equipamentoPreEscolhido:
+                                              equipamentoPreEscolhido,
+                                          tipoSolicitacao: tipoSolicitacao,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                                itemCount: snapshot.data!.docs.length,
+                              ),
                             );
-                          },
-                          itemCount: snapshot.data!.docs.length,
-                        ),
-                      );
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),

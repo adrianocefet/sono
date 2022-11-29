@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sono/pages/perfis/perfil_equipamento/equipamento_controller.dart';
 import 'package:sono/pages/perfis/perfil_paciente/terapia_com_pap/widgets/item_equipamento.dart';
-import 'package:sono/pages/tabelas/tab_tipos_equipamento.dart';
 import 'package:sono/utils/dialogs/manual_ou_qrcode.dart';
 import 'package:sono/utils/models/equipamento.dart';
 import 'package:sono/utils/models/paciente.dart';

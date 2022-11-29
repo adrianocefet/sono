@@ -26,63 +26,60 @@ class ItemUsuario extends StatelessWidget {
           leading: FotoDoUsuarioThumbnail(
             usuario.urlFotoDePerfil,
           ),
-          title: Text(
-            usuario.nomeCompleto,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                usuario.nomeCompleto,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                visualDensity: VisualDensity.compact,
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CadastroDeUsuario(usuario: usuario),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Theme.of(context).focusColor,
+                ),
+              ),
+            ],
           ),
           subtitle: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 2,
             ),
-            child: Stack(
-              alignment: Alignment.centerRight,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                CadastroDeUsuario(usuario: usuario),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: Theme.of(context).focusColor,
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      const Text("Instituição: "),
+                      Text(
+                        usuario.instituicao.emString,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColorLight,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        children: [
-                          const Text("Instituição: "),
-                          Text(
-                            usuario.instituicao.emString,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColorLight,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(
-                      'Perfil: ${usuario.perfil.emString}'
-                      '\nData de Cadastro: ${usuario.dataDeCadastroFormatada}'
-                      '\nProfissão: ${usuario.profissao}',
-                    ),
-                  ],
+                Text(
+                  'Perfil: ${usuario.perfil.emString}'
+                  '\nData de Cadastro: ${usuario.dataDeCadastroFormatada}'
+                  '\nProfissão: ${usuario.profissao}',
                 ),
               ],
             ),
