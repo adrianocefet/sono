@@ -416,7 +416,7 @@ class FirebaseService {
 
     await _db.collection(_strPacientes).doc(paciente.id).update(
       {
-        "equipamentos_concedidos": FieldValue.arrayUnion([equipamento.id])
+        "equipamentos": FieldValue.arrayUnion([equipamento.id])
       },
     );
   }
@@ -432,21 +432,14 @@ class FirebaseService {
         "data_de_expedicao": FieldValue.delete(),
       },
     );
-    equipamento.status == StatusDoEquipamento.emprestado
-        ? await _db
-            .collection(_strPacientes)
-            .doc(equipamento.idPacienteResponsavel)
-            .update(
-            {
-              "equipamentos": FieldValue.arrayRemove([equipamento.id]),
-            },
-          )
-        : await _db
-            .collection(_strPacientes)
-            .doc(equipamento.idPacienteResponsavel)
-            .update({
-            "equipamentos_concedidos": FieldValue.arrayRemove([equipamento.id]),
-          });
+    await _db
+        .collection(_strPacientes)
+        .doc(equipamento.idPacienteResponsavel)
+        .update(
+      {
+        "equipamentos": FieldValue.arrayRemove([equipamento.id]),
+      },
+    );
   }
 
   Future<void> desinfectarEquipamento(
