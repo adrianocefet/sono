@@ -151,11 +151,15 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 8.0, left: 15),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8.0, left: 15),
                                   child: Text(
-                                    'Justificativa da devolução',
-                                    style: TextStyle(
+                                    solicitacao.tipo ==
+                                            TipoSolicitacao.devolucao
+                                        ? 'Justificativa da devolução'
+                                        : 'Justificativa da deleção',
+                                    style: const TextStyle(
                                         color:
                                             Constantes.corAzulEscuroPrincipal,
                                         fontSize: 15,
@@ -175,44 +179,60 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                               ],
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8.0, left: 15),
-                            child: Text(
-                              'Paciente',
-                              style: TextStyle(
-                                  color: Constantes.corAzulEscuroPrincipal,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                          Visibility(
+                            visible: solicitacao.idPaciente != null,
+                            child: StreamBuilder<
+                                    DocumentSnapshot<Map<String, dynamic>>>(
+                                stream: FirebaseService()
+                                    .streamInfoPacientePorID(
+                                        solicitacao.idPaciente!),
+                                builder: (context, snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting:
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    default:
+                                      pacienteSolicitado =
+                                          Paciente.porDocumentSnapshot(
+                                              snapshot.data!);
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 8.0, left: 15),
+                                            child: Text(
+                                              'Paciente',
+                                              style: TextStyle(
+                                                  color: Constantes
+                                                      .corAzulEscuroPrincipal,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          const Divider(
+                                            color: Constantes
+                                                .corAzulEscuroPrincipal,
+                                          ),
+                                          ListTile(
+                                              title: Text(pacienteSolicitado
+                                                  .nomeCompleto),
+                                              subtitle: Text(
+                                                  "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
+                                              leading: FotoDoPacienteThumbnail(
+                                                  pacienteSolicitado
+                                                      .urlFotoDePerfil,
+                                                  statusPaciente:
+                                                      pacienteSolicitado
+                                                          .status)),
+                                        ],
+                                      );
+                                  }
+                                }),
                           ),
-                          const Divider(
-                            color: Constantes.corAzulEscuroPrincipal,
-                          ),
-                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                              stream: FirebaseService().streamInfoPacientePorID(
-                                  solicitacao.idPaciente),
-                              builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                  case ConnectionState.waiting:
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  default:
-                                    pacienteSolicitado =
-                                        Paciente.porDocumentSnapshot(
-                                            snapshot.data!);
-                                    return ListTile(
-                                        title: Text(
-                                            pacienteSolicitado.nomeCompleto),
-                                        subtitle: Text(
-                                            "CPF: ${pacienteSolicitado.cpf ?? 'Não informado!'}"),
-                                        leading: FotoDoPacienteThumbnail(
-                                            pacienteSolicitado.urlFotoDePerfil,
-                                            statusPaciente:
-                                                pacienteSolicitado.status));
-                                }
-                              }),
                           const Padding(
                             padding: EdgeInsets.only(top: 8.0, left: 15),
                             child: Text(
@@ -242,12 +262,6 @@ class _PainelHistoricoState extends State<PainelHistorico> {
                                     dadosEquipamento["id"] = snapshot.data!.id;
                                     equipamentoSolicitado =
                                         Equipamento.porMap(dadosEquipamento);
-                                    if (solicitacao.urlPdf == null) {
-                                      solicitacao.gerarTermoEmprestimo(
-                                          pacienteSolicitado,
-                                          equipamentoSolicitado,
-                                          model);
-                                    }
                                     return Column(
                                       children: [
                                         ListTile(

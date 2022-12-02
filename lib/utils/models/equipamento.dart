@@ -169,6 +169,11 @@ class Equipamento {
   Future<void> emprestarPara(Paciente paciente) async =>
       await FirebaseService().emprestarEquipamento(this, paciente);
 
+  Future<void> solicitarDelecao(Usuario usuario, String justificativa) async {
+    await FirebaseService()
+        .solicitarDelecaoEquipamento(this, usuario, justificativa);
+  }
+
   Future<void> solicitarEmprestimo(Paciente paciente, Usuario usuario) async =>
       await FirebaseService()
           .solicitarEmprestimoEquipamento(this, paciente, usuario);

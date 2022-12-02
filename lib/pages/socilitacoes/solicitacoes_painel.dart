@@ -30,6 +30,18 @@ class SolicitacoesPainel extends StatefulWidget {
 }
 
 class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
+  String botaoAceitar(TipoSolicitacao tipo) {
+    switch (tipo) {
+      case TipoSolicitacao.concessao:
+      case TipoSolicitacao.devolucao:
+        return 'Devolver';
+      case TipoSolicitacao.emprestimo:
+        return 'Emprestar';
+      case TipoSolicitacao.delecao:
+        return 'Deletar';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     late Paciente pacienteSolicitado;
@@ -222,11 +234,14 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, left: 15),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 15),
                               child: Text(
-                                'Justificativa da devolução',
-                                style: TextStyle(
+                                solicitacao.tipo == TipoSolicitacao.devolucao
+                                    ? 'Justificativa da devolução'
+                                    : 'Justificativa da deleção',
+                                style: const TextStyle(
                                     color: Constantes.corAzulEscuroPrincipal,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
@@ -299,44 +314,56 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                 );
                             }
                           }),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8.0, left: 15),
-                        child: Text(
-                          'Paciente',
-                          style: TextStyle(
+                      Visibility(
+                        visible: solicitacao.idPaciente != null,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8.0, left: 15),
+                              child: Text(
+                                'Paciente',
+                                style: TextStyle(
+                                    color: Constantes.corAzulEscuroPrincipal,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const Divider(
                               color: Constantes.corAzulEscuroPrincipal,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
+                            ),
+                            StreamBuilder<
+                                    DocumentSnapshot<Map<String, dynamic>>>(
+                                stream: solicitacao.idPaciente != null
+                                    ? FirebaseService().streamInfoPacientePorID(
+                                        solicitacao.idPaciente!)
+                                    : null,
+                                builder: (context, snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting:
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    default:
+                                      pacienteSolicitado =
+                                          Paciente.porDocumentSnapshot(
+                                              snapshot.data!);
+                                      return ListTile(
+                                          title: Text(
+                                              pacienteSolicitado.nomeCompleto),
+                                          subtitle: Text(
+                                              "CPF: ${pacienteSolicitado.cpf ?? 'Não informado'}"),
+                                          leading: FotoDoPacienteThumbnail(
+                                              pacienteSolicitado
+                                                  .urlFotoDePerfil,
+                                              statusPaciente:
+                                                  pacienteSolicitado.status));
+                                  }
+                                }),
+                          ],
                         ),
                       ),
-                      const Divider(
-                        color: Constantes.corAzulEscuroPrincipal,
-                      ),
-                      StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: FirebaseService()
-                              .streamInfoPacientePorID(solicitacao.idPaciente),
-                          builder: (context, snapshot) {
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.none:
-                              case ConnectionState.waiting:
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              default:
-                                pacienteSolicitado =
-                                    Paciente.porDocumentSnapshot(
-                                        snapshot.data!);
-                                return ListTile(
-                                    title:
-                                        Text(pacienteSolicitado.nomeCompleto),
-                                    subtitle: Text(
-                                        "CPF: ${pacienteSolicitado.cpf ?? 'Não informado'}"),
-                                    leading: FotoDoPacienteThumbnail(
-                                        pacienteSolicitado.urlFotoDePerfil,
-                                        statusPaciente:
-                                            pacienteSolicitado.status));
-                            }
-                          }),
                       Visibility(
                         visible:
                             solicitacao.confirmacao == Confirmacao.pendente,
@@ -357,80 +384,20 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                               ),
                               ElevatedButton(
                                 onPressed: () async {
-                                  if (solicitacao.tipo ==
-                                      TipoSolicitacao.emprestimo) {
-                                    if (equipamentoSolicitado.status ==
-                                        StatusDoEquipamento.disponivel) {
-                                      if (await mostrarDialogConfirmacao(
-                                              context,
-                                              'Confirmar empréstimo?',
-                                              'O equipamento se tornará emprestado') ==
-                                          true) {
-                                        mostrarDialogCarregando(context);
-                                        try {
-                                          await equipamentoSolicitado
-                                              .emprestarPara(
-                                                  pacienteSolicitado);
-                                          solicitacao.infoMap['confirmacao'] =
-                                              'confirmado';
-                                          solicitacao
-                                                  .infoMap['data_de_resposta'] =
-                                              FieldValue.serverTimestamp();
-                                          FirebaseService.atualizarSolicitacao(
-                                              solicitacao);
-                                        } catch (erro) {
-                                          equipamentoSolicitado.status =
-                                              StatusDoEquipamento.disponivel;
-                                          mostrarMensagemErro(
-                                              context, erro.toString());
-                                        }
-                                        Navigator.pop(context);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            backgroundColor: Constantes
-                                                .corAzulEscuroPrincipal,
-                                            content: Text(
-                                                "Solicitação aceita com sucesso!"),
-                                          ),
-                                        );
-                                        await solicitacao.gerarTermoEmprestimo(
-                                            pacienteSolicitado,
-                                            equipamentoSolicitado,
-                                            model);
-                                      }
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          backgroundColor:
-                                              Constantes.corAzulEscuroPrincipal,
-                                          content: Text(
-                                              "Esse equipamento não está disponível!"),
-                                        ),
-                                      );
-                                    }
-                                  } else {
-                                    if (equipamentoSolicitado.status ==
-                                            StatusDoEquipamento.emprestado ||
-                                        equipamentoSolicitado.status ==
-                                            StatusDoEquipamento.concedido) {
-                                      if (await mostrarDialogConfirmacao(
-                                              context,
-                                              'Confirmar devolução?',
-                                              'O equipamento se tornará disponível') ==
-                                          true) {
-                                        String? integridadeDoEquipamento =
-                                            await mostrarDialogIntegridade(
+                                  switch (solicitacao.tipo) {
+                                    case TipoSolicitacao.emprestimo:
+                                      if (equipamentoSolicitado.status ==
+                                          StatusDoEquipamento.disponivel) {
+                                        if (await mostrarDialogConfirmacao(
                                                 context,
-                                                'Integridade do equipamento',
-                                                'Qual o estado do equipamento devolvido?');
-
-                                        if (integridadeDoEquipamento != null) {
+                                                'Confirmar empréstimo?',
+                                                'O equipamento se tornará emprestado') ==
+                                            true) {
                                           mostrarDialogCarregando(context);
                                           try {
                                             await equipamentoSolicitado
-                                                .devolver();
+                                                .emprestarPara(
+                                                    pacienteSolicitado);
                                             solicitacao.infoMap['confirmacao'] =
                                                 'confirmado';
                                             solicitacao.infoMap[
@@ -441,7 +408,7 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                     solicitacao);
                                           } catch (erro) {
                                             equipamentoSolicitado.status =
-                                                StatusDoEquipamento.emprestado;
+                                                StatusDoEquipamento.disponivel;
                                             mostrarMensagemErro(
                                                 context, erro.toString());
                                           }
@@ -455,30 +422,130 @@ class _SolicitacoesPainelState extends State<SolicitacoesPainel> {
                                                   "Solicitação aceita com sucesso!"),
                                             ),
                                           );
-                                          await solicitacao.gerarTermoDevolucao(
-                                              integridadeDoEquipamento,
-                                              pacienteSolicitado,
-                                              equipamentoSolicitado,
-                                              model);
+                                          await solicitacao
+                                              .gerarTermoEmprestimo(
+                                                  pacienteSolicitado,
+                                                  equipamentoSolicitado,
+                                                  model);
                                         }
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Constantes
+                                                .corAzulEscuroPrincipal,
+                                            content: Text(
+                                                "Esse equipamento não está disponível!"),
+                                          ),
+                                        );
                                       }
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          backgroundColor:
-                                              Constantes.corAzulEscuroPrincipal,
-                                          content: Text(
-                                              "Esse equipamento não está mais emprestado!"),
-                                        ),
-                                      );
-                                    }
+                                      break;
+                                    case TipoSolicitacao.concessao:
+                                    case TipoSolicitacao.devolucao:
+                                      if (equipamentoSolicitado.status ==
+                                              StatusDoEquipamento.emprestado ||
+                                          equipamentoSolicitado.status ==
+                                              StatusDoEquipamento.concedido) {
+                                        if (await mostrarDialogConfirmacao(
+                                                context,
+                                                'Confirmar devolução?',
+                                                'O equipamento se tornará disponível') ==
+                                            true) {
+                                          String? integridadeDoEquipamento =
+                                              await mostrarDialogIntegridade(
+                                                  context,
+                                                  'Integridade do equipamento',
+                                                  'Qual o estado do equipamento devolvido?');
+
+                                          if (integridadeDoEquipamento !=
+                                              null) {
+                                            mostrarDialogCarregando(context);
+                                            try {
+                                              await equipamentoSolicitado
+                                                  .devolver();
+                                              solicitacao
+                                                      .infoMap['confirmacao'] =
+                                                  'confirmado';
+                                              solicitacao.infoMap[
+                                                      'data_de_resposta'] =
+                                                  FieldValue.serverTimestamp();
+                                              FirebaseService
+                                                  .atualizarSolicitacao(
+                                                      solicitacao);
+                                            } catch (erro) {
+                                              equipamentoSolicitado.status =
+                                                  StatusDoEquipamento
+                                                      .emprestado;
+                                              mostrarMensagemErro(
+                                                  context, erro.toString());
+                                            }
+                                            Navigator.pop(context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                backgroundColor: Constantes
+                                                    .corAzulEscuroPrincipal,
+                                                content: Text(
+                                                    "Solicitação aceita com sucesso!"),
+                                              ),
+                                            );
+                                            await solicitacao
+                                                .gerarTermoDevolucao(
+                                                    integridadeDoEquipamento,
+                                                    pacienteSolicitado,
+                                                    equipamentoSolicitado,
+                                                    model);
+                                          }
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Constantes
+                                                .corAzulEscuroPrincipal,
+                                            content: Text(
+                                                "Esse equipamento não está mais emprestado!"),
+                                          ),
+                                        );
+                                      }
+                                      break;
+                                    case TipoSolicitacao.delecao:
+                                      if (await mostrarDialogConfirmacao(
+                                              context,
+                                              'Confirmar deleção?',
+                                              'O equipamento será removido permanentemente!') ==
+                                          true) {
+                                        mostrarDialogCarregando(context);
+                                        try {
+                                          FirebaseService().removerEquipamento(
+                                              solicitacao.idEquipamento);
+                                          solicitacao.infoMap['confirmacao'] =
+                                              'confirmado';
+                                          solicitacao
+                                                  .infoMap['data_de_resposta'] =
+                                              FieldValue.serverTimestamp();
+                                          FirebaseService.atualizarSolicitacao(
+                                              solicitacao);
+                                        } catch (erro) {
+                                          mostrarMensagemErro(
+                                              context, erro.toString());
+                                        }
+                                        Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Constantes
+                                                .corAzulEscuroPrincipal,
+                                            content: Text(
+                                                "Equipamento deletado com sucesso!"),
+                                          ),
+                                        );
+                                        break;
+                                      }
                                   }
                                 },
                                 child: Text(
-                                  solicitacao.tipo == TipoSolicitacao.emprestimo
-                                      ? 'Emprestar '
-                                      : 'Devolver ',
+                                  botaoAceitar(solicitacao.tipo),
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 style: ElevatedButton.styleFrom(

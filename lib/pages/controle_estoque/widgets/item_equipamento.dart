@@ -92,7 +92,7 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                 StatusDoEquipamento.disponivel
                             ? () {
                                 mostrarDialogDeletarEquipamento(
-                                    context, equipamento.id);
+                                    context, equipamento, model);
                               }
                             : null,
                         onTap: () {

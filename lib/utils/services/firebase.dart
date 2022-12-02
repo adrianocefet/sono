@@ -393,7 +393,8 @@ class FirebaseService {
       );
     }
     final FieldValue horaAtual = FieldValue.serverTimestamp();
-    await _db.collection(_stringSolicitacoes).doc().set(
+    String idSolicitacao = _db.collection(_stringSolicitacoes).doc().id;
+    await _db.collection(_stringSolicitacoes).doc(idSolicitacao).set(
       {
         "tipo": TipoSolicitacao.concessao.emStringSemAcentos,
         "equipamento": equipamento.id,
@@ -405,6 +406,12 @@ class FirebaseService {
         "hospital": equipamento.hospital,
       },
     );
+
+    DocumentSnapshot<Map<String, dynamic>> dadosSolicitacao =
+        await _db.collection(_stringSolicitacoes).doc(idSolicitacao).get();
+    Solicitacao solicitacao = Solicitacao.porDocumentSnapshot(dadosSolicitacao);
+    solicitacao.gerarTermoEmprestimo(paciente, equipamento, usuario);
+
     await _db.collection(_stringEquipamento).doc(equipamento.id).update(
       {
         "status": StatusDoEquipamento.concedido.emString,
@@ -491,14 +498,53 @@ class FirebaseService {
     return idEquipamento;
   }
 
+  Future<void> solicitarDelecaoEquipamento(
+      Equipamento equipamento, Usuario usuario, String justificativa) async {
+    await _db.collection(_stringSolicitacoes).doc().set(
+      {
+        "tipo": "delecao",
+        "equipamento": equipamento.id,
+        "solicitante": usuario.id,
+        "data_da_solicitacao": FieldValue.serverTimestamp(),
+        "confirmacao": "pendente",
+        "hospital": equipamento.hospital,
+        "justificativa_devolucao": justificativa
+      },
+    );
+  }
+
   Future removerEquipamento(String idEquipamento) async {
-    DocumentSnapshot<Map<String, dynamic>> info =
-        await _db.collection(_stringEquipamento).doc(idEquipamento).get();
+    QuerySnapshot<Map<String, dynamic>> solicitacoes = await _db
+        .collection(_stringSolicitacoes)
+        .where('equipamento', isEqualTo: idEquipamento)
+        .get();
     try {
+      for (var solicitacao in solicitacoes.docs) {
+        Map<String, dynamic> dadosSolicitacao = solicitacao.data();
+        dadosSolicitacao['paciente'] != null
+            ? await deletarPDFs(
+                dadosSolicitacao['paciente'], solicitacao.id, idEquipamento)
+            : null;
+      }
       await deletarImagemEquipamentoDoFirebaseStorage(idEquipamento);
       // ignore: empty_catches
     } on Exception {}
+    solicitacoes.docs.forEach((solicitacao) async {
+      await _db.collection(_stringSolicitacoes).doc(solicitacao.id).delete();
+    });
     await _db.collection(_stringEquipamento).doc(idEquipamento).delete();
+  }
+
+  Future deletarPDFs(String solicitacaoPaciente, String solicitacaoId,
+      String idEquipamento) async {
+    print(
+        "$_stringTermos/$idEquipamento/$solicitacaoPaciente/$solicitacaoId.pdf");
+    Reference ref = _storage.ref(
+      "$_stringTermos/$idEquipamento/$solicitacaoPaciente/$solicitacaoId.pdf",
+    );
+    try {
+      await ref.delete();
+    } on Exception {}
   }
 
   Future removerPaciente(String idPaciente) async {

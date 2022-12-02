@@ -11,7 +11,7 @@ class Solicitacao {
   late final String id;
   late final TipoSolicitacao tipo;
   late final String idEquipamento;
-  late final String idPaciente;
+  late final String? idPaciente;
   late Confirmacao confirmacao;
   late final String idSolicitante;
   late final DateTime dataDaSolicitacao;
@@ -98,6 +98,8 @@ class Solicitacao {
         return TipoSolicitacao.devolucao;
       case 'concessao':
         return TipoSolicitacao.concessao;
+      case 'delecao':
+        return TipoSolicitacao.delecao;
     }
     return null;
   }
@@ -119,6 +121,8 @@ extension ExtensaoConfirmacaoSolicitacao on Confirmacao {
 extension ExtensaoTipoSolicitacao on TipoSolicitacao {
   String get emString {
     switch (this) {
+      case TipoSolicitacao.delecao:
+        return 'Deleção';
       case TipoSolicitacao.devolucao:
         return 'Devolução';
       case TipoSolicitacao.emprestimo:
@@ -130,6 +134,8 @@ extension ExtensaoTipoSolicitacao on TipoSolicitacao {
 
   String get emStringSemAcentos {
     switch (this) {
+      case TipoSolicitacao.delecao:
+        return 'delecao';
       case TipoSolicitacao.devolucao:
         return 'decolucao';
       case TipoSolicitacao.emprestimo:
@@ -142,4 +148,4 @@ extension ExtensaoTipoSolicitacao on TipoSolicitacao {
 
 enum Confirmacao { pendente, confirmado, negado }
 
-enum TipoSolicitacao { emprestimo, devolucao, concessao }
+enum TipoSolicitacao { emprestimo, devolucao, concessao, delecao }

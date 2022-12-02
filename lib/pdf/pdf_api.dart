@@ -20,6 +20,7 @@ class PDFapi {
     final dir = await getApplicationDocumentsDirectory();
     final File arquivo;
     switch (tipo) {
+      case TipoSolicitacao.delecao:
       case TipoSolicitacao.concessao:
       case TipoSolicitacao.emprestimo:
         arquivo = File(

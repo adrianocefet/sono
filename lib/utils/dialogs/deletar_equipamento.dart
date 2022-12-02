@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sono/utils/dialogs/carregando.dart';
+import 'package:sono/utils/models/solicitacao.dart';
 import 'package:sono/utils/services/firebase.dart';
 
-Future mostrarDialogDeletarEquipamento(context, idEquipamento) async {
+import '../../constants/constants.dart';
+import '../models/equipamento.dart';
+import '../models/usuario.dart';
+import 'error_message.dart';
+import 'justificativa.dart';
+
+Future mostrarDialogDeletarEquipamento(
+    context, Equipamento equipamento, Usuario usuario) async {
   return await showDialog(
       context: context,
       builder: (context) => Center(
@@ -48,7 +56,7 @@ Future mostrarDialogDeletarEquipamento(context, idEquipamento) async {
                       ),
                     ),
                     const Text(
-                      "Este processo não pode ser revertido!",
+                      "Este processo não pode ser revertido! Uma solicitação será enviada à dispensação!",
                       textAlign: TextAlign.center,
                     ),
                     Padding(
@@ -71,16 +79,32 @@ Future mostrarDialogDeletarEquipamento(context, idEquipamento) async {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              mostrarDialogCarregando(context);
                               try {
-                                await FirebaseService()
-                                    .removerEquipamento(idEquipamento);
-                              } catch (e) {
-                                rethrow;
+                                String? justificativa =
+                                    await mostrarDialogJustificativa(
+                                        context,
+                                        'Deletar do hospital?',
+                                        'Qual o motivo da deleção?');
+                                if (justificativa != null) {
+                                  mostrarDialogCarregando(context);
+                                  await equipamento.solicitarDelecao(
+                                      usuario, justificativa);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor:
+                                          Constantes.corAzulEscuroPrincipal,
+                                      content: Text(
+                                          "Solicitação enviada à dispensação!"),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              } catch (erro) {
+                                mostrarMensagemErro(context, erro.toString());
                               }
-
-                              Navigator.pop(context);
-                              Navigator.pop(context);
                             },
                             child: const Text(
                               'Sim',
