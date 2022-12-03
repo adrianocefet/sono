@@ -112,10 +112,11 @@ class FirebaseService {
     );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamUsuarios() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamUsuarios(
+      Instituicao instituicao) {
     return _db
         .collection(_strUsuarios)
-        .where('instituicao', isNull: false)
+        .where('instituicao', isEqualTo: instituicao.emString)
         .snapshots();
   }
 

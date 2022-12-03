@@ -21,7 +21,7 @@ void main() async {
 
   runApp(
     Phoenix(
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -47,28 +47,29 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-        future: obterUsuario(),
-        builder: (context, snapshot) {
-          return ScopedModel<Usuario>(
-            model: usuario ?? Usuario(),
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Projeto Sono - UFC',
-              theme: ThemeData(
-                primaryColor: const Color.fromRGBO(65, 69, 168, 1.0),
-                primaryColorLight: const Color.fromRGBO(165, 166, 246, 1.0),
-                focusColor: const Color.fromRGBO(97, 253, 125, 1.0),
-                highlightColor: const Color.fromRGBO(97, 253, 125, 1.0),
-              ),
-              home: SplashScreenView(
-                navigateRoute: const Login(),
-                duration: 3000,
-                imageSize: 500,
-                imageSrc: "assets/imagens/splash.jpeg",
-                backgroundColor: Colors.white,
-              ),
+      future: obterUsuario(),
+      builder: (context, snapshot) {
+        return ScopedModel<Usuario>(
+          model: usuario ?? Usuario(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Projeto Sono - UFC',
+            theme: ThemeData(
+              primaryColor: const Color.fromRGBO(65, 69, 168, 1.0),
+              primaryColorLight: const Color.fromRGBO(165, 166, 246, 1.0),
+              focusColor: const Color.fromRGBO(97, 253, 125, 1.0),
+              highlightColor: const Color.fromRGBO(97, 253, 125, 1.0),
             ),
-          );
-        });
+            home: SplashScreenView(
+              navigateRoute: const Login(),
+              duration: 3000,
+              imageSize: 500,
+              imageSrc: "assets/imagens/splash.jpeg",
+              backgroundColor: Colors.white,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

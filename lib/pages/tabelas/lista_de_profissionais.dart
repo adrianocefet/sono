@@ -48,7 +48,7 @@ class ListaDeUsuarios extends StatelessWidget {
               ),
             ),
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseService().streamUsuarios(),
+              stream: FirebaseService().streamUsuarios(usuario.instituicao),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -63,24 +63,35 @@ class ListaDeUsuarios extends StatelessWidget {
                     if (snapshot.hasData) {
                       List<DocumentSnapshot<Map<String, dynamic>>>
                           docsUsuarios = snapshot.data!.docs;
-                      return Scrollbar(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            Usuario usuario = Usuario.porDocumentSnapshot(
-                              docsUsuarios[index],
-                            );
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: index == 0 ? 10 : 0,
+                      return docsUsuarios.isEmpty
+                          ? Center(
+                              child: Text(
+                                "Nenhum profissional cadastrado neste hospital.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                ItemUsuario(usuario: usuario),
-                              ],
+                              ),
+                            )
+                          : Scrollbar(
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  Usuario usuario = Usuario.porDocumentSnapshot(
+                                    docsUsuarios[index],
+                                  );
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: index == 0 ? 10 : 0,
+                                      ),
+                                      ItemUsuario(usuario: usuario),
+                                    ],
+                                  );
+                                },
+                                itemCount: snapshot.data!.docs.length,
+                              ),
                             );
-                          },
-                          itemCount: snapshot.data!.docs.length,
-                        ),
-                      );
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),

@@ -29,12 +29,14 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(builder: (context, child, model) {
-      print(model.infoMap);
+      print(widget.controller.instituicao.emString);
+      print(model.instituicao);
       MediaQueryData mediaQuery = MediaQuery.of(context);
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
-              .where('hospital', isEqualTo: model.instituicao.emString)
+              .where('hospital',
+                  isEqualTo: widget.controller.instituicao.emString)
               .where('status', isEqualTo: widget.controller.status.emString)
               .where('tipo', isEqualTo: widget.titulo.emStringSnakeCase)
               .snapshots(),
@@ -54,13 +56,14 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                     onPressed: () async {
                       widget.controller.tipo = widget.titulo;
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListaDeEquipamentos(
-                                    pacientePreEscolhido:
-                                        widget.pacientePreEscolhido,
-                                    controller: widget.controller,
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListaDeEquipamentos(
+                            pacientePreEscolhido: widget.pacientePreEscolhido,
+                            controller: widget.controller,
+                          ),
+                        ),
+                      );
                     },
                     child: Column(
                       children: [
@@ -74,49 +77,51 @@ class _BotaoTipoEquipamentoState extends State<BotaoTipoEquipamento> {
                             ),
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Stack(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: SizedBox(
-                                height: mediaQuery.size.height * 0.1,
-                                child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Image.asset(
-                                    widget.imagem,
-                                    fit: BoxFit.fill,
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: SizedBox(
+                                  height: mediaQuery.size.height * 0.1,
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Image.asset(
+                                      widget.imagem,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
+                              Positioned(
                                 right: 0,
                                 bottom: 0,
                                 child: Container(
+                                  alignment: Alignment.center,
+                                  height: 20,
+                                  width: 20,
+                                  decoration: const BoxDecoration(
+                                    color: Constantes.corAzulEscuroPrincipal,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Container(
                                     alignment: Alignment.center,
                                     height: 20,
                                     width: 20,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
                                       color: Constantes.corAzulEscuroPrincipal,
-                                      shape: BoxShape.circle,
                                     ),
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          color:
-                                              Constantes.corAzulEscuroPrincipal,
-                                        ),
-                                        child: Text(
-                                          snapshot.data!.docs.length.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ))))
-                          ]),
+                                    child: Text(
+                                      snapshot.data!.docs.length.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           height: 3,

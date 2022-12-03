@@ -29,7 +29,8 @@ class _ListaDeEquipamentosState extends State<ListaDeEquipamentos> {
         return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('equipamentos')
-              .where('hospital', isEqualTo: model.instituicao.emString)
+              .where('hospital',
+                  isEqualTo: widget.controller.instituicao.emString)
               .where('status', isEqualTo: widget.controller.status.emString)
               .where('tipo',
                   isEqualTo: widget.controller.tipo.emStringSnakeCase)

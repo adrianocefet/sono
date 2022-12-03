@@ -24,6 +24,8 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<Usuario>(
       builder: (context, child, model) {
+        widget.controller.instituicao = model.instituicao;
+        print(model.instituicao);
         widget.pacientePreEscolhido != null
             ? widget.controller.status = StatusDoEquipamento.disponivel
             : null;
@@ -82,11 +84,11 @@ class _TiposDeEquipamentosState extends State<TiposDeEquipamentos> {
                         children: [
                           for (var tipo in TipoEquipamento.values)
                             BotaoTipoEquipamento(
-                                controller: widget.controller,
-                                titulo: tipo,
-                                imagem: tipo.imagens,
-                                pacientePreEscolhido:
-                                    widget.pacientePreEscolhido),
+                              controller: widget.controller,
+                              titulo: tipo,
+                              imagem: tipo.imagens,
+                              pacientePreEscolhido: widget.pacientePreEscolhido,
+                            ),
                         ],
                       ),
                     ),

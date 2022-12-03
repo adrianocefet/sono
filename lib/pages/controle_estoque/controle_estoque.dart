@@ -35,11 +35,13 @@ class _ControleEstoqueState extends State<ControleEstoque> {
         return Container(
           // ignore: prefer_const_constructors
           decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color.fromARGB(255, 194, 195, 255), Colors.white],
-                  stops: [0, 0.4])),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color.fromARGB(255, 194, 195, 255), Colors.white],
+              stops: [0, 0.4],
+            ),
+          ),
           child: ListView(children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
