@@ -12,7 +12,17 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyAwiC3u3vH-kanbQB0JPE-3c5ciKrQ48qE",
+      authDomain: "projeto-sono.firebaseapp.com",
+      projectId: "projeto-sono",
+      storageBucket: "projeto-sono.appspot.com",
+      messagingSenderId: "369810232730",
+      appId: "1:369810232730:web:7187e1b8fbe4d0c9d3d623",
+      measurementId: "G-DN974L8484",
+    ),
+  );
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
