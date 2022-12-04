@@ -19,9 +19,13 @@ class RedefinirSenha extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset('assets/imagens/splash.jpeg'),
+            Image.asset(
+              'assets/imagens/login.jpg',
+              width: 350,
+              height: 350,
+            ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,

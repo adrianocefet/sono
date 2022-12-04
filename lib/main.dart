@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/login/login.dart';
 import 'package:sono/utils/models/usuario.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
@@ -12,17 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyAwiC3u3vH-kanbQB0JPE-3c5ciKrQ48qE",
-      authDomain: "projeto-sono.firebaseapp.com",
-      projectId: "projeto-sono",
-      storageBucket: "projeto-sono.appspot.com",
-      messagingSenderId: "369810232730",
-      appId: "1:369810232730:web:7187e1b8fbe4d0c9d3d623",
-      measurementId: "G-DN974L8484",
-    ),
-  );
+  await Firebase.initializeApp();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -74,8 +65,8 @@ class _MyAppState extends State<MyApp> {
               navigateRoute: const Login(),
               duration: 3000,
               imageSize: 500,
-              imageSrc: "assets/imagens/splash.jpeg",
-              backgroundColor: Colors.white,
+              imageSrc: "assets/imagens/splash.jpg",
+              backgroundColor: Constantes.corAzulEscuroPrincipal,
             ),
           ),
         );

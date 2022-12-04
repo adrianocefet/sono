@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sono/constants/constants.dart';
 import 'package:sono/pages/pagina_inicial/screen_home.dart';
 import 'package:sono/utils/dialogs/error_message.dart';
 import 'package:sono/utils/models/usuario.dart';
@@ -46,7 +47,7 @@ class Login extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/imagens/splash.jpeg'),
+                      Image.asset('assets/imagens/login.jpg'),
                       const Credenciais(),
                     ],
                   ),
@@ -62,9 +63,9 @@ class Login extends StatelessWidget {
           }
         } else {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Constantes.corAzulEscuroPrincipal,
             body: Center(
-              child: Image.asset("assets/imagens/splash.jpeg"),
+              child: Image.asset("assets/imagens/splash.jpg"),
             ),
           );
         }
