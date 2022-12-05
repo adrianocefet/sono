@@ -120,16 +120,21 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
                       }
                     }
                   },
-                  child: Text(widget.equipamentoJaCadastrado == null
-                      ? 'Adicionar equipamento'
-                      : 'Salvar alterações'),
+                  child: Text(
+                    widget.equipamentoJaCadastrado == null
+                        ? 'Adicionar equipamento'
+                        : 'Salvar alterações',
+                    style: const TextStyle(color: Colors.black),
+                  ),
                   style: ElevatedButton.styleFrom(
-                    elevation: 0.0,
-                    shadowColor: Colors.transparent,
-                    fixedSize: Size(MediaQuery.of(context).size.width, 50),
-                    backgroundColor: Colors.green,
+                    elevation: 5.0,
+                    backgroundColor: Theme.of(context).focusColor,
+                    fixedSize: Size(
+                      MediaQuery.of(context).size.width,
+                      50,
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                   ),
                 ),
@@ -142,67 +147,3 @@ class _AdicionarEquipamentoState extends State<AdicionarEquipamento> {
         }));
   }
 }
-
-/* void mostrarDialogAdicionarEquipamento(BuildContext context) {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final RegistroEquipamentoHelper helper = RegistroEquipamentoHelper();
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return ScopedModelDescendant<UserModel>(
-        builder: (context, child, model) => AlertDialog(
-          title: const Text('Adicionar equipamento'),
-          contentPadding: EdgeInsets.zero,
-          content: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  RespostaWidget(helper.perguntas.first),
-                  RespostaWidget(helper.perguntas.last),
-                  formTamanhos(),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text("Adicionar"),
-              onPressed: () async {
-                if (formKey.currentState!.validate()) {
-                  formKey.currentState!.save();
-                  mostrarDialogCarregando(context);
-                  try {
-                    switch (await helper.registrarEquipamento(
-                        model.hospital, model.equipamento)) {
-                      case StatusCadastroEquipamento.jaExistenteNoBancoDeDados:
-                        Navigator.pop(context);
-                        mostrarAvisoJaPossuiEquipamento(context);
-                        break;
-                      default:
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                    }
-                  } catch (e) {
-                    Navigator.pop(context);
-                    mostrarMensagemErro(context, e.toString());
-                  }
-                }
-              },
-            ),
-            TextButton(
-              child: const Text("Cancelar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        ),
-      );
-    },
-  );
-} */

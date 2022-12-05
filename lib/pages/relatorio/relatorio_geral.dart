@@ -102,7 +102,7 @@ calcularQuantidade(List<QueryDocumentSnapshot<Object?>> equipamentos,
   if (total) {
     contador = equipamentos
         .where((element) =>
-            element['tipo'].toString().contains(tipo.emStringSnakeCase) &&
+            element['tipo'].toString().compareTo(tipo.emStringSnakeCase) == 0 &&
             element['hospital'].toString().contains(hospital) &&
             !element['status']
                 .toString()
@@ -111,7 +111,7 @@ calcularQuantidade(List<QueryDocumentSnapshot<Object?>> equipamentos,
   } else {
     contador = equipamentos
         .where((element) =>
-            element['tipo'].toString().contains(tipo.emStringSnakeCase) &&
+            element['tipo'].toString().compareTo(tipo.emStringSnakeCase) == 0 &&
             element['status'].toString().contains(status) &&
             element['hospital'].toString().contains(hospital))
         .length;

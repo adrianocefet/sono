@@ -88,13 +88,6 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: InkWell(
                         splashColor: Constantes.corAzulEscuroSecundario,
-                        onLongPress: widget.controller.status ==
-                                StatusDoEquipamento.disponivel
-                            ? () {
-                                mostrarDialogDeletarEquipamento(
-                                    context, equipamento, model);
-                              }
-                            : null,
                         onTap: () {
                           Navigator.push(
                               context,
@@ -351,9 +344,43 @@ class _ItemEquipamentoState extends State<ItemEquipamento> {
                                         ],
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Constantes.corAzulEscuroPrincipal,
+                                    Column(
+                                      children: [
+                                        Visibility(
+                                          visible: widget.controller.status ==
+                                                  StatusDoEquipamento
+                                                      .disponivel &&
+                                              [
+                                                PerfilUsuario.clinico,
+                                                PerfilUsuario.vigilancia,
+                                                PerfilUsuario.mestre,
+                                                PerfilUsuario.dispensacao,
+                                              ].contains(model.perfil),
+                                          child: Column(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  mostrarDialogDeletarEquipamento(
+                                                      context,
+                                                      equipamento,
+                                                      model);
+                                                },
+                                                color: Theme.of(context)
+                                                    .errorColor,
+                                                icon: const Icon(Icons.delete),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          color:
+                                              Constantes.corAzulEscuroPrincipal,
+                                        ),
+                                      ],
                                     )
                                   ],
                                 ),

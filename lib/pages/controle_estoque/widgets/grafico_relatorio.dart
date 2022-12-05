@@ -43,8 +43,9 @@ class _GraficoRelatorioState extends State<GraficoRelatorio> {
                       documentos
                           .where((element) =>
                               element['tipo']
-                                  .toString()
-                                  .contains(tipo.emStringSnakeCase) &&
+                                      .toString()
+                                      .compareTo(tipo.emStringSnakeCase) ==
+                                  0 &&
                               element['status'].toString().contains(
                                   StatusDoEquipamento.disponivel.emString) &&
                               element['hospital']
@@ -54,8 +55,9 @@ class _GraficoRelatorioState extends State<GraficoRelatorio> {
                       documentos
                           .where((element) =>
                               element['tipo']
-                                  .toString()
-                                  .contains(tipo.emStringSnakeCase) &&
+                                      .toString()
+                                      .compareTo(tipo.emStringSnakeCase) ==
+                                  0 &&
                               element['status'].toString().contains(
                                   StatusDoEquipamento.emprestado.emString) &&
                               element['hospital']
@@ -65,8 +67,9 @@ class _GraficoRelatorioState extends State<GraficoRelatorio> {
                       documentos
                           .where((element) =>
                               element['tipo']
-                                  .toString()
-                                  .contains(tipo.emStringSnakeCase) &&
+                                      .toString()
+                                      .compareTo(tipo.emStringSnakeCase) ==
+                                  0 &&
                               element['status'].toString().contains(
                                   StatusDoEquipamento.manutencao.emString) &&
                               element['hospital']
@@ -76,8 +79,9 @@ class _GraficoRelatorioState extends State<GraficoRelatorio> {
                       documentos
                           .where((element) =>
                               element['tipo']
-                                  .toString()
-                                  .contains(tipo.emStringSnakeCase) &&
+                                      .toString()
+                                      .compareTo(tipo.emStringSnakeCase) ==
+                                  0 &&
                               element['status'].toString().contains(
                                   StatusDoEquipamento.desinfeccao.emString) &&
                               element['hospital']

@@ -56,7 +56,7 @@ Future mostrarDialogDeletarEquipamento(
                       ),
                     ),
                     const Text(
-                      "Este processo não pode ser revertido! Uma solicitação será enviada à dispensação!",
+                      "Uma solicitação de deleção será enviada à dispensação!",
                       textAlign: TextAlign.center,
                     ),
                     Padding(

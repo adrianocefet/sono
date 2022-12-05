@@ -15,8 +15,6 @@ class RelatorioEspecifico extends StatefulWidget {
 }
 
 class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
-  ControllerPerfilClinicoEquipamento controller =
-      ControllerPerfilClinicoEquipamento();
   int? indexOrdenarColuna;
   bool ordemCrescente = false;
   List<Equipamento> equipamentos = [];
@@ -137,17 +135,8 @@ class _RelatorioEspecificoState extends State<RelatorioEspecifico> {
         ];
 
         return DataRow(
-            cells: pegarCelulas(celulas),
-            onLongPress: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TelaEquipamento(
-                            id: equipamento.id,
-                            controller: controller,
-                          )));
-              inicializou = false;
-            });
+          cells: pegarCelulas(celulas),
+        );
       }).toList();
 
   List<Equipamento> pegarEquipamentos(List<DocumentSnapshot> snapshot) =>
